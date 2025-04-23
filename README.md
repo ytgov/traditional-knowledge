@@ -323,8 +323,6 @@ Files:
    DB_PASSWORD=DevPwd99!
    DB_DATABASE=traditional_knowledge_production
 
-   DB_TRUST_SERVER_CERTIFICATE=true # false or unset in production environment
-
    VITE_API_BASE_URL="http://localhost:8080"
    VITE_AUTH0_CLIENT_ID="mNqPwPZ5M1VXkEH6e8OgEaxmmWfxecwo"
    VITE_AUTH0_AUDIENCE="testing"
