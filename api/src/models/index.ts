@@ -11,6 +11,7 @@ import Retention from "@/models/retention"
 import Source from "@/models/source"
 import SourceCategory from "@/models/source-category"
 import User from "@/models/user"
+import UserGroup from "@/models/user-group"
 import UserPermission from "@/models/user-permission"
 
 db.addModels([
@@ -24,6 +25,7 @@ db.addModels([
   Source,
   SourceCategory,
   User,
+  UserGroup,
   UserPermission,
 ])
 
@@ -38,6 +40,7 @@ Retention.establishScopes()
 Source.establishScopes()
 SourceCategory.establishScopes()
 User.establishScopes()
+UserGroup.establishScopes()
 UserPermission.establishScopes()
 
 export {
@@ -51,6 +54,7 @@ export {
   Source,
   SourceCategory,
   User,
+  UserGroup,
   UserPermission,
 }
 
