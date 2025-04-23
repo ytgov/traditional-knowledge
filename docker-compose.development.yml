@@ -42,14 +42,27 @@ services:
     # stdin_open: true # equivalent of docker exec -i
     ports:
       - "3000:3000"
-    volumes:
-      - ./api:/usr/src/api
-      - ./.gitignore:/usr/src/.gitignore
-      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
     depends_on:
       - db
       - mail
       - cache
+    develop:
+      watch: &api-develop-watch
+        - path: ./api
+          target: /usr/src/api
+          action: sync
+          ignore:
+            - node_modules/
+        - path: ./.gitignore
+          target: /usr/src/.gitignore
+          action: sync
+        - path: ./.prettierrc.yaml
+          target: /usr/src/.prettierrc.yaml
+          action: sync
+        - path: ./api/package.json
+          action: rebuild
+        - path: ./api/package-lock.json
+          action: rebuild
 
   web:
     build:
@@ -59,12 +72,25 @@ services:
       <<: *default-environment
     ports:
       - "8080:8080"
-    volumes:
-      - ./web:/usr/src/web
-      - ./.gitignore:/usr/src/.gitignore
-      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
     depends_on:
       - api
+    develop:
+      watch:
+        - path: ./web
+          target: /usr/src/web
+          action: sync
+          ignore:
+            - node_modules/
+        - path: ./.gitignore
+          target: /usr/src/.gitignore
+          action: sync
+        - path: ./.prettierrc.yaml
+          target: /usr/src/.prettierrc.yaml
+          action: sync
+        - path: ./web/package.json
+          action: rebuild
+        - path: ./web/package-lock.json
+          action: rebuild
 
   test_api:
     build:
@@ -76,16 +102,16 @@ services:
     environment:
       <<: *default-environment
       NODE_ENV: test
-      DB_DATABASE: digital_vault_test
+      DB_DATABASE: traditional_knowledge_test
       DEFAULT_LOG_LEVEL: "info"
       DB_HEALTH_CHECK_START_PERIOD_SECONDS: 0
     tty: true
-    volumes:
-      - ./api:/usr/src/api
     depends_on:
       - db
       - mail
       - cache
+    develop:
+      watch: *api-develop-watch
 
   # test_web:
   #   build:
@@ -151,14 +177,28 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./archiver:/usr/src/archiver
-      - ./.gitignore:/usr/src/.gitignore
-      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
       - ./archiver/certs/icefog.pem:/etc/ssl/private/icefog.pem:ro
       - ./archiver/certs/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
     depends_on:
       - db
       - cache
+    develop:
+      watch:
+        - path: ./archiver
+          target: /usr/src/archiver
+          action: sync
+          ignore:
+            - node_modules/
+        - path: ./.gitignore
+          target: /usr/src/.gitignore
+          action: sync
+        - path: ./.prettierrc.yaml
+          target: /usr/src/.prettierrc.yaml
+          action: sync
+        - path: ./archiver/package.json
+          action: rebuild
+        - path: ./archiver/package-lock.json
+          action: rebuild
 
 volumes:
   db_data:
