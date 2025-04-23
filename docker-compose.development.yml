@@ -3,7 +3,7 @@ x-default-environment: &default-environment
   NODE_ENV: development
   DB_HOST: db
   DB_USERNAME: sa
-  DB_DATABASE: tk_development
+  DB_DATABASE: traditional_knowledge_development
   DB_PASSWORD: &default-db-password DevPwd99!
   DB_PORT: &default-db-port 1433
   DB_TRUST_SERVER_CERTIFICATE: "true"
@@ -23,6 +23,11 @@ x-default-environment: &default-environment
   MAIL_PORT: 1025
   MAIL_FROM: "traditional-knowledge.development@yukon.ca"
   MAIL_SERVICE: "MailDev"
+  REDIS_CONNECTION_URL: "redis://@localhost:6379"
+  PDF_SIGNER_JAR: "/var/lib/open-pdf-sign.jar"
+  TIMESTAMP_SERVER: "http://timestamp.digicert.com"
+  SSL_FULL_CHAIN_PATH: "/etc/ssl/certs/fullchain.pem"
+  SSL_CERT_KEY_PATH: "/etc/ssl/private/icefog.pem"
 
 services:
   api:

@@ -313,7 +313,7 @@ Files:
 1. Create a `.env` file in top level directory with the appropriate values.
 
    ```bash
-   VITE_APPLICATION_NAME="Digital Vault"
+   VITE_APPLICATION_NAME="Traditional Knowledge"
    HOST_PORT=8080
    API_PORT=8080
 
@@ -321,7 +321,7 @@ Files:
    DB_PORT=1433
    DB_USERNAME=sa
    DB_PASSWORD=DevPwd99!
-   DB_DATABASE=digital_vault_production
+   DB_DATABASE=traditional_knowledge_production
 
    DB_TRUST_SERVER_CERTIFICATE=true # false or unset in production environment
 
