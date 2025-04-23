@@ -1,0 +1,154 @@
+x-default-environment: &default-environment
+  TZ: "UTC"
+  NODE_ENV: development
+  DB_HOST: db
+  DB_USERNAME: sa
+  DB_DATABASE: tk_development
+  DB_PASSWORD: &default-db-password DevPwd99!
+  DB_PORT: &default-db-port 1433
+  DB_TRUST_SERVER_CERTIFICATE: "true"
+  DB_HEALTH_CHECK_INTERVAL_SECONDS: 5
+  DB_HEALTH_CHECK_TIMEOUT_SECONDS: 10
+  DB_HEALTH_CHECK_RETRIES: 3
+  DB_HEALTH_CHECK_START_PERIOD_SECONDS: 5
+  FRONTEND_URL: "http://localhost:8080"
+  VITE_APPLICATION_NAME: "Traditional Knowledge"
+  VITE_API_BASE_URL: "http://localhost:3000"
+  VITE_AUTH0_CLIENT_ID: "mNqPwPZ5M1VXkEH6e8OgEaxmmWfxecwo"
+  VITE_AUTH0_AUDIENCE: "testing"
+  VITE_AUTH0_DOMAIN: "https://dev-0tc6bn14.eu.auth0.com"
+  RELEASE_TAG: "${RELEASE_TAG:-development}"
+  GIT_COMMIT_HASH: "${GIT_COMMIT_HASH:-not-set}"
+  MAIL_HOST: "mail"
+  MAIL_PORT: 1025
+  MAIL_FROM: "traditional-knowledge.development@yukon.ca"
+  MAIL_SERVICE: "MailDev"
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: development.Dockerfile
+    env_file:
+      - ./api/.env.development
+    environment:
+      <<: *default-environment
+    tty: true # allows attaching debugger, equivalent of docker exec -t
+    # stdin_open: true # equivalent of docker exec -i
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api:/usr/src/api
+      - ./.gitignore:/usr/src/.gitignore
+      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
+    depends_on:
+      - db
+      - mail
+
+  web:
+    build:
+      context: ./web
+      dockerfile: development.Dockerfile
+    environment:
+      <<: *default-environment
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./web:/usr/src/web
+      - ./.gitignore:/usr/src/.gitignore
+      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
+    depends_on:
+      - api
+
+  test_api:
+    build:
+      context: ./api
+      dockerfile: development.Dockerfile
+    command: /bin/true
+    env_file:
+      - ./api/.env.development
+    environment:
+      <<: *default-environment
+      NODE_ENV: test
+      DB_DATABASE: digital_vault_test
+      DEFAULT_LOG_LEVEL: "info"
+      DB_HEALTH_CHECK_START_PERIOD_SECONDS: 0
+    tty: true
+    volumes:
+      - ./api:/usr/src/api
+    depends_on:
+      - db
+      - mail
+
+  # test_web:
+  #   build:
+  #     context: ./web
+  #     dockerfile: development.Dockerfile
+  #   command: /bin/true
+  #   environment:
+  #     <<: *default-environment
+  #     NODE_ENV: test
+  #   tty: true
+  #   volumes:
+  #     - ./web:/usr/src/web
+
+  cache:
+    image: bitnami/redis:7.2.4
+    user: root
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "6379:6379"
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04
+    user: root
+    environment:
+      <<: *default-environment
+      DB_HOST: "localhost"
+      MSSQL_SA_PASSWORD: *default-db-password
+      TZ: "America/Whitehorse"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - db_data:/var/opt/mssql/data
+
+  mail:
+    image: maildev/maildev
+    user: root
+    ports:
+      - "1080:1080" # Web UI
+      - "1025:1025" # SMTP
+
+  # For easily generating large PlantUML diagrams
+  # Not relevant to production environment.
+  # Accessible at http://localhost:9999
+  # plantuml:
+  #   image: plantuml/plantuml-server:jetty
+  #   ports:
+  #     - 9999:8080
+  #   environment:
+  #     PLANTUML_LIMIT_SIZE: 8192
+
+  archiver:
+    build:
+      context: ./archiver
+      dockerfile: development.Dockerfile
+    env_file:
+      - ./archiver/.env.development
+    environment:
+      <<: *default-environment
+    tty: true # allows attaching debugger, equivalent of docker exec -t
+    # stdin_open: true # equivalent of docker exec -i
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./archiver:/usr/src/archiver
+      - ./.gitignore:/usr/src/.gitignore
+      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
+      - ./archiver/certs/icefog.pem:/etc/ssl/private/icefog.pem:ro
+      - ./archiver/certs/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
+
+volumes:
+  db_data:

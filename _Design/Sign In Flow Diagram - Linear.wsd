@@ -1,0 +1,18 @@
+@startuml Sign In Flow Diagram - Linear
+start
+
+:User tries to access the app;
+
+:App tries to validate the user;
+:Validation fails;
+:Redirect user to Auth0 sign-in page;
+:User signs in on Auth0 page;
+:Auth0 sign-in page redirects user to app with "code=" in URL;
+
+:App consumes token and validates user;
+:User is valid;
+
+:Auth0 instance can now be used to get an API token;
+
+stop
+@enduml

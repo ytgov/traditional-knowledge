@@ -1,0 +1,38 @@
+services:
+  app:
+    # Replace `build` line with `image` line, if you want to pull a build generated via github workflow
+    # You must use the appropriate build tag.
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+    ports:
+      - "${HOST_PORT:-3000}:${HOST_PORT:-3000}"
+    volumes:
+      - ./.env:/home/node/app/.env.production
+    depends_on:
+      - db
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04
+    user: root
+    environment:
+      TZ: "UTC"
+      # default user is `sa`
+      MSSQL_SA_PASSWORD: "${DB_PASSWORD}"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - db_data:/var/opt/mssql/data
+
+  mail:
+    image: maildev/maildev
+    ports:
+      - "1080:1080" # Web UI
+      - "1025:1025" # SMTP
+
+volumes:
+  db_data:
