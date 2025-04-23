@@ -49,7 +49,7 @@
 
 4. [Set up the `dev`](#set-up-dev-command) command, or use `docker compose -f docker-compose.development.yml` instead of `dev` in all instructions.
 
-5. Boot the api, web, and db services via `dev up` or `docker compose -f docker-compose.development.yml up`. This will run the boot pipeline and create the database, run migrations, and run seeds.
+5. Boot the api, web, and db services via `dev up --watch` or `dev watch` or `docker compose -f docker-compose.development.yml up --watch`. This will run the boot pipeline and create the database, run migrations, and run seeds.
 
 6. Stop the api, web, and db services via `ctrl+c` or `dev down` or if you want to wipe the database `dev down -v`.
 
@@ -66,7 +66,7 @@
 
    # or
 
-   docker compose -f docker-compose.development.yml up api
+   docker compose -f docker-compose.development.yml up --watch api
 
    # or
 
@@ -85,7 +85,7 @@
 
    # or
 
-   docker compose -f docker-compose.development.yml up web
+   docker compose -f docker-compose.development.yml up --watch web
 
    # or
 
@@ -104,7 +104,7 @@
 
    # or
 
-   docker compose -f docker-compose.development.yml up db
+   docker compose -f docker-compose.development.yml up --watch db
    ```
 
    > Migrations run automatically, as do seeds.
