@@ -55,7 +55,7 @@
 
 7. Install local dependencies by installing `asdf` and node via `asdf` and then running `npm install` at the top level of the project.
 
-8. To get the local per-service node_modules, folders run `dev api npm i` and `dev web npm i`. I'm not sure why the previous commands don't do this automatically.
+8. To get the local per-service node_modules, so your code editor gets linting and types, do `cd api && npm i` and `cd web && npm i`.
 
 ### API Service (a.k.a back-end)
 
