@@ -23,7 +23,7 @@ x-default-environment: &default-environment
   MAIL_PORT: 1025
   MAIL_FROM: "traditional-knowledge.development@yukon.ca"
   MAIL_SERVICE: "MailDev"
-  REDIS_CONNECTION_URL: "redis://@localhost:6379"
+  REDIS_CONNECTION_URL: "redis://@cache:6379"
   PDF_SIGNER_JAR: "/var/lib/open-pdf-sign.jar"
   TIMESTAMP_SERVER: "http://timestamp.digicert.com"
   SSL_FULL_CHAIN_PATH: "/etc/ssl/certs/fullchain.pem"
