@@ -49,6 +49,7 @@ services:
     depends_on:
       - db
       - mail
+      - cache
 
   web:
     build:
@@ -84,6 +85,7 @@ services:
     depends_on:
       - db
       - mail
+      - cache
 
   # test_web:
   #   build:
@@ -154,6 +156,9 @@ services:
       - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
       - ./archiver/certs/icefog.pem:/etc/ssl/private/icefog.pem:ro
       - ./archiver/certs/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
+    depends_on:
+      - db
+      - cache
 
 volumes:
   db_data:
