@@ -23,10 +23,13 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "administration",
-        name: "administration",
         children: [
           {
             path: "",
+            redirect: "/administration/dashboard",
+          },
+          {
+            path: "dashboard",
             name: "administration/DashboardPage",
             component: () => import("@/pages/administration/DashboardPage.vue"),
           },
