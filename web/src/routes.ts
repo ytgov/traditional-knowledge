@@ -81,7 +81,11 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@/pages/categories/CategoryEditPage.vue"),
             props: true,
           },
-
+          {
+            path: "groups",
+            name: "administration/GroupsPage",
+            component: () => import("@/pages/administration/GroupsPage.vue"),
+          },
           {
             path: "users",
             name: "users/UsersPage",
