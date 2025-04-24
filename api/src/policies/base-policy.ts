@@ -1,6 +1,6 @@
 import { ModelStatic, Model, Attributes, FindOptions, ScopeOptions, literal } from "@sequelize/core"
 
-import { Source, User } from "@/models"
+import { User } from "@/models"
 import { Path, deepPick } from "@/utils/deep-pick"
 
 export type Actions = "show" | "create" | "update" | "destroy"
@@ -11,13 +11,11 @@ export const ALL_RECORDS_SCOPE = Object.freeze({})
  * See PolicyFactory below for policy with scope helpers
  */
 export class BasePolicy<M extends Model> {
-  protected user: User | null
-  protected source: Source | null
+  protected user: User
   protected record: M
 
-  constructor(creator: User | Source, record: M) {
-    this.user = creator instanceof User ? creator : null
-    this.source = creator instanceof Source ? creator : null
+  constructor(user: User, record: M) {
+    this.user = user
     this.record = record
   }
 
