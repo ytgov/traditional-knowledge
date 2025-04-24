@@ -49,13 +49,13 @@
 
 4. [Set up the `dev`](#set-up-dev-command) command, or use `docker compose -f docker-compose.development.yml` instead of `dev` in all instructions.
 
-5. Boot the api, web, and db services via `dev up` or `docker compose -f docker-compose.development.yml up`. This will run the boot pipeline and create the database, run migrations, and run seeds.
+5. Boot the api, web, and db services via `dev up --watch` or `dev watch` or `docker compose -f docker-compose.development.yml up --watch`. This will run the boot pipeline and create the database, run migrations, and run seeds.
 
 6. Stop the api, web, and db services via `ctrl+c` or `dev down` or if you want to wipe the database `dev down -v`.
 
 7. Install local dependencies by installing `asdf` and node via `asdf` and then running `npm install` at the top level of the project.
 
-8. To get the local per-service node_modules, folders run `dev api npm i` and `dev web npm i`. I'm not sure why the previous commands don't do this automatically.
+8. To get the local per-service node_modules, so your code editor gets linting and types, do `cd api && npm i` and `cd web && npm i`.
 
 ### API Service (a.k.a back-end)
 
@@ -66,7 +66,7 @@
 
    # or
 
-   docker compose -f docker-compose.development.yml up api
+   docker compose -f docker-compose.development.yml up --watch api
 
    # or
 
@@ -85,7 +85,7 @@
 
    # or
 
-   docker compose -f docker-compose.development.yml up web
+   docker compose -f docker-compose.development.yml up --watch web
 
    # or
 
@@ -104,7 +104,7 @@
 
    # or
 
-   docker compose -f docker-compose.development.yml up db
+   docker compose -f docker-compose.development.yml up --watch db
    ```
 
    > Migrations run automatically, as do seeds.
