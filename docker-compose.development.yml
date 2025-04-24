@@ -54,6 +54,10 @@ services:
           action: sync
           ignore:
             - node_modules/
+            - src/initializers
+        - path: ./api/src/initializers
+          target: /usr/src/api/src/initializers
+          action: sync+restart
         - path: ./.gitignore
           target: /usr/src/.gitignore
           action: sync
@@ -202,6 +206,10 @@ services:
           action: sync
           ignore:
             - node_modules/
+            - src/initializers/
+        - path: ./api/src/initializers
+          target: /usr/src/api/src/initializers
+          action: sync+restart
         - path: ./.gitignore
           target: /usr/src/.gitignore
           action: sync
