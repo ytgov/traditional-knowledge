@@ -10,7 +10,9 @@ import {
   Attribute,
   AutoIncrement,
   BelongsTo,
+  BelongsToMany,
   Default,
+  HasMany,
   Index,
   NotNull,
   PrimaryKey,
@@ -18,6 +20,7 @@ import {
 
 import BaseModel from "@/models/base-model"
 import User from "@/models/user"
+import UserGroup from "@/models/user-group"
 
 export class Group extends BaseModel<InferAttributes<Group>, InferCreationAttributes<Group>> {
   @Attribute(DataTypes.INTEGER)
@@ -73,6 +76,35 @@ export class Group extends BaseModel<InferAttributes<Group>, InferCreationAttrib
     },
   })
   declare creator?: NonAttribute<User>
+
+  @HasMany(() => UserGroup, {
+    foreignKey: {
+      name: "groupId",
+      allowNull: false,
+    },
+    inverse: "group",
+  })
+  declare userGroups?: NonAttribute<UserGroup[]>
+
+  @BelongsToMany(() => User, {
+    through: () => UserGroup,
+    foreignKey: "groupId",
+    otherKey: "userId",
+    inverse: "groups",
+    throughAssociations: {
+      fromSource: "userGroups",
+      toSource: "group",
+      fromTarget: "userGroups",
+      toTarget: "user",
+    },
+  })
+  declare users?: NonAttribute<User[]>
+  /**
+   * Created by Group.belongsToMany(User), refers to a direct connection to a given User
+   * Populated by by { include: [{ association: "users", through: { attributes: [xxx] } }] }
+   * See https://sequelize.org/docs/v7/querying/select-in-depth/#eager-loading-the-belongstomany-through-model
+   */
+  declare userGroup?: NonAttribute<UserGroup>
 
   // Scopes
   static establishScopes(): void {
