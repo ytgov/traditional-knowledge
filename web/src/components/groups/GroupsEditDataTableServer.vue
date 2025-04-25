@@ -72,6 +72,7 @@ const headers = ref([
   {
     title: "Description",
     key: "description",
+    sortable: false,
   },
   {
     title: "Host",
@@ -80,6 +81,7 @@ const headers = ref([
   {
     title: "Actions",
     key: "actions",
+    sortable: false,
   },
 ])
 
