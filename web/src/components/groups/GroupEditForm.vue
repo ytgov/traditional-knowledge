@@ -19,6 +19,7 @@
               v-model="group.name"
               label="Name *"
               :rules="[required]"
+              :filters="groupNameFilters"
               variant="outlined"
               required
             />
@@ -82,7 +83,7 @@
 
 <script setup lang="ts">
 import { isNil } from "lodash"
-import { ref, toRefs } from "vue"
+import { computed, ref, toRefs } from "vue"
 
 import { type VBtn, type VForm } from "vuetify/lib/components/index.mjs"
 
@@ -117,6 +118,10 @@ const emit = defineEmits<{
 
 const { groupId } = toRefs(props)
 const { group, save, isLoading } = useGroup(groupId)
+
+const groupNameFilters = computed(() => ({
+  excludeById: groupId.value,
+}))
 
 const snack = useSnack()
 

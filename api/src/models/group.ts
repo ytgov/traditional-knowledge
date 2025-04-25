@@ -1,5 +1,6 @@
 import {
   DataTypes,
+  Op,
   sql,
   type CreationOptional,
   type InferAttributes,
@@ -17,6 +18,8 @@ import {
   NotNull,
   PrimaryKey,
 } from "@sequelize/core/decorators-legacy"
+
+import arrayWrap from "@/utils/array-wrap"
 
 import BaseModel from "@/models/base-model"
 import User from "@/models/user"
@@ -109,6 +112,17 @@ export class Group extends BaseModel<InferAttributes<Group>, InferCreationAttrib
   // Scopes
   static establishScopes(): void {
     this.addSearchScope(["name", "acronym", "description"])
+
+    this.addScope("excludeById", (idOrIds: number) => {
+      const ids = arrayWrap(idOrIds)
+      return {
+        where: {
+          id: {
+            [Op.notIn]: ids,
+          },
+        },
+      }
+    })
   }
 }
 

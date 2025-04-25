@@ -21,6 +21,7 @@ export type GroupWhereOptions = WhereOptions<Group, "name" | "acronym" | "isHost
 
 export type GroupFiltersOptions = FiltersOptions<{
   search: string | string[]
+  excludeById: number | number[]
 }>
 
 export type GroupQueryOptions = QueryOptions<GroupWhereOptions, GroupFiltersOptions>
