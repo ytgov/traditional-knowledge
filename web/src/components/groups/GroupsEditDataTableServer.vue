@@ -9,6 +9,9 @@
     :loading="isLoading"
     @click:row="(_event: unknown, { item }: GroupTableRow) => goToGroupEdit(item.id)"
   >
+    <template #item.isHost="{ item }">
+      {{ item.isHost ? "Yes" : "No" }}
+    </template>
     <template #item.actions="{ item }">
       <div class="d-flex justify-end align-center">
         <v-btn
