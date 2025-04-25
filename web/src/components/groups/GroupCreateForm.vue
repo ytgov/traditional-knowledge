@@ -11,8 +11,7 @@
             cols="12"
             md="8"
           >
-            <!-- TODO: use unique checker component -->
-            <v-text-field
+            <GroupNameUniqueTextField
               v-model="groupAttributes.name"
               label="Name *"
               :rules="[required]"
@@ -89,6 +88,8 @@ import { VForm } from "vuetify/lib/components/index.mjs"
 import { required } from "@/utils/validators"
 import groupsApi, { type Group } from "@/api/groups-api"
 import useSnack from "@/use/use-snack"
+
+import GroupNameUniqueTextField from "@/components/groups/GroupNameUniqueTextField.vue"
 
 const snack = useSnack()
 const router = useRouter()
