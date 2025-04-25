@@ -8,16 +8,9 @@
           label="Search"
           density="compact"
         />
-        <!-- TODO: add group new page -->
-        <!-- <v-btn
-          color="primary"
-          :to="{ name: 'groups/GroupNewPage' }"
-          style="height: 40px"
-        >
-          New Group
-        </v-btn> -->
         <v-btn
           color="primary"
+          :to="{ name: 'administration/groups/GroupNewPage' }"
           style="height: 40px"
         >
           New Group
