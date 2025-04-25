@@ -117,7 +117,6 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "archive-items",
-        name: "archive-item/ArchiveItemListPage",
         children: [
           {
             path: "",
@@ -143,7 +142,6 @@ const routes: RouteRecordRaw[] = [
 
       {
         path: "decisions",
-        name: "decisions/DecisionListPage",
         children: [
           {
             path: "",
