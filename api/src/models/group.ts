@@ -52,7 +52,7 @@ export class Group extends BaseModel<InferAttributes<Group>, InferCreationAttrib
   @Attribute(DataTypes.BOOLEAN)
   @NotNull
   @Default(false)
-  declare isHost: boolean
+  declare isHost: CreationOptional<boolean>
 
   @Attribute(DataTypes.DATE(0))
   @NotNull
