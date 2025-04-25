@@ -10,7 +10,9 @@
         />
         <v-btn
           color="primary"
-          :to="{ name: 'administration/groups/GroupNewPage' }"
+          :to="{
+            name: 'administration/groups/GroupNewPage',
+          }"
           style="height: 40px"
         >
           New Group

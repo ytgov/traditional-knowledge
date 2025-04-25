@@ -107,7 +107,7 @@ const router = useRouter()
 
 function goToGroupEdit(groupId: number) {
   router.push({
-    name: "groups/GroupEditPage",
+    name: "administration/groups/GroupEditPage",
     params: {
       groupId,
     },
