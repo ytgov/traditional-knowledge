@@ -45,14 +45,6 @@
               variant="outlined"
             />
           </v-col>
-          <v-col cols="12">
-            <v-switch
-              v-model="group.isHost"
-              label="Is Host"
-              inset
-              color="primary"
-            />
-          </v-col>
         </v-row>
 
         <v-row>
