@@ -19,19 +19,28 @@
         </v-btn>
       </div>
 
-      <GroupsEditTable :search="search" />
+      <GroupsEditDataTableServer :filters="filters" />
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue"
+import { computed, ref } from "vue"
+import { isEmpty, isNil } from "lodash"
 
-import GroupsEditTable from "@/components/groups/GroupsEditDataTableServer.vue"
+import GroupsEditDataTableServer from "@/components/groups/GroupsEditDataTableServer.vue"
 
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
 
 const search = ref("")
+
+const filters = computed(() => {
+  if (isNil(search.value) || isEmpty(search.value)) return {}
+
+  return {
+    search: search.value,
+  }
+})
 
 useBreadcrumbs("Groups", [ADMIN_CRUMB])
 </script>
