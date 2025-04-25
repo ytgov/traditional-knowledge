@@ -2,7 +2,7 @@
   <v-card>
     <v-card-text>
       <div class="d-flex">
-        <v-text-field
+        <FilterSearchDebouncedTextField
           v-model="search"
           class="mb-4 mr-5"
           label="Search"
@@ -28,6 +28,7 @@
 import { computed, ref } from "vue"
 import { isEmpty, isNil } from "lodash"
 
+import FilterSearchDebouncedTextField from "@/components/common/tables/FilterSearchDebouncedTextField.vue"
 import GroupsEditDataTableServer from "@/components/groups/GroupsEditDataTableServer.vue"
 
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
