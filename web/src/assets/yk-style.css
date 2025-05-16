@@ -1,0 +1,156 @@
+body,
+h1,
+h2,
+h3,
+p,
+div {
+  color: #2e4336;
+}
+
+.bg-error div,
+.bg-error span .bg-error i {
+  color: white;
+}
+
+html {
+  font-size: 15px;
+}
+
+*,
+.text-body-1,
+.text-subtitle-1,
+.text-h6,
+.text-h4,
+.text-h5 {
+  font-family: Montserrat, Helvetica, Arial, sans-serif !important;
+}
+
+.text-h2 {
+  font-family: Montserrat, Helvetica, Arial, sans-serif !important;
+  font-size: 1.85rem !important;
+  line-height: 2rem !important;
+  font-weight: 400 !important;
+}
+
+.text-h3 {
+  font-family: Montserrat, Helvetica, Arial, sans-serif !important;
+  font-size: 1.5rem !important;
+  line-height: 2rem !important;
+  font-weight: 600 !important;
+}
+
+h1 {
+  display: block;
+  font-size: 2em;
+  font-weight: bold;
+  margin-block-start: 0.67em;
+  margin-block-end: 0.67em;
+}
+
+a {
+  text-decoration: none;
+  color: #00818f;
+}
+a:hover {
+  color: #00707c;
+}
+
+.page-wrapper {
+  background-color: #eee;
+  height: 100% !important;
+}
+/* 
+.v-card.default {
+    background-color: #fff2d5;
+} */
+
+.v-card.border {
+  border: 1px #8db19c solid !important;
+}
+
+.v-card.default .v-data-table {
+  border: 1px #e0d5bb solid;
+}
+
+.v-card.default .v-card__title {
+  font-size: 1rem;
+  line-height: 1.4rem;
+}
+
+.v-card-title {
+  font-size: 1.1rem;
+  line-height: 1.4rem;
+}
+
+ul.v-breadcrumbs {
+  padding-left: 0;
+}
+
+.text-error {
+  color: #f44336 !important;
+}
+
+.v-btn.v-size--small {
+  font-size: 14px;
+}
+
+.v-data-table.row-clickable > .v-data-table__wrapper > table > tbody > tr:hover > td {
+  cursor: pointer;
+}
+
+.v-toolbar.bg-primary .v-toolbar-title__placeholder,
+.v-toolbar.bg-warning .v-toolbar-title__placeholder {
+  color: white !important;
+}
+.v-breadcrumbs-item--disabled {
+  color: #323232 !important;
+  opacity: 80% !important;
+}
+
+table.table {
+  width: 100%;
+  text-align: left;
+  margin-top: 10px;
+  font-size: 1.05em;
+}
+
+.v-alert.bg-yg_blue .v-alert-title,
+.v-alert.bg-yg_blue .v-alert__content,
+.v-alert.bg-yg_blue .v-alert__prepend,
+.v-alert.bg-yg_blue .v-alert__close {
+  color: white !important;
+}
+
+.v-card.elevation-0,
+.v-alert.elevation-0 {
+  border: 1px #d7cfbe solid;
+}
+
+.display-table {
+  background-color: white;
+  border-bottom: 1px #ccc solid;
+}
+.display-table th {
+  width: 40%;
+  border: 1px #ccc solid;
+  border-bottom: 0px;
+  border-right: 0px;
+  padding: 3px 6px;
+  font-weight: 400;
+}
+.display-table td {
+  width: 60%;
+  border: 1px #ccc solid;
+  border-bottom: 0px;
+  padding: 3px 6px;
+  font-weight: 400;
+}
+
+.dp__main input {
+  height: 50px;
+  display: flex;
+}
+
+.dp__input_wrap {
+  box-sizing: inherit;
+}

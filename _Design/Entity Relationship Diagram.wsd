@@ -1,0 +1,31 @@
+@startuml Entity Relationship Diagram
+top to bottom direction
+
+entity "users" {
+  * id : int [PK]
+  --
+  * email : nvarchar(100)
+  * auth_subject : nvarchar(100)
+  * first_name : nvarchar(100)
+  * last_name : nvarchar(100)
+  * display_name : nvarchar(200)
+  * roles : nvarchar(255) - comma separated pseudo array
+  [title] : nvarchar(100)
+  * department : nvarchar(100)
+  division : nvarchar(100)
+  branch : nvarchar(100)
+  unit : nvarchar(100)
+  * is_active : bit
+  * created_at : datetime2(0)
+  * updated_at : datetime2(0)
+  deleted_at : datetime2(0)
+}
+
+' Relationships
+' add in the format xxx:id }o..|| yyy:xxx_id
+
+note as Disclaimer
+PlantUML URL: https://plantuml.com/ie-diagram
+This diagram may be out of date and should be verified against the current database schema.
+end note
+@enduml

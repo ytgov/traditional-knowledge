@@ -1,0 +1,26 @@
+@startuml Sign In Flow Diagram
+start
+
+:User tries to access the app;
+
+if (URL contains "code="?) then (yes)
+:Consume token and validate user;
+:Redirect user to the app root or page user requested;
+:Validate user again;
+:user is valid;
+else (no)
+:Try to validate the user;
+if (Validation fails?) then (yes)
+  :Redirect user to Auth0 sign-in page;
+  :User signs in on Auth0 page;
+  :Auth0 sign-in page redirects user to app;
+  :URL now has "code=" in it - return to check for "code=" in URL - see top;
+else (no)
+  :user is valid;
+endif
+endif
+
+:Auth0 instance can now be used to get an API token;
+
+stop
+@enduml
