@@ -10,7 +10,10 @@
     @click:row="(_event: unknown, { item }: UserGroupTableRow) => goToGroupUserPage(item.id)"
   >
     <template #item.actions="{ item }">
-      <div class="d-flex justify-end align-center">
+      <div
+        v-if="isSystemAdmin || isGroupAdminFor(item.id)"
+        class="d-flex justify-end align-center"
+      >
         <v-btn
           class="ml-2"
           :loading="isDeleting"
@@ -34,6 +37,8 @@ import { useRouter } from "vue-router"
 import userGroupsApi from "@/api/user-groups-api"
 import useVuetifySortByToSafeRouteQuery from "@/use/utils/use-vuetify-sort-by-to-safe-route-query"
 import useVuetifySortByToSequelizeSafeOrder from "@/use/utils/use-vuetify-sort-by-to-sequelize-safe-order"
+
+import useCurrentUser from "@/use/use-current-user"
 import useSnack from "@/use/use-snack"
 import useUserGroups, {
   type UserGroupAsIndex,
@@ -116,6 +121,8 @@ const userGroupsQuery = computed(() => ({
 }))
 
 const { userGroups, totalCount, isLoading, refresh } = useUserGroups(userGroupsQuery)
+
+const { isSystemAdmin, isGroupAdminFor } = useCurrentUser<true>()
 
 const router = useRouter()
 

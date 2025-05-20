@@ -13,7 +13,10 @@
       {{ item.isHost ? "Yes" : "No" }}
     </template>
     <template #item.actions="{ item }">
-      <div class="d-flex justify-end align-center">
+      <div
+        v-if="isSystemAdmin || isGroupAdminFor(item.id)"
+        class="d-flex justify-end align-center"
+      >
         <v-btn
           :to="{
             name: 'administration/groups/GroupEditPage',
@@ -52,6 +55,8 @@ import { useRouteQuery } from "@vueuse/router"
 import groupsApi from "@/api/groups-api"
 import useVuetifySortByToSafeRouteQuery from "@/use/utils/use-vuetify-sort-by-to-safe-route-query"
 import useVuetifySortByToSequelizeSafeOrder from "@/use/utils/use-vuetify-sort-by-to-sequelize-safe-order"
+
+import useCurrentUser from "@/use/use-current-user"
 import useSnack from "@/use/use-snack"
 import useGroups, {
   type Group,
@@ -120,6 +125,8 @@ const groupsQuery = computed(() => ({
 }))
 
 const { groups, totalCount, isLoading, refresh } = useGroups(groupsQuery)
+
+const { isSystemAdmin, isGroupAdminFor } = useCurrentUser<true>()
 
 const router = useRouter()
 

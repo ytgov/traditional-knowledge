@@ -1,14 +1,15 @@
 <template>
   <v-card>
     <v-card-text>
-      <div class="d-flex">
+      <div class="d-flex mb-4">
         <FilterSearchDebouncedTextField
           v-model="search"
-          class="mb-4 mr-5"
           label="Search"
           density="compact"
         />
         <v-btn
+          v-if="isSystemAdmin"
+          class="ml-5"
           color="primary"
           :to="{
             name: 'administration/groups/GroupNewPage',
@@ -32,6 +33,7 @@ import FilterSearchDebouncedTextField from "@/components/common/tables/FilterSea
 import GroupsEditDataTableServer from "@/components/groups/GroupsEditDataTableServer.vue"
 
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
+import useCurrentUser from "@/use/use-current-user"
 
 const search = ref("")
 
@@ -42,6 +44,8 @@ const filters = computed(() => {
     search: search.value,
   }
 })
+
+const { isSystemAdmin } = useCurrentUser<true>()
 
 useBreadcrumbs("Groups", [ADMIN_CRUMB])
 </script>

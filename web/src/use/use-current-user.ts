@@ -1,5 +1,5 @@
 import { computed, reactive, toRefs, unref } from "vue"
-import { isNil } from "lodash"
+import { isNil, isUndefined } from "lodash"
 import { DateTime } from "luxon"
 
 import currentUserApi from "@/api/current-user-api"
@@ -90,6 +90,20 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
     state.isCached = false
   }
 
+  // Helper functions
+  function isGroupAdminFor(groupId: number) {
+    if (isNil(state.currentUser)) {
+      throw new Error("Expected currentUser to be non-null")
+    }
+
+    const { userGroups } = state.currentUser
+    if (isUndefined(userGroups)) {
+      throw new Error("Expected currentUser to have a userGroups association")
+    }
+
+    return userGroups.some((userGroup) => userGroup.isAdmin && userGroup.groupId === groupId)
+  }
+
   return {
     ...toRefs(state as StateOrLoadedState),
     isReady,
@@ -101,6 +115,8 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
     isSystemAdmin,
     isGroupAdmin,
     isAdmin,
+    // Helper functions
+    isGroupAdminFor,
   }
 }
 
