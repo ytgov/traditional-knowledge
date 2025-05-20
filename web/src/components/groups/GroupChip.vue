@@ -43,7 +43,9 @@
               dense
             >
               <v-col cols="12">
-                Description: <strong>{{ group.description }}</strong>
+                Description:
+                <strong v-if="!isEmpty(group.description)">{{ group.description }}</strong>
+                <em v-else>&lt;unset&gt;</em>
               </v-col>
             </v-row>
           </v-card-text>
@@ -55,7 +57,7 @@
 
 <script lang="ts" setup>
 import { computed, toRefs } from "vue"
-import { isNil } from "lodash"
+import { isEmpty, isNil } from "lodash"
 
 import { VChip } from "vuetify/lib/components/index.mjs"
 
