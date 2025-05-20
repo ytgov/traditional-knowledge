@@ -90,8 +90,7 @@ const props = withDefaults(
     }),
     editButtonProps: ({ informationSharingAgreementId }) => ({
       to: {
-        // TODO: update once appropriate page exists.
-        name: "administration/groups/GroupEditPage",
+        name: "administration/information-sharing-agreements/InformationSharingAgreementEditPage",
         params: {
           informationSharingAgreementId,
         },

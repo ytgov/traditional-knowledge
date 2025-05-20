@@ -28,9 +28,9 @@
       <div class="d-flex justify-end align-center">
         <v-btn
           :to="{
-            name: 'administration/groups/GroupEditPage',
+            name: 'administration/information-sharing-agreements/InformationSharingAgreementEditPage',
             params: {
-              groupId: item.id,
+              informationSharingAgreementId: item.id,
             },
           }"
           :loading="isDeleting"

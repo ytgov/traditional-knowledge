@@ -34,10 +34,9 @@ const editButtonProps = computed(() => {
 
   return {
     to: {
-      // TODO: update once appropriate page exists.
-      name: "administration/groups/GroupEditPage",
+      name: "administration/information-sharing-agreements/InformationSharingAgreementEditPage",
       params: {
-        groupId: props.informationSharingAgreementId,
+        informationSharingAgreementId: props.informationSharingAgreementId,
       },
       query: {
         returnTo: routeLocation.href,
