@@ -1,10 +1,9 @@
 <template>
   <v-card>
     <v-card-text>
-      <div class="d-flex">
+      <div class="d-flex flex-wrap ga-4 mb-4">
         <FilterSearchDebouncedTextField
           v-model="search"
-          class="mb-4 mr-5"
           label="Search"
           density="compact"
         />
@@ -15,7 +14,7 @@
           }"
           style="height: 40px"
         >
-          New Information Sharing Agreement
+          <span class="text-pre-wrap">New Information Sharing Agreement</span>
         </v-btn>
       </div>
 

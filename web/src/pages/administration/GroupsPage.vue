@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-text>
-      <div class="d-flex mb-4">
+      <div class="d-flex flex-wrap ga-4 mb-4">
         <FilterSearchDebouncedTextField
           v-model="search"
           label="Search"
@@ -9,7 +9,6 @@
         />
         <v-btn
           v-if="isSystemAdmin"
-          class="ml-5"
           color="primary"
           :to="{
             name: 'administration/groups/GroupNewPage',
