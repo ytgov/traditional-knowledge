@@ -1,30 +1,13 @@
 <template>
-  <div class="d-flex">
-    <v-text-field
-      v-model="search"
-      class="mb-4 mr-5"
-      label="Search"
-      density="compact"
-    />
-    <v-btn
-      color="primary"
-      :to="{ name: 'users/UserNewPage' }"
-      style="height: 40px"
-    >
-      New User
-    </v-btn>
-  </div>
-
   <v-data-table-server
     v-model:items-per-page="perPage"
-    :search="search"
-    :page="page"
+    v-model:page="page"
+    v-model:sort-by="sortBy"
     :headers="headers"
     :items="users"
     :items-length="totalCount"
     :loading="isLoading"
-    @update:page="updatePage"
-    @click:row="(_event: unknown, { item }: UserTableRow) => goToUserEdit(item.id)"
+    @click:row="(_event: unknown, { item }: UserTableRow) => goToUserEditPage(item.id)"
   >
     <template #item.actions="{ item }">
       <div class="d-flex justify-end align-center">
@@ -33,11 +16,10 @@
           title="Delete"
           icon="mdi-delete"
           size="x-small"
-          class="ml-2"
           color="error"
           variant="outlined"
-          @click="confirmThenDelete(item)"
-        ></v-btn>
+          @click.stop="confirmThenDelete(item)"
+        />
       </div>
     </template>
   </v-data-table-server>
@@ -47,24 +29,51 @@
 import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
+import { useRouteQuery } from "@vueuse/router"
+
+import useVuetifySortByToSafeRouteQuery from "@/use/utils/use-vuetify-sort-by-to-safe-route-query"
+import useVuetifySortByToSequelizeSafeOrder from "@/use/utils/use-vuetify-sort-by-to-sequelize-safe-order"
 
 import usersApi from "@/api/users-api"
 import useSnack from "@/use/use-snack"
-import useUsers, { User } from "@/use/use-users"
-import { useRouteQuery } from "@vueuse/router"
+import useUsers, {
+  type User,
+  type UserFiltersOptions,
+  type UserWhereOptions,
+} from "@/use/use-users"
 
 type UserTableRow = {
   item: User
 }
 
+const props = withDefaults(
+  defineProps<{
+    filters?: UserFiltersOptions
+    where?: UserWhereOptions
+    routeQuerySuffix?: string
+  }>(),
+  {
+    filters: () => ({}),
+    where: () => ({}),
+    routeQuerySuffix: "",
+  }
+)
+
 const { t } = useI18n()
 
-const search = ref()
-
 const headers = ref([
-  { title: "Display Name", key: "displayName" },
-  { title: "Email", key: "email" },
-  { title: "Title", key: "title" },
+  {
+    title: "Display Name",
+    key: "displayName",
+  },
+  {
+    title: "Email",
+    key: "email",
+  },
+  {
+    title: "Title",
+    key: "title",
+  },
   {
     title: "Department",
     key: "department",
@@ -81,25 +90,43 @@ const headers = ref([
       const formatedRoleTypes = roles.map((role) => t(`user.roles.${role}`, role))
       return formatedRoleTypes.join(", ")
     },
+    sortable: false,
   },
-  { title: "", key: "actions" },
+  {
+    title: "Actions",
+    key: "actions",
+    sortable: false,
+  },
 ])
 
-const router = useRouter()
-const page = useRouteQuery("page", "1", { transform: Number })
-const perPage = useRouteQuery("perPage", "10", { transform: Number })
+const page = useRouteQuery(`page${props.routeQuerySuffix}`, "1", { transform: Number })
+const perPage = useRouteQuery(`perPage${props.routeQuerySuffix}`, "10", { transform: Number })
+const sortBy = useVuetifySortByToSafeRouteQuery(`sortBy${props.routeQuerySuffix}`, [
+  {
+    key: "displayName",
+    order: "asc",
+  },
+])
+const order = useVuetifySortByToSequelizeSafeOrder(sortBy)
 
 const usersQuery = computed(() => ({
+  filters: props.filters,
+  where: props.where,
+  order: order.value,
   perPage: perPage.value,
   page: page.value,
 }))
 
 const { users, totalCount, isLoading, refresh } = useUsers(usersQuery)
 
-function goToUserEdit(userId: number) {
-  router.push({
+const router = useRouter()
+
+function goToUserEditPage(userId: number) {
+  return router.push({
     name: "users/UserEditPage",
-    params: { userId },
+    params: {
+      userId,
+    },
   })
 }
 
@@ -116,20 +143,14 @@ async function confirmThenDelete(user: User) {
     await usersApi.delete(user.id)
     await refresh()
   } catch (error) {
-    console.error(error)
-    snack.error(`Failed to load directory: ${error}`)
+    console.error(`Failed to delete user: ${error}`, { error })
+    snack.error(`Failed to delete user: ${error}`)
   } finally {
     isDeleting.value = false
   }
 }
 
-// Necessary to avoid wiping page value due to bug in Vuetify table implementation
-// which causes page value to be wiped if changed during loading state.
-function updatePage(newPage: number) {
-  if (isLoading.value) return
-
-  page.value = newPage
-}
-
-defineExpose({ refresh })
+defineExpose({
+  refresh,
+})
 </script>
