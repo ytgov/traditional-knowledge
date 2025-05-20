@@ -19,12 +19,14 @@ export class GroupPolicy extends PolicyFactory(Group) {
 
   update(): boolean {
     if (this.user.isSystemAdmin) return true
+    if (this.user.isGroupAdminOf(this.record.id)) return true
 
     return false
   }
 
   destroy(): boolean {
     if (this.user.isSystemAdmin) return true
+    if (this.user.isGroupAdminOf(this.record.id)) return true
 
     return false
   }

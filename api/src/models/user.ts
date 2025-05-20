@@ -120,6 +120,14 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     return this.roles?.some((role) => role === UserRoles.SYSTEM_ADMIN)
   }
 
+  get isGroupAdmin(): NonAttribute<boolean | undefined> {
+    if (isUndefined(this.userGroups)) {
+      throw new Error("Expected userGroups association to be pre-loaded.")
+    }
+
+    return this.userGroups.some((userGroup) => userGroup.isAdmin)
+  }
+
   get categories(): NonAttribute<number[]> {
     if (this.userPermissions) {
       return this.userPermissions
