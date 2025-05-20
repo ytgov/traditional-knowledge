@@ -1,5 +1,5 @@
 import { computed, reactive, toRefs, unref } from "vue"
-import { isNil, isUndefined } from "lodash"
+import { isEmpty, isNil, isUndefined } from "lodash"
 import { DateTime } from "luxon"
 
 import currentUserApi from "@/api/current-user-api"
@@ -35,9 +35,10 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
   const isSystemAdmin = computed(() => {
     return state.currentUser?.roles.includes(UserRoles.SYSTEM_ADMIN)
   })
-  const isGroupAdmin = computed(() =>
-    state.currentUser?.userGroups?.some((userGroup) => userGroup.isAdmin)
-  )
+  const isGroupAdmin = computed(() => !isEmpty(state.currentUser?.adminGroups))
+  const isCreatorGroupAdmin = computed(() => {
+    return state.currentUser?.adminGroups?.some((group) => !group.isHost)
+  })
   const isAdmin = computed(() => isSystemAdmin.value || isGroupAdmin.value)
 
   async function fetch(): Promise<User> {
@@ -96,12 +97,12 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
       throw new Error("Expected currentUser to be non-null")
     }
 
-    const { userGroups } = state.currentUser
-    if (isUndefined(userGroups)) {
-      throw new Error("Expected currentUser to have a userGroups association")
+    const { adminGroups } = state.currentUser
+    if (isUndefined(adminGroups)) {
+      throw new Error("Expected currentUser to have a adminGroups association")
     }
 
-    return userGroups.some((userGroup) => userGroup.isAdmin && userGroup.groupId === groupId)
+    return adminGroups.some((group) => group.id === groupId)
   }
 
   return {
@@ -112,9 +113,10 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
     reset,
     save,
     // Computed properties
-    isSystemAdmin,
-    isGroupAdmin,
     isAdmin,
+    isCreatorGroupAdmin,
+    isGroupAdmin,
+    isSystemAdmin,
     // Helper functions
     isGroupAdminFor,
   }

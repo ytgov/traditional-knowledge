@@ -1,10 +1,15 @@
+import { Includeable } from "@sequelize/core"
+
 import { auth0Integration } from "@/integrations"
 import { User } from "@/models"
 import BaseService from "@/services/base-service"
 import CreateService from "@/services/users/create-service"
 
 export class EnsureFromAuth0TokenService extends BaseService {
-  constructor(private token: string) {
+  constructor(
+    private token: string,
+    private include?: Includeable | Includeable[]
+  ) {
     super()
   }
 
@@ -15,7 +20,7 @@ export class EnsureFromAuth0TokenService extends BaseService {
 
     const existingUser = await User.findOne({
       where: { auth0Subject },
-      include: ["userGroups", "userPermissions"],
+      include: this.include,
     })
 
     if (existingUser) {
@@ -24,7 +29,7 @@ export class EnsureFromAuth0TokenService extends BaseService {
 
     const firstTimeUser = await User.findOne({
       where: { auth0Subject: email },
-      include: ["userGroups", "userPermissions"],
+      include: this.include,
     })
     if (firstTimeUser) {
       await firstTimeUser.update({ auth0Subject })
@@ -40,7 +45,7 @@ export class EnsureFromAuth0TokenService extends BaseService {
     const newUser = await User.findOne({
       where: { auth0Subject },
       rejectOnEmpty: true,
-      include: ["userGroups", "userPermissions"],
+      include: this.include,
     })
     return newUser
   }

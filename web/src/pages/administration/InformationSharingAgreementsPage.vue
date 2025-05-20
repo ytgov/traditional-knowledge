@@ -8,6 +8,7 @@
           density="compact"
         />
         <v-btn
+          v-if="isSystemAdmin || isCreatorGroupAdmin"
           color="primary"
           :to="{
             name: 'administration/information-sharing-agreements/InformationSharingAgreementNewPage',
@@ -28,9 +29,12 @@ import { computed, ref } from "vue"
 import { isEmpty, isNil } from "lodash"
 
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
+import useCurrentUser from "@/use/use-current-user"
 
 import FilterSearchDebouncedTextField from "@/components/common/tables/FilterSearchDebouncedTextField.vue"
 import InformationSharingAgreementsEditDataTableServer from "@/components/information-sharing-agreements/InformationSharingAgreementsEditDataTableServer.vue"
+
+const { isSystemAdmin, isCreatorGroupAdmin } = useCurrentUser()
 
 const search = ref("")
 
@@ -42,5 +46,5 @@ const filters = computed(() => {
   }
 })
 
-useBreadcrumbs("Groups", [ADMIN_CRUMB])
+useBreadcrumbs("Information Sharing Agreements", [ADMIN_CRUMB])
 </script>

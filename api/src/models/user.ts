@@ -18,7 +18,7 @@ import {
   PrimaryKey,
   ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
-import { isNil, isUndefined } from "lodash"
+import { isEmpty, isNil, isUndefined } from "lodash"
 
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
@@ -121,11 +121,11 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   }
 
   get isGroupAdmin(): NonAttribute<boolean | undefined> {
-    if (isUndefined(this.userGroups)) {
-      throw new Error("Expected userGroups association to be pre-loaded.")
+    if (isUndefined(this.adminGroups)) {
+      throw new Error("Expected adminGroups association to be pre-loaded.")
     }
 
-    return this.userGroups.some((userGroup) => userGroup.isAdmin)
+    return !isEmpty(this.adminGroups)
   }
 
   get categories(): NonAttribute<number[]> {
@@ -148,11 +148,11 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
 
   // Helper functions
   isGroupAdminOf(groupId: number): boolean {
-    if (isUndefined(this.userGroups)) {
-      throw new Error("Expected userGroups association to be pre-loaded.")
+    if (isUndefined(this.adminGroups)) {
+      throw new Error("Expected adminGroups association to be pre-loaded.")
     }
 
-    return this.userGroups.some((userGroup) => userGroup.groupId === groupId && userGroup.isAdmin)
+    return this.adminGroups.some((group) => group.id === groupId)
   }
 
   // Associations
