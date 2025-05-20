@@ -174,6 +174,27 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   })
   declare userPermissions?: NonAttribute<UserPermission[]>
 
+  @HasMany(() => UserGroup, {
+    foreignKey: {
+      name: "userId",
+      allowNull: false,
+    },
+    inverse: "user",
+  })
+  declare userGroups?: NonAttribute<UserGroup[]>
+
+  @HasMany(() => UserGroup, {
+    foreignKey: {
+      name: "userId",
+      allowNull: false,
+    },
+    inverse: "user",
+    scope: {
+      isAdmin: true,
+    },
+  })
+  declare adminUserGroups?: NonAttribute<UserGroup[]>
+
   @BelongsToMany(() => Group, {
     through: () => UserGroup,
     foreignKey: "userId",
@@ -193,6 +214,21 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
    * See https://sequelize.org/docs/v7/querying/select-in-depth/#eager-loading-the-belongstomany-through-model
    */
   declare userGroup?: NonAttribute<UserGroup>
+
+  @BelongsToMany(() => Group, {
+    through: {
+      model: () => UserGroup,
+      scope: {
+        isAdmin: true,
+      },
+    },
+    foreignKey: "userId",
+    otherKey: "groupId",
+    // TODO: set inverse to "adminUsers" once https://github.com/sequelize/sequelize/issues/16034 is fixed
+    // This workaround is necessary because the inverse fails to define symetrically so is never valid.
+    inverse: "inverseAdminGroups",
+  })
+  declare adminGroups?: NonAttribute<Group[]>
 
   // Scopes
   static establishScopes(): void {
