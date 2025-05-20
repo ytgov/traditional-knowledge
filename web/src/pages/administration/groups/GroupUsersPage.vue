@@ -11,7 +11,7 @@
       :to="{
         name: 'administration/groups/GroupUserNewPage',
         params: {
-          groupId: props.groupId,
+          groupId,
         },
       }"
       style="height: 40px"
