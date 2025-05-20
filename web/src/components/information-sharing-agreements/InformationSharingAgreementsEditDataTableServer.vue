@@ -12,6 +12,18 @@
         goToInformationSharingAgreementPage(item.id)
     "
   >
+    <template #item.sharingGroupId="{ value }">
+      <GroupChip :group-id="value" />
+    </template>
+    <template #item.sharingGroupContactId="{ value }">
+      <UserChip :user-id="value" />
+    </template>
+    <template #item.receivingGroupId="{ value }">
+      <GroupChip :group-id="value" />
+    </template>
+    <template #item.receivingGroupContactId="{ value }">
+      <UserChip :user-id="value" />
+    </template>
     <template #item.actions="{ item }">
       <div class="d-flex justify-end align-center">
         <v-btn
@@ -49,6 +61,8 @@ import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 import { useRouteQuery } from "@vueuse/router"
 
+import { formatDate } from "@/utils/formatters"
+
 import informationSharingAgreementsApi from "@/api/information-sharing-agreements-api"
 import useVuetifySortByToSafeRouteQuery from "@/use/utils/use-vuetify-sort-by-to-safe-route-query"
 import useVuetifySortByToSequelizeSafeOrder from "@/use/utils/use-vuetify-sort-by-to-sequelize-safe-order"
@@ -58,6 +72,9 @@ import useInformationSharingAgreements, {
   type InformationSharingAgreementWhereOptions,
   type InformationSharingAgreementFiltersOptions,
 } from "@/use/use-information-sharing-agreements"
+
+import GroupChip from "@/components/groups/GroupChip.vue"
+import UserChip from "@/components/users/UserChip.vue"
 
 type InformationSharingAgreementTableRow = {
   item: InformationSharingAgreement
@@ -100,10 +117,18 @@ const headers = ref([
   {
     title: "Start Date",
     key: "startDate",
+    value: (item: unknown) => {
+      const { startDate } = item as InformationSharingAgreement
+      return formatDate(startDate)
+    },
   },
   {
     title: "End Date",
     key: "endDate",
+    value: (item: unknown) => {
+      const { endDate } = item as InformationSharingAgreement
+      return formatDate(endDate)
+    },
   },
   {
     title: "Creator",
