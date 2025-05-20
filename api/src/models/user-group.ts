@@ -1,5 +1,7 @@
 import {
+  Attributes,
   DataTypes,
+  FindOptions,
   sql,
   type CreationOptional,
   type InferAttributes,
@@ -14,6 +16,9 @@ import {
   NotNull,
   PrimaryKey,
 } from "@sequelize/core/decorators-legacy"
+
+import arrayWrap from "@/utils/array-wrap"
+import whereFieldsOptionallyLikeTerms from "@/utils/search/where-fields-optionally-like-terms"
 
 import BaseModel from "@/models/base-model"
 import User from "@/models/user"
@@ -97,7 +102,36 @@ export class UserGroup extends BaseModel<
 
   // Scopes
   static establishScopes(): void {
-    // add as needed
+    this.addScope(
+      "searchUser",
+      (termOrTerms: string | string[]): FindOptions<Attributes<UserGroup>> => {
+        const terms = arrayWrap(termOrTerms)
+        if (terms.length === 0) {
+          return {}
+        }
+
+        const associatedUserFields = [
+          "user.display_name",
+          "user.email",
+          "user.first_name",
+          "user.last_name",
+        ]
+        const associatedUserFieldsOptionallyLikeTerms = whereFieldsOptionallyLikeTerms(
+          associatedUserFields,
+          terms
+        )
+
+        return {
+          where: associatedUserFieldsOptionallyLikeTerms,
+          include: [
+            {
+              association: "user",
+              required: false,
+            },
+          ],
+        }
+      }
+    )
   }
 }
 
