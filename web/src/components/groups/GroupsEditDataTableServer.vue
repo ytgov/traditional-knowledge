@@ -13,11 +13,9 @@
       {{ item.isHost ? "Yes" : "No" }}
     </template>
     <template #item.actions="{ item }">
-      <div
-        v-if="isSystemAdmin || isGroupAdminFor(item.id)"
-        class="d-flex justify-end align-center"
-      >
+      <div class="d-flex justify-end align-center">
         <v-btn
+          v-if="isSystemAdmin || isGroupAdminFor(item.id)"
           :to="{
             name: 'administration/groups/GroupEditPage',
             params: {
@@ -33,6 +31,7 @@
           @click.stop
         />
         <v-btn
+          v-if="isSystemAdmin"
           class="ml-2"
           :loading="isDeleting"
           title="Delete"
