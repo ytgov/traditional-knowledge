@@ -49,9 +49,8 @@ const username = computed(() => {
 function signOut() {
   resetCurrentUser()
 
-  // I would prefer to redirect to /sign-in here, but that requires updating the auth0 application settings
-  // const returnTo = encodeURI(window.location.origin + "/sign-in")
-  const returnTo = window.location.origin
+  // NOTE: requires updating the auth0 application settings to include /sign-in as a valid logout location.
+  const returnTo = encodeURI(window.location.origin + "/sign-in")
   return logout({
     logoutParams: {
       returnTo,
