@@ -35,6 +35,9 @@
             cols="12"
             md="6"
           >
+            <div class="mb-6">
+              Sharing Group: <GroupChip :group-id="informationSharingAgreement.sharingGroupId" />
+            </div>
             <UserSearchableAutocomplete
               v-model="informationSharingAgreement.sharingGroupContactId"
               label="Sharing Group Contact *"
@@ -48,6 +51,9 @@
             cols="12"
             md="6"
           >
+            <div class="mb-6">
+              Receiving Group: <GroupChip :group-id="informationSharingAgreement.receivingGroupId" />
+            </div>
             <UserSearchableAutocomplete
               v-model="informationSharingAgreement.receivingGroupContactId"
               label="Receiving Group Contact *"
@@ -120,6 +126,7 @@ import { required } from "@/utils/validators"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import useSnack from "@/use/use-snack"
 
+import GroupChip from "@/components/groups/GroupChip.vue"
 import UserSearchableAutocomplete from "@/components/users/UserSearchableAutocomplete.vue"
 
 type CancelButtonOptions = VBtn["$props"]
