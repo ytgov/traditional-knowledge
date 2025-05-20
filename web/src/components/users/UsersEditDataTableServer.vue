@@ -12,6 +12,7 @@
     <template #item.actions="{ item }">
       <div class="d-flex justify-end align-center">
         <v-btn
+          v-if="isSystemAdmin"
           :loading="isDeleting"
           title="Delete"
           icon="mdi-delete"
@@ -35,6 +36,7 @@ import useVuetifySortByToSafeRouteQuery from "@/use/utils/use-vuetify-sort-by-to
 import useVuetifySortByToSequelizeSafeOrder from "@/use/utils/use-vuetify-sort-by-to-sequelize-safe-order"
 
 import usersApi from "@/api/users-api"
+import useCurrentUser from "@/use/use-current-user"
 import useSnack from "@/use/use-snack"
 import useUsers, {
   type User,
@@ -118,6 +120,8 @@ const usersQuery = computed(() => ({
 }))
 
 const { users, totalCount, isLoading, refresh } = useUsers(usersQuery)
+
+const { isSystemAdmin } = useCurrentUser()
 
 const router = useRouter()
 

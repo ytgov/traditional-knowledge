@@ -8,6 +8,7 @@
           density="compact"
         />
         <v-btn
+          v-if="isSystemAdmin"
           color="primary"
           :to="{ name: 'users/UserNewPage' }"
           style="height: 40px"
@@ -26,8 +27,11 @@ import { computed, ref } from "vue"
 import { isEmpty, isNil } from "lodash"
 
 import { ADMIN_CRUMB, useBreadcrumbs } from "@/use/use-breadcrumbs"
+import useCurrentUser from "@/use/use-current-user"
 
 import UsersEditDataTableServer from "@/components/users/UsersEditDataTableServer.vue"
+
+const { isSystemAdmin } = useCurrentUser()
 
 const search = ref("")
 
