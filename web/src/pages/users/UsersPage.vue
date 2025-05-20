@@ -2,7 +2,7 @@
   <v-card>
     <v-card-text>
       <div class="d-flex flex-wrap ga-4 mb-4">
-        <v-text-field
+        <FilterSearchDebouncedTextField
           v-model="search"
           label="Search"
           density="compact"
@@ -29,6 +29,7 @@ import { isEmpty, isNil } from "lodash"
 import { ADMIN_CRUMB, useBreadcrumbs } from "@/use/use-breadcrumbs"
 import useCurrentUser from "@/use/use-current-user"
 
+import FilterSearchDebouncedTextField from "@/components/common/tables/FilterSearchDebouncedTextField.vue"
 import UsersEditDataTableServer from "@/components/users/UsersEditDataTableServer.vue"
 
 const { isSystemAdmin } = useCurrentUser()
