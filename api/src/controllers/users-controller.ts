@@ -6,7 +6,6 @@ import { UsersPolicy } from "@/policies"
 import { CreateService } from "@/services/users"
 import { IndexSerializer, ShowSerializer } from "@/serializers/users"
 import BaseController from "@/controllers/base-controller"
-import MergeService from "@/services/user-permissions/merge-service"
 
 export class UsersController extends BaseController<User> {
   async index() {
@@ -96,12 +95,6 @@ export class UsersController extends BaseController<User> {
           message: "You are not authorized to update this user",
         })
       }
-
-      MergeService.perform({
-        user,
-        categoryIds: this.request.body.categories,
-        sourceIds: this.request.body.sources,
-      })
 
       const permittedAttributes = policy.permitAttributes(this.request.body)
       await user.update(permittedAttributes)

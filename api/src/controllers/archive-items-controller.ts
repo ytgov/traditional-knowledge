@@ -1,10 +1,11 @@
+import { isNil } from "lodash"
+
 import logger from "@/utils/logger"
-import { ArchiveItem, ArchiveItemAudit, ArchiveItemFile, Category } from "@/models"
+import { ArchiveItem, ArchiveItemAudit } from "@/models"
 import { ArchiveItemsPolicy } from "@/policies"
+import { CreateService } from "@/services/archive-items"
 import { IndexSerializer, ShowSerializer } from "@/serializers/archive-items"
 import BaseController from "@/controllers/base-controller"
-import { CreateService, UsersFor } from "@/services/archive-items"
-import { isNil } from "lodash"
 
 export class ArchiveItemsController extends BaseController<ArchiveItem> {
   async index() {
@@ -47,9 +48,8 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
 
       const archiveItem = await CreateService.perform({
         ...permittedAttributes,
-        categoryIds: this.request.body.categories,
         files: this.request.body.files,
-        currentUser: this.request.currentUser,
+        currentUser: this.currentUser,
       })
 
       await ArchiveItemAudit.create({
@@ -84,7 +84,6 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
         })
       }
 
-      console.log("archiveItem", archiveItem.users?.length)
       const serializedItem = ShowSerializer.perform(archiveItem)
 
       await ArchiveItemAudit.create({
@@ -105,10 +104,10 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
 
   private async loadArchiveItem() {
     const item = await ArchiveItem.findByPk(this.params.id, {
-      include: [{ model: Category }, { model: ArchiveItemFile }, "user", "source"],
+      include: ["files", "user", "source"],
     })
     if (isNil(item)) return null
-    item.users = await UsersFor.perform(item)
+
     return item
   }
 

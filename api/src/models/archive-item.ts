@@ -10,7 +10,6 @@ import {
   Attribute,
   AutoIncrement,
   BelongsTo,
-  BelongsToMany,
   Default,
   HasMany,
   NotNull,
@@ -21,10 +20,7 @@ import { isEmpty, isNil } from "lodash"
 
 import BaseModel from "@/models/base-model"
 import ArchiveItemFile from "@/models/archive-item-file"
-import Category from "./category"
-import ArchiveItemCategory from "./archive-item-category"
-import User from "./user"
-import Source from "./source"
+import User from "@/models/user"
 
 /** Keep in sync with web/src/api/users-api.ts */
 export enum SecurityLevel {
@@ -161,16 +157,6 @@ export class ArchiveItem extends BaseModel<
   @BelongsTo(() => User, { foreignKey: "userId" })
   declare user?: NonAttribute<User>
 
-  @BelongsTo(() => Source, { foreignKey: "sourceId" })
-  declare source?: NonAttribute<Source>
-
-  @BelongsToMany(() => Category, {
-    through: { model: ArchiveItemCategory },
-  })
-  declare categories?: NonAttribute<Category[]>
-
-  declare users?: NonAttribute<User[]>
-
   // Scopes
   static establishScopes(): void {
     this.addSearchScope(["title", "description", "tags"])
@@ -183,13 +169,17 @@ export class ArchiveItem extends BaseModel<
       attributes: {
         include: [
           [
-            sql`(
-              SELECT COUNT(*)
-              FROM archive_item_files
-              WHERE
-                archive_item_files.archive_item_id = ${tableAlias}.id AND
-                archive_item_files.deleted_at IS NULL
-            )`,
+            sql`
+              (
+                SELECT
+                  COUNT(*)
+                FROM
+                  archive_item_files
+                WHERE
+                  archive_item_files.archive_item_id = ${tableAlias}.id
+                  AND archive_item_files.deleted_at IS NULL
+              )
+            `,
             "archiveItemFileCount",
           ],
         ],

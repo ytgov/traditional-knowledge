@@ -24,7 +24,6 @@ import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
 import UserGroup from "@/models/user-group"
-import UserPermission from "@/models/user-permission"
 
 /** Keep in sync with web/src/api/users-api.ts */
 export enum UserRoles {
@@ -128,24 +127,6 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     return !isEmpty(this.adminGroups)
   }
 
-  get categories(): NonAttribute<number[]> {
-    if (this.userPermissions) {
-      return this.userPermissions
-        ?.map((permission) => permission.categoryId)
-        .filter((categoryId) => !isNil(categoryId))
-    }
-    return []
-  }
-
-  get sources(): NonAttribute<number[]> {
-    if (this.userPermissions) {
-      return this.userPermissions
-        ?.map((permission) => permission.sourceId)
-        .filter((sourceId) => !isNil(sourceId))
-    }
-    return []
-  }
-
   // Helper functions
   isGroupAdminOf(groupId: number): boolean {
     if (isUndefined(this.adminGroups)) {
@@ -182,14 +163,6 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     inverse: "user",
   })
   declare userOrganizations?: NonAttribute<UserGroup[]>
-
-  @HasMany(() => UserPermission, {
-    foreignKey: "userId",
-    inverse: {
-      as: "user",
-    },
-  })
-  declare userPermissions?: NonAttribute<UserPermission[]>
 
   @HasMany(() => UserGroup, {
     foreignKey: {

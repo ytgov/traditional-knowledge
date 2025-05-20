@@ -1,15 +1,15 @@
 import { CreationAttributes } from "@sequelize/core"
 import { isNil } from "lodash"
 
-import db, { ArchiveItem, ArchiveItemCategory, ArchiveItemFile, User } from "@/models"
+import cache from "@/db/cache-client"
+
+import db, { ArchiveItem, ArchiveItemFile, User } from "@/models"
 import BaseService from "@/services/base-service"
 import { ArchiveItemStatus } from "@/models/archive-item"
-import { FileStorageService } from "../file-storage-service"
-import cache from "@/db/cache-client"
+import { FileStorageService } from "@/services/file-storage-service"
 
 export type ArchiveItemCreationAttributes = Partial<CreationAttributes<ArchiveItem>> & {
   files: File[] | null
-  categoryIds: string[] | number[] | null
   currentUser: User
 }
 
@@ -68,19 +68,6 @@ export class CreateService extends BaseService {
         },
         { transaction }
       )
-
-      if (!isNil(this.attributes.categoryIds)) {
-        for (const categoryId of this.attributes.categoryIds) {
-          await ArchiveItemCategory.create(
-            {
-              archiveItemId: archiveItem.id,
-              categoryId: parseInt(`${categoryId}`),
-              setByUserId: this.attributes.currentUser.id,
-            },
-            { transaction }
-          )
-        }
-      }
 
       if (!isNil(this.attributes.files)) {
         const service = new FileStorageService()
