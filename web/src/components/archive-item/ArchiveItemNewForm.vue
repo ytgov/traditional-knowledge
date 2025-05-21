@@ -73,7 +73,7 @@
 import { isEmpty, isNil } from "lodash"
 import { onMounted, ref } from "vue"
 import { useRouter } from "vue-router"
-import { VForm } from "vuetify/lib/components/index.mjs"
+import { VForm } from "vuetify/components"
 
 import useSnack from "@/use/use-snack"
 import useArchiveItem from "@/use/use-archive-item"

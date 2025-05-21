@@ -41,9 +41,9 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
+import { useDisplay } from "vuetify"
 
 import useCurrentUser from "@/use/use-current-user"
-import { useDisplay } from "vuetify/lib/framework.mjs"
 
 const { mdAndUp } = useDisplay()
 

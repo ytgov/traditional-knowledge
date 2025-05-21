@@ -42,7 +42,7 @@
 import { isEmpty, isNil } from "lodash"
 import { toRefs } from "vue"
 
-import { type VBtn } from "vuetify/lib/components/index.mjs"
+import { type VBtn } from "vuetify/components"
 
 import useGroup from "@/use/use-group"
 

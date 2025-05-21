@@ -26,7 +26,7 @@
           class="mr-3"
           variant="flat"
           title="Toggle Fullscreen"
-          @click="fullscreen = !fullscreen"
+          @click="(fullscreen = !fullscreen)"
         ></v-btn>
         <v-btn
           icon="mdi-close"
@@ -57,7 +57,10 @@
           :src="previewUrl"
           style="border: 1px black solid; margin-right: 10px; width: 100%; height: 100%"
         />
-        <div v-else-if="!isLoading" class="ml-2">
+        <div
+          v-else-if="!isLoading"
+          class="ml-2"
+        >
           Sorry, no preview available, use download button to download the file.
         </div>
       </v-card-text>
@@ -68,7 +71,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue"
-import { useDisplay } from "vuetify/lib/framework.mjs"
+import { useDisplay } from "vuetify"
 import Pdf from "vue-pdf-embed"
 
 import usePreview from "@/use/use-preview"
@@ -91,7 +94,6 @@ watch(
       previewUrl.value = URL.createObjectURL(blob as Blob)
 
       console.log("BLOB", (blob as Blob).type)
-
     } else if (!show) {
       if (previewUrl.value) URL.revokeObjectURL(previewUrl.value)
       previewUrl.value = null

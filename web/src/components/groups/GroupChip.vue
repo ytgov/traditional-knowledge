@@ -59,7 +59,7 @@
 import { computed, toRefs } from "vue"
 import { isEmpty, isNil } from "lodash"
 
-import { VChip } from "vuetify/lib/components/index.mjs"
+import { VChip } from "vuetify/components"
 
 import useGroup from "@/use/use-group"
 

@@ -100,11 +100,13 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
+import { useDisplay } from "vuetify"
 
-import archiveItemsApi, { ArchiveItemFile } from "@/api/archive-items-api"
 import { getFileIcon } from "@/utils/file-icons"
 import { formatBytes } from "@/utils/formatters"
-import { useDisplay } from "vuetify"
+
+import archiveItemsApi, { ArchiveItemFile } from "@/api/archive-items-api"
+
 import usePreview from "@/use/use-preview"
 
 const { lgAndUp } = useDisplay()

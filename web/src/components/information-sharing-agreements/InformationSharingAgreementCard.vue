@@ -66,7 +66,7 @@
 import { toRefs } from "vue"
 import { isNil } from "lodash"
 
-import { type VBtn } from "vuetify/lib/components/index.mjs"
+import { type VBtn } from "vuetify/components"
 
 import { formatDate } from "@/utils/formatters"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"

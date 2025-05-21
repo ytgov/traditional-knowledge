@@ -83,7 +83,7 @@ import { isNil } from "lodash"
 import { ref } from "vue"
 import { useRouter } from "vue-router"
 
-import { VForm } from "vuetify/lib/components/index.mjs"
+import { VForm } from "vuetify/components"
 
 import { required } from "@/utils/validators"
 import groupsApi, { type Group } from "@/api/groups-api"

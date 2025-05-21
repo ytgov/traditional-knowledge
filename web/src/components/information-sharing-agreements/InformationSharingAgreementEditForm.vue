@@ -52,7 +52,8 @@
             md="6"
           >
             <div class="mb-6">
-              Receiving Group: <GroupChip :group-id="informationSharingAgreement.receivingGroupId" />
+              Receiving Group:
+              <GroupChip :group-id="informationSharingAgreement.receivingGroupId" />
             </div>
             <UserSearchableAutocomplete
               v-model="informationSharingAgreement.receivingGroupContactId"
@@ -120,7 +121,7 @@
 import { isNil } from "lodash"
 import { computed, ref, toRefs } from "vue"
 
-import { type VBtn, type VForm } from "vuetify/lib/components/index.mjs"
+import { type VBtn, type VForm } from "vuetify/components"
 
 import { required } from "@/utils/validators"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"

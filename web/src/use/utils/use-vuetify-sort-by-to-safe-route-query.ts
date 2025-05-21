@@ -2,7 +2,7 @@ import { isEmpty } from "lodash"
 import { type Ref } from "vue"
 import { useRouteQuery } from "@vueuse/router"
 
-import { type VDataTable } from "vuetify/lib/components/VDataTable/index.mjs"
+import { type VDataTable } from "vuetify/components"
 
 import { jsonTransformer } from "@/utils/use-route-query-transformers"
 
