@@ -13,7 +13,6 @@ export type ArchiveItemShowView = Pick<
   | "calculatedExpireDate"
   | "overrideExpireDate"
   | "expireAction"
-  | "sourceId"
   | "userId"
   | "title"
   | "description"
@@ -39,7 +38,6 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
         "calculatedExpireDate",
         "overrideExpireDate",
         "expireAction",
-        "sourceId",
         "userId",
         "title",
         "description",

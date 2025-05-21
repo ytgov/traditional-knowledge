@@ -71,9 +71,6 @@ export class ArchiveItem extends BaseModel<
   declare expireAction: string
 
   @Attribute(DataTypes.INTEGER)
-  declare sourceId: number | null
-
-  @Attribute(DataTypes.INTEGER)
   declare userId: number | null
 
   @Attribute(DataTypes.STRING(2000))

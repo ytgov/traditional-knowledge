@@ -35,7 +35,6 @@ export class ArchiveItemsPolicy extends PolicyFactory(ArchiveItem) {
       "calculatedExpireDate",
       "overrideExpireDate",
       "expireAction",
-      "sourceId",
       "userId",
       "title",
       "description",

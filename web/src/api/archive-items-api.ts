@@ -25,7 +25,6 @@ export type ArchiveItem = {
   calculatedExpireDate: Date
   overrideExpireDate: Date | null
   expireAction: string
-  sourceId: number | null
   userId: number | null
   description: string | null
   summary: string | null

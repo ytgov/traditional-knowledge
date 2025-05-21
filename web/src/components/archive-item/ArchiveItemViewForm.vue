@@ -118,10 +118,6 @@
         </v-card-title>
         <v-divider />
         <v-card-text>
-          <div v-if="item.sourceId">
-            <div class="text-subtitle-2 mb-n1 text-grey">SOURCE</div>
-            {{ item.source?.name }}
-          </div>
           <div v-if="item.userId">
             <div class="text-subtitle-2 mb-n1 text-grey">RECORDED BY</div>
             {{ item.user?.displayName }}
