@@ -65,7 +65,7 @@
 <script lang="ts" setup>
 import { onMounted } from "vue"
 import { useAuth0 } from "@auth0/auth0-vue"
-import { useDisplay } from "vuetify/lib/framework.mjs"
+import { useDisplay } from "vuetify"
 
 import { APPLICATION_NAME } from "@/config"
 import useCurrentUser from "@/use/use-current-user"
