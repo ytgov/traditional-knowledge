@@ -5,6 +5,8 @@ import {
   type QueryOptions,
   type WhereOptions,
 } from "@/api/base-api"
+import { type Group } from "@/api/groups-api"
+import { type UserReferenceView } from "@/api/users-api"
 
 export enum InformationSharingAgreementAccessGrantAccessLevel {
   READ = "read",
@@ -23,6 +25,11 @@ export type InformationSharingAgreementAccessGrant = {
   updatedAt: string
 }
 
+export type InformationSharingAgreementAccessGrantIndexView = InformationSharingAgreementAccessGrant & {
+  user: UserReferenceView | null
+  group: Group
+}
+
 export type InformationSharingAgreementAccessGrantWhereOptions = WhereOptions<
   InformationSharingAgreementAccessGrant,
   "informationSharingAgreementId" | "groupId" | "userId" | "accessLevel" | "creatorId"
@@ -39,7 +46,7 @@ export type InformationSharingAgreementAccessGrantQueryOptions = QueryOptions<
 
 export const informationSharingAgreementAccessGrantsApi = {
   async list(params: InformationSharingAgreementAccessGrantQueryOptions = {}): Promise<{
-    informationSharingAgreementAccessGrants: InformationSharingAgreementAccessGrant[]
+    informationSharingAgreementAccessGrants: InformationSharingAgreementAccessGrantIndexView[]
     totalCount: number
   }> {
     const { data } = await http.get("/api/information-sharing-agreement-access-grants", {

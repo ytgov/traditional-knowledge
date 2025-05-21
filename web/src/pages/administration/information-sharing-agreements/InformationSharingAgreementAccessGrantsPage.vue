@@ -20,7 +20,7 @@
     </v-btn>
   </div>
 
-  <UserGroupsAsUsersEditDataTableServer
+  <InformationSharingAgreementAccessGrantEditDataTableServer
     :filters="filters"
   />
 </template>
@@ -30,7 +30,7 @@ import { computed, ref } from "vue"
 import { isEmpty, isNil } from "lodash"
 
 import FilterSearchDebouncedTextField from "@/components/common/tables/FilterSearchDebouncedTextField.vue"
-import UserGroupsAsUsersEditDataTableServer from "@/components/user-groups/UserGroupsAsUsersEditDataTableServer.vue"
+import InformationSharingAgreementAccessGrantEditDataTableServer from "@/components/information-sharing-agreement-access-grants/InformationSharingAgreementAccessGrantEditDataTableServer.vue"
 
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
 
@@ -51,7 +51,7 @@ const filters = computed(() => {
   if (isNil(search.value) || isEmpty(search.value)) return {}
 
   return {
-    searchUser: search.value,
+    search: search.value,
   }
 })
 

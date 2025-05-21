@@ -27,6 +27,7 @@ export class InformationSharingAgreementAccessGrantsController extends BaseContr
           order,
           limit: this.pagination.limit,
           offset: this.pagination.offset,
+          include: ["group", "user"],
         })
       const serializedInformationSharingAgreementAccessGrants = IndexSerializer.perform(
         informationSharingAgreementAccessGrants

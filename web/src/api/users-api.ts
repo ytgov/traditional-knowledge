@@ -37,6 +37,20 @@ export type User = {
   adminGroups?: Group[]
 }
 
+export type UserReferenceView = Pick<
+  User,
+  | "id"
+  | "email"
+  | "firstName"
+  | "lastName"
+  | "displayName"
+  | "title"
+  | "department"
+  | "division"
+  | "branch"
+  | "unit"
+>
+
 export type UserWhereOptions = WhereOptions<
   User,
   "email" | "title" | "department" | "division" | "branch" | "unit"
