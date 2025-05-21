@@ -127,30 +127,6 @@
           >
             <UserRolesSelect v-model="user.roles" />
           </v-col>
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <CategorySelect
-              v-model="user.categories"
-              label="Categories"
-              multiple
-              chips
-              closable-chips
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <SourceSelect
-              v-model="user.sources"
-              label="Sources"
-              multiple
-              chips
-              closable-chips
-            />
-          </v-col>
         </v-row>
         <v-row>
           <v-col class="d-flex justify-end">
@@ -181,7 +157,6 @@
 <script setup lang="ts">
 import { isNil } from "lodash"
 import { ref, toRefs } from "vue"
-import { useI18n } from "vue-i18n"
 
 import { type VBtn, type VForm } from "vuetify/lib/components/index.mjs"
 
@@ -189,8 +164,6 @@ import { required } from "@/utils/validators"
 import useSnack from "@/use/use-snack"
 import useUser from "@/use/use-user"
 import UserRolesSelect from "./UserRolesSelect.vue"
-import CategorySelect from "../categories/CategorySelect.vue"
-import SourceSelect from "../sources/SourceSelect.vue"
 
 type CancelButtonOptions = VBtn["$props"]
 
@@ -231,11 +204,5 @@ async function saveWrapper() {
   await save()
   snack.success("User saved!")
   emit("saved", user.value.id)
-}
-
-const { t } = useI18n()
-
-function formatRole(role: string) {
-  return t(`user.roles.${role}`, role)
 }
 </script>
