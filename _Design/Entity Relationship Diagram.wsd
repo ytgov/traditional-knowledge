@@ -13,14 +13,10 @@ entity "archive_items" {
   user_id : int [FK]
   --
   * is_decision : bit
-  * retention_name : nvarchar(255)
-  * calculated_expire_date : datetime2(0)
-  * expire_action : nvarchar(255)
   * title : nvarchar(255)
   * status : nvarchar(100)
   * security_level : int
   decision_text : nvarchar(255)
-  override_expire_date : datetime2(0)
   description : nvarchar(2000)
   summary : nvarchar(MAX)
   tags : nvarchar(255)
@@ -49,9 +45,10 @@ entity "archive_item_files" {
   deleted_at : datetime2(0)
 }
 
-enum ArchiveItemAccessGrantPermission {
-  VIEW
-  EDIT
+enum ArchiveItemAccessGrantAccessLevel {
+  read
+  read_download
+  edit
 }
 
 entity "information_sharing_agreements" {
@@ -78,7 +75,7 @@ entity "information_sharing_agreement_access_grants" {
   * group_id : int [FK]
   user_id : int [FK] -- most access will be to individual users
   * creator_id : int [FK]
-  * permission : nvarchar(20) -- ArchiveItemAccessGrantPermission
+  * access_level : nvarchar(20) -- ArchiveItemAccessGrantAccessLevel
   * created_at : datetime2(0)
   * updated_at : datetime2(0)
   --
@@ -156,6 +153,8 @@ groups::id }o--|| information_sharing_agreements::sharing_group_id
 groups::id }o--|| user_groups::group_id
 information_sharing_agreement_access_grants::group_id ||--o{ groups::id
 information_sharing_agreement_access_grants::user_id |o--o{ users::id
+information_sharing_agreement_access_grants::creator_id ||--o{ users::id
+information_sharing_agreement_access_grants::access_level ||--o| ArchiveItemAccessGrantAccessLevel
 information_sharing_agreements::id }o--|| information_sharing_agreement_archive_items::information_sharing_agreement_id
 information_sharing_agreements::receiving_group_contact_id ||--o{ users::id
 information_sharing_agreements::sharing_group_contact_id ||--o{ users::id
