@@ -23,6 +23,7 @@ import { isEmpty, isNil, isUndefined } from "lodash"
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
+import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
 import UserGroup from "@/models/user-group"
 
 /** Keep in sync with web/src/api/users-api.ts */
@@ -154,6 +155,18 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     inverse: "receivingGroupContact",
   })
   declare receivedInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
+
+  @HasMany(() => InformationSharingAgreementAccessGrant, {
+    foreignKey: "userId",
+    inverse: "user",
+  })
+  declare informationSharingAgreementAccessGrants?: NonAttribute<InformationSharingAgreementAccessGrant[]>
+
+  @HasMany(() => InformationSharingAgreementAccessGrant, {
+    foreignKey: "creatorId",
+    inverse: "creator",
+  })
+  declare createdInformationSharingAgreementAccessGrants?: NonAttribute<InformationSharingAgreementAccessGrant[]>
 
   @HasMany(() => UserGroup, {
     foreignKey: {

@@ -11,12 +11,14 @@ import {
   AutoIncrement,
   BelongsTo,
   Default,
+  HasMany,
   NotNull,
   PrimaryKey,
 } from "@sequelize/core/decorators-legacy"
 
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
+import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
 import User from "@/models/user"
 
 export class InformationSharingAgreement extends BaseModel<
@@ -121,6 +123,12 @@ export class InformationSharingAgreement extends BaseModel<
     },
   })
   declare receivingGroupContact?: NonAttribute<User>
+
+  @HasMany(() => InformationSharingAgreementAccessGrant, {
+    foreignKey: "informationSharingAgreementId",
+    inverse: "informationSharingAgreement",
+  })
+  declare accessGrants?: NonAttribute<InformationSharingAgreementAccessGrant[]>
 
   // Scopes
   static establishScopes(): void {
