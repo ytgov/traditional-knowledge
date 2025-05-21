@@ -6,6 +6,7 @@
 
   <v-card class="mt-5">
     <v-card-title>
+      <!-- TODO: consider if we should have separate tabs for sharing and receiving groups access grants? -->
       <v-tabs>
         <v-tab
           :to="{

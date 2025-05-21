@@ -9,24 +9,7 @@
         <v-row> </v-row>
         <v-row>
           <v-col
-            v-if="shareWithEntireGroup && !isNil(informationSharingAgreement)"
-            cols="12"
-            md="6"
-            class="d-flex align-center"
-          >
-          <!-- TODO: support dynamic group depending whether current user the sharer or receiver -->
-            <GroupSearchableAutocomplete
-              v-model="informationSharingAgreementAccessGrantAttributes.groupId"
-              label="Group *"
-              :rules="[required]"
-              :clearable="false"
-              required
-              readonly
-              append-inner-icon="mdi-lock"
-            />
-          </v-col>
-          <v-col
-            v-else
+            v-if="!shareWithEntireGroup"
             cols="12"
             md="6"
           >
@@ -36,6 +19,22 @@
               :filters="userFilters"
               :rules="[required]"
               required
+            />
+          </v-col>
+          <v-col
+            v-else
+            cols="12"
+            md="6"
+            class="d-flex align-center"
+          >
+            <GroupSearchableAutocomplete
+              v-model="informationSharingAgreementAccessGrantAttributes.groupId"
+              label="Group *"
+              :rules="[required]"
+              :clearable="false"
+              required
+              readonly
+              append-inner-icon="mdi-lock"
             />
           </v-col>
           <v-col
@@ -93,8 +92,8 @@
 </template>
 
 <script setup lang="ts">
-import { cloneDeep, isNil } from "lodash"
-import { computed, ref, toRefs, watch } from "vue"
+import { isNil } from "lodash"
+import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
 import { VForm } from "vuetify/components"
@@ -104,7 +103,6 @@ import informationSharingAgreementAccessGrantsApi, {
   type InformationSharingAgreementAccessGrant,
   InformationSharingAgreementAccessGrantAccessLevel,
 } from "@/api/information-sharing-agreement-access-grants-api"
-import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import useSnack from "@/use/use-snack"
 
 import GroupSearchableAutocomplete from "@/components/groups/GroupSearchableAutocomplete.vue"
@@ -113,13 +111,14 @@ import UserSearchableAutocomplete from "@/components/users/UserSearchableAutocom
 
 const props = defineProps<{
   informationSharingAgreementId: number
+  groupId: number
 }>()
 
 const informationSharingAgreementAccessGrantAttributes = ref<
   Partial<InformationSharingAgreementAccessGrant>
 >({
-  informationSharingAgreementId: undefined,
-  groupId: undefined,
+  informationSharingAgreementId: props.informationSharingAgreementId,
+  groupId: props.groupId,
   userId: undefined,
   accessLevel: InformationSharingAgreementAccessGrantAccessLevel.READ,
 })
@@ -128,26 +127,7 @@ const userFilters = computed(() => ({
   inGroup: informationSharingAgreementAccessGrantAttributes.value.groupId,
 }))
 
-
 const shareWithEntireGroup = ref(false)
-
-const { informationSharingAgreementId } = toRefs(props)
-const { informationSharingAgreement } = useInformationSharingAgreement(
-  informationSharingAgreementId
-)
-
-watch(
-  () => cloneDeep(informationSharingAgreement.value),
-  (newInformationSharingAgreement) => {
-    if (isNil(newInformationSharingAgreement)) return
-
-    informationSharingAgreementAccessGrantAttributes.value.informationSharingAgreementId =
-      newInformationSharingAgreement.id
-    informationSharingAgreementAccessGrantAttributes.value.groupId =
-      newInformationSharingAgreement.receivingGroupId
-  },
-  { deep: true, immediate: true }
-)
 
 const snack = useSnack()
 const router = useRouter()
