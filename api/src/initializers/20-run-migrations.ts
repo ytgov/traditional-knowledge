@@ -8,7 +8,10 @@ type MigrationInfo = {
 
 async function runMigrations(): Promise<void> {
   const [_completedMigrations, pendingMigrations]: [MigrationInfo[], MigrationInfo[]] =
-    await dbMigrationClient.migrate.list()
+    await dbMigrationClient.migrate.list().catch((error) => {
+      logger.error(`Error listing migrations: ${error}`, { error })
+      throw error
+    })
 
   if (pendingMigrations.length === 0) {
     logger.info("No pending migrations.")
