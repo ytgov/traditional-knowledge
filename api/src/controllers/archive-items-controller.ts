@@ -28,7 +28,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
         totalCount,
       })
     } catch (error) {
-      logger.error("Error fetching archive items" + error)
+      logger.error(`Error fetching archive items: ${error}`, { error })
       return this.response.status(400).json({
         message: `Error fetching archive items: ${error}`,
       })
@@ -61,7 +61,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
 
       return this.response.status(201).json({ archiveItem })
     } catch (error) {
-      logger.error("Error creating archive item" + error)
+      logger.error(`Error creating archive item: ${error}`, { error })
       return this.response.status(422).json({
         message: `Error creating archive item: ${error}`,
       })
@@ -95,7 +95,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
 
       return this.response.json({ archiveItem: serializedItem, policy })
     } catch (error) {
-      logger.error("Error fetching item" + error)
+      logger.error(`Error fetching item: ${error}`, { error })
       return this.response.status(400).json({
         message: `Error fetching item: ${error}`,
       })
