@@ -19,7 +19,6 @@ export class UsersController extends BaseController<User> {
         where,
         limit: this.pagination.limit,
         offset: this.pagination.offset,
-        include: ["userPermissions"],
       })
       const serializedUsers = IndexSerializer.perform(users)
       return this.response.json({
@@ -145,7 +144,7 @@ export class UsersController extends BaseController<User> {
 
   private async loadUser() {
     const user = await User.findByPk(this.params.id, {
-      include: ["adminGroups", "userPermissions"],
+      include: ["adminGroups"],
     })
 
     return user
