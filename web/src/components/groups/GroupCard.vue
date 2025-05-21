@@ -28,6 +28,7 @@
       </v-btn>
       <v-spacer />
       <v-btn
+        v-if="policy?.update"
         color="primary"
         v-bind="editButtonProps"
       >
@@ -71,7 +72,7 @@ const props = withDefaults(
 )
 
 const { groupId } = toRefs(props)
-const { group, isLoading } = useGroup(groupId)
+const { group, policy, isLoading } = useGroup(groupId)
 </script>
 
 <style scoped>

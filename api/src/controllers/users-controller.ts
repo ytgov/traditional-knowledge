@@ -151,7 +151,9 @@ export class UsersController extends BaseController<User> {
   }
 
   private async loadUser() {
-    const user = await User.findByPk(this.params.id, { include: ["userPermissions"] })
+    const user = await User.findByPk(this.params.id, {
+      include: ["adminGroups", "userPermissions"],
+    })
 
     return user
   }

@@ -1,6 +1,6 @@
 import { isNil, pick } from "lodash"
 
-import { User } from "@/models"
+import { Group, User } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
 
 export type UserShowView = Pick<
@@ -24,10 +24,14 @@ export type UserShowView = Pick<
   | "updatedAt"
 > & {
   isActive: boolean
+} & {
+  adminGroups?: Group[]
 }
 
 export class ShowSerializer extends BaseSerializer<User> {
   perform(): UserShowView {
+    // TODO: serialize nested associations with appropriate serializers.
+    const { adminGroups } = this.record
     return {
       ...pick(this.record, [
         "id",
@@ -49,6 +53,7 @@ export class ShowSerializer extends BaseSerializer<User> {
         "updatedAt",
       ]),
       isActive: isNil(this.record.deactivatedAt),
+      adminGroups,
     }
   }
 }

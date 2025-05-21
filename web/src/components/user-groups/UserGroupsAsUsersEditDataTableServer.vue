@@ -7,10 +7,13 @@
     :items="userGroups"
     :items-length="totalCount"
     :loading="isLoading"
-    @click:row="(_event: unknown, { item }: UserGroupTableRow) => goToGroupUserPage(item.id)"
+    @click:row="(_event: unknown, { item }: UserGroupTableRow) => goToUserPage(item.userId)"
   >
     <template #item.actions="{ item }">
-      <div class="d-flex justify-end align-center">
+      <div
+        v-if="isSystemAdmin || isGroupAdminFor(item.id)"
+        class="d-flex justify-end align-center"
+      >
         <v-btn
           class="ml-2"
           :loading="isDeleting"
@@ -28,13 +31,14 @@
 
 <script lang="ts" setup>
 import { computed, ref } from "vue"
-import { useI18n } from "vue-i18n"
 import { useRouteQuery } from "@vueuse/router"
 import { useRouter } from "vue-router"
 
 import userGroupsApi from "@/api/user-groups-api"
 import useVuetifySortByToSafeRouteQuery from "@/use/utils/use-vuetify-sort-by-to-safe-route-query"
 import useVuetifySortByToSequelizeSafeOrder from "@/use/utils/use-vuetify-sort-by-to-sequelize-safe-order"
+
+import useCurrentUser from "@/use/use-current-user"
 import useSnack from "@/use/use-snack"
 import useUserGroups, {
   type UserGroupAsIndex,
@@ -59,8 +63,6 @@ const props = withDefaults(
   }
 )
 
-const { t } = useI18n()
-
 const headers = ref([
   {
     title: "Display Name",
@@ -84,14 +86,14 @@ const headers = ref([
     sortable: false,
   },
   {
-    title: "Role",
-    key: "user.roles",
+    title: "Is\u00a0Admin?",
+    key: "isAdmin",
     value: (item: unknown) => {
-      const { roles } = (item as UserGroupAsIndex).user
-      const formatedRoleTypes = roles.map((role) => t(`user.roles.${role}`, role))
-      return formatedRoleTypes.join(", ")
+      const { isAdmin } = item as UserGroupAsIndex
+      return isAdmin ? "Yes" : "No"
     },
-    sortable: false,
+    sortable: true,
+    align: "center" as const,
   },
   {
     title: "Actions",
@@ -120,13 +122,16 @@ const userGroupsQuery = computed(() => ({
 
 const { userGroups, totalCount, isLoading, refresh } = useUserGroups(userGroupsQuery)
 
+const { isSystemAdmin, isGroupAdminFor } = useCurrentUser<true>()
+
 const router = useRouter()
 
-function goToGroupUserPage(userGroupId: number) {
-  router.push({
-    name: "administration/groups/UserGroupPage",
+function goToUserPage(userId: number) {
+  // TODO: standardize this route to redirect to user read page
+  return router.push({
+    name: "users/UserEditPage",
     params: {
-      userGroupId,
+      userId,
     },
   })
 }

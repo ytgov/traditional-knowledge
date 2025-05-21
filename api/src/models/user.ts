@@ -18,10 +18,11 @@ import {
   PrimaryKey,
   ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
-import { isNil } from "lodash"
+import { isEmpty, isNil, isUndefined } from "lodash"
 
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
+import InformationSharingAgreement from "@/models/information-sharing-agreement"
 import UserGroup from "@/models/user-group"
 import UserPermission from "@/models/user-permission"
 
@@ -119,6 +120,14 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     return this.roles?.some((role) => role === UserRoles.SYSTEM_ADMIN)
   }
 
+  get isGroupAdmin(): NonAttribute<boolean | undefined> {
+    if (isUndefined(this.adminGroups)) {
+      throw new Error("Expected adminGroups association to be pre-loaded.")
+    }
+
+    return !isEmpty(this.adminGroups)
+  }
+
   get categories(): NonAttribute<number[]> {
     if (this.userPermissions) {
       return this.userPermissions
@@ -137,7 +146,34 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     return []
   }
 
+  // Helper functions
+  isGroupAdminOf(groupId: number): boolean {
+    if (isUndefined(this.adminGroups)) {
+      throw new Error("Expected adminGroups association to be pre-loaded.")
+    }
+
+    return this.adminGroups.some((group) => group.id === groupId)
+  }
+
   // Associations
+  @HasMany(() => InformationSharingAgreement, {
+    foreignKey: "creatorId",
+    inverse: "creator",
+  })
+  declare createdInformationSharingAgreements?: NonAttribute<InformationSharingAgreement[]>
+
+  @HasMany(() => InformationSharingAgreement, {
+    foreignKey: "sharingGroupContactId",
+    inverse: "sharingGroupContact",
+  })
+  declare sharedInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
+
+  @HasMany(() => InformationSharingAgreement, {
+    foreignKey: "receivingGroupContactId",
+    inverse: "receivingGroupContact",
+  })
+  declare receivedInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
+
   @HasMany(() => UserGroup, {
     foreignKey: {
       name: "userId",
@@ -154,6 +190,27 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     },
   })
   declare userPermissions?: NonAttribute<UserPermission[]>
+
+  @HasMany(() => UserGroup, {
+    foreignKey: {
+      name: "userId",
+      allowNull: false,
+    },
+    inverse: "user",
+  })
+  declare userGroups?: NonAttribute<UserGroup[]>
+
+  @HasMany(() => UserGroup, {
+    foreignKey: {
+      name: "userId",
+      allowNull: false,
+    },
+    inverse: "user",
+    scope: {
+      isAdmin: true,
+    },
+  })
+  declare adminUserGroups?: NonAttribute<UserGroup[]>
 
   @BelongsToMany(() => Group, {
     through: () => UserGroup,
@@ -175,10 +232,37 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
    */
   declare userGroup?: NonAttribute<UserGroup>
 
+  @BelongsToMany(() => Group, {
+    through: {
+      model: () => UserGroup,
+      scope: {
+        isAdmin: true,
+      },
+    },
+    foreignKey: "userId",
+    otherKey: "groupId",
+    // TODO: set inverse to "adminUsers" once https://github.com/sequelize/sequelize/issues/16034 is fixed
+    // This workaround is necessary because the inverse fails to define symetrically so is never valid.
+    inverse: "inverseAdminGroups",
+  })
+  declare adminGroups?: NonAttribute<Group[]>
+
   // Scopes
   static establishScopes(): void {
-    this.addSearchScope(["firstName", "lastName", "displayName"])
+    this.addSearchScope(["firstName", "lastName", "displayName", "email"])
 
+    this.addScope("inGroup", (groupId: number) => {
+      return {
+        include: [
+          {
+            association: "userGroup",
+            where: {
+              groupId,
+            },
+          },
+        ],
+      }
+    })
     this.addScope("notInGroup", (groupId) => {
       return {
         where: {

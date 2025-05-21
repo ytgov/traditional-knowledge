@@ -1,6 +1,7 @@
 import { type Ref, reactive, toRefs, unref, watch } from "vue"
 import { isNil } from "lodash"
 
+import { type Policy } from "@/api/base-api"
 import groupsApi, {
   type Group,
   type GroupWhereOptions,
@@ -12,10 +13,12 @@ export { type Group, type GroupWhereOptions, type GroupFiltersOptions }
 export function useGroup(id: Ref<number | null | undefined>) {
   const state = reactive<{
     group: Group | null
+    policy: Policy | null
     isLoading: boolean
     isErrored: boolean
   }>({
     group: null,
+    policy: null,
     isLoading: false,
     isErrored: false,
   })
@@ -28,9 +31,10 @@ export function useGroup(id: Ref<number | null | undefined>) {
 
     state.isLoading = true
     try {
-      const { group } = await groupsApi.get(staticId)
+      const { group, policy } = await groupsApi.get(staticId)
       state.isErrored = false
       state.group = group
+      state.policy = policy
       return group
     } catch (error) {
       console.error(`Failed to fetch group ${error}:`, { error })

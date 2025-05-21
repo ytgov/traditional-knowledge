@@ -7,7 +7,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
-        redirect: "sign-in",
+        redirect: "dashboard",
       },
       {
         path: "dashboard",
@@ -124,6 +124,37 @@ const routes: RouteRecordRaw[] = [
             props: true,
           },
           {
+            path: "information-sharing-agreements",
+            name: "administration/InformationSharingAgreementsPage",
+            component: () => import("@/pages/administration/InformationSharingAgreementsPage.vue"),
+          },
+          {
+            path: "information-sharing-agreements/new",
+            name: "administration/information-sharing-agreements/InformationSharingAgreementNewPage",
+            component: () =>
+              import(
+                "@/pages/administration/information-sharing-agreements/InformationSharingAgreementNewPage.vue"
+              ),
+          },
+          {
+            path: "information-sharing-agreements/:informationSharingAgreementId",
+            name: "administration/information-sharing-agreements/InformationSharingAgreementPage",
+            component: () =>
+              import(
+                "@/pages/administration/information-sharing-agreements/InformationSharingAgreementPage.vue"
+              ),
+            props: true,
+          },
+          {
+            path: "information-sharing-agreements/:informationSharingAgreementId/edit",
+            name: "administration/information-sharing-agreements/InformationSharingAgreementEditPage",
+            component: () =>
+              import(
+                "@/pages/administration/information-sharing-agreements/InformationSharingAgreementEditPage.vue"
+              ),
+            props: true,
+          },
+          {
             path: "users",
             name: "users/UsersPage",
             component: () => import("@/pages/users/UsersPage.vue"),
@@ -190,11 +221,6 @@ const routes: RouteRecordRaw[] = [
         ],
       },
     ],
-  },
-  {
-    path: "/callback",
-    component: () => import("@/pages/CallbackPage.vue"),
-    meta: { requiresAuth: false, title: "Callback" },
   },
   {
     path: "/sign-in",

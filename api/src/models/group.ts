@@ -22,6 +22,7 @@ import {
 import arrayWrap from "@/utils/array-wrap"
 
 import BaseModel from "@/models/base-model"
+import InformationSharingAgreement from "@/models/information-sharing-agreement"
 import User from "@/models/user"
 import UserGroup from "@/models/user-group"
 
@@ -80,6 +81,18 @@ export class Group extends BaseModel<InferAttributes<Group>, InferCreationAttrib
   })
   declare creator?: NonAttribute<User>
 
+  @HasMany(() => InformationSharingAgreement, {
+    foreignKey: "sharingGroupId",
+    inverse: "sharingGroup",
+  })
+  declare sharedInformationAgreements?: NonAttribute<InformationSharingAgreement[]>
+
+  @HasMany(() => InformationSharingAgreement, {
+    foreignKey: "receivingGroupId",
+    inverse: "receivingGroup",
+  })
+  declare receivedInformationAgreements?: NonAttribute<InformationSharingAgreement[]>
+
   @HasMany(() => UserGroup, {
     foreignKey: {
       name: "groupId",
@@ -88,6 +101,18 @@ export class Group extends BaseModel<InferAttributes<Group>, InferCreationAttrib
     inverse: "group",
   })
   declare userGroups?: NonAttribute<UserGroup[]>
+
+  @HasMany(() => UserGroup, {
+    foreignKey: {
+      name: "groupId",
+      allowNull: false,
+    },
+    inverse: "group",
+    scope: {
+      isAdmin: true,
+    },
+  })
+  declare adminUserGroups?: NonAttribute<UserGroup[]>
 
   @BelongsToMany(() => User, {
     through: () => UserGroup,
@@ -109,6 +134,21 @@ export class Group extends BaseModel<InferAttributes<Group>, InferCreationAttrib
    */
   declare userGroup?: NonAttribute<UserGroup>
 
+  @BelongsToMany(() => User, {
+    through: {
+      model: () => UserGroup,
+      scope: {
+        isAdmin: true,
+      },
+    },
+    foreignKey: "groupId",
+    otherKey: "userId",
+    // TODO: set inverse to "adminGroups" once https://github.com/sequelize/sequelize/issues/16034 is fixed
+    // This workaround is necessary because the inverse fails to define symetrically so is never valid.
+    inverse: "inverseAdminUsers",
+  })
+  declare adminUsers?: NonAttribute<User[]>
+
   // Scopes
   static establishScopes(): void {
     this.addSearchScope(["name", "acronym", "description"])
@@ -121,6 +161,19 @@ export class Group extends BaseModel<InferAttributes<Group>, InferCreationAttrib
             [Op.notIn]: ids,
           },
         },
+      }
+    })
+    this.addScope("isAdmin", (userId: number) => {
+      return {
+        include: [
+          {
+            association: "userGroups",
+            where: {
+              userId,
+              isAdmin: true,
+            },
+          },
+        ],
       }
     })
   }
