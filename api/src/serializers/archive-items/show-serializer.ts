@@ -8,13 +8,7 @@ import { UserReferenceView } from "@/serializers/users/reference-serializer"
 export type ArchiveItemShowView = Pick<
   ArchiveItem,
   | "id"
-  | "retentionName"
   | "isDecision"
-  | "calculatedExpireDate"
-  | "overrideExpireDate"
-  | "expireAction"
-  | "sourceId"
-  | "source"
   | "userId"
   | "title"
   | "description"
@@ -24,29 +18,18 @@ export type ArchiveItemShowView = Pick<
   | "tags"
   | "submittedAt"
   | "files"
-  | "categories"
-  | "users"
   | "createdAt"
   | "updatedAt"
 > & {
-  permittedUsers?: UserReferenceView[]
   user?: UserReferenceView
 }
 
 export class ShowSerializer extends BaseSerializer<ArchiveItem> {
   perform(): ArchiveItemShowView {
-    const u = this.record.users?.map((u) => ReferenceSerializer.perform(u)) ?? []
-
     return {
       ...pick(this.record, [
         "id",
-        "retentionName",
         "isDecision",
-        "calculatedExpireDate",
-        "overrideExpireDate",
-        "expireAction",
-        "sourceId",
-        "source",
         "userId",
         "title",
         "description",
@@ -56,11 +39,9 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
         "tags",
         "submittedAt",
         "files",
-        "categories",
         "createdAt",
         "updatedAt",
       ]),
-      permittedUsers: u,
       user: this.record.user ? ReferenceSerializer.perform(this.record.user) : undefined,
     }
   }

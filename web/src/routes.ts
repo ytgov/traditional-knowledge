@@ -34,54 +34,6 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@/pages/administration/DashboardPage.vue"),
           },
           {
-            path: "sources",
-            name: "administration/SourceListPage",
-            component: () => import("@/pages/sources/SourceListPage.vue"),
-          },
-          {
-            path: "sources/new",
-            name: "administration/SourceNewPage",
-            component: () => import("@/pages/sources/SourceNewPage.vue"),
-          },
-          {
-            path: "sources/:sourceId/edit",
-            name: "administration/SourceEditPage",
-            component: () => import("@/pages/sources/SourceEditPage.vue"),
-            props: true,
-          },
-          {
-            path: "retentions",
-            name: "administration/RetentionListPage",
-            component: () => import("@/pages/retentions/RetentionListPage.vue"),
-          },
-          {
-            path: "retentions/new",
-            name: "administration/RetentionNewPage",
-            component: () => import("@/pages/retentions/RetentionNewPage.vue"),
-          },
-          {
-            path: "retentions/:retentionId/edit",
-            name: "administration/RetentionEditPage",
-            component: () => import("@/pages/retentions/RetentionEditPage.vue"),
-            props: true,
-          },
-          {
-            path: "categories",
-            name: "administration/CategoryListPage",
-            component: () => import("@/pages/categories/CategoryListPage.vue"),
-          },
-          {
-            path: "categories/new",
-            name: "administration/CategoryNewPage",
-            component: () => import("@/pages/categories/CategoryNewPage.vue"),
-          },
-          {
-            path: "categories/:categoryId/edit",
-            name: "administration/CategoryEditPage",
-            component: () => import("@/pages/categories/CategoryEditPage.vue"),
-            props: true,
-          },
-          {
             path: "groups",
             name: "administration/GroupsPage",
             component: () => import("@/pages/administration/GroupsPage.vue"),
@@ -192,30 +144,6 @@ const routes: RouteRecordRaw[] = [
             path: ":archiveItemId/view",
             name: "archive-item/ArchiveItemViewPage",
             component: () => import("@/pages/archive-item/ArchiveItemViewPage.vue"),
-            props: true,
-          },
-        ],
-      },
-
-      {
-        path: "decisions",
-        children: [
-          {
-            path: "",
-            name: "decisions/DecisionListPage",
-            component: () => import("@/pages/decisions/DecisionListPage.vue"),
-            meta: { title: "Decision" },
-          },
-          {
-            path: "record",
-            name: "decisions/DecisionNewPage",
-            component: () => import("@/pages/decisions/DecisionNewPage.vue"),
-            meta: { title: "Decision" },
-          },
-          {
-            path: ":decisionId/view",
-            name: "decisions/DecisionViewPage",
-            component: () => import("@/pages/decisions/DecisionViewPage.vue"),
             props: true,
           },
         ],

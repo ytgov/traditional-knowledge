@@ -1,9 +1,8 @@
+import { type GenericFormData } from "axios"
+
 import http from "@/api/http-client"
 import { type Policy } from "@/api/base-api"
-import { GenericFormData } from "axios"
-import { Category } from "./categories-api"
-import { User } from "./users-api"
-import { Source } from "./sources-api"
+import { type User } from "@/api/users-api"
 
 export enum SecurityLevel {
   LOW = 1,
@@ -21,11 +20,6 @@ export enum ArchiveItemStatus {
 export type ArchiveItem = {
   id: number
   title: string
-  retentionName: string
-  calculatedExpireDate: Date
-  overrideExpireDate: Date | null
-  expireAction: string
-  sourceId: number | null
   userId: number | null
   description: string | null
   summary: string | null
@@ -36,10 +30,8 @@ export type ArchiveItem = {
   createdAt: Date | null
   updatedAt: Date | null
 
-  categories: Category[] | null
   files: ArchiveItemFile[] | null
   user: User | null
-  source: Source | null
   users: User[] | null
   permittedUsers: User[] | null
 }
@@ -62,17 +54,12 @@ export type ArchiveItemFile = {
 }
 export type ArchiveItemCreate = {
   title: string
-  retentionName: string | null
-  expireAction: string | null
-  calculatedExpireDate: Date | string | null
-  overrideExpireDate: Date | string | null
   description: string | null
   summary: string | null
   securityLevel: SecurityLevel
   tags: string[] | null
 
   files: File[] | null
-  categories: number[] | null
 }
 
 export type ArchiveItemWhereOptions = {

@@ -1,8 +1,9 @@
 import logger from "@/utils/logger"
+
 import { ArchiveItemAudit } from "@/models"
 import { ArchiveItemAuditsPolicy } from "@/policies"
-import BaseController from "@/controllers/base-controller"
 import { IndexSerializer } from "@/serializers/archive-item-audits"
+import BaseController from "@/controllers/base-controller"
 
 export class ArchiveItemAuditsController extends BaseController<ArchiveItemAudit> {
   async index() {

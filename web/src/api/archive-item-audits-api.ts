@@ -1,6 +1,6 @@
 import http from "@/api/http-client"
-import { User } from "./users-api"
-import { ArchiveItem, ArchiveItemFile } from "./archive-items-api"
+import { type User } from "@/api/users-api"
+import { type ArchiveItem, type ArchiveItemFile } from "@/api/archive-items-api"
 
 export type ArchiveItemAudit = {
   id: number

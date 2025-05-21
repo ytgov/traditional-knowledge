@@ -85,15 +85,13 @@
             density="compact"
           />
         </v-col>
-        <v-col
-          cols="12"
-          md="3"
-        >
-        <SourceSelect v-model="source" label="Source" density="compact" />
-        </v-col>
         <v-col class="d-flex">
-          <StatusSelect v-model="status" label="Status" density="compact" />
-          
+          <StatusSelect
+            v-model="status"
+            label="Status"
+            density="compact"
+          />
+
           <v-btn
             class="ml-6"
             color="info"
@@ -114,24 +112,19 @@
         @update:page="updatePage"
         @click:row="openItem"
       >
-        <template #item.calculatedExpireDate="{ item }">
-          {{ formatDate(item.calculatedExpireDate) }}
-        </template>
       </v-data-table-server>
     </v-card-text>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
+import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 import { useRouteQuery } from "@vueuse/router"
 
 import useArchiveItems from "@/use/use-archive-items"
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 import { ArchiveItem } from "@/api/archive-items-api"
-import { formatDate } from "@/utils/formatters"
-import SourceSelect from "@/components/sources/SourceSelect.vue"
 import StatusSelect from "@/components/archive-item/StatusSelect.vue"
 
 const router = useRouter()
@@ -141,7 +134,6 @@ const showDue = ref(false)
 const showMine = ref(false)
 
 const search = ref()
-const source = ref()
 const status = ref()
 const page = useRouteQuery("page", "1", { transform: Number })
 const perPage = useRouteQuery("perPage", "10", { transform: Number })
@@ -151,7 +143,6 @@ const headers = [
   { title: "Description", value: "description" },
   { title: "Status", value: "status" },
   { title: "Attachments", value: "archiveItemFileCount" },
-  { title: "Expires On", value: "calculatedExpireDate" },
 ]
 
 useBreadcrumbs("Archive Items", [BASE_CRUMB])

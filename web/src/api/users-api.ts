@@ -32,8 +32,6 @@ export type User = {
 
   // Virtuals
   isActive: boolean
-  categories?: number[]
-  sources?: number[]
 
   // Associations
   adminGroups?: Group[]

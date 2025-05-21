@@ -50,51 +50,6 @@
           >
           </v-card>
         </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
-          <v-card
-            color="white"
-            class="border"
-            title="Sources"
-            subtitle="Manage Sources"
-            :to="{
-              name: 'administration/SourceListPage',
-            }"
-          >
-          </v-card>
-        </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
-          <v-card
-            color="white"
-            class="border"
-            title="Retentions"
-            subtitle="Manage Current Users"
-            :to="{
-              name: 'administration/RetentionListPage',
-            }"
-          >
-          </v-card>
-        </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
-          <v-card
-            color="white"
-            class="border"
-            title="Categories"
-            subtitle="Manage Current Users"
-            :to="{
-              name: 'administration/CategoryListPage',
-            }"
-          >
-          </v-card>
-        </v-col>
       </v-row>
     </v-card-text>
   </v-card>

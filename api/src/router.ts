@@ -21,14 +21,9 @@ import {
   ArchiveItemAuditsController,
   ArchiveItemFilesController,
   ArchiveItemsController,
-  CategoriesController,
   CurrentUserController,
-  DecisionsController,
   GroupsController,
   InformationSharingAgreementsController,
-  IntegrationController,
-  RetentionsController,
-  SourcesController,
   UserGroupsController,
   UsersController,
 } from "@/controllers"
@@ -45,8 +40,6 @@ router.route("/_status").get((_req: Request, res: Response) => {
 
 router.use("/migrate", migrator.migrationRouter)
 
-router.route("/api/integrations/:sourceId").post(IntegrationController.create)
-
 // api routes
 router.use("/api", jwtMiddleware, ensureAndAuthorizeCurrentUser)
 
@@ -58,28 +51,6 @@ router
   .get(UsersController.show)
   .patch(UsersController.update)
   .delete(UsersController.destroy)
-
-router.route("/api/sources").get(SourcesController.index).post(SourcesController.create)
-router
-  .route("/api/sources/:id")
-  .get(SourcesController.show)
-  .patch(SourcesController.update)
-  .delete(SourcesController.destroy)
-
-router.route("/api/retentions").get(RetentionsController.index).post(RetentionsController.create)
-router
-  .route("/api/retentions/:id")
-  .get(RetentionsController.show)
-  .patch(RetentionsController.update)
-  .delete(RetentionsController.destroy)
-
-router.route("/api/categories").get(CategoriesController.index).post(CategoriesController.create)
-
-router
-  .route("/api/categories/:id")
-  .get(CategoriesController.show)
-  .patch(CategoriesController.update)
-  .delete(CategoriesController.destroy)
 
 router
   .route("/api/archive-items")
@@ -93,13 +64,6 @@ router
 
 router.route("/api/archive-items/:archiveItemId/files/:fileId").get(ArchiveItemFilesController.show)
 router.route("/api/archive-items/:archiveItemId/audits").get(ArchiveItemAuditsController.index)
-
-router.route("/api/decisions").get(DecisionsController.index).post(DecisionsController.create)
-router
-  .route("/api/decisions/:id")
-  .get(DecisionsController.show)
-  .patch(DecisionsController.update)
-  .delete(DecisionsController.destroy)
 
 router.route("/api/groups").get(GroupsController.index).post(GroupsController.create)
 router
