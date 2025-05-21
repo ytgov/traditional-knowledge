@@ -7,7 +7,7 @@
     :items="userGroups"
     :items-length="totalCount"
     :loading="isLoading"
-    @click:row="(_event: unknown, { item }: UserGroupTableRow) => goToGroupUserPage(item.id)"
+    @click:row="(_event: unknown, { item }: UserGroupTableRow) => goToUserPage(item.userId)"
   >
     <template #item.actions="{ item }">
       <div
@@ -126,11 +126,12 @@ const { isSystemAdmin, isGroupAdminFor } = useCurrentUser<true>()
 
 const router = useRouter()
 
-function goToGroupUserPage(userGroupId: number) {
-  router.push({
-    name: "administration/groups/UserGroupPage",
+function goToUserPage(userId: number) {
+  // TODO: standardize this route to redirect to user read page
+  return router.push({
+    name: "users/UserEditPage",
     params: {
-      userGroupId,
+      userId,
     },
   })
 }
