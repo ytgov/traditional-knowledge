@@ -90,12 +90,38 @@ const routes: RouteRecordRaw[] = [
           },
           {
             path: "information-sharing-agreements/:informationSharingAgreementId",
-            name: "administration/information-sharing-agreements/InformationSharingAgreementPage",
             component: () =>
               import(
                 "@/pages/administration/information-sharing-agreements/InformationSharingAgreementPage.vue"
               ),
             props: true,
+            children: [
+              {
+                path: "",
+                name: "administration/information-sharing-agreements/InformationSharingAgreementPage",
+                redirect: {
+                  name: "administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage",
+                },
+              },
+              {
+                path: "access-grants",
+                name: "administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage",
+                component: () =>
+                  import(
+                    "@/pages/administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage.vue"
+                  ),
+                props: true,
+              },
+              {
+                path: "access-grants/new",
+                name: "administration/information-sharing-agreements/InformationSharingAgreementAccessGrantNewPage",
+                component: () =>
+                  import(
+                    "@/pages/administration/information-sharing-agreements/InformationSharingAgreementAccessGrantNewPage.vue"
+                  ),
+                props: true,
+              },
+            ],
           },
           {
             path: "information-sharing-agreements/:informationSharingAgreementId/edit",
