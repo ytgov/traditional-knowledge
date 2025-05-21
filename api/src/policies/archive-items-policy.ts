@@ -31,10 +31,6 @@ export class ArchiveItemsPolicy extends PolicyFactory(ArchiveItem) {
 
   permittedAttributes(): Path[] {
     const attributes: (keyof Attributes<ArchiveItem>)[] = [
-      "retentionName",
-      "calculatedExpireDate",
-      "overrideExpireDate",
-      "expireAction",
       "userId",
       "title",
       "description",

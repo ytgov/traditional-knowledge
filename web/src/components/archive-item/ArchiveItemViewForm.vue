@@ -39,42 +39,6 @@
           </v-row>
         </v-card-text>
 
-        <v-card-title>Retention</v-card-title>
-        <v-card-text>
-          <v-row>
-            <v-col
-              cols="12"
-              md="4"
-            >
-              <v-text-field
-                v-model="item.retentionName"
-                readonly
-                label="Policy"
-              />
-            </v-col>
-            <v-col
-              cols="12"
-              md="4"
-            >
-              <v-text-field
-                :model-value="formatDate(item.calculatedExpireDate)"
-                label="Expires on"
-                readonly
-              />
-            </v-col>
-            <v-col
-              cols="12"
-              md="4"
-            >
-              <v-text-field
-                :model-value="item.expireAction"
-                label="When item expires"
-                readonly
-              />
-            </v-col>
-          </v-row>
-        </v-card-text>
-
         <v-card-title>Tags</v-card-title>
         <v-card-text>
           <p class="mb-4">
@@ -150,7 +114,7 @@
 import { computed, ref } from "vue"
 
 import useArchiveItem from "@/use/use-archive-item"
-import { formatDate, formatDateTime } from "@/utils/formatters"
+import { formatDateTime } from "@/utils/formatters"
 
 import SecurityLevelSelect from "@/components/archive-item/SecurityLevelSelect.vue"
 import ArchiveItemFileCard from "@/components/archive-item-files/ArchiveItemFileCard.vue"

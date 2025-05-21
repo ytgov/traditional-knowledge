@@ -112,9 +112,6 @@
         @update:page="updatePage"
         @click:row="openItem"
       >
-        <template #item.calculatedExpireDate="{ item }">
-          {{ formatDate(item.calculatedExpireDate) }}
-        </template>
       </v-data-table-server>
     </v-card-text>
   </v-card>
@@ -128,7 +125,6 @@ import { useRouteQuery } from "@vueuse/router"
 import useArchiveItems from "@/use/use-archive-items"
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 import { ArchiveItem } from "@/api/archive-items-api"
-import { formatDate } from "@/utils/formatters"
 import StatusSelect from "@/components/archive-item/StatusSelect.vue"
 
 const router = useRouter()
@@ -147,7 +143,6 @@ const headers = [
   { title: "Description", value: "description" },
   { title: "Status", value: "status" },
   { title: "Attachments", value: "archiveItemFileCount" },
-  { title: "Expires On", value: "calculatedExpireDate" },
 ]
 
 useBreadcrumbs("Archive Items", [BASE_CRUMB])

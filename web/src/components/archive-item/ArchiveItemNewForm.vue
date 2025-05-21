@@ -107,12 +107,7 @@ onMounted(() => {
     title: "",
     securityLevel: SecurityLevel.LOW,
     description: null,
-    expireAction: null,
-    calculatedExpireDate: null,
-    overrideExpireDate: null,
-    retentionName: null,
     summary: null,
-    categories: [],
     tags: [],
     files: [],
   }

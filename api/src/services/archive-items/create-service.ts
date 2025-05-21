@@ -19,29 +19,12 @@ export class CreateService extends BaseService {
   }
 
   async perform(): Promise<ArchiveItem> {
-    const {
-      title,
-      retentionName,
-      calculatedExpireDate,
-      expireAction,
-      securityLevel,
-      ...optionalAttributes
-    } = this.attributes
+    const { title, securityLevel, ...optionalAttributes } = this.attributes
 
     const status = ArchiveItemStatus.ACCEPTED
 
-    //if (!isArray(categories)) this .categories = JSON.parse(optionalAttributes.)
     if (isNil(title)) {
       throw new Error("Title is required")
-    }
-    if (isNil(retentionName)) {
-      throw new Error("Retention Policy is required")
-    }
-    if (isNil(calculatedExpireDate)) {
-      throw new Error("Expires on is required")
-    }
-    if (isNil(expireAction)) {
-      throw new Error("Expire action is required")
     }
     if (isNil(status)) {
       throw new Error("Status is required")
@@ -59,9 +42,6 @@ export class CreateService extends BaseService {
           ...optionalAttributes,
           isDecision: false,
           title,
-          retentionName,
-          calculatedExpireDate,
-          expireAction,
           status,
           securityLevel,
           userId: this.attributes.currentUser?.id,

@@ -8,11 +8,7 @@ import { UserReferenceView } from "@/serializers/users/reference-serializer"
 export type ArchiveItemShowView = Pick<
   ArchiveItem,
   | "id"
-  | "retentionName"
   | "isDecision"
-  | "calculatedExpireDate"
-  | "overrideExpireDate"
-  | "expireAction"
   | "userId"
   | "title"
   | "description"
@@ -33,11 +29,7 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
     return {
       ...pick(this.record, [
         "id",
-        "retentionName",
         "isDecision",
-        "calculatedExpireDate",
-        "overrideExpireDate",
-        "expireAction",
         "userId",
         "title",
         "description",

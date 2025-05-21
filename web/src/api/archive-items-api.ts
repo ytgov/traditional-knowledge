@@ -20,10 +20,6 @@ export enum ArchiveItemStatus {
 export type ArchiveItem = {
   id: number
   title: string
-  retentionName: string
-  calculatedExpireDate: Date
-  overrideExpireDate: Date | null
-  expireAction: string
   userId: number | null
   description: string | null
   summary: string | null
@@ -58,17 +54,12 @@ export type ArchiveItemFile = {
 }
 export type ArchiveItemCreate = {
   title: string
-  retentionName: string | null
-  expireAction: string | null
-  calculatedExpireDate: Date | string | null
-  overrideExpireDate: Date | string | null
   description: string | null
   summary: string | null
   securityLevel: SecurityLevel
   tags: string[] | null
 
   files: File[] | null
-  categories: number[] | null
 }
 
 export type ArchiveItemWhereOptions = {

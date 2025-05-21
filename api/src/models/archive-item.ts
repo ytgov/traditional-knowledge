@@ -48,27 +48,12 @@ export class ArchiveItem extends BaseModel<
   @AutoIncrement
   declare id: CreationOptional<number>
 
-  @Attribute(DataTypes.STRING(255))
-  @NotNull
-  declare retentionName: string
-
   @Attribute(DataTypes.BOOLEAN)
   @NotNull
   declare isDecision: boolean
 
   @Attribute(DataTypes.STRING(255))
   declare decisionText: string | null
-
-  @Attribute(DataTypes.DATE(0))
-  @NotNull
-  declare calculatedExpireDate: Date | string
-
-  @Attribute(DataTypes.DATE(0))
-  declare overrideExpireDate: Date | null
-
-  @Attribute(DataTypes.STRING(255))
-  @NotNull
-  declare expireAction: string
 
   @Attribute(DataTypes.INTEGER)
   declare userId: number | null
