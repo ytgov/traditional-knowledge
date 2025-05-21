@@ -27,6 +27,7 @@ export class UserGroupPolicy extends PolicyFactory(UserGroup) {
 
   destroy(): boolean {
     if (this.user.isSystemAdmin) return true
+    if (this.user.isGroupAdminOf(this.record.groupId)) return true
 
     return false
   }
