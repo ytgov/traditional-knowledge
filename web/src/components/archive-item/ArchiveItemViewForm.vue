@@ -75,22 +75,12 @@
           </v-row>
         </v-card-text>
 
-        <v-card-title>Categories and Tags</v-card-title>
+        <v-card-title>Tags</v-card-title>
         <v-card-text>
           <p class="mb-4">
-            Categories and Tags are used as filter criteria to find items in the archive as well as
-            determine who can see the items. You can select as many of each as are applicable to
-            this item. Additional categories potentially increase the number of people that can see
-            this information, but also make it more accessible in the future.
+            Tags are used as filter criteria to find items in the archive. You can select as many as
+            are applicable to this item.
           </p>
-          <v-select
-            v-model="categoryNames"
-            :hide-details="false"
-            label="Categories"
-            multiple
-            chips
-            readonly
-          />
           <v-combobox
             v-model="item.tags"
             label="Tags"
@@ -175,13 +165,6 @@ const auditCard = ref<typeof ArchiveItemAuditCard>()
 const archiveItemId = computed(() => (props.archiveItemId ? parseInt(props.archiveItemId) : null))
 
 const { item } = useArchiveItem(archiveItemId)
-
-const categoryNames = computed(() => {
-  if (item.value && item.value.categories) {
-    return item.value.categories.map((c) => c.name)
-  }
-  return []
-})
 
 function reloadAudit() {
   auditCard.value?.reload()
