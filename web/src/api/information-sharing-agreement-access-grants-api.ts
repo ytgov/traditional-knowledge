@@ -8,10 +8,11 @@ import {
 import { type Group } from "@/api/groups-api"
 import { type UserReferenceView } from "@/api/users-api"
 
-export enum InformationSharingAgreementAccessGrantAccessLevel {
+export enum InformationSharingAgreementAccessGrantAccessLevels {
   READ = "read",
   READ_DOWNLOAD = "read_download",
   EDIT = "edit",
+  ADMIN = "admin",
 }
 
 export type InformationSharingAgreementAccessGrant = {
@@ -19,7 +20,7 @@ export type InformationSharingAgreementAccessGrant = {
   informationSharingAgreementId: number
   groupId: number
   userId: number | null
-  accessLevel: InformationSharingAgreementAccessGrantAccessLevel
+  accessLevel: InformationSharingAgreementAccessGrantAccessLevels
   creatorId: number
   createdAt: string
   updatedAt: string

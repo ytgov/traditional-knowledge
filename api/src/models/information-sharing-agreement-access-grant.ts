@@ -21,16 +21,19 @@ import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
 import User from "@/models/user"
 
-export enum InformationSharingAgreementAccessGrantAccessLevel {
+export enum InformationSharingAgreementAccessGrantAccessLevels {
   READ = "read",
   READ_DOWNLOAD = "read_download",
   EDIT = "edit",
+  ADMIN = "admin",
 }
 
 export class InformationSharingAgreementAccessGrant extends BaseModel<
   InferAttributes<InformationSharingAgreementAccessGrant>,
   InferCreationAttributes<InformationSharingAgreementAccessGrant>
 > {
+  static readonly AccessLevels = InformationSharingAgreementAccessGrantAccessLevels
+
   @Attribute(DataTypes.INTEGER)
   @PrimaryKey
   @AutoIncrement
@@ -49,16 +52,16 @@ export class InformationSharingAgreementAccessGrant extends BaseModel<
 
   @Attribute(DataTypes.STRING)
   @NotNull
-  @Default(InformationSharingAgreementAccessGrantAccessLevel.READ)
+  @Default(InformationSharingAgreementAccessGrantAccessLevels.READ)
   @ValidateAttribute({
     isIn: {
-      args: [Object.values(InformationSharingAgreementAccessGrantAccessLevel)],
+      args: [Object.values(InformationSharingAgreementAccessGrantAccessLevels)],
       msg: `Access level must be one of ${Object.values(
-        InformationSharingAgreementAccessGrantAccessLevel
+        InformationSharingAgreementAccessGrantAccessLevels
       ).join(", ")}`,
     },
   })
-  declare accessLevel: CreationOptional<InformationSharingAgreementAccessGrantAccessLevel>
+  declare accessLevel: CreationOptional<InformationSharingAgreementAccessGrantAccessLevels>
 
   @Attribute(DataTypes.INTEGER)
   @NotNull

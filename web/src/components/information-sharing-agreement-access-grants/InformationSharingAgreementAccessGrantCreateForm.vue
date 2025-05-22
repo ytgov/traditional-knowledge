@@ -101,7 +101,7 @@ import { VForm } from "vuetify/components"
 import { required } from "@/utils/validators"
 import informationSharingAgreementAccessGrantsApi, {
   type InformationSharingAgreementAccessGrant,
-  InformationSharingAgreementAccessGrantAccessLevel,
+  InformationSharingAgreementAccessGrantAccessLevels,
 } from "@/api/information-sharing-agreement-access-grants-api"
 import useSnack from "@/use/use-snack"
 
@@ -120,7 +120,7 @@ const informationSharingAgreementAccessGrantAttributes = ref<
   informationSharingAgreementId: props.informationSharingAgreementId,
   groupId: props.groupId,
   userId: undefined,
-  accessLevel: InformationSharingAgreementAccessGrantAccessLevel.READ,
+  accessLevel: InformationSharingAgreementAccessGrantAccessLevels.READ,
 })
 
 const userFilters = computed(() => ({

@@ -5,7 +5,7 @@ import informationSharingAgreementAccessGrantsApi, {
   type InformationSharingAgreementAccessGrantWhereOptions,
   type InformationSharingAgreementAccessGrantFiltersOptions,
   type InformationSharingAgreementAccessGrantQueryOptions,
-  InformationSharingAgreementAccessGrantAccessLevel,
+  InformationSharingAgreementAccessGrantAccessLevels,
 } from "@/api/information-sharing-agreement-access-grants-api"
 
 export {
@@ -13,7 +13,7 @@ export {
   type InformationSharingAgreementAccessGrantWhereOptions,
   type InformationSharingAgreementAccessGrantFiltersOptions,
   type InformationSharingAgreementAccessGrantQueryOptions,
-  InformationSharingAgreementAccessGrantAccessLevel,
+  InformationSharingAgreementAccessGrantAccessLevels,
 }
 
 export function useInformationSharingAgreementAccessGrants(
