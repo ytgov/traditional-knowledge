@@ -23,12 +23,7 @@ describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts"
           })
 
         await informationSharingAgreementAccessGrant.reload({
-          include: [
-            {
-              association: "informationSharingAgreement",
-              include: ["accessGrants"],
-            },
-          ],
+          include: ["siblings"],
         })
 
         // Act
@@ -55,12 +50,7 @@ describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts"
           })
 
         await informationSharingAgreementAccessGrant.reload({
-          include: [
-            {
-              association: "informationSharingAgreement",
-              include: ["accessGrants"],
-            },
-          ],
+          include: ["siblings"],
         })
 
         // Act

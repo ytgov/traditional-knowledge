@@ -174,7 +174,17 @@ export class InformationSharingAgreementAccessGrantsController extends BaseContr
 
   private async loadInformationSharingAgreementAccessGrant() {
     return InformationSharingAgreementAccessGrant.findByPk(
-      this.params.informationSharingAgreementAccessGrantId
+      this.params.informationSharingAgreementAccessGrantId,
+      {
+        include: [
+          {
+            association: "siblings",
+            where: {
+              userId: this.currentUser.id,
+            },
+          },
+        ],
+      }
     )
   }
 
@@ -182,6 +192,14 @@ export class InformationSharingAgreementAccessGrantsController extends BaseContr
     const informationSharingAgreementAccessGrant = InformationSharingAgreementAccessGrant.build(
       this.request.body
     )
+    const siblings = await InformationSharingAgreementAccessGrant.findAll({
+      where: {
+        informationSharingAgreementId:
+          informationSharingAgreementAccessGrant.informationSharingAgreementId,
+        userId: this.currentUser.id,
+      },
+    })
+    informationSharingAgreementAccessGrant.siblings = siblings
     return informationSharingAgreementAccessGrant
   }
 
