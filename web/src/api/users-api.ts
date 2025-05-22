@@ -6,6 +6,7 @@ import {
   type WhereOptions,
 } from "@/api/base-api"
 import { type Group } from "@/api/groups-api"
+import { type InformationSharingAgreementAccessGrant } from "@/api/information-sharing-agreement-access-grants-api"
 
 /** Keep in sync with api/src/models/user.ts */
 export enum UserRoles {
@@ -35,6 +36,7 @@ export type User = {
 
   // Associations
   adminGroups?: Group[]
+  adminInformationSharingAgreementAccessGrants?: InformationSharingAgreementAccessGrant[]
 }
 
 export type UserReferenceView = Pick<

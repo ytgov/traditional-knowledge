@@ -33,7 +33,7 @@
     </template>
     <template #item.actions="{ item }">
       <div
-        v-if="isGroupAdminFor(item.groupId)"
+        v-if="isAdminForInformationSharingAgreement(item.informationSharingAgreementId)"
         class="d-flex justify-end align-center"
       >
         <v-btn
@@ -140,7 +140,7 @@ const informationSharingAgreementAccessGrantsQuery = computed(() => ({
 const { informationSharingAgreementAccessGrants, totalCount, isLoading, refresh } =
   useInformationSharingAgreementAccessGrants(informationSharingAgreementAccessGrantsQuery)
 
-const { isGroupAdminFor } = useCurrentUser<true>()
+const { isAdminForInformationSharingAgreement } = useCurrentUser<true>()
 
 const router = useRouter()
 
