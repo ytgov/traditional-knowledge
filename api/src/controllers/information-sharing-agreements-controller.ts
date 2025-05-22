@@ -3,7 +3,7 @@ import { isNil } from "lodash"
 import logger from "@/utils/logger"
 import { InformationSharingAgreement } from "@/models"
 import { InformationSharingAgreementPolicy } from "@/policies"
-import { CreateService } from "@/services/information-sharing-agreements"
+import { CreateService, UpdateService } from "@/services/information-sharing-agreements"
 import { IndexSerializer, ShowSerializer } from "@/serializers/information-sharing-agreements"
 import BaseController from "@/controllers/base-controller"
 
@@ -119,7 +119,12 @@ export class InformationSharingAgreementsController extends BaseController<Infor
       }
 
       const permittedAttributes = policy.permitAttributes(this.request.body)
-      await informationSharingAgreement.update(permittedAttributes)
+      await UpdateService.perform(
+        informationSharingAgreement,
+        permittedAttributes,
+        this.currentUser
+      )
+
       const serializedInformationSharingAgreement = ShowSerializer.perform(
         informationSharingAgreement
       )

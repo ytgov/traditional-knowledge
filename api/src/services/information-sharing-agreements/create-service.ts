@@ -73,7 +73,7 @@ export class CreateService extends BaseService {
         ...optionalAttributes,
       })
 
-      await this.createAdminAccessGrants(
+      await this.ensureAdminAccessGrants(
         informationSharingAgreement.id,
         informationSharingAgreement.sharingGroupId,
         informationSharingAgreement.sharingGroupContactId,
@@ -85,41 +85,44 @@ export class CreateService extends BaseService {
     })
   }
 
-  private async createAdminAccessGrants(
+  private async ensureAdminAccessGrants(
     informationSharingAgreementId: number,
     sharingGroupId: number,
     sharingGroupContactId: number,
     receivingGroupId: number,
     receivingGroupContactId: number
   ) {
-    await this.createAdminAccessGrantFor(
+    await this.ensureAdminAccessGrantFor(
       informationSharingAgreementId,
       sharingGroupId,
       this.currentUser.id
     )
-
-    if (sharingGroupContactId !== this.currentUser.id) {
-      await this.createAdminAccessGrantFor(
-        informationSharingAgreementId,
-        sharingGroupId,
-        sharingGroupContactId
-      )
-    }
-
-    if (receivingGroupContactId !== this.currentUser.id) {
-      await this.createAdminAccessGrantFor(
-        informationSharingAgreementId,
-        receivingGroupId,
-        receivingGroupContactId
-      )
-    }
+    await this.ensureAdminAccessGrantFor(
+      informationSharingAgreementId,
+      sharingGroupId,
+      sharingGroupContactId
+    )
+    await this.ensureAdminAccessGrantFor(
+      informationSharingAgreementId,
+      receivingGroupId,
+      receivingGroupContactId
+    )
   }
 
-  private async createAdminAccessGrantFor(
+  private async ensureAdminAccessGrantFor(
     informationSharingAgreementId: number,
     groupId: number,
     userId: number
   ) {
+    const existingAccessGrant = await InformationSharingAgreementAccessGrant.findOne({
+      where: {
+        informationSharingAgreementId,
+        groupId,
+        userId,
+      },
+    })
+    if (existingAccessGrant) return
+
     return InformationSharingAgreementAccessGrant.create({
       informationSharingAgreementId,
       groupId,
