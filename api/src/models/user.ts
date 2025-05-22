@@ -271,6 +271,29 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
         },
       }
     })
+
+    this.addScope("withoutAccessGrantFor", (informationSharingAgreementId: number) => {
+      return {
+        where: {
+          id: {
+            [Op.notIn]: sql`
+              (
+                SELECT
+                  user_id
+                FROM
+                  information_sharing_agreement_access_grants
+                WHERE
+                  deleted_at IS NULL
+                  AND information_sharing_agreement_id = :informationSharingAgreementId
+              )
+            `,
+          },
+        },
+        replacements: {
+          informationSharingAgreementId,
+        },
+      }
+    })
   }
 }
 

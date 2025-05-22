@@ -124,7 +124,8 @@ const informationSharingAgreementAccessGrantAttributes = ref<
 })
 
 const userFilters = computed(() => ({
-  inGroup: informationSharingAgreementAccessGrantAttributes.value.groupId,
+  inGroup: props.groupId,
+  withoutAccessGrantFor: props.informationSharingAgreementId,
 }))
 
 const shareWithEntireGroup = ref(false)

@@ -60,6 +60,7 @@ export type UserFiltersOptions = FiltersOptions<{
   search: string | string[]
   inGroup: number
   notInGroup: number
+  withoutAccessGrantFor: number
   // TODO: implement isActive scope in back-end
 }>
 
