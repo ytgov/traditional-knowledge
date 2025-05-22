@@ -10,16 +10,20 @@ import {
   Attribute,
   AutoIncrement,
   BelongsTo,
+  BelongsToMany,
   Default,
   NotNull,
   PrimaryKey,
+  Table,
   ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
+import { isUndefined } from "lodash"
 
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
 import User from "@/models/user"
+import InformationSharingAgreementAccessGrantSibling from "@/models/information-sharing-agreement-access-grant-sibling"
 
 export enum InformationSharingAgreementAccessGrantAccessLevels {
   READ = "read",
@@ -28,6 +32,9 @@ export enum InformationSharingAgreementAccessGrantAccessLevels {
   ADMIN = "admin",
 }
 
+@Table({
+  tableName: "information_sharing_agreement_access_grants",
+})
 export class InformationSharingAgreementAccessGrant extends BaseModel<
   InferAttributes<InformationSharingAgreementAccessGrant>,
   InferCreationAttributes<InformationSharingAgreementAccessGrant>
@@ -80,6 +87,15 @@ export class InformationSharingAgreementAccessGrant extends BaseModel<
   @Attribute(DataTypes.DATE(0))
   declare deletedAt: Date | null
 
+  // Helpers
+  get selfAndSiblings(): NonAttribute<InformationSharingAgreementAccessGrant[]> {
+    if (isUndefined(this.siblings)) {
+      throw new Error("Expected siblings association to be pre-loaded.")
+    }
+
+    return [this, ...this.siblings]
+  }
+
   // Associations
   @BelongsTo(() => InformationSharingAgreement, {
     foreignKey: "informationSharingAgreementId",
@@ -116,6 +132,15 @@ export class InformationSharingAgreementAccessGrant extends BaseModel<
     },
   })
   declare creator?: NonAttribute<User>
+
+  @BelongsToMany(() => InformationSharingAgreementAccessGrant, {
+    through: () => InformationSharingAgreementAccessGrantSibling,
+    foreignKey: "informationSharingAgreementAccessGrantId",
+    otherKey: "informationSharingAgreementAccessGrantSiblingId",
+    inverse: "siblingsOf",
+  })
+  declare siblings?: NonAttribute<InformationSharingAgreementAccessGrant[]>
+  declare siblingsOf?: NonAttribute<InformationSharingAgreementAccessGrant[]>
 
   // Scopes
   static establishScopes(): void {
