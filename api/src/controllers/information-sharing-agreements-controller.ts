@@ -168,7 +168,7 @@ export class InformationSharingAgreementsController extends BaseController<Infor
 
   private async loadInformationSharingAgreement() {
     return InformationSharingAgreement.findByPk(this.params.informationSharingAgreementId, {
-      include: ["creator", "sharingGroup", "receivingGroup"],
+      include: ["creator", "sharingGroup", "receivingGroup", "accessGrants"],
     })
   }
 

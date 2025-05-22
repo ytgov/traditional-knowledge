@@ -15,6 +15,7 @@ import {
   NotNull,
   PrimaryKey,
 } from "@sequelize/core/decorators-legacy"
+import { isUndefined } from "lodash"
 
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
@@ -77,6 +78,15 @@ export class InformationSharingAgreement extends BaseModel<
 
   @Attribute(DataTypes.DATE(0))
   declare deletedAt: Date | null
+
+  // Helper functions
+  hasAccessGrantFor(userId: number): boolean {
+    if (isUndefined(this.accessGrants)) {
+      throw new Error("Expected accessGrants association to be pre-loaded.")
+    }
+
+    return this.accessGrants.some((accessGrant) => accessGrant.userId === userId)
+  }
 
   // Associations
   @BelongsTo(() => User, {

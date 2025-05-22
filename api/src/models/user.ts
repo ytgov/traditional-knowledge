@@ -139,6 +139,18 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     return this.adminGroups.some((group) => group.id === groupId)
   }
 
+  isAdminForInformationSharingAgreement(informationSharingAgreementId: number): boolean {
+    if (isUndefined(this.adminInformationSharingAgreementAccessGrants)) {
+      throw new Error(
+        "Expected adminInformationSharingAgreementAccessGrants association to be pre-loaded."
+      )
+    }
+
+    return this.adminInformationSharingAgreementAccessGrants.some(
+      (accessGrant) => accessGrant.informationSharingAgreementId === informationSharingAgreementId
+    )
+  }
+
   // Associations
   @HasMany(() => InformationSharingAgreement, {
     foreignKey: "creatorId",
