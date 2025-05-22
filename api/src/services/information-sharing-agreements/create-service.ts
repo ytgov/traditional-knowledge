@@ -1,7 +1,11 @@
 import { Attributes } from "@sequelize/core"
 import { isNil } from "lodash"
 
-import db, { User, InformationSharingAgreement, InformationSharingAgreementAccessGrant } from "@/models"
+import db, {
+  User,
+  InformationSharingAgreement,
+  InformationSharingAgreementAccessGrant,
+} from "@/models"
 import BaseService from "@/services/base-service"
 
 export type InformationSharingAgreementCreationAttributes = Partial<
@@ -93,16 +97,22 @@ export class CreateService extends BaseService {
       sharingGroupId,
       this.currentUser.id
     )
-    await this.createAdminAccessGrantFor(
-      informationSharingAgreementId,
-      sharingGroupId,
-      sharingGroupContactId
-    )
-    await this.createAdminAccessGrantFor(
-      informationSharingAgreementId,
-      receivingGroupId,
-      receivingGroupContactId
-    )
+
+    if (sharingGroupContactId !== this.currentUser.id) {
+      await this.createAdminAccessGrantFor(
+        informationSharingAgreementId,
+        sharingGroupId,
+        sharingGroupContactId
+      )
+    }
+
+    if (receivingGroupContactId !== this.currentUser.id) {
+      await this.createAdminAccessGrantFor(
+        informationSharingAgreementId,
+        receivingGroupId,
+        receivingGroupContactId
+      )
+    }
   }
 
   private async createAdminAccessGrantFor(
