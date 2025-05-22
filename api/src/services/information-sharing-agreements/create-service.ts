@@ -1,12 +1,9 @@
 import { Attributes } from "@sequelize/core"
 import { isNil } from "lodash"
 
-import db, {
-  User,
-  InformationSharingAgreement,
-  InformationSharingAgreementAccessGrant,
-} from "@/models"
+import db, { User, InformationSharingAgreement } from "@/models"
 import BaseService from "@/services/base-service"
+import { EnsureAdminAccessService } from "@/services/information-sharing-agreements/admin-access-grants-service"
 
 export type InformationSharingAgreementCreationAttributes = Partial<
   Attributes<InformationSharingAgreement>
@@ -78,7 +75,8 @@ export class CreateService extends BaseService {
         informationSharingAgreement.sharingGroupId,
         informationSharingAgreement.sharingGroupContactId,
         informationSharingAgreement.receivingGroupId,
-        informationSharingAgreement.receivingGroupContactId
+        informationSharingAgreement.receivingGroupContactId,
+        this.currentUser
       )
 
       return informationSharingAgreement
@@ -90,46 +88,17 @@ export class CreateService extends BaseService {
     sharingGroupId: number,
     sharingGroupContactId: number,
     receivingGroupId: number,
-    receivingGroupContactId: number
+    receivingGroupContactId: number,
+    currentUser: User
   ) {
-    await this.ensureAdminAccessGrantFor(
+    await EnsureAdminAccessService.perform(
       informationSharingAgreementId,
       sharingGroupId,
-      this.currentUser.id
-    )
-    await this.ensureAdminAccessGrantFor(
-      informationSharingAgreementId,
-      sharingGroupId,
-      sharingGroupContactId
-    )
-    await this.ensureAdminAccessGrantFor(
-      informationSharingAgreementId,
+      sharingGroupContactId,
       receivingGroupId,
-      receivingGroupContactId
+      receivingGroupContactId,
+      currentUser
     )
-  }
-
-  private async ensureAdminAccessGrantFor(
-    informationSharingAgreementId: number,
-    groupId: number,
-    userId: number
-  ) {
-    const existingAccessGrant = await InformationSharingAgreementAccessGrant.findOne({
-      where: {
-        informationSharingAgreementId,
-        groupId,
-        userId,
-      },
-    })
-    if (existingAccessGrant) return
-
-    return InformationSharingAgreementAccessGrant.create({
-      informationSharingAgreementId,
-      groupId,
-      userId,
-      accessLevel: InformationSharingAgreementAccessGrant.AccessLevels.ADMIN,
-      creatorId: this.currentUser.id,
-    })
   }
 }
 
