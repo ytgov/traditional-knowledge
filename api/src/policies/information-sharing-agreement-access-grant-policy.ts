@@ -2,7 +2,7 @@ import { type Attributes, type FindOptions } from "@sequelize/core"
 
 import { type Path } from "@/utils/deep-pick"
 import { InformationSharingAgreementAccessGrant, User } from "@/models"
-import { ALL_RECORDS_SCOPE, PolicyFactory } from "@/policies/base-policy"
+import { PolicyFactory } from "@/policies/base-policy"
 
 export class InformationSharingAgreementAccessGrantPolicy extends PolicyFactory(
   InformationSharingAgreementAccessGrant
@@ -40,15 +40,21 @@ export class InformationSharingAgreementAccessGrantPolicy extends PolicyFactory(
   }
 
   static policyScope(user: User): FindOptions<Attributes<InformationSharingAgreementAccessGrant>> {
-    if (user.isSystemAdmin) return ALL_RECORDS_SCOPE
-
     return {
       include: [
         {
-          association: "siblings",
-          where: {
-            userId: user.id,
-          },
+          association: "informationSharingAgreement",
+          attributes: ["id"],
+          include: [
+            {
+              association: "accessGrants",
+              attributes: [],
+              where: {
+                userId: user.id,
+              },
+            },
+          ],
+          required: true,
         },
       ],
     }
