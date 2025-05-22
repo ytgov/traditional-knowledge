@@ -1,7 +1,8 @@
 import { Op, type Attributes, type FindOptions } from "@sequelize/core"
+import { isUndefined } from "lodash"
 
 import { type Path } from "@/utils/deep-pick"
-import { InformationSharingAgreementAccessGrant, User } from "@/models"
+import { InformationSharingAgreement, InformationSharingAgreementAccessGrant, User } from "@/models"
 import { ALL_RECORDS_SCOPE, PolicyFactory } from "@/policies/base-policy"
 
 export class InformationSharingAgreementAccessGrantPolicy extends PolicyFactory(
@@ -15,7 +16,7 @@ export class InformationSharingAgreementAccessGrantPolicy extends PolicyFactory(
   }
 
   create(): boolean {
-    // TODO: add ability for information sharing agreement owners to create access grants
+    if (this.hasAdminAccess(this.user.id)) return true
 
     return false
   }
@@ -52,6 +53,28 @@ export class InformationSharingAgreementAccessGrantPolicy extends PolicyFactory(
         ],
       },
     }
+  }
+
+  private hasAdminAccess(userId: number): boolean {
+    const { accessGrants } = this.informationSharingAgreement
+    if (isUndefined(accessGrants)) {
+      throw new Error("Expected access grants association to be pre-loaded.")
+    }
+
+    return accessGrants.some(
+      (accessGrant) =>
+        accessGrant.userId === userId &&
+        accessGrant.accessLevel === InformationSharingAgreementAccessGrant.AccessLevels.ADMIN
+    )
+  }
+
+  private get informationSharingAgreement(): InformationSharingAgreement {
+    const { informationSharingAgreement } = this.record
+    if (isUndefined(informationSharingAgreement)) {
+      throw new Error("Expected information sharing agreement association to be pre-loaded.")
+    }
+
+    return informationSharingAgreement
   }
 }
 
