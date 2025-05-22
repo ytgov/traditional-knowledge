@@ -32,6 +32,7 @@ export const SUBTITLE_MAX_LENGTH = 255
 // Keep in sync with web/src/api/notifications-api.ts
 export enum NotificationSourceTypes {
   SYSTEM = "system",
+  GROUP = "group",
 }
 
 export class Notification extends BaseModel<
