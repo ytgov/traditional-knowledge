@@ -1,4 +1,4 @@
-import { Op, type Attributes, type FindOptions } from "@sequelize/core"
+import { type Attributes, type FindOptions } from "@sequelize/core"
 
 import { type Path } from "@/utils/deep-pick"
 import { InformationSharingAgreement, User } from "@/models"
@@ -51,21 +51,15 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
       return ALL_RECORDS_SCOPE
     }
 
-    // TODO: Allow users to view agreements that they have an associated information sharing agreement access grant for.
     return {
-      where: {
-        [Op.or]: [
-          {
-            creatorId: user.id,
+      include: [
+        {
+          association: "accessGrants",
+          where: {
+            userId: user.id,
           },
-          {
-            sharingGroupContactId: user.id,
-          },
-          {
-            receivingGroupContactId: user.id,
-          },
-        ],
-      },
+        },
+      ],
     }
   }
 }
