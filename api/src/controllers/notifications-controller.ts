@@ -110,7 +110,7 @@ export class NotificationsController extends BaseController<Notification> {
   }
 
   private async loadNotification() {
-    return Notification.findByPk(this.params.id)
+    return Notification.findByPk(this.params.notificationId)
   }
 
   private async buildNotification() {
