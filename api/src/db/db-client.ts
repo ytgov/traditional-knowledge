@@ -35,7 +35,7 @@ export const SEQUELIZE_CONFIG: Options<MsSqlDialect> = {
   schema: "dbo", // default - explicit for clarity
   // Avoids need to have a signed certificate in development.
   trustServerCertificate: DB_TRUST_SERVER_CERTIFICATE,
-  logging: console.log, // NODE_ENV === "development" ? console.log : false,
+  logging: NODE_ENV === "development" ? console.log : false,
   define: {
     underscored: true,
     timestamps: true, // default - explicit for clarity.
