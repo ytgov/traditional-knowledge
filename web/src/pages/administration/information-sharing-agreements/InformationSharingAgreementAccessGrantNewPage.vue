@@ -1,7 +1,12 @@
 <template>
   <v-skeleton-loader
-    v-if="isNil(informationSharingAgreement) || isNil(groupId)"
+    v-if="isNil(informationSharingAgreement)"
     type="table"
+  />
+  <v-alert
+    v-else-if="isNil(groupId)"
+    type="error"
+    title="You are not a contact (admin) for this information sharing agreement"
   />
   <InformationSharingAgreementAccessGrantCreateForm
     v-else
@@ -47,7 +52,7 @@ const groupId = computed(() => {
   } else if (currentUser.value.id === receivingGroupContactId) {
     return receivingGroupId
   } else {
-    throw new Error("Current user is not a contact (admin) for this information sharing agreement")
+    return null
   }
 })
 
