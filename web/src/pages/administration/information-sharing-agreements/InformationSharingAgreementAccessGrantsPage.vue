@@ -21,6 +21,7 @@
   </div>
 
   <InformationSharingAgreementAccessGrantEditDataTableServer
+    :where="where"
     :filters="filters"
   />
 </template>
@@ -34,16 +35,16 @@ import InformationSharingAgreementAccessGrantEditDataTableServer from "@/compone
 
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
 
-defineProps<{
+const props = defineProps<{
   informationSharingAgreementId: string
 }>()
 
-// const informationSharingAgreementIdAsNumber = computed(() =>
-//   parseInt(props.informationSharingAgreementId)
-// )
-// const where = computed(() => ({
-//   informationSharingAgreementId: informationSharingAgreementIdAsNumber.value,
-// }))
+const informationSharingAgreementIdAsNumber = computed(() =>
+  parseInt(props.informationSharingAgreementId)
+)
+const where = computed(() => ({
+  informationSharingAgreementId: informationSharingAgreementIdAsNumber.value,
+}))
 
 const search = ref("")
 
