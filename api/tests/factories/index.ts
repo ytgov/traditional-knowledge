@@ -1,1 +1,5 @@
+export { groupFactory } from "./group-factory"
+export { informationSharingAgreementAccessGrantFactory } from "./information-sharing-agreement-access-grant-factory"
+export { informationSharingAgreementFactory } from "./information-sharing-agreement-factory"
 export { userFactory } from "./user-factory"
+export { userGroupFactory } from "./user-group-factory"
