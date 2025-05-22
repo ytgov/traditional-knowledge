@@ -9,7 +9,7 @@
     :loading="isLoading"
     @click:row="
       (_event: unknown, { item }: InformationSharingAgreementAccessGrantTableRow) =>
-        goToInformationSharingAgreementAccessGrantPage(item.id)
+        goToGroupOrUserPage(item.groupId, item.userId)
     "
   >
     <template #item.group.name="{ item }">
@@ -144,13 +144,21 @@ const { isGroupAdminFor } = useCurrentUser<true>()
 
 const router = useRouter()
 
-function goToInformationSharingAgreementAccessGrantPage(
-  informationSharingAgreementAccessGrantId: number
-) {
+function goToGroupOrUserPage(groupId: number, userId: number | null) {
+  if (isNil(userId)) {
+    return router.push({
+      name: "administration/groups/GroupPage",
+      params: {
+        groupId,
+      },
+    })
+  }
+
+  // TODO: standardize this route to redirect to user read page
   return router.push({
-    name: "administration/information-sharing-agreements/InformationSharingAgreementAccessGrantPage",
+    name: "users/UserEditPage",
     params: {
-      informationSharingAgreementAccessGrantId,
+      userId,
     },
   })
 }
