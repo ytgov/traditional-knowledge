@@ -40,6 +40,38 @@ describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts"
         // Assert
         expect(policy.create()).toBe(true)
       })
+
+      test("when the user does not have admin level access to the information sharing agreement, returns false", async () => {
+        // Arrange
+        const user = await userFactory.create()
+
+        const informationSharingAgreement = await informationSharingAgreementFactory.create()
+
+        const informationSharingAgreementAccessGrant =
+          await informationSharingAgreementAccessGrantFactory.create({
+            informationSharingAgreementId: informationSharingAgreement.id,
+            userId: user.id,
+            accessLevel: InformationSharingAgreementAccessGrant.AccessLevels.EDIT,
+          })
+
+        await informationSharingAgreementAccessGrant.reload({
+          include: [
+            {
+              association: "informationSharingAgreement",
+              include: ["accessGrants"],
+            },
+          ],
+        })
+
+        // Act
+        const policy = new InformationSharingAgreementAccessGrantPolicy(
+          user,
+          informationSharingAgreementAccessGrant
+        )
+
+        // Assert
+        expect(policy.create()).toBe(false)
+      })
     })
   })
 })
