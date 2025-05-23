@@ -25,9 +25,13 @@ export class CreateService extends BaseService {
       throw new Error("Source type is required")
     }
 
+    if (isNil(userId)) {
+      throw new Error("User ID is required")
+    }
+
     const notification = await Notification.create({
       ...optionalAttributes,
-      userId: userId || this.currentUser.id,
+      userId,
       title,
       sourceType,
     })
