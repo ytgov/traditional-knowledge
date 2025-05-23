@@ -13,7 +13,8 @@ export class NotifyUserOfMembershipService extends BaseService {
   }
 
   async perform() {
-    const safeTitle = Notification.sanitizeAttribute("title", `Group Added: ${this.group.name}`)
+    const { name: groupName } = this.group
+    const safeTitle = Notification.sanitizeAttribute("title", `Group Added: ${groupName}`)
     await Notifications.CreateService.perform(
       {
         title: safeTitle,
