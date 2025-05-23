@@ -12,8 +12,6 @@ export class NotificationsPolicy extends PolicyFactory(Notification) {
   }
 
   create(): boolean {
-    if (this.user.isSystemAdmin) return true
-
     return false
   }
 
@@ -24,8 +22,6 @@ export class NotificationsPolicy extends PolicyFactory(Notification) {
   }
 
   destroy(): boolean {
-    if (this.user.isSystemAdmin) return true
-
     return false
   }
 
