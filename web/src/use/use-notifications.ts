@@ -41,7 +41,7 @@ export function useNotifications(
       state.totalCount = totalCount
       return notifications
     } catch (error) {
-      console.error("Failed to fetch notifications:", error)
+      console.error(`Failed to fetch notifications: ${error}`, { error })
       state.isErrored = true
       throw error
     } finally {
