@@ -12,7 +12,7 @@
     >
       {{ title }}
       <v-spacer />
-      <slot name="rightTitle"></slot>
+      <slot name="title-append"></slot>
     </v-card-title>
     <v-card-subtitle
       v-if="subtitle"
