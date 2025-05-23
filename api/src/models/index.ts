@@ -8,6 +8,7 @@ import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
 import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
 import InformationSharingAgreementAccessGrantSibling from "@/models/information-sharing-agreement-access-grant-sibling"
+import InformationSharingAgreementArchiveItem from "@/models/information-sharing-agreement-archive-item"
 import Notification from "@/models/notification"
 import User from "@/models/user"
 import UserGroup from "@/models/user-group"
@@ -20,6 +21,7 @@ db.addModels([
   InformationSharingAgreement,
   InformationSharingAgreementAccessGrant,
   InformationSharingAgreementAccessGrantSibling,
+  InformationSharingAgreementArchiveItem,
   Notification,
   User,
   UserGroup,
@@ -32,6 +34,7 @@ ArchiveItemFile.establishScopes()
 Group.establishScopes()
 InformationSharingAgreement.establishScopes()
 InformationSharingAgreementAccessGrant.establishScopes()
+InformationSharingAgreementArchiveItem.establishScopes()
 Notification.establishScopes()
 User.establishScopes()
 UserGroup.establishScopes()
@@ -44,6 +47,7 @@ export {
   InformationSharingAgreement,
   InformationSharingAgreementAccessGrant,
   InformationSharingAgreementAccessGrantSibling,
+  InformationSharingAgreementArchiveItem,
   Notification,
   User,
   UserGroup,
