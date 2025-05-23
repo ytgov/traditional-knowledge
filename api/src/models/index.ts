@@ -4,6 +4,7 @@ import db from "@/db/db-client"
 import ArchiveItem from "@/models/archive-item"
 import ArchiveItemAudit from "@/models/archive-item-audit"
 import ArchiveItemFile from "@/models/archive-item-file"
+import ArchiveItemInformationSharingAgreementAccessGrant from "@/models/archive-item-information-sharing-agreement-access-grant"
 import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
 import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
@@ -17,6 +18,7 @@ db.addModels([
   ArchiveItem,
   ArchiveItemAudit,
   ArchiveItemFile,
+  ArchiveItemInformationSharingAgreementAccessGrant,
   Group,
   InformationSharingAgreement,
   InformationSharingAgreementAccessGrant,
@@ -43,6 +45,7 @@ export {
   ArchiveItem,
   ArchiveItemAudit,
   ArchiveItemFile,
+  ArchiveItemInformationSharingAgreementAccessGrant,
   Group,
   InformationSharingAgreement,
   InformationSharingAgreementAccessGrant,
