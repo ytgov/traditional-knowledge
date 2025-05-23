@@ -14,7 +14,6 @@ import {
   BelongsTo,
   Default,
   Index,
-  ModelValidator,
   NotNull,
   PrimaryKey,
   ValidateAttribute,
@@ -53,13 +52,8 @@ export class Notification extends BaseModel<
   @Index
   declare userId: number
 
-  @Attribute(DataTypes.BOOLEAN)
-  @NotNull
-  @Default(false)
-  declare isRead: CreationOptional<boolean>
-
   @Attribute(DataTypes.DATE(0))
-  declare readDate: Date | null
+  declare readAt: Date | null
 
   @Attribute(DataTypes.STRING(TITLE_MAX_LENGTH))
   @NotNull
@@ -93,17 +87,6 @@ export class Notification extends BaseModel<
 
   @Attribute(DataTypes.DATE(0))
   declare deletedAt: Date | null
-
-  // Model Validators
-  @ModelValidator
-  ensureIsReadAndReadDateConsistency() {
-    // TODO: consider using a BeforeSave hook instead?
-    if (this.isRead === true && isNil(this.readDate)) {
-      throw new Error("Read date must be set when notification is read")
-    } else if (this.isRead === false && !isNil(this.readDate)) {
-      throw new Error("Read date must be null when notification is not read")
-    }
-  }
 
   // Associations
   @BelongsTo(() => User, {
