@@ -26,7 +26,7 @@ export class NotificationsController extends BaseController<Notification> {
         totalCount,
       })
     } catch (error) {
-      logger.error("Error fetching notifications" + error)
+      logger.error(`Error fetching notifications: ${error}`, { error })
       return this.response.status(400).json({
         message: `Error fetching notifications: ${error}`,
       })
@@ -51,7 +51,7 @@ export class NotificationsController extends BaseController<Notification> {
 
       return this.response.json({ notification, policy })
     } catch (error) {
-      logger.error("Error fetching notification" + error)
+      logger.error(`Error fetching notification: ${error}`, { error })
       return this.response.status(400).json({
         message: `Error fetching notification: ${error}`,
       })
@@ -102,7 +102,7 @@ export class NotificationsController extends BaseController<Notification> {
       await UpdateService.perform(notification, permittedAttributes)
       return this.response.json({ notification })
     } catch (error) {
-      logger.error("Error updating notification" + error)
+      logger.error(`Error updating notification: ${error}`, { error })
       return this.response.status(400).json({
         message: `Error updating notification: ${error}`,
       })
