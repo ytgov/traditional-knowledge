@@ -15,10 +15,10 @@ export class UpdateService extends BaseService {
   }
 
   async perform() {
-    const { isRead } = this.attributes
+    const { readAt } = this.attributes
     // TODO: consider if isRead is a state change and should have it's own endpoint?
-    if (!isUndefined(isRead)) {
-      this.attributes.readDate = isRead === true ? new Date() : null
+    if (!isUndefined(readAt)) {
+      this.attributes.readAt = new Date()
     }
 
     const notification = await this.notification.update(this.attributes)

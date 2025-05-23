@@ -9,8 +9,7 @@ export enum NotificationSourceTypes {
 export type Notification = {
   id: number
   userId: number
-  isRead: boolean
-  readDate: string | null
+  readAt: string | null
   title: string
   subtitle: string | null
   href: string | null
@@ -21,7 +20,7 @@ export type Notification = {
 
 export type NotificationWhereOptions = {
   userId?: number
-  isRead?: boolean
+  readAt?: string
   sourceType?: NotificationSourceTypes
 }
 
