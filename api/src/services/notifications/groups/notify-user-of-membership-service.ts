@@ -3,7 +3,7 @@ import { Group, User, Notification } from "@/models"
 import BaseService from "@/services/base-service"
 import { Notifications } from "@/services"
 
-export class NotifyUserOfMembership extends BaseService {
+export class NotifyUserOfMembershipService extends BaseService {
   constructor(
     private user: User,
     private group: Group,
@@ -27,4 +27,4 @@ export class NotifyUserOfMembership extends BaseService {
   }
 }
 
-export default NotifyUserOfMembership
+export default NotifyUserOfMembershipService

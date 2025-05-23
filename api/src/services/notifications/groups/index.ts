@@ -1,1 +1,1 @@
-export { NotifyUserOfMembership } from "./notify-user-of-membership"
+export { NotifyUserOfMembershipService } from "./notify-user-of-membership-service"

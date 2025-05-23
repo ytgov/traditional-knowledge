@@ -46,7 +46,11 @@ export class CreateService extends BaseService {
         throw new Error("Group not found")
       }
 
-      await Notifications.Groups.NotifyUserOfMembership.perform(user, group, this.currentUser)
+      await Notifications.Groups.NotifyUserOfMembershipService.perform(
+        user,
+        group,
+        this.currentUser
+      )
 
       return userGroup
     })
