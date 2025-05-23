@@ -52,7 +52,7 @@
       </v-btn>
       <v-spacer />
       <v-btn
-        v-if="editButtonProps"
+        v-if="policy?.update"
         color="primary"
         v-bind="editButtonProps"
       >
@@ -100,7 +100,7 @@ const props = withDefaults(
 )
 
 const { informationSharingAgreementId } = toRefs(props)
-const { informationSharingAgreement, isLoading } = useInformationSharingAgreement(
+const { informationSharingAgreement, policy, isLoading } = useInformationSharingAgreement(
   informationSharingAgreementId
 )
 </script>
