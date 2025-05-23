@@ -100,7 +100,7 @@
         <v-btn
           variant="outlined"
           block
-          :to="{ name: 'NotificationPage' }"
+          :to="{ name: 'NotificationsPage' }"
           text="See all Notifications"
           @click="showMenu = false"
         />
