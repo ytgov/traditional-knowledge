@@ -4,8 +4,7 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable("notifications", function (table) {
     table.increments("id").notNullable().primary()
     table.integer("user_id").notNullable()
-    table.boolean("is_read").notNullable().defaultTo(false)
-    table.specificType("read_date", "DATETIME2(0)").nullable()
+    table.specificType("read_at", "DATETIME2(0)").nullable()
     table.string("title", 250).notNullable()
     table.string("subtitle", 250).nullable()
     table.string("href", 1000).nullable()
