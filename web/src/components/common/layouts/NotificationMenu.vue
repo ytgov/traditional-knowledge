@@ -68,7 +68,6 @@
           <v-list-item
             v-for="notification in latestNotifications"
             :key="notification.id"
-            :value="notification"
             class="py-4 px-8"
             :base-color="notification.readAt ? '' : 'error'"
             @click="markAsRead(notification)"
