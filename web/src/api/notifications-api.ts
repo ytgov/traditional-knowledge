@@ -20,7 +20,7 @@ export type Notification = {
 
 export type NotificationWhereOptions = {
   userId?: number
-  readAt?: string
+  readAt?: string | null
   sourceType?: NotificationSourceTypes
 }
 

@@ -31,7 +31,7 @@
         :key="item.id"
         :value="item"
         class="py-4 px-8"
-        :base-color="item.isRead ? '' : 'error'"
+        :base-color="item.readAt ? '' : 'error'"
         @click="markAsRead(item)"
       >
         <template #append>
@@ -40,7 +40,7 @@
             size="x-small"
             class="mt-0 ml-2 align-top"
             icon="mdi-link-variant"
-            :color="!item.isRead ? 'error' : 'success'"
+            :color="!item.readAt ? 'error' : 'success'"
             @click.stop="openNotification(item)"
           ></v-btn>
         </template>
@@ -81,7 +81,7 @@ const route = useRoute()
 const showFilter = ref<string>((route.query.show as string) || "All")
 const where = computed<NotificationWhereOptions>(() => {
   if (showFilter.value === "Unread") {
-    return { isRead: false }
+    return { readAt: null }
   }
 
   return {}
@@ -100,13 +100,13 @@ const notificationsQuery = computed(() => ({
 const { notifications, totalCount } = useNotifications(notificationsQuery)
 
 async function markAsRead(notification: Notification) {
-  if (notification.isRead) return
+  if (notification.readAt) return
 
   try {
     const { notification: updatedNotification } = await notificationsApi.update(notification.id, {
-      isRead: true,
+      readAt: new Date().toISOString(),
     })
-    notification.isRead = updatedNotification.isRead
+    notification.readAt = updatedNotification.readAt
   } catch (error) {
     console.error(error)
   }

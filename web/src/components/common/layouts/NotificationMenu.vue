@@ -70,7 +70,7 @@
             :key="notification.id"
             :value="notification"
             class="py-4 px-8"
-            :base-color="notification.isRead ? '' : 'error'"
+            :base-color="notification.readAt ? '' : 'error'"
             @click="markAsRead(notification)"
           >
             <template #append>
@@ -79,7 +79,7 @@
                 size="x-small"
                 class="mt-0 ml-2 align-top"
                 icon="mdi-link-variant"
-                :color="!notification.isRead ? 'error' : 'success'"
+                :color="!notification.readAt ? 'error' : 'success'"
                 @click.stop="openNotification(notification)"
               />
             </template>
@@ -129,7 +129,7 @@ const { notifications: latestNotifications, refresh: refreshLatestNotifications 
 
 const unreadNotificationsQuery = computed(() => ({
   where: {
-    isRead: false,
+    readAt: null,
   },
   perPage: 1, // we only care about the total count
 }))
@@ -155,13 +155,13 @@ async function refresh() {
 }
 
 async function markAsRead(notification: Notification) {
-  if (notification.isRead) return
+  if (notification.readAt) return
 
   try {
     const { notification: updatedNotification } = await notificationsApi.update(notification.id, {
-      isRead: true,
+      readAt: new Date().toISOString(),
     })
-    notification.isRead = updatedNotification.isRead
+    notification.readAt = updatedNotification.readAt
     refresh()
   } catch (error) {
     console.error(error)

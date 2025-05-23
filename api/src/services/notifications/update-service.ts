@@ -16,7 +16,7 @@ export class UpdateService extends BaseService {
 
   async perform() {
     const { readAt } = this.attributes
-    // TODO: consider if isRead is a state change and should have it's own endpoint?
+    // TODO: consider if readAt is a state change and should have it's own endpoint?
     if (!isUndefined(readAt)) {
       this.attributes.readAt = new Date()
     }
