@@ -105,6 +105,23 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
     return adminGroups.some((group) => group.id === groupId)
   }
 
+  function isAdminForInformationSharingAgreement(informationSharingAgreementId: number) {
+    if (isNil(state.currentUser)) {
+      throw new Error("Expected currentUser to be non-null")
+    }
+
+    const { adminInformationSharingAgreementAccessGrants } = state.currentUser
+    if (isUndefined(adminInformationSharingAgreementAccessGrants)) {
+      throw new Error(
+        "Expected currentUser to have a adminInformationSharingAgreementAccessGrants association"
+      )
+    }
+
+    return adminInformationSharingAgreementAccessGrants.some(
+      (accessGrant) => accessGrant.informationSharingAgreementId === informationSharingAgreementId
+    )
+  }
+
   return {
     ...toRefs(state as StateOrLoadedState),
     isReady,
@@ -119,6 +136,7 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
     isSystemAdmin,
     // Helper functions
     isGroupAdminFor,
+    isAdminForInformationSharingAgreement,
   }
 }
 

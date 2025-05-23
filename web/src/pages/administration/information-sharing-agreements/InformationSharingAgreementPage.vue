@@ -3,6 +3,28 @@
     :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
     :edit-button-props="editButtonProps"
   />
+
+  <v-card class="mt-5">
+    <v-card-title>
+      <!-- TODO: consider if we should have separate tabs for sharing and receiving groups access grants? -->
+      <v-tabs>
+        <v-tab
+          :to="{
+            name: 'administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage',
+            params: {
+              informationSharingAgreementId,
+            },
+          }"
+        >
+          Access Grants
+        </v-tab>
+      </v-tabs>
+    </v-card-title>
+
+    <v-card-text>
+      <router-view />
+    </v-card-text>
+  </v-card>
 </template>
 
 <script setup lang="ts">

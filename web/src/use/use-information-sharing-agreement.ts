@@ -1,6 +1,7 @@
 import { type Ref, reactive, toRefs, unref, watch } from "vue"
 import { isNil } from "lodash"
 
+import { Policy } from "@/api/base-api"
 import informationSharingAgreementsApi, {
   type InformationSharingAgreement,
   type InformationSharingAgreementWhereOptions,
@@ -16,10 +17,12 @@ export {
 export function useInformationSharingAgreement(id: Ref<number | null | undefined>) {
   const state = reactive<{
     informationSharingAgreement: InformationSharingAgreement | null
+    policy: Policy | null
     isLoading: boolean
     isErrored: boolean
   }>({
     informationSharingAgreement: null,
+    policy: null,
     isLoading: false,
     isErrored: false,
   })
@@ -32,9 +35,11 @@ export function useInformationSharingAgreement(id: Ref<number | null | undefined
 
     state.isLoading = true
     try {
-      const { informationSharingAgreement } = await informationSharingAgreementsApi.get(staticId)
+      const { informationSharingAgreement, policy } =
+        await informationSharingAgreementsApi.get(staticId)
       state.isErrored = false
       state.informationSharingAgreement = informationSharingAgreement
+      state.policy = policy
       return informationSharingAgreement
     } catch (error) {
       console.error(`Failed to fetch information sharing agreement ${error}:`, { error })

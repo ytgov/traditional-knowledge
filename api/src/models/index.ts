@@ -6,6 +6,8 @@ import ArchiveItemAudit from "@/models/archive-item-audit"
 import ArchiveItemFile from "@/models/archive-item-file"
 import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
+import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
+import InformationSharingAgreementAccessGrantSibling from "@/models/information-sharing-agreement-access-grant-sibling"
 import User from "@/models/user"
 import UserGroup from "@/models/user-group"
 
@@ -15,6 +17,8 @@ db.addModels([
   ArchiveItemFile,
   Group,
   InformationSharingAgreement,
+  InformationSharingAgreementAccessGrant,
+  InformationSharingAgreementAccessGrantSibling,
   User,
   UserGroup,
 ])
@@ -25,6 +29,7 @@ ArchiveItemAudit.establishScopes()
 ArchiveItemFile.establishScopes()
 Group.establishScopes()
 InformationSharingAgreement.establishScopes()
+InformationSharingAgreementAccessGrant.establishScopes()
 User.establishScopes()
 UserGroup.establishScopes()
 
@@ -34,6 +39,8 @@ export {
   ArchiveItemFile,
   Group,
   InformationSharingAgreement,
+  InformationSharingAgreementAccessGrant,
+  InformationSharingAgreementAccessGrantSibling,
   User,
   UserGroup,
 }

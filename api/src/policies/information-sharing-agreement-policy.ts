@@ -1,4 +1,4 @@
-import { Op, type Attributes, type FindOptions } from "@sequelize/core"
+import { type Attributes, type FindOptions } from "@sequelize/core"
 
 import { type Path } from "@/utils/deep-pick"
 import { InformationSharingAgreement, User } from "@/models"
@@ -7,11 +7,7 @@ import { ALL_RECORDS_SCOPE, PolicyFactory } from "@/policies/base-policy"
 export class InformationSharingAgreementPolicy extends PolicyFactory(InformationSharingAgreement) {
   show(): boolean {
     if (this.user.isSystemAdmin) return true
-    if (this.record.creatorId === this.user.id) return true
-    if (this.record.sharingGroupContactId === this.user.id) return true
-    if (this.record.receivingGroupContactId === this.user.id) return true
-
-    // TODO: Allow users to view agreements that they have an associated information sharing agreement access grant for.
+    if (this.record.hasAccessGrantFor(this.user.id)) return true
 
     return false
   }
@@ -19,25 +15,18 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
   create(): boolean {
     if (this.user.isSystemAdmin) return true
     if (this.user.isGroupAdminOf(this.record.sharingGroupId)) return true
-    // TODO: Add ability for non-host group admin to create information sharing agreements.
 
     return false
   }
 
   update(): boolean {
-    if (this.user.isSystemAdmin) return true
-    if (this.record.creatorId === this.user.id) return true
-    if (this.record.sharingGroupContactId === this.user.id) return true
-    // TODO: Add ability for non-host group admin to update information sharing agreements.
+    if (this.user.isAdminForInformationSharingAgreement(this.record.id)) return true
 
     return false
   }
 
   destroy(): boolean {
-    if (this.user.isSystemAdmin) return true
-    if (this.record.creatorId === this.user.id) return true
-    if (this.record.sharingGroupContactId === this.user.id) return true
-    // TODO: Add ability for non-host group admin to destroy information sharing agreements.
+    if (this.user.isAdminForInformationSharingAgreement(this.record.id)) return true
 
     return false
   }
@@ -62,21 +51,15 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
       return ALL_RECORDS_SCOPE
     }
 
-    // TODO: Allow users to view agreements that they have an associated information sharing agreement access grant for.
     return {
-      where: {
-        [Op.or]: [
-          {
-            creatorId: user.id,
+      include: [
+        {
+          association: "accessGrants",
+          where: {
+            userId: user.id,
           },
-          {
-            sharingGroupContactId: user.id,
-          },
-          {
-            receivingGroupContactId: user.id,
-          },
-        ],
-      },
+        },
+      ],
     }
   }
 }

@@ -23,6 +23,9 @@ import { isEmpty, isNil, isUndefined } from "lodash"
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
+import InformationSharingAgreementAccessGrant, {
+  InformationSharingAgreementAccessGrantAccessLevels,
+} from "@/models/information-sharing-agreement-access-grant"
 import UserGroup from "@/models/user-group"
 
 /** Keep in sync with web/src/api/users-api.ts */
@@ -136,6 +139,18 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     return this.adminGroups.some((group) => group.id === groupId)
   }
 
+  isAdminForInformationSharingAgreement(informationSharingAgreementId: number): boolean {
+    if (isUndefined(this.adminInformationSharingAgreementAccessGrants)) {
+      throw new Error(
+        "Expected adminInformationSharingAgreementAccessGrants association to be pre-loaded."
+      )
+    }
+
+    return this.adminInformationSharingAgreementAccessGrants.some(
+      (accessGrant) => accessGrant.informationSharingAgreementId === informationSharingAgreementId
+    )
+  }
+
   // Associations
   @HasMany(() => InformationSharingAgreement, {
     foreignKey: "creatorId",
@@ -154,6 +169,33 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     inverse: "receivingGroupContact",
   })
   declare receivedInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
+
+  @HasMany(() => InformationSharingAgreementAccessGrant, {
+    foreignKey: "userId",
+    inverse: "user",
+  })
+  declare informationSharingAgreementAccessGrants?: NonAttribute<
+    InformationSharingAgreementAccessGrant[]
+  >
+
+  @HasMany(() => InformationSharingAgreementAccessGrant, {
+    foreignKey: "userId",
+    inverse: "user",
+    scope: {
+      accessLevel: InformationSharingAgreementAccessGrantAccessLevels.ADMIN,
+    },
+  })
+  declare adminInformationSharingAgreementAccessGrants?: NonAttribute<
+    InformationSharingAgreementAccessGrant[]
+  >
+
+  @HasMany(() => InformationSharingAgreementAccessGrant, {
+    foreignKey: "creatorId",
+    inverse: "creator",
+  })
+  declare createdInformationSharingAgreementAccessGrants?: NonAttribute<
+    InformationSharingAgreementAccessGrant[]
+  >
 
   @HasMany(() => UserGroup, {
     foreignKey: {
@@ -255,6 +297,29 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
         },
         replacements: {
           groupId,
+        },
+      }
+    })
+
+    this.addScope("withoutAccessGrantFor", (informationSharingAgreementId: number) => {
+      return {
+        where: {
+          id: {
+            [Op.notIn]: sql`
+              (
+                SELECT
+                  user_id
+                FROM
+                  information_sharing_agreement_access_grants
+                WHERE
+                  deleted_at IS NULL
+                  AND information_sharing_agreement_id = :informationSharingAgreementId
+              )
+            `,
+          },
+        },
+        replacements: {
+          informationSharingAgreementId,
         },
       }
     })

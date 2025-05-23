@@ -12,17 +12,16 @@
         goToInformationSharingAgreementPage(item.id)
     "
   >
-    <template #item.sharingGroupId="{ value }">
-      <GroupChip :group-id="value" />
+    <template #item.sharingGroupId="{ item }">
+      <GroupChip :group-id="item.sharingGroupId" />
+      <UserChip :user-id="item.sharingGroupContactId" />
     </template>
-    <template #item.sharingGroupContactId="{ value }">
-      <UserChip :user-id="value" />
+    <template #item.receivingGroupId="{ item }">
+      <GroupChip :group-id="item.receivingGroupId" />
+      <UserChip :user-id="item.receivingGroupContactId" />
     </template>
-    <template #item.receivingGroupId="{ value }">
-      <GroupChip :group-id="value" />
-    </template>
-    <template #item.receivingGroupContactId="{ value }">
-      <UserChip :user-id="value" />
+    <template #item.creatorId="{ item }">
+      <UserChip :user-id="item.creatorId" />
     </template>
     <template #item.actions="{ item }">
       <div class="d-flex justify-end align-center">
@@ -97,22 +96,15 @@ const headers = ref([
   {
     title: "Title",
     key: "title",
+    minWidth: "300px",
   },
   {
     title: "Sharing Group",
     key: "sharingGroupId",
   },
   {
-    title: "Sharing Group Contact",
-    key: "sharingGroupContactId",
-  },
-  {
     title: "Receiving Group",
     key: "receivingGroupId",
-  },
-  {
-    title: "Receiving Group Contact",
-    key: "receivingGroupContactId",
   },
   {
     title: "Start Date",

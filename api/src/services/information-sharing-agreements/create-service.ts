@@ -1,8 +1,9 @@
 import { Attributes } from "@sequelize/core"
 import { isNil } from "lodash"
 
-import { User, InformationSharingAgreement } from "@/models"
+import db, { User, InformationSharingAgreement } from "@/models"
 import BaseService from "@/services/base-service"
+import { EnsureAdminAccessService } from "@/services/information-sharing-agreements/admin-access-grants-service"
 
 export type InformationSharingAgreementCreationAttributes = Partial<
   Attributes<InformationSharingAgreement>
@@ -56,18 +57,48 @@ export class CreateService extends BaseService {
       throw new Error("End date is required")
     }
 
-    const informationSharingAgreement = await InformationSharingAgreement.create({
-      creatorId: this.currentUser.id,
-      title,
+    return db.transaction(async () => {
+      const informationSharingAgreement = await InformationSharingAgreement.create({
+        creatorId: this.currentUser.id,
+        title,
+        sharingGroupId,
+        sharingGroupContactId,
+        receivingGroupId,
+        receivingGroupContactId,
+        startDate,
+        endDate,
+        ...optionalAttributes,
+      })
+
+      await this.ensureAdminAccessGrants(
+        informationSharingAgreement.id,
+        informationSharingAgreement.sharingGroupId,
+        informationSharingAgreement.sharingGroupContactId,
+        informationSharingAgreement.receivingGroupId,
+        informationSharingAgreement.receivingGroupContactId,
+        this.currentUser
+      )
+
+      return informationSharingAgreement
+    })
+  }
+
+  private async ensureAdminAccessGrants(
+    informationSharingAgreementId: number,
+    sharingGroupId: number,
+    sharingGroupContactId: number,
+    receivingGroupId: number,
+    receivingGroupContactId: number,
+    currentUser: User
+  ) {
+    await EnsureAdminAccessService.perform(
+      informationSharingAgreementId,
       sharingGroupId,
       sharingGroupContactId,
       receivingGroupId,
       receivingGroupContactId,
-      startDate,
-      endDate,
-      ...optionalAttributes,
-    })
-    return informationSharingAgreement
+      currentUser
+    )
   }
 }
 
