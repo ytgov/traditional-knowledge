@@ -41,10 +41,10 @@
         </p>
       </v-list-item>
     </template>
-    <template #footer>
+    <template #footer="{ pageCount }">
       <v-pagination
         v-model="page"
-        :length="Math.ceil(totalCount / perPage)"
+        :length="pageCount"
       />
     </template>
   </v-data-iterator>

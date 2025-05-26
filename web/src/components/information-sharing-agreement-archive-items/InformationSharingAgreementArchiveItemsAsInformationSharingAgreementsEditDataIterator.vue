@@ -5,20 +5,19 @@
     :items="informationSharingAgreementArchiveItems"
     :items-length="totalCount"
     :loading="isLoading"
-    class="border rounded border-opacity-30 cursor-pointer"
   >
     <template #default="{ items }">
       <v-list
-        class="py-0 border rounded border-opacity-30"
+        class="py-0 border rounded border-opacity-50"
         :loading="isLoading"
       >
         <InformationSharingAgreementListItem
           v-for="({ raw: item }, index) in items"
           :key="item.id"
           :information-sharing-agreement-id="item.informationSharingAgreementId"
-          class="py-2"
+          class="py-2 cursor-pointer"
           :class="{
-            'border-b border-opacity-30': index < items.length - 1,
+            'border-b border-opacity-50': index < items.length - 1,
           }"
           @click.stop="goToInformationSharingAgreementPage(item.informationSharingAgreementId)"
         >
@@ -34,6 +33,14 @@
         </InformationSharingAgreementListItem>
       </v-list>
     </template>
+
+    <template #footer="{ pageCount }">
+      <v-pagination
+        v-model="page"
+        :length="pageCount"
+      />
+    </template>
+
     <template #no-data>
       <p class="text-center pa-3">No information sharing agreements for this item</p>
     </template>
