@@ -26,32 +26,36 @@
       class="py-0 mt-4"
       lines="two"
     >
-      <v-list-item
-        v-for="item in notifications"
-        :key="item.id"
-        :value="item"
-        class="py-4 px-8"
-        :base-color="item.readAt ? '' : 'error'"
-        @click="markAsRead(item)"
-      >
-        <template #append>
-          <v-btn
-            v-if="item.href"
-            size="x-small"
-            class="mt-0 ml-2 align-top"
-            icon="mdi-link-variant"
-            :color="!item.readAt ? 'error' : 'success'"
-            @click.stop="openNotification(item)"
-          ></v-btn>
+      <v-data-iterator :items="notifications">
+        <template #default="{ items }">
+          <v-list-item
+            v-for="(item, index) of items"
+            :key="index"
+            :value="item"
+            class="py-4 px-8"
+            :base-color="item.raw.readAt ? '' : 'error'"
+            @click="markAsRead(item.raw)"
+          >
+            <template #append>
+              <v-btn
+                v-if="item.raw.href"
+                size="x-small"
+                class="mt-0 ml-2 align-top"
+                icon="mdi-link-variant"
+                :color="!item.raw.readAt ? 'error' : 'success'"
+                @click.stop="openNotification(item.raw)"
+              ></v-btn>
+            </template>
+            <p class="text-subtitle-1 font-weight-retular font-italic textSecondary">
+              {{ formatDate(item.raw.createdAt) }}
+            </p>
+            <div>
+              <h6 class="text-subtitle-1 font-weight-semibold mb-1">{{ item.raw.title }}</h6>
+            </div>
+            <p class="text-subtitle-1 font-weight-regular textSecondary">{{ item.raw.subtitle }}</p>
+          </v-list-item>
         </template>
-        <p class="text-subtitle-1 font-weight-retular font-italic textSecondary">
-          {{ formatDate(item.createdAt) }}
-        </p>
-        <div>
-          <h6 class="text-subtitle-1 font-weight-semibold mb-1">{{ item.title }}</h6>
-        </div>
-        <p class="text-subtitle-1 font-weight-regular textSecondary">{{ item.subtitle }}</p>
-      </v-list-item>
+      </v-data-iterator>
       <RouteQueryPagination
         v-model="page"
         v-model:per-page="perPage"
