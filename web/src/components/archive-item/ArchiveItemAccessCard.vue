@@ -4,7 +4,19 @@
     type="card"
   />
   <v-card v-else>
-    <template #title>Users with Access to this Item</template>
+    <template #title>
+      <div class="d-flex flex-column flex-md-row items-center justify-space-between">
+        Users with Access to this Item
+        <v-btn
+          v-if="policy?.update"
+          color="primary"
+          variant="outlined"
+          @click="openGrantAccessDialog"
+        >
+          Share
+        </v-btn>
+      </div>
+    </template>
     <template
       v-if="
         !isNil(archiveItem.informationSharingAgreementAccessGrants) &&
@@ -49,14 +61,21 @@
     >
       No users have access to this item
     </template>
+
+    <AddArchiveItemToInformationSharingAgreementDialog
+      ref="addArchiveItemToInformationSharingAgreementDialog"
+    />
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { toRefs } from "vue"
+import { toRefs, useTemplateRef } from "vue"
 import { isNil } from "lodash"
 
 import useArchiveItem from "@/use/use-archive-item"
+
+import GroupListItem from "@/components/groups/GroupListItem.vue"
+import AddArchiveItemToInformationSharingAgreementDialog from "@/components/information-sharing-agreement-archive-items/AddArchiveItemToInformationSharingAgreementDialog.vue"
 import UserListItem from "@/components/users/UserListItem.vue"
 
 const props = defineProps<{
@@ -65,7 +84,17 @@ const props = defineProps<{
 
 // TODO: switch to using a query to /information-sharing-agreement-access-grants
 const { archiveItemId } = toRefs(props)
-const { archiveItem } = useArchiveItem(archiveItemId)
+const { archiveItem, policy } = useArchiveItem(archiveItemId)
+
+const addArchiveItemToInformationSharingAgreementDialog = useTemplateRef<
+  InstanceType<typeof AddArchiveItemToInformationSharingAgreementDialog>
+>("addArchiveItemToInformationSharingAgreementDialog")
+
+function openGrantAccessDialog() {
+  if (isNil(addArchiveItemToInformationSharingAgreementDialog.value)) return
+
+  addArchiveItemToInformationSharingAgreementDialog.value.show(props.archiveItemId)
+}
 </script>
 
 <style>
