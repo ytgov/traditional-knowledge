@@ -16,16 +16,15 @@
     @click:clear="reset"
   >
     <template #chip="{ props: chipProps, item: { raw: result } }">
-      <v-chip
+      <InformationSharingAgreementChip
         v-bind="chipProps"
-        :text="result.title || `Agreement #${result.id}`"
+        :information-sharing-agreement-id="result.id"
       />
     </template>
     <template #item="{ props: itemProps, item: { raw: result } }">
-      <v-list-item
+      <InformationSharingAgreementListItem
         v-bind="safeItemProps(itemProps)"
-        :title="result.title"
-        :subtitle="getAgreementSubtitle(result)"
+        :information-sharing-agreement-id="result.id"
       />
     </template>
     <template
@@ -55,14 +54,15 @@ export {
 import { computed, ref, watch } from "vue"
 import { debounce, isEmpty, isNil, omit, uniqBy } from "lodash"
 
-import { formatDate } from "@/utils/formatters"
-
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import useInformationSharingAgreements, {
   type InformationSharingAgreement,
   type InformationSharingAgreementWhereOptions,
   type InformationSharingAgreementFiltersOptions,
 } from "@/use/use-information-sharing-agreements"
+
+import InformationSharingAgreementChip from "@/components/information-sharing-agreements/InformationSharingAgreementChip.vue"
+import InformationSharingAgreementListItem from "@/components/information-sharing-agreements/InformationSharingAgreementListItem.vue"
 
 const props = defineProps<{
   modelValue: number | null | undefined
@@ -129,14 +129,6 @@ const allInformationSharingAgreements = computed<InformationSharingAgreement[]>(
  */
 function safeItemProps(itemProps: Record<string, unknown>) {
   return omit(itemProps, ["title"])
-}
-
-function getAgreementSubtitle(agreement: InformationSharingAgreement): string {
-  const startDate = agreement.startDate
-    ? formatDate(new Date(agreement.startDate))
-    : "No start date"
-  const endDate = agreement.endDate ? formatDate(new Date(agreement.endDate)) : "No end date"
-  return `${startDate} - ${endDate}`
 }
 
 async function reset() {
