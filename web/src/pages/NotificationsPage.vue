@@ -26,7 +26,13 @@
       class="py-0 mt-4"
       lines="two"
     >
-      <v-data-iterator :items="notifications">
+      <v-data-iterator
+        :items-per-page="perPage"
+        :page="page"
+        :items="notifications"
+        :items-length="totalCount"
+        :loading="isLoading"
+      >
         <template #default="{ items }">
           <v-list-item
             v-for="(item, index) of items"
@@ -56,11 +62,6 @@
           </v-list-item>
         </template>
       </v-data-iterator>
-      <RouteQueryPagination
-        v-model="page"
-        v-model:per-page="perPage"
-        :total-count="totalCount"
-      />
     </v-list>
   </AppCard>
 </template>
@@ -80,7 +81,6 @@ import useNotifications, { NotificationWhereOptions, Notification } from "@/use/
 import useRouteQueryPagination from "@/use/utils/use-route-query-pagination"
 
 import AppCard from "@/components/common/AppCard.vue"
-import RouteQueryPagination from "@/components/common/RouteQueryPagination.vue"
 
 const routeQuerySuffix = "Notifications"
 
