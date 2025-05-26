@@ -27,6 +27,7 @@
       <v-list
         class="py-0"
         style="border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 4px"
+        :loading="isLoading"
       >
         <template
           v-for="(
@@ -64,6 +65,7 @@
 
     <AddArchiveItemToInformationSharingAgreementDialog
       ref="addArchiveItemToInformationSharingAgreementDialog"
+      @created="refresh"
     />
   </v-card>
 </template>
@@ -84,7 +86,7 @@ const props = defineProps<{
 
 // TODO: switch to using a query to /information-sharing-agreement-access-grants
 const { archiveItemId } = toRefs(props)
-const { archiveItem, policy } = useArchiveItem(archiveItemId)
+const { archiveItem, policy, isLoading, refresh } = useArchiveItem(archiveItemId)
 
 const addArchiveItemToInformationSharingAgreementDialog = useTemplateRef<
   InstanceType<typeof AddArchiveItemToInformationSharingAgreementDialog>
