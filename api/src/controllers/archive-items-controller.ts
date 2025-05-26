@@ -45,12 +45,13 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
       }
 
       const permittedAttributes = policy.permitAttributesForCreate(this.request.body)
-
-      const archiveItem = await CreateService.perform({
-        ...permittedAttributes,
-        files: this.request.body.files,
-        currentUser: this.currentUser,
-      })
+      const archiveItem = await CreateService.perform(
+        {
+          ...permittedAttributes,
+          files: this.request.body.files,
+        },
+        this.currentUser
+      )
 
       await ArchiveItemAudit.create({
         archiveItemId: archiveItem.id,

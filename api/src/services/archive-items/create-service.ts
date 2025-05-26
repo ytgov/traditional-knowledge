@@ -10,11 +10,13 @@ import { FileStorageService } from "@/services/file-storage-service"
 
 export type ArchiveItemCreationAttributes = Partial<CreationAttributes<ArchiveItem>> & {
   files: File[] | null
-  currentUser: User
 }
 
 export class CreateService extends BaseService {
-  constructor(private attributes: ArchiveItemCreationAttributes) {
+  constructor(
+    private attributes: ArchiveItemCreationAttributes,
+    private currentUser: User
+  ) {
     super()
   }
 
@@ -36,18 +38,15 @@ export class CreateService extends BaseService {
       throw new Error("Title is required")
     }
 
-    return db.transaction(async (transaction) => {
-      const archiveItem = await ArchiveItem.create(
-        {
-          ...optionalAttributes,
-          isDecision: false,
-          title,
-          status,
-          securityLevel,
-          userId: this.attributes.currentUser?.id,
-        },
-        { transaction }
-      )
+    return db.transaction(async () => {
+      const archiveItem = await ArchiveItem.create({
+        ...optionalAttributes,
+        isDecision: false,
+        title,
+        status,
+        securityLevel,
+        userId: this.currentUser.id,
+      })
 
       if (!isNil(this.attributes.files)) {
         const service = new FileStorageService()
@@ -58,16 +57,13 @@ export class CreateService extends BaseService {
           const fileKey = `${folderKey}/${service.makeKey()}`
           const pdfKey = `${folderKey}/${service.makeKey()}`
 
-          const sourceFile = await ArchiveItemFile.create(
-            {
-              archiveItemId: archiveItem.id,
-              originalFileName: file.name,
-              originalFileSize: file.size,
-              originalMimeType: file.type,
-              originalKey: fileKey,
-            },
-            { transaction }
-          )
+          const sourceFile = await ArchiveItemFile.create({
+            archiveItemId: archiveItem.id,
+            originalFileName: file.name,
+            originalFileSize: file.size,
+            originalMimeType: file.type,
+            originalKey: fileKey,
+          })
 
           // eslint-disable-next-line
           const uploadResp = await service.uploadFile(fileKey, (file as any).path)
