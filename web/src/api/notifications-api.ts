@@ -75,6 +75,20 @@ export const notificationsApi = {
     const { data } = await http.delete(`/api/notifications/${notificationId}`)
     return data
   },
+
+  async read(notificationId: number): Promise<{
+    notification: Notification
+  }> {
+    const { data } = await http.post(`/api/notifications/${notificationId}/read`)
+    return data
+  },
+
+  async unread(notificationId: number): Promise<{
+    notification: Notification
+  }> {
+    const { data } = await http.delete(`/api/notifications/${notificationId}/read`)
+    return data
+  },
 }
 
 export default notificationsApi
