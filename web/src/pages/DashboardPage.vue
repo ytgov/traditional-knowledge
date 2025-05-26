@@ -21,7 +21,7 @@
           <v-row>
             <v-col>
               <p>
-                <router-link :to="{ name: 'archive-item/ArchiveItemListPage' }"
+                <router-link :to="{ name: 'archive-items/ArchiveItemListPage' }"
                   >View the Archive Items</router-link
                 >
               </p>

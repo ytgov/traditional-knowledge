@@ -23,7 +23,7 @@
 
       <v-list-item
         title="Archive Items"
-        :to="{ name: 'archive-item/ArchiveItemListPage' }"
+        :to="{ name: 'archive-items/ArchiveItemListPage' }"
         :exact="false"
         prepend-icon="mdi-archive"
       />

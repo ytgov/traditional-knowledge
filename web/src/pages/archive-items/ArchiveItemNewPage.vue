@@ -11,7 +11,7 @@ useBreadcrumbs("New Archive Item", [
   {
     title: "Archive Items",
     to: {
-      name: "archive-item/ArchiveItemListPage",
+      name: "archive-items/ArchiveItemListPage",
     },
   },
 ])

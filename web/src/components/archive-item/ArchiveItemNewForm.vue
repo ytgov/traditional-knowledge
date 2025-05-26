@@ -133,7 +133,7 @@ async function saveWrapper() {
     if (isUpdate) snack.success("Item saved.")
     else snack.success("Item created.")
 
-    router.push({ name: "archive-item/ArchiveItemListPage" })
+    router.push({ name: "archive-items/ArchiveItemListPage" })
   } catch (error) {
     snack.error("Save failed!")
     throw error

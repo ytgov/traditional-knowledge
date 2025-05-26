@@ -160,24 +160,35 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "archive-items",
+        name: "archive-items/ArchiveItemListPage",
+        component: () => import("@/pages/archive-items/ArchiveItemListPage.vue"),
+        meta: { title: "Archive Items" },
+        props: true,
+      },
+      {
+        path: "archive-items/new",
+        name: "archive-items/ArchiveItemNewPage",
+        component: () => import("@/pages/archive-items/ArchiveItemNewPage.vue"),
+        props: true,
+      },
+      {
+        path: "archive-items/:archiveItemId",
+        component: () => import("@/pages/archive-items/ArchiveItemPage.vue"),
+        props: true,
         children: [
           {
             path: "",
-            name: "archive-item/ArchiveItemListPage",
-            component: () => import("@/pages/archive-item/ArchiveItemListPage.vue"),
-            meta: { title: "Archive Items" },
-            props: true,
+            name: "archive-items/ArchiveItemPage",
+            redirect: {
+              name: "archive-items/ArchiveItemInformationSharingAgreementsPage",
+            },
           },
+
           {
-            path: "new",
-            name: "archive-item/ArchiveItemNewPage",
-            component: () => import("@/pages/archive-item/ArchiveItemNewPage.vue"),
-            props: true,
-          },
-          {
-            path: ":archiveItemId/view",
-            name: "archive-item/ArchiveItemViewPage",
-            component: () => import("@/pages/archive-item/ArchiveItemViewPage.vue"),
+            path: "information-sharing-agreements",
+            name: "archive-items/ArchiveItemInformationSharingAgreementsPage",
+            component: () =>
+              import("@/pages/archive-items/ArchiveItemInformationSharingAgreementsPage.vue"),
             props: true,
           },
         ],
