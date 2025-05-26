@@ -103,9 +103,7 @@ async function markAsRead(notification: Notification) {
   if (notification.readAt) return
 
   try {
-    const { notification: updatedNotification } = await notificationsApi.update(notification.id, {
-      readAt: new Date().toISOString(),
-    })
+    const { notification: updatedNotification } = await notificationsApi.read(notification.id)
     notification.readAt = updatedNotification.readAt
   } catch (error) {
     console.error(error)

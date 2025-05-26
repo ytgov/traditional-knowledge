@@ -26,6 +26,7 @@ import {
   InformationSharingAgreementAccessGrantsController,
   InformationSharingAgreementsController,
   NotificationsController,
+  Notifications,
   UserGroupsController,
   UsersController,
 } from "@/controllers"
@@ -52,8 +53,8 @@ router.route("/api/notifications/:notificationId").get(NotificationsController.s
 
 router
   .route("/api/notifications/:notificationId/read")
-  .post(NotificationsController.create)
-  .delete(NotificationsController.destroy)
+  .post(Notifications.ReadController.create)
+  .delete(Notifications.ReadController.destroy)
 
 router.route("/api/users").get(UsersController.index).post(UsersController.create)
 router
