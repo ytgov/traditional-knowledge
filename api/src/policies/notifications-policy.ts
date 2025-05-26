@@ -26,7 +26,7 @@ export class NotificationsPolicy extends PolicyFactory(Notification) {
   }
 
   permittedAttributes(): Path[] {
-    return ["readAt"]
+    return []
   }
 
   static policyScope(user: User): FindOptions<Attributes<Notification>> {
