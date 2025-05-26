@@ -57,6 +57,11 @@ router
   .patch(NotificationsController.update)
   .delete(NotificationsController.destroy)
 
+router
+  .route("/api/notifications/:notificationId/read")
+  .get(NotificationsController.create)
+  .delete(NotificationsController.destroy)
+
 router.route("/api/users").get(UsersController.index).post(UsersController.create)
 router
   .route("/api/users/:id")
@@ -99,7 +104,9 @@ router
   .get(InformationSharingAgreementAccessGrantsController.index)
   .post(InformationSharingAgreementAccessGrantsController.create)
 router
-  .route("/api/information-sharing-agreement-access-grants/:informationSharingAgreementAccessGrantId")
+  .route(
+    "/api/information-sharing-agreement-access-grants/:informationSharingAgreementAccessGrantId"
+  )
   .get(InformationSharingAgreementAccessGrantsController.show)
   .patch(InformationSharingAgreementAccessGrantsController.update)
   .delete(InformationSharingAgreementAccessGrantsController.destroy)
