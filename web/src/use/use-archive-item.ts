@@ -3,16 +3,16 @@ import { isNil } from "lodash"
 
 import { type Policy } from "@/api/base-api"
 import archiveItemsApi, {
-  type ArchiveItem,
+  type ArchiveItemShowView,
   type ArchiveItemWhereOptions,
   type ArchiveItemFiltersOptions,
 } from "@/api/archive-items-api"
 
-export { type ArchiveItem, type ArchiveItemWhereOptions, type ArchiveItemFiltersOptions }
+export { type ArchiveItemShowView, type ArchiveItemWhereOptions, type ArchiveItemFiltersOptions }
 
 export function useArchiveItem(id: Ref<number | null | undefined>) {
   const state = reactive<{
-    archiveItem: ArchiveItem | null
+    archiveItem: ArchiveItemShowView | null
     policy: Policy | null
     isLoading: boolean
     isErrored: boolean
@@ -23,7 +23,7 @@ export function useArchiveItem(id: Ref<number | null | undefined>) {
     isErrored: false,
   })
 
-  async function fetch(): Promise<ArchiveItem> {
+  async function fetch(): Promise<ArchiveItemShowView> {
     const staticId = unref(id)
     if (isNil(staticId)) {
       throw new Error("id is required")
@@ -45,7 +45,7 @@ export function useArchiveItem(id: Ref<number | null | undefined>) {
     }
   }
 
-  async function save(): Promise<ArchiveItem> {
+  async function save(): Promise<ArchiveItemShowView> {
     const staticId = unref(id)
     if (isNil(staticId)) {
       throw new Error("id is required")
