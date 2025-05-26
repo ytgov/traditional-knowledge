@@ -1,10 +1,7 @@
-import { isNil } from "lodash"
-
 import logger from "@/utils/logger"
 
 import { Notification } from "@/models"
 import { NotificationsPolicy } from "@/policies"
-import { CreateService, UpdateService } from "@/services/notifications"
 import BaseController from "@/controllers/base-controller"
 
 export class NotificationsController extends BaseController<Notification> {
@@ -58,63 +55,8 @@ export class NotificationsController extends BaseController<Notification> {
     }
   }
 
-  async create() {
-    try {
-      const newNotification = await this.buildNotification()
-      const policy = this.buildPolicy(newNotification)
-      if (!policy.create()) {
-        return this.response.status(403).json({
-          message: "You are not authorized to create notifications",
-        })
-      }
-
-      const permittedAttributes = policy.permitAttributesForCreate(this.request.body)
-      const notification = await CreateService.perform(permittedAttributes, this.currentUser)
-
-      return this.response.status(201).json({
-        notification,
-      })
-    } catch (error) {
-      logger.error(`Error creating notification: ${error}`, { error })
-      return this.response.status(422).json({
-        message: `Error creating notification: ${error}`,
-      })
-    }
-  }
-
-  async update() {
-    try {
-      const notification = await this.loadNotification()
-      if (isNil(notification)) {
-        return this.response.status(404).json({
-          message: "Notification not found",
-        })
-      }
-
-      const policy = this.buildPolicy(notification)
-      if (!policy.update()) {
-        return this.response.status(403).json({
-          message: "You are not authorized to update this notification",
-        })
-      }
-
-      const permittedAttributes = policy.permitAttributes(this.request.body)
-      await UpdateService.perform(notification, permittedAttributes)
-      return this.response.json({ notification })
-    } catch (error) {
-      logger.error(`Error updating notification: ${error}`, { error })
-      return this.response.status(400).json({
-        message: `Error updating notification: ${error}`,
-      })
-    }
-  }
-
   private async loadNotification() {
     return Notification.findByPk(this.params.notificationId)
-  }
-
-  private async buildNotification() {
-    return Notification.build(this.request.body)
   }
 
   private buildPolicy(notification: Notification = Notification.build()) {

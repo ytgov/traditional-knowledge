@@ -11,19 +11,7 @@ export class NotificationsPolicy extends PolicyFactory(Notification) {
     return false
   }
 
-  create(): boolean {
-    if (this.record.userId === this.user.id) return true
-
-    return false
-  }
-
   update(): boolean {
-    if (this.record.userId === this.user.id) return true
-
-    return false
-  }
-
-  destroy(): boolean {
     if (this.record.userId === this.user.id) return true
 
     return false

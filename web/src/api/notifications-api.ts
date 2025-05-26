@@ -54,28 +54,6 @@ export const notificationsApi = {
     return data
   },
 
-  async create(attributes: Partial<Notification>): Promise<{
-    notification: Notification
-  }> {
-    const { data } = await http.post("/api/notifications", attributes)
-    return data
-  },
-
-  async update(
-    notificationId: number,
-    attributes: Partial<Notification>
-  ): Promise<{
-    notification: Notification
-  }> {
-    const { data } = await http.patch(`/api/notifications/${notificationId}`, attributes)
-    return data
-  },
-
-  async delete(notificationId: number): Promise<void> {
-    const { data } = await http.delete(`/api/notifications/${notificationId}`)
-    return data
-  },
-
   async read(notificationId: number): Promise<{
     notification: Notification
   }> {

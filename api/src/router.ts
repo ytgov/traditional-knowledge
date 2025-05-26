@@ -47,15 +47,8 @@ router.use("/api", jwtMiddleware, ensureAndAuthorizeCurrentUser)
 
 router.route("/api/current-user").get(CurrentUserController.show)
 
-router
-  .route("/api/notifications")
-  .get(NotificationsController.index)
-  .post(NotificationsController.create)
-router
-  .route("/api/notifications/:notificationId")
-  .get(NotificationsController.show)
-  .patch(NotificationsController.update)
-  .delete(NotificationsController.destroy)
+router.route("/api/notifications").get(NotificationsController.index)
+router.route("/api/notifications/:notificationId").get(NotificationsController.show)
 
 router
   .route("/api/notifications/:notificationId/read")
