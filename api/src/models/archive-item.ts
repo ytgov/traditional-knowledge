@@ -136,7 +136,9 @@ export class ArchiveItem extends BaseModel<
   // Helper functions
   hasInformationSharingAgreementAccessGrantFor(userId: number): boolean {
     if (isUndefined(this.informationSharingAgreementAccessGrants)) {
-      throw new Error("Expected informationSharingAgreementAccessGrants association to be pre-loaded.")
+      throw new Error(
+        "Expected informationSharingAgreementAccessGrants association to be pre-loaded."
+      )
     }
 
     return this.informationSharingAgreementAccessGrants.some(
