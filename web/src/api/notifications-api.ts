@@ -54,6 +54,7 @@ export const notificationsApi = {
     return data
   },
 
+  // Stateful actions
   async read(notificationId: number): Promise<{
     notification: Notification
   }> {
