@@ -4,9 +4,8 @@
     type="card"
   />
   <v-card v-else>
-    <template #title>
-      <div class="d-flex flex-column flex-md-row items-center justify-space-between">
-        Users with Access to this Item
+    <template #text>
+      <div class="d-flex justify-end mb-4">
         <v-btn
           v-if="policy?.update"
           color="primary"
@@ -16,77 +15,41 @@
           Share
         </v-btn>
       </div>
-    </template>
-    <template
-      v-if="
-        !isNil(archiveItem.informationSharingAgreementAccessGrants) &&
-        archiveItem.informationSharingAgreementAccessGrants.length > 0
-      "
-      #text
-    >
-      <v-list
-        class="py-0"
-        style="border: 1px solid rgba(0, 0, 0, 0.3); border-radius: 4px"
-        :loading="isLoading"
-      >
-        <template
-          v-for="(
-            informationSharingAgreementAccessGrant, index
-          ) of archiveItem.informationSharingAgreementAccessGrants"
-          :key="informationSharingAgreementAccessGrant.userId"
-        >
-          <UserListItem
-            v-if="!isNil(informationSharingAgreementAccessGrant.userId)"
-            :user-id="informationSharingAgreementAccessGrant.userId"
-            class="py-2"
-            :class="{
-              'border-bottom':
-                index < archiveItem.informationSharingAgreementAccessGrants.length - 1,
-            }"
-          />
-          <GroupListItem
-            v-else
-            :group-id="informationSharingAgreementAccessGrant.groupId"
-            class="py-2"
-            :class="{
-              'border-bottom':
-                index < archiveItem.informationSharingAgreementAccessGrants.length - 1,
-            }"
-          />
-        </template>
-      </v-list>
-    </template>
-    <template
-      v-else
-      #text
-    >
-      No users have access to this item
+      <div>
+        <InformationSharingAgreementArchiveItemsAsInformationSharingAgreementsDataTableServer
+          ref="informationSharingAgreementArchiveItemsAsInformationSharingAgreementsDataTableServer"
+          :where="informationSharingAgreementArchiveItemsWhereOptions"
+          route-query-suffix="InformationSharingAgreementArchiveItems"
+        />
+      </div>
     </template>
 
     <AddArchiveItemToInformationSharingAgreementDialog
       ref="addArchiveItemToInformationSharingAgreementDialog"
-      @created="refresh"
+      @created="refreshAll"
     />
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { toRefs, useTemplateRef } from "vue"
+import { computed, toRefs, useTemplateRef } from "vue"
 import { isNil } from "lodash"
 
 import useArchiveItem from "@/use/use-archive-item"
 
-import GroupListItem from "@/components/groups/GroupListItem.vue"
 import AddArchiveItemToInformationSharingAgreementDialog from "@/components/information-sharing-agreement-archive-items/AddArchiveItemToInformationSharingAgreementDialog.vue"
-import UserListItem from "@/components/users/UserListItem.vue"
+import InformationSharingAgreementArchiveItemsAsInformationSharingAgreementsDataTableServer from "@/components/information-sharing-agreement-archive-items/InformationSharingAgreementArchiveItemsAsInformationSharingAgreementsDataTableServer.vue"
 
 const props = defineProps<{
   archiveItemId: number
 }>()
 
-// TODO: switch to using a query to /information-sharing-agreement-access-grants
 const { archiveItemId } = toRefs(props)
-const { archiveItem, policy, isLoading, refresh } = useArchiveItem(archiveItemId)
+const { archiveItem, policy, refresh } = useArchiveItem(archiveItemId)
+
+const informationSharingAgreementArchiveItemsWhereOptions = computed(() => ({
+  archiveItemId: props.archiveItemId,
+}))
 
 const addArchiveItemToInformationSharingAgreementDialog = useTemplateRef<
   InstanceType<typeof AddArchiveItemToInformationSharingAgreementDialog>
@@ -96,6 +59,18 @@ function openGrantAccessDialog() {
   if (isNil(addArchiveItemToInformationSharingAgreementDialog.value)) return
 
   addArchiveItemToInformationSharingAgreementDialog.value.show(props.archiveItemId)
+}
+
+const informationSharingAgreementArchiveItemsAsInformationSharingAgreementsDataTableServer =
+  useTemplateRef<
+    InstanceType<
+      typeof InformationSharingAgreementArchiveItemsAsInformationSharingAgreementsDataTableServer
+    >
+  >("informationSharingAgreementArchiveItemsAsInformationSharingAgreementsDataTableServer")
+
+function refreshAll() {
+  refresh()
+  informationSharingAgreementArchiveItemsAsInformationSharingAgreementsDataTableServer.value?.refresh()
 }
 </script>
 

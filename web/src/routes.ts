@@ -191,6 +191,12 @@ const routes: RouteRecordRaw[] = [
               import("@/pages/archive-items/ArchiveItemInformationSharingAgreementsPage.vue"),
             props: true,
           },
+          {
+            path: "users",
+            name: "archive-items/ArchiveItemUsersPage",
+            component: () => import("@/pages/archive-items/ArchiveItemUsersPage.vue"),
+            props: true,
+          },
         ],
       },
     ],
