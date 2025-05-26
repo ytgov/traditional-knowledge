@@ -22,8 +22,8 @@
             class="mt-0 ml-2 align-top"
             icon="mdi-link-variant"
             :color="!item.raw.readAt ? 'error' : 'success'"
-            @click.stop="notificationClicked(item.raw)"
-          ></v-btn>
+            @click.stop="goToNotificationHref(item.raw)"
+          />
         </template>
         <p class="text-subtitle-1 font-weight-retular font-italic textSecondary">
           {{ formatDate(item.raw.createdAt) }}
@@ -34,48 +34,66 @@
         <p class="text-subtitle-1 font-weight-regular textSecondary">{{ item.raw.subtitle }}</p>
       </v-list-item>
     </template>
+    <template #no-data>
+      <v-list-item class="py-4 px-8">
+        <p class="text-subtitle-1 font-weight-retular font-italic textSecondary">
+          No notifications found
+        </p>
+      </v-list-item>
+    </template>
+    <template #footer>
+      <v-pagination
+        v-model="page"
+        :length="Math.ceil(totalCount / perPage)"
+      />
+    </template>
   </v-data-iterator>
 </template>
 
 <script lang="ts" setup>
 import { useRouteQuery } from "@vueuse/router"
 import { computed } from "vue"
+import { useRouter } from "vue-router"
 
 import { formatDate } from "@/utils/formatters"
 
 import notificationsApi from "@/api/notifications-api"
 
-import { stringTransformer } from "@/utils/use-route-query-transformers"
+import useNotifications, {
+  NotificationFiltersOptions,
+  NotificationWhereOptions,
+  NotificationQueryOptions,
+  Notification,
+} from "@/use/use-notifications"
 
-import useNotifications, { NotificationWhereOptions, Notification } from "@/use/use-notifications"
-import useRouteQueryPagination from "@/use/utils/use-route-query-pagination"
-
-const routeQuerySuffix = "Notifications"
-
-const { page, perPage } = useRouteQueryPagination({
-  perPage: 5,
-  routeQuerySuffix,
-})
-
-const showFilter = useRouteQuery<string>(`show${routeQuerySuffix}`, "All", {
-  transform: stringTransformer,
-})
-
-const where = computed<NotificationWhereOptions>(() => {
-  if (showFilter.value === "Unread") {
-    return { readAt: null }
+const props = withDefaults(
+  defineProps<{
+    filters?: NotificationFiltersOptions
+    where?: NotificationWhereOptions
+    routeQuerySuffix?: string
+  }>(),
+  {
+    filters: () => ({}),
+    where: () => ({}),
+    routeQuerySuffix: "",
   }
+)
 
-  return {}
+const router = useRouter()
+
+const page = useRouteQuery(`page${props.routeQuerySuffix}`, "1", { transform: Number })
+const perPage = useRouteQuery(`perPage${props.routeQuerySuffix}`, "5", { transform: Number })
+
+const notificationsQuery = computed<NotificationQueryOptions>(() => {
+  return {
+    where: props.where,
+    filters: props.filters,
+    perPage: perPage.value,
+    page: page.value,
+  }
 })
 
-const notificationsQuery = computed(() => ({
-  where: where.value,
-  perPage: perPage.value,
-  page: page.value,
-}))
-
-const { notifications, totalCount, isLoading } = useNotifications(notificationsQuery)
+const { notifications, totalCount, isLoading, refresh } = useNotifications(notificationsQuery)
 
 async function markAsRead(notification: Notification) {
   if (notification.readAt) return
@@ -88,9 +106,15 @@ async function markAsRead(notification: Notification) {
   }
 }
 
-const emit = defineEmits<{ clicked: [notification: Notification] }>()
+async function goToNotificationHref(notification: Notification) {
+  await markAsRead(notification)
 
-async function notificationClicked(notification: Notification) {
-  emit("clicked", notification)
+  if (notification.href) {
+    router.push(notification.href)
+  }
 }
+
+defineExpose({
+  refresh,
+})
 </script>

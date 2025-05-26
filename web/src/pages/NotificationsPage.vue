@@ -8,7 +8,6 @@
       group
       mandatory
       style="border: 1px #b0b0b0 solid !important; border-radius: 6px"
-      @update:model-value="page = 1"
     >
       <v-btn
         value="All"
@@ -22,23 +21,21 @@
       />
     </v-btn-toggle>
 
-    <v-list
+    <NotificationDataIterator
+      :where="where"
+      :route-query-suffix="routeQuerySuffix"
       class="py-0 mt-4"
-      lines="two"
-    >
-      <NotificationDataIterator @clicked="openNotification" />
-    </v-list>
+    />
   </AppCard>
 </template>
 
 <script lang="ts" setup>
 import { useRouteQuery } from "@vueuse/router"
-import { useRouter } from "vue-router"
+import { computed } from "vue"
 
 import { stringTransformer } from "@/utils/use-route-query-transformers"
-import notificationsApi from "@/api/notifications-api"
 
-import { Notification } from "@/use/use-notifications"
+import { NotificationWhereOptions } from "@/use/use-notifications"
 
 import AppCard from "@/components/common/AppCard.vue"
 import NotificationDataIterator from "@/components/notifications/NotificationDataIterator.vue"
@@ -49,24 +46,11 @@ const showFilter = useRouteQuery<string>(`show${routeQuerySuffix}`, "All", {
   transform: stringTransformer,
 })
 
-async function markAsRead(notification: Notification) {
-  if (notification.readAt) return
-
-  try {
-    const { notification: updatedNotification } = await notificationsApi.read(notification.id)
-    notification.readAt = updatedNotification.readAt
-  } catch (error) {
-    console.error(error)
+const where = computed<NotificationWhereOptions>(() => {
+  if (showFilter.value === "Unread") {
+    return { readAt: null }
   }
-}
 
-const router = useRouter()
-
-async function openNotification(notification: Notification) {
-  await markAsRead(notification)
-
-  if (notification.href) {
-    router.push(notification.href)
-  }
-}
+  return {}
+})
 </script>
