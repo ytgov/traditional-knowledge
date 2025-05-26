@@ -5,16 +5,8 @@
   />
 </template>
 
-<script lang="ts">
-/**
- * Use in conjuction with `useRouteQueryPagination` composable.
- */
-</script>
-
 <script setup lang="ts">
-import { computed, watch } from "vue"
-import { useRoute, useRouter } from "vue-router"
-import { isNil } from "lodash"
+import { computed } from "vue"
 
 const page = defineModel<number>({
   required: true,
@@ -30,41 +22,4 @@ const props = defineProps<{
 }>()
 
 const totalPages = computed(() => Math.ceil(props.totalCount / perPage.value))
-
-const route = useRoute()
-const router = useRouter()
-
-watch<[number, number], true>(
-  () => [page.value, perPage.value],
-  ([newPage, newPerPage]) => {
-    const isUnchanged =
-      newPage.toString() === route.query.page && newPerPage.toString() === route.query.perPage
-    if (isUnchanged) {
-      return
-    }
-
-    const isFirstUse = isNil(route.query.page) || isNil(route.query.perPage)
-    if (isFirstUse) {
-      router.replace({
-        query: {
-          ...route.query,
-          page: newPage,
-          perPage: newPerPage,
-        },
-      })
-      return
-    }
-
-    router.push({
-      query: {
-        ...route.query,
-        page: newPage,
-        perPage: newPerPage,
-      },
-    })
-  },
-  {
-    immediate: true,
-  }
-)
 </script>
