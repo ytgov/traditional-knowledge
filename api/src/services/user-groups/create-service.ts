@@ -27,12 +27,11 @@ export class CreateService extends BaseService {
     }
 
     return db.transaction(async () => {
-      // _TODO_ can I eager load the user and group?
       const userGroup = await UserGroup.create({
+        ...optionalAttributes,
         creatorId: this.currentUser.id,
         userId,
         groupId,
-        ...optionalAttributes,
       })
 
       const user = await User.findByPk(userId)
@@ -46,14 +45,14 @@ export class CreateService extends BaseService {
         throw new Error("Group not found")
       }
 
-      await Notifications.Groups.NotifyUserOfMembershipService.perform(
-        user,
-        group,
-        this.currentUser
-      )
+      await this.notifyUserOfMembership(user, group)
 
       return userGroup
     })
+  }
+
+  private async notifyUserOfMembership(user: User, group: Group) {
+    await Notifications.Groups.NotifyUserOfMembershipService.perform(user, group, this.currentUser)
   }
 }
 
