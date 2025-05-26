@@ -1,5 +1,5 @@
 // Policy Bundles
-// e.g. export * as Users from "./users"
+export * as Notifications from "./notifications"
 
 export { ArchiveItemAuditsPolicy } from "./archive-item-audits-policy"
 export { ArchiveItemsPolicy } from "./archive-items-policy"

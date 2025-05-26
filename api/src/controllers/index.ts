@@ -1,3 +1,5 @@
+export * as Notifications from "./notifications"
+
 // Controllers
 export { ArchiveItemAuditsController } from "./archive-item-audits-controller"
 export { ArchiveItemFilesController } from "./archive-item-files-controller"
