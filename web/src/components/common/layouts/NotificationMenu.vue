@@ -65,34 +65,40 @@
           class="py-0"
           lines="two"
         >
-          <v-list-item
-            v-for="notification in latestNotifications"
-            :key="notification.id"
-            class="py-4 px-8"
-            :base-color="notification.readAt ? '' : 'error'"
-            @click="markAsRead(notification)"
-          >
-            <template #append>
-              <v-btn
-                v-if="notification.href"
-                size="x-small"
-                class="mt-0 ml-2 align-top"
-                icon="mdi-link-variant"
-                :color="!notification.readAt ? 'error' : 'success'"
-                @click.stop="openNotification(notification)"
-              />
+          <v-data-iterator :items="latestNotifications">
+            <template #default="{ items }">
+              <v-list-item
+                v-for="(notification, index) of items"
+                :key="index"
+                class="py-4 px-8"
+                :base-color="notification.raw.readAt ? '' : 'error'"
+                @click="markAsRead(notification.raw)"
+              >
+                <template #append>
+                  <v-btn
+                    v-if="notification.raw.href"
+                    size="x-small"
+                    class="mt-0 ml-2 align-top"
+                    icon="mdi-link-variant"
+                    :color="!notification.raw.readAt ? 'error' : 'success'"
+                    @click.stop="openNotification(notification.raw)"
+                  />
+                </template>
+                <p class="text-subtitle-1 font-weight-retular font-italic textSecondary">
+                  {{ formatDate(notification.raw.createdAt) }}
+                </p>
+                <div>
+                  <h6 class="text-subtitle-1 font-weight-semibold mb-1">
+                    {{ notification.raw.title }}
+                  </h6>
+                </div>
+                <p class="text-subtitle-1 font-weight-regular textSecondary">
+                  {{ notification.raw.subtitle }}
+                </p>
+              </v-list-item>
+              <v-divider />
             </template>
-            <p class="text-subtitle-1 font-weight-retular font-italic textSecondary">
-              {{ formatDate(notification.createdAt) }}
-            </p>
-            <div>
-              <h6 class="text-subtitle-1 font-weight-semibold mb-1">{{ notification.title }}</h6>
-            </div>
-            <p class="text-subtitle-1 font-weight-regular textSecondary">
-              {{ notification.subtitle }}
-            </p>
-          </v-list-item>
-          <v-divider></v-divider>
+          </v-data-iterator>
         </v-list>
       </div>
       <div class="py-4 px-6 text-center">
