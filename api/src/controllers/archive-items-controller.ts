@@ -53,6 +53,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
         this.currentUser
       )
 
+      // TODO: move to /services/archive-items/create-service.ts
       await ArchiveItemAudit.create({
         archiveItemId: archiveItem.id,
         action: "Created",
@@ -60,7 +61,11 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
         description: `${this.currentUser.displayName} created item`,
       })
 
-      return this.response.status(201).json({ archiveItem })
+      const serializedArchiveItem = ShowSerializer.perform(archiveItem)
+
+      return this.response.status(201).json({
+        archiveItem: serializedArchiveItem,
+      })
     } catch (error) {
       logger.error(`Error creating archive item: ${error}`, { error })
       return this.response.status(422).json({
@@ -85,8 +90,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
         })
       }
 
-      const serializedItem = ShowSerializer.perform(archiveItem)
-
+      // TODO: move to /services/archive-items/show-service.ts
       await ArchiveItemAudit.create({
         archiveItemId: archiveItem.id,
         action: "Viewed Metadata",
@@ -94,7 +98,12 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
         description: `${this.currentUser.displayName} viewed metadata`,
       })
 
-      return this.response.json({ archiveItem: serializedItem, policy })
+      const serializedArchiveItem = ShowSerializer.perform(archiveItem)
+
+      return this.response.json({
+        archiveItem: serializedArchiveItem,
+        policy,
+      })
     } catch (error) {
       logger.error(`Error fetching item: ${error}`, { error })
       return this.response.status(400).json({
