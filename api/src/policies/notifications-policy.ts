@@ -12,6 +12,8 @@ export class NotificationsPolicy extends PolicyFactory(Notification) {
   }
 
   create(): boolean {
+    if (this.record.userId === this.user.id) return true
+
     return false
   }
 
@@ -22,6 +24,8 @@ export class NotificationsPolicy extends PolicyFactory(Notification) {
   }
 
   destroy(): boolean {
+    if (this.record.userId === this.user.id) return true
+
     return false
   }
 

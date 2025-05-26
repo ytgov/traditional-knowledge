@@ -1,6 +1,3 @@
-// Policy Bundles
-export * as Notifications from "./notifications"
-
 export { ArchiveItemAuditsPolicy } from "./archive-item-audits-policy"
 export { ArchiveItemsPolicy } from "./archive-items-policy"
 export { GroupPolicy } from "./group-policy"

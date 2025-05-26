@@ -3,7 +3,7 @@ import { isNil } from "lodash"
 import logger from "@/utils/logger"
 
 import { Notification } from "@/models"
-import { Notifications } from "@/policies"
+import { NotificationsPolicy } from "@/policies"
 import BaseController from "@/controllers/base-controller"
 
 export class ReadController extends BaseController<Notification> {
@@ -17,9 +17,9 @@ export class ReadController extends BaseController<Notification> {
       }
 
       const policy = this.buildPolicy(notification)
-      if (!policy.create()) {
+      if (!policy.update()) {
         return this.response.status(403).json({
-          message: "You are not authorized to read this notification",
+          message: "You are not authorized to mark this notification as read",
         })
       }
 
@@ -46,9 +46,9 @@ export class ReadController extends BaseController<Notification> {
       }
 
       const policy = this.buildPolicy(notification)
-      if (!policy.destroy()) {
+      if (!policy.update()) {
         return this.response.status(403).json({
-          message: "You are not authorized to unread this notification",
+          message: "You are not authorized to mark this notification as unread",
         })
       }
 
@@ -70,7 +70,7 @@ export class ReadController extends BaseController<Notification> {
   }
 
   private buildPolicy(notification: Notification = Notification.build()) {
-    return new Notifications.ReadPolicy(this.currentUser, notification)
+    return new NotificationsPolicy(this.currentUser, notification)
   }
 }
 
