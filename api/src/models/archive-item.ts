@@ -17,7 +17,7 @@ import {
   PrimaryKey,
   ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
-import { isEmpty, isNil } from "lodash"
+import { isEmpty, isNil, isUndefined } from "lodash"
 
 import BaseModel from "@/models/base-model"
 import ArchiveItemFile from "@/models/archive-item-file"
@@ -132,6 +132,17 @@ export class ArchiveItem extends BaseModel<
 
   // Magic Attributes
   declare archiveItemFileCount?: number
+
+  // Helper functions
+  hasInformationSharingAgreementAccessGrantFor(userId: number): boolean {
+    if (isUndefined(this.informationSharingAgreementAccessGrants)) {
+      throw new Error("Expected informationSharingAgreementAccessGrants association to be pre-loaded.")
+    }
+
+    return this.informationSharingAgreementAccessGrants.some(
+      (accessGrant) => accessGrant.userId === userId
+    )
+  }
 
   // Associations
   @HasMany(() => ArchiveItemFile, {

@@ -105,7 +105,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
 
   private async loadArchiveItem() {
     const item = await ArchiveItem.findByPk(this.params.id, {
-      include: ["files", "user"],
+      include: ["files", "user", "informationSharingAgreementAccessGrants"],
     })
     if (isNil(item)) return null
 
