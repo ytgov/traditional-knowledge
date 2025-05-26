@@ -59,7 +59,7 @@ router
 
 router
   .route("/api/notifications/:notificationId/read")
-  .get(NotificationsController.create)
+  .post(NotificationsController.create)
   .delete(NotificationsController.destroy)
 
 router.route("/api/users").get(UsersController.index).post(UsersController.create)
