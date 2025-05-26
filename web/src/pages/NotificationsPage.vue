@@ -66,13 +66,15 @@
 </template>
 
 <script lang="ts" setup>
-import { useRoute, useRouter } from "vue-router"
-import { computed, ref, watch } from "vue"
-import { isNil } from "lodash"
+import { useRouter } from "vue-router"
+import { useRouteQuery } from "@vueuse/router"
+import { computed } from "vue"
 
 import { formatDate } from "@/utils/formatters"
 
 import notificationsApi from "@/api/notifications-api"
+
+import { stringTransformer } from "@/utils/use-route-query-transformers"
 
 import useNotifications, { NotificationWhereOptions, Notification } from "@/use/use-notifications"
 import useRouteQueryPagination from "@/use/utils/use-route-query-pagination"
@@ -80,19 +82,23 @@ import useRouteQueryPagination from "@/use/utils/use-route-query-pagination"
 import AppCard from "@/components/common/AppCard.vue"
 import RouteQueryPagination from "@/components/common/RouteQueryPagination.vue"
 
-const route = useRoute()
+const routeQuerySuffix = "Notifications"
 
-const showFilter = ref<string>((route.query.show as string) || "All")
+const { page, perPage } = useRouteQueryPagination({
+  perPage: 5,
+  routeQuerySuffix,
+})
+
+const showFilter = useRouteQuery<string>(`show${routeQuerySuffix}`, "All", {
+  transform: stringTransformer,
+})
+
 const where = computed<NotificationWhereOptions>(() => {
   if (showFilter.value === "Unread") {
     return { readAt: null }
   }
 
   return {}
-})
-
-const { page, perPage } = useRouteQueryPagination({
-  perPage: 5,
 })
 
 const notificationsQuery = computed(() => ({
@@ -115,6 +121,7 @@ async function markAsRead(notification: Notification) {
 }
 
 const router = useRouter()
+
 async function openNotification(notification: Notification) {
   await markAsRead(notification)
 
@@ -122,36 +129,4 @@ async function openNotification(notification: Notification) {
     router.push(notification.href)
   }
 }
-
-watch(
-  () => route.query,
-  (newQuery) => {
-    const isFirstUse = isNil(newQuery.show)
-    if (isFirstUse) {
-      router.replace({
-        query: {
-          show: "All",
-          page: 1,
-          perPage: 5,
-        },
-      })
-    }
-  },
-  {
-    immediate: true,
-    deep: true,
-  }
-)
-
-watch(
-  () => showFilter.value,
-  () => {
-    router.push({
-      query: {
-        ...route.query,
-        show: showFilter.value,
-      },
-    })
-  }
-)
 </script>
