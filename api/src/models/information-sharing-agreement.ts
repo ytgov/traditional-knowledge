@@ -1,5 +1,6 @@
 import {
   DataTypes,
+  Op,
   sql,
   type CreationOptional,
   type InferAttributes,
@@ -152,6 +153,28 @@ export class InformationSharingAgreement extends BaseModel<
   // Scopes
   static establishScopes(): void {
     this.addSearchScope(["title", "description"])
+
+    this.addScope("notAssociatedWithArchiveItem", (archiveItemId: number) => {
+      return {
+        where: {
+          id: {
+            [Op.notIn]: sql`
+              (
+                SELECT
+                  information_sharing_agreement_id
+                FROM
+                  information_sharing_agreement_archive_items
+                WHERE
+                  archive_item_id = :archiveItemId
+              )
+            `,
+          },
+        },
+        replacements: {
+          archiveItemId,
+        },
+      }
+    })
   }
 }
 

@@ -20,6 +20,7 @@
                 v-model="
                   informationSharingAgreementArchiveItemAttributes.informationSharingAgreementId
                 "
+                :filters="informationSharingAgreementFilters"
               />
             </v-col>
           </v-row>
@@ -90,6 +91,10 @@ const informationSharingAgreementArchiveItemAttributes = ref<
   archiveItemId: undefined,
   informationSharingAgreementId: undefined,
 })
+
+const informationSharingAgreementFilters = computed(() => ({
+  notAssociatedWithArchiveItem: archiveItemId.value,
+}))
 
 const form = ref<InstanceType<typeof VForm> | null>(null)
 

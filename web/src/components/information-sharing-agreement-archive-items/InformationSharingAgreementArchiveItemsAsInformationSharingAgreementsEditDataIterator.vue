@@ -78,6 +78,10 @@ const props = withDefaults(
   }
 )
 
+const emit = defineEmits<{
+  deleted: [informationSharingAgreementArchiveItemId: number]
+}>()
+
 const page = useRouteQuery(`page${props.routeQuerySuffix}`, "1", { transform: Number })
 const perPage = useRouteQuery(`perPage${props.routeQuerySuffix}`, "10", { transform: Number })
 
@@ -104,6 +108,7 @@ async function deleteInformationSharingAgreementArchiveItem(
     )
     snack.success("Stopped sharing with information sharing agreement.")
     refresh()
+    emit("deleted", informationSharingAgreementArchiveItemId)
   } catch (error) {
     console.error(`Failed to remove information sharing agreement archive item: ${error}`, {
       error,
