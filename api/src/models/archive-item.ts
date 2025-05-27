@@ -146,6 +146,20 @@ export class ArchiveItem extends BaseModel<
     )
   }
 
+  hasAdminInformationSharingAgreementAccessGrantFor(userId: number): boolean {
+    if (isUndefined(this.informationSharingAgreementAccessGrants)) {
+      throw new Error(
+        "Expected informationSharingAgreementAccessGrants association to be pre-loaded."
+      )
+    }
+
+    return this.informationSharingAgreementAccessGrants.some(
+      (accessGrant) =>
+        accessGrant.userId === userId &&
+        accessGrant.accessLevel === InformationSharingAgreementAccessGrant.AccessLevels.ADMIN
+    )
+  }
+
   // Associations
   @HasMany(() => ArchiveItemFile, {
     foreignKey: "archiveItemId",
