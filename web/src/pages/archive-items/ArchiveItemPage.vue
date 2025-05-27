@@ -27,7 +27,7 @@
                 },
               }"
             >
-              Users with Access to this Item
+              Users with Access
             </v-tab>
           </v-tabs>
         </template>
