@@ -7,8 +7,9 @@
     :loading="isLoading"
   >
     <template #loader>
-      <v-skeleton-loader type="list-item-two-line@6" />
+      <v-skeleton-loader type="list-item-two-line" />
     </template>
+
     <template #default="{ items }">
       <v-list
         class="py-0 border rounded border-opacity-50"
