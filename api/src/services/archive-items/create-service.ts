@@ -80,7 +80,19 @@ export class CreateService extends BaseService {
         }
       }
 
-      return archiveItem
+      return archiveItem.reload({
+        include: [
+          "files",
+          "user",
+          {
+            association: "informationSharingAgreementAccessGrants",
+            through: {
+              // NOTE: suppressing through model attributes as their names are too long
+              attributes: [],
+            },
+          },
+        ],
+      })
     })
   }
 }
