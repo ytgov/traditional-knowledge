@@ -1,10 +1,13 @@
 <template>
   <v-card>
     <template #text>
-      <div class="d-flex justify-end mb-4">
+      <div
+        v-if="canShare"
+        class="d-flex justify-end mb-4"
+      >
         <ArchiveItemShareButton
-          ref="archiveItemShareButton"
           :archive-item-id="archiveItemIdAsNumber"
+          :loading="isLoading"
           @shared="
             refreshInformationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator
           "
@@ -15,7 +18,7 @@
           ref="informationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator"
           :where="informationSharingAgreementArchiveItemsWhereOptions"
           route-query-suffix="InformationSharingAgreementArchiveItems"
-          @deleted="refreshArchiveItemShareButton"
+          @deleted="refreshArchiveItem"
         />
       </div>
     </template>
@@ -25,6 +28,8 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from "vue"
 
+import useArchiveItem from "@/use/use-archive-item"
+
 import ArchiveItemShareButton from "@/components/archive-items/ArchiveItemShareButton.vue"
 import InformationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator from "@/components/information-sharing-agreement-archive-items/InformationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator.vue"
 
@@ -33,17 +38,13 @@ const props = defineProps<{
 }>()
 
 const archiveItemIdAsNumber = computed(() => parseInt(props.archiveItemId))
+const { policy, isLoading, refresh: refreshArchiveItem } = useArchiveItem(archiveItemIdAsNumber)
+
+const canShare = computed(() => policy.value?.update)
 
 const informationSharingAgreementArchiveItemsWhereOptions = computed(() => ({
   archiveItemId: archiveItemIdAsNumber.value,
 }))
-
-const archiveItemShareButton =
-  useTemplateRef<InstanceType<typeof ArchiveItemShareButton>>("archiveItemShareButton")
-
-function refreshArchiveItemShareButton() {
-  archiveItemShareButton.value?.refresh()
-}
 
 const informationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator =
   useTemplateRef<
@@ -53,6 +54,7 @@ const informationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditD
   >("informationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator")
 
 function refreshInformationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator() {
+  refreshArchiveItem()
   informationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator.value?.refresh()
 }
 </script>

@@ -2,8 +2,6 @@
   <v-btn
     color="primary"
     variant="outlined"
-    :loading="isLoading"
-    :disabled="!canShare"
     @click="openGrantAccessDialog"
   >
     Share
@@ -15,10 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs, useTemplateRef } from "vue"
+import { useTemplateRef } from "vue"
 import { isNil } from "lodash"
-
-import useArchiveItem from "@/use/use-archive-item"
 
 import AddArchiveItemToInformationSharingAgreementDialog from "@/components/information-sharing-agreement-archive-items/AddArchiveItemToInformationSharingAgreementDialog.vue"
 
@@ -30,11 +26,6 @@ const emit = defineEmits<{
   shared: [archiveItemToInformationSharingAgreementId: number]
 }>()
 
-const { archiveItemId } = toRefs(props)
-const { policy, isLoading, refresh } = useArchiveItem(archiveItemId)
-
-const canShare = computed(() => policy.value?.update)
-
 const addArchiveItemToInformationSharingAgreementDialog = useTemplateRef<
   InstanceType<typeof AddArchiveItemToInformationSharingAgreementDialog>
 >("addArchiveItemToInformationSharingAgreementDialog")
@@ -42,10 +33,6 @@ const addArchiveItemToInformationSharingAgreementDialog = useTemplateRef<
 function openGrantAccessDialog() {
   if (isNil(addArchiveItemToInformationSharingAgreementDialog.value)) return
 
-  addArchiveItemToInformationSharingAgreementDialog.value.show(archiveItemId.value)
+  addArchiveItemToInformationSharingAgreementDialog.value.show(props.archiveItemId)
 }
-
-defineExpose({
-  refresh,
-})
 </script>
