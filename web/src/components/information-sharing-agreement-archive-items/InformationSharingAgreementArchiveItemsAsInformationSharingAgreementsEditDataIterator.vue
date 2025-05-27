@@ -27,6 +27,7 @@
         >
           <template #append>
             <v-btn
+              v-if="isAdminForInformationSharingAgreement(item.informationSharingAgreementId)"
               :loading="isDeleting"
               size="x-small"
               icon="mdi-delete"
@@ -57,6 +58,8 @@ import { useRouter } from "vue-router"
 import { useRouteQuery } from "@vueuse/router"
 
 import informationSharingAgreementArchiveItemsApi from "@/api/information-sharing-agreement-archive-items-api"
+
+import useCurrentUser from "@/use/use-current-user"
 import useInformationSharingAgreementArchiveItems, {
   type InformationSharingAgreementArchiveItemWhereOptions,
   type InformationSharingAgreementArchiveItemFiltersOptions,
@@ -94,6 +97,8 @@ const informationSharingAgreementArchiveItemsQuery = computed(() => ({
 
 const { informationSharingAgreementArchiveItems, totalCount, isLoading, refresh } =
   useInformationSharingAgreementArchiveItems(informationSharingAgreementArchiveItemsQuery)
+
+const { isAdminForInformationSharingAgreement } = useCurrentUser()
 
 const isDeleting = ref(false)
 const snack = useSnack()
