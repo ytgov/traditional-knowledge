@@ -21,7 +21,7 @@
             </v-tab>
             <v-tab
               :to="{
-                name: 'archive-items/ArchiveItemUsersPage',
+                name: 'archive-items/ArchiveItemUsersWithAccessPage',
                 params: {
                   archiveItemId,
                 },
