@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts" setup>
-import ArchiveItemNewButton from "@/components/archive-item/ArchiveItemNewButton.vue"
+import ArchiveItemNewButton from "@/components/archive-items/ArchiveItemNewButton.vue"
 import VaultInfoCard from "@/components/common/VaultInfoCard.vue"
 import VaultStatisticsCard from "@/components/common/VaultStatisticsCard.vue"
 import useBreadcrumbs from "@/use/use-breadcrumbs"

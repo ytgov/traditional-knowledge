@@ -61,7 +61,7 @@ import { isNil } from "lodash"
 
 import useArchiveItem from "@/use/use-archive-item"
 
-import SecurityLevelSelect from "@/components/archive-item/SecurityLevelSelect.vue"
+import SecurityLevelSelect from "@/components/archive-items/SecurityLevelSelect.vue"
 
 const props = defineProps<{
   archiveItemId: number

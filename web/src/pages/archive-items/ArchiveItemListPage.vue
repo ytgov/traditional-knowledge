@@ -127,7 +127,7 @@ import { useRouteQuery } from "@vueuse/router"
 import useArchiveItems from "@/use/use-archive-items"
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 import { ArchiveItem } from "@/api/archive-items-api"
-import StatusSelect from "@/components/archive-item/StatusSelect.vue"
+import StatusSelect from "@/components/archive-items/StatusSelect.vue"
 
 const router = useRouter()
 

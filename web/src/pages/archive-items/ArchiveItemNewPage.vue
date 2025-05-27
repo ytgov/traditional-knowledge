@@ -4,7 +4,8 @@
 
 <script setup lang="ts">
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
-import ArchiveItemNewForm from "../../components/archive-item/ArchiveItemNewForm.vue"
+
+import ArchiveItemNewForm from "@/components/archive-items/ArchiveItemNewForm.vue"
 
 useBreadcrumbs("New Archive Item", [
   BASE_CRUMB,

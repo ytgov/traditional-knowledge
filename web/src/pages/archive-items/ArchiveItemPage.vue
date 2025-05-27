@@ -66,7 +66,7 @@ import { computed, useTemplateRef } from "vue"
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 
 import ArchiveItemAttachmentsCard from "@/components/archive-items/ArchiveItemAttachmentsCard.vue"
-import ArchiveItemAuditCard from "@/components/archive-item/ArchiveItemAuditCard.vue"
+import ArchiveItemAuditCard from "@/components/archive-items/ArchiveItemAuditCard.vue"
 import ArchiveItemCard from "@/components/archive-items/ArchiveItemCard.vue"
 import ArchiveItemQuickInfoCard from "@/components/archive-items/ArchiveItemQuickInfoCard.vue"
 import PreviewDialog from "@/components/pdf/PreviewDialog.vue"
