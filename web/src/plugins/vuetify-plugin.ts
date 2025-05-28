@@ -82,6 +82,7 @@ export default createVuetify({
       variant: "outlined",
       density: "comfortable",
       color: "primary",
+      hideActions: true,
       hideDetails: "auto",
       bgColor: "#fff",
       prependIcon: "",
