@@ -1,5 +1,7 @@
 import { pick } from "lodash"
 
+import { formatDate } from "@/utils/formatters"
+
 import { InformationSharingAgreement } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
 
@@ -13,14 +15,19 @@ export type AgreementShowView = Pick<
   | "receivingGroupContactId"
   | "title"
   | "description"
-  | "startDate"
-  | "endDate"
   | "createdAt"
   | "updatedAt"
->
+> & {
+  startDate: string
+  endDate: string
+}
 
 export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> {
   perform(): AgreementShowView {
+    const { startDate, endDate } = this.record
+    const formattedStartDate = formatDate(startDate)
+    const formattedEndDate = formatDate(endDate)
+
     return {
       ...pick(this.record, [
         "id",
@@ -31,11 +38,11 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "receivingGroupContactId",
         "title",
         "description",
-        "startDate",
-        "endDate",
         "createdAt",
         "updatedAt",
       ]),
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
     }
   }
 }
