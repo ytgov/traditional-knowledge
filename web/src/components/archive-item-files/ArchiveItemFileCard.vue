@@ -105,18 +105,21 @@ import { useDisplay } from "vuetify"
 import { getFileIcon } from "@/utils/file-icons"
 import { formatBytes } from "@/utils/formatters"
 
-import archiveItemsApi, { ArchiveItemFile } from "@/api/archive-items-api"
-
+import archiveItemsApi from "@/api/archive-items-api"
+import { type ArchiveItemFile } from "@/api/archive-item-files-api"
 import usePreview from "@/use/use-preview"
-
-const { lgAndUp } = useDisplay()
-const { canPreview, showPreview } = usePreview()
-const emit = defineEmits(["reloadAudit"])
-const isLoading = ref(false)
 
 const props = defineProps<{
   file: ArchiveItemFile
 }>()
+
+const emit = defineEmits<{
+  accessed: [archiveItemFileId: number]
+}>()
+
+const { lgAndUp } = useDisplay()
+const { canPreview, showPreview } = usePreview()
+const isLoading = ref(false)
 
 async function downloadFile(usePDF: boolean = false) {
   if (!props.file.archiveItemId) return
@@ -129,11 +132,11 @@ async function downloadFile(usePDF: boolean = false) {
   link.download = (usePDF ? props.file.pdfFileName : props.file.originalFileName) || "download"
   link.click()
 
-  emit("reloadAudit")
+  emit("accessed", props.file.id)
 }
 
 async function previewFile(usePdf: boolean = false) {
   await showPreview(props.file, usePdf)
-  emit("reloadAudit")
+  emit("accessed", props.file.id)
 }
 </script>

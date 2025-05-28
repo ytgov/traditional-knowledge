@@ -76,7 +76,7 @@ import { useRouter } from "vue-router"
 import { VForm } from "vuetify/components"
 
 import useSnack from "@/use/use-snack"
-import useArchiveItem from "@/use/use-archive-item"
+import useArchiveItemLegacy from "@/use/use-archive-item-legacy"
 
 import { SecurityLevel } from "@/api/archive-items-api"
 
@@ -97,7 +97,7 @@ const isValid = ref(false)
 const snack = useSnack()
 const router = useRouter()
 
-const { createItem, isUpdate, save } = useArchiveItem(ref(null))
+const { createItem, isUpdate, save } = useArchiveItemLegacy(ref(null))
 
 const isLoading = ref(false)
 const form = ref<InstanceType<typeof VForm> | null>(null)
@@ -133,7 +133,7 @@ async function saveWrapper() {
     if (isUpdate) snack.success("Item saved.")
     else snack.success("Item created.")
 
-    router.push({ name: "archive-item/ArchiveItemListPage" })
+    router.push({ name: "archive-items/ArchiveItemListPage" })
   } catch (error) {
     snack.error("Save failed!")
     throw error

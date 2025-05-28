@@ -3,7 +3,7 @@ import { pick } from "lodash"
 import { InformationSharingAgreementAccessGrant } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
 
-export type AccessGrantShowView = Pick<
+export type InformationSharingAgreementAccessGrantShowView = Pick<
   InformationSharingAgreementAccessGrant,
   | "id"
   | "informationSharingAgreementId"
@@ -16,7 +16,7 @@ export type AccessGrantShowView = Pick<
 >
 
 export class ShowSerializer extends BaseSerializer<InformationSharingAgreementAccessGrant> {
-  perform(): AccessGrantShowView {
+  perform(): InformationSharingAgreementAccessGrantShowView {
     return {
       ...pick(this.record, [
         "id",

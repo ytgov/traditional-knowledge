@@ -26,10 +26,11 @@ export type InformationSharingAgreementAccessGrant = {
   updatedAt: string
 }
 
-export type InformationSharingAgreementAccessGrantIndexView = InformationSharingAgreementAccessGrant & {
-  user: UserReferenceView | null
-  group: Group
-}
+export type InformationSharingAgreementAccessGrantIndexView =
+  InformationSharingAgreementAccessGrant & {
+    user: UserReferenceView | null
+    group: Group
+  }
 
 export type InformationSharingAgreementAccessGrantWhereOptions = WhereOptions<
   InformationSharingAgreementAccessGrant,
@@ -38,6 +39,7 @@ export type InformationSharingAgreementAccessGrantWhereOptions = WhereOptions<
 
 export type InformationSharingAgreementAccessGrantFiltersOptions = FiltersOptions<{
   search: string | string[]
+  forArchiveItemId: number | number[]
 }>
 
 export type InformationSharingAgreementAccessGrantQueryOptions = QueryOptions<

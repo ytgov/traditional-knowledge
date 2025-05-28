@@ -97,7 +97,9 @@
             color="info"
             text="New Archive Item"
             style="height: 40px"
-            :to="{ name: 'archive-item/ArchiveItemNewPage' }"
+            :to="{
+              name: 'archive-items/ArchiveItemNewPage',
+            }"
           />
         </v-col>
       </v-row>
@@ -125,7 +127,7 @@ import { useRouteQuery } from "@vueuse/router"
 import useArchiveItems from "@/use/use-archive-items"
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 import { ArchiveItem } from "@/api/archive-items-api"
-import StatusSelect from "@/components/archive-item/StatusSelect.vue"
+import StatusSelect from "@/components/archive-items/StatusSelect.vue"
 
 const router = useRouter()
 
@@ -160,10 +162,14 @@ const query = computed(() => {
     perPage: perPage.value,
   }
 })
-
 const { items, totalCount, isLoading } = useArchiveItems(query)
 
 function openItem(_event: PointerEvent, { item }: { item: ArchiveItem }) {
-  router.push({ name: "archive-item/ArchiveItemViewPage", params: { archiveItemId: item.id } })
+  router.push({
+    name: "archive-items/ArchiveItemPage",
+    params: {
+      archiveItemId: item.id,
+    },
+  })
 }
 </script>

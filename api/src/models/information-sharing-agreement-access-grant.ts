@@ -12,6 +12,7 @@ import {
   BelongsTo,
   BelongsToMany,
   Default,
+  HasMany,
   NotNull,
   PrimaryKey,
   Table,
@@ -20,10 +21,11 @@ import {
 import { isUndefined } from "lodash"
 
 import BaseModel from "@/models/base-model"
+import ArchiveItemInformationSharingAgreementAccessGrant from "@/models/archive-item-information-sharing-agreement-access-grant"
 import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
-import User from "@/models/user"
 import InformationSharingAgreementAccessGrantSibling from "@/models/information-sharing-agreement-access-grant-sibling"
+import User from "@/models/user"
 
 export enum InformationSharingAgreementAccessGrantAccessLevels {
   READ = "read",
@@ -133,6 +135,17 @@ export class InformationSharingAgreementAccessGrant extends BaseModel<
   })
   declare creator?: NonAttribute<User>
 
+  @HasMany(() => ArchiveItemInformationSharingAgreementAccessGrant, {
+    foreignKey: {
+      name: "informationSharingAgreementAccessGrantId",
+      allowNull: false,
+    },
+    inverse: "informationSharingAgreementAccessGrant",
+  })
+  declare archiveItemInformationSharingAgreementAccessGrants?: NonAttribute<
+    ArchiveItemInformationSharingAgreementAccessGrant[]
+  >
+
   @BelongsToMany(() => InformationSharingAgreementAccessGrant, {
     through: () => InformationSharingAgreementAccessGrantSibling,
     foreignKey: "informationSharingAgreementAccessGrantId",
@@ -144,7 +157,19 @@ export class InformationSharingAgreementAccessGrant extends BaseModel<
 
   // Scopes
   static establishScopes(): void {
-    // Add as needed, might want nested user or group search?
+    this.addScope("forArchiveItemId", (archiveItemId: number) => {
+      return {
+        include: [
+          {
+            association: "archiveItemInformationSharingAgreementAccessGrants",
+            attributes: [],
+            where: {
+              archiveItemId,
+            },
+          },
+        ],
+      }
+    })
   }
 }
 

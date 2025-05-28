@@ -1,5 +1,6 @@
 import {
   DataTypes,
+  Op,
   sql,
   type CreationOptional,
   type InferAttributes,
@@ -20,6 +21,7 @@ import { isUndefined } from "lodash"
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
 import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
+import InformationSharingAgreementArchiveItem from "@/models/information-sharing-agreement-archive-item"
 import User from "@/models/user"
 
 export class InformationSharingAgreement extends BaseModel<
@@ -140,9 +142,39 @@ export class InformationSharingAgreement extends BaseModel<
   })
   declare accessGrants?: NonAttribute<InformationSharingAgreementAccessGrant[]>
 
+  @HasMany(() => InformationSharingAgreementArchiveItem, {
+    foreignKey: "informationSharingAgreementId",
+    inverse: "informationSharingAgreement",
+  })
+  declare informationSharingAgreementArchiveItems?: NonAttribute<
+    InformationSharingAgreementArchiveItem[]
+  >
+
   // Scopes
   static establishScopes(): void {
     this.addSearchScope(["title", "description"])
+
+    this.addScope("notAssociatedWithArchiveItem", (archiveItemId: number) => {
+      return {
+        where: {
+          id: {
+            [Op.notIn]: sql`
+              (
+                SELECT
+                  information_sharing_agreement_id
+                FROM
+                  information_sharing_agreement_archive_items
+                WHERE
+                  archive_item_id = :archiveItemId
+              )
+            `,
+          },
+        },
+        replacements: {
+          archiveItemId,
+        },
+      }
+    })
   }
 }
 
