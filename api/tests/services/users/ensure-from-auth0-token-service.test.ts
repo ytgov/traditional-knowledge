@@ -50,22 +50,18 @@ describe("api/src/services/users/ensure-from-auth0-token-service.ts", () => {
         }
         mockedAuth0Integration.getUserInfo.mockResolvedValue(getUserInfoResult)
 
-
         // Assert
         expect.assertions(2)
         let result
-        await expect(
-          async () => {
-            // Act
-            result = await EnsureFromAuth0TokenService.perform(token)
-            return result
-          }
-        ).toChange(() => User.count(), { from: 0, to: 1 })
-        expect(result).to.be.instanceOf(User).with.property("authSubject", auth0Subject)
+        await expect(async () => {
+          // Act
+          result = await EnsureFromAuth0TokenService.perform(token)
+          return result
+        }).toChange(() => User.count(), { from: 0, to: 1 })
+        expect(result).to.be.instanceOf(User).with.property("auth0Subject", auth0Subject)
       })
 
       test("when user with Auth0 subject, matching email returned by Auth0 integration, exists in database, updates and returns user", async () => {
-        // Arrange
         // Arrange
         const token = "Auth0AccessToken"
         const auth0Subject = "auth0|74df9b33217f9d4c8fefcc8b"
@@ -87,7 +83,7 @@ describe("api/src/services/users/ensure-from-auth0-token-service.ts", () => {
         // Assert
         expect(result).to.be.instanceOf(User).and.to.include({
           id: user.id,
-          authSubject: auth0Subject,
+          auth0Subject,
           email: user.email,
         })
       })

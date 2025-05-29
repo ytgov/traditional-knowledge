@@ -69,7 +69,7 @@
             md="6"
           >
             <!-- TODO: consider using a v-date-input range type? -->
-            <v-date-input
+            <StringDateInput
               v-model="informationSharingAgreement.startDate"
               label="Start Date *"
               :rules="[required]"
@@ -81,7 +81,7 @@
             cols="12"
             md="6"
           >
-            <v-date-input
+            <StringDateInput
               v-model="informationSharingAgreement.endDate"
               label="End Date *"
               :rules="[required]"
@@ -127,6 +127,7 @@ import { required } from "@/utils/validators"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import useSnack from "@/use/use-snack"
 
+import StringDateInput from "@/components/common/StringDateInput.vue"
 import GroupChip from "@/components/groups/GroupChip.vue"
 import UserSearchableAutocomplete from "@/components/users/UserSearchableAutocomplete.vue"
 
