@@ -1,12 +1,12 @@
 <template>
   <v-date-input
-    v-bind="$attrs"
-    v-model="formattedDate"
+    :model-value="date"
+    @update:model-value="updateDateAndEmit"
   />
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
+import { ref, watch } from "vue"
 import { DateTime } from "luxon"
 import { isNil } from "lodash"
 
@@ -24,30 +24,42 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  "update:modelValue": [value: string]
+  "update:modelValue": [value: string | null]
 }>()
 
-const formattedDate = computed({
-  get() {
-    if (isNil(props.modelValue)) return undefined
+const date = ref<Date | null>(null)
 
-    const date = DateTime.fromISO(props.modelValue).toJSDate()
-    return date
-  },
-  set(value) {
-    if (value instanceof Date) {
-      const stringValue = DateTime.fromJSDate(value).toFormat(props.returnFormat)
-      if (isNil(stringValue)) {
-        emit("update:modelValue", "")
-        return ""
-      }
-
-      emit("update:modelValue", stringValue)
-      return stringValue
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (isNil(newValue)) {
+      date.value = null
+      return
     }
 
-    emit("update:modelValue", "")
-    return ""
-  },
-})
+    const newDate = DateTime.fromISO(newValue).toJSDate()
+    date.value = newDate
+  }
+)
+
+function updateDateAndEmit(value: unknown) {
+  if (value instanceof Date) {
+    date.value = value
+
+    const stringValue = DateTime.fromJSDate(value).toFormat(props.returnFormat)
+    if (isNil(stringValue)) {
+      emit("update:modelValue", null)
+      return
+    }
+
+    emit("update:modelValue", stringValue)
+    return stringValue
+  } else if (typeof value === "string") {
+    date.value = DateTime.fromISO(value).toJSDate()
+    emit("update:modelValue", value)
+  } else {
+    date.value = null
+    emit("update:modelValue", null)
+  }
+}
 </script>
