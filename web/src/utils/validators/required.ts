@@ -5,10 +5,9 @@ export function required(v: unknown): boolean | string {
     return "This field is required"
   }
 
-  if (
-    v instanceof Date &&
-    isNaN(v.getTime())
-  ) {
+  if (v instanceof Date) {
+    if (!isNaN(v.getTime())) return true
+
     return "This field is required"
   }
 
