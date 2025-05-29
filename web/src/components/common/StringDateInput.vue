@@ -1,7 +1,8 @@
 <template>
   <v-date-input
-    :model-value="date"
-    @update:model-value="updateDateAndEmit"
+    v-model="date"
+    v-bind="$attrs"
+    @update:model-value="emitStringResult"
   />
 </template>
 
@@ -34,31 +35,32 @@ watch(
   (newValue) => {
     if (isNil(newValue)) {
       date.value = null
-      return
+    } else {
+      const dateTime = DateTime.fromISO(newValue)
+      if (dateTime.isValid) {
+        date.value = dateTime.toJSDate()
+      } else {
+        date.value = null
+      }
     }
-
-    const newDate = DateTime.fromISO(newValue).toJSDate()
-    date.value = newDate
+  },
+  {
+    immediate: true,
   }
 )
 
-function updateDateAndEmit(value: unknown) {
+function emitStringResult(value: unknown) {
   if (value instanceof Date) {
-    date.value = value
-
-    const stringValue = DateTime.fromJSDate(value).toFormat(props.returnFormat)
-    if (isNil(stringValue)) {
+    const dateTime = DateTime.fromJSDate(value)
+    if (dateTime.isValid) {
+      const stringValue = dateTime.toFormat(props.returnFormat)
+      emit("update:modelValue", stringValue)
+    } else {
       emit("update:modelValue", null)
-      return
     }
-
-    emit("update:modelValue", stringValue)
-    return stringValue
   } else if (typeof value === "string") {
-    date.value = DateTime.fromISO(value).toJSDate()
     emit("update:modelValue", value)
   } else {
-    date.value = null
     emit("update:modelValue", null)
   }
 }
