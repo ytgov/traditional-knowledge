@@ -1,8 +1,9 @@
 import { Attributes } from "@sequelize/core"
 import { isNil } from "lodash"
 
-import { User, UserGroup } from "@/models"
+import db, { Group, User, UserGroup } from "@/models"
 import BaseService from "@/services/base-service"
+import { Notifications } from "@/services"
 
 export type UserGroupCreationAttributes = Partial<Attributes<UserGroup>>
 
@@ -25,14 +26,33 @@ export class CreateService extends BaseService {
       throw new Error("Group ID is required")
     }
 
-    const userGroup = await UserGroup.create({
-      creatorId: this.currentUser.id,
-      userId,
-      groupId,
-      ...optionalAttributes,
-    })
+    return db.transaction(async () => {
+      const userGroup = await UserGroup.create({
+        ...optionalAttributes,
+        creatorId: this.currentUser.id,
+        userId,
+        groupId,
+      })
 
-    return userGroup
+      const user = await User.findByPk(userId)
+      const group = await Group.findByPk(groupId)
+
+      if (isNil(user)) {
+        throw new Error("User not found")
+      }
+
+      if (isNil(group)) {
+        throw new Error("Group not found")
+      }
+
+      await this.notifyUserOfMembership(user, group)
+
+      return userGroup
+    })
+  }
+
+  private async notifyUserOfMembership(user: User, group: Group) {
+    await Notifications.Groups.NotifyUserOfMembershipService.perform(user, group, this.currentUser)
   }
 }
 

@@ -77,7 +77,7 @@
 import { isNil } from "lodash"
 import { computed, ref, toRefs } from "vue"
 
-import { type VBtn, type VForm } from "vuetify/lib/components/index.mjs"
+import { type VBtn, type VForm } from "vuetify/components"
 
 import { required } from "@/utils/validators"
 import useGroup from "@/use/use-group"

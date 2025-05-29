@@ -20,6 +20,16 @@
               required
             />
           </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-switch
+              v-model="userGroupAttributes.isAdmin"
+              label="Is Admin?"
+              inset
+            />
+          </v-col>
         </v-row>
       </template>
       <template #actions>
@@ -55,7 +65,7 @@ import { isNil } from "lodash"
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
-import { VForm } from "vuetify/lib/components/index.mjs"
+import { VForm } from "vuetify/components"
 
 import { required } from "@/utils/validators"
 import userGroupsApi, { type UserGroup } from "@/api/user-groups-api"

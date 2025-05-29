@@ -39,7 +39,7 @@
 import { ref } from "vue"
 import { debounce, isEmpty, isNil } from "lodash"
 
-import { VTextField } from "vuetify/lib/components/VTextField/index.mjs"
+import { VTextField } from "vuetify/components"
 
 const props = withDefaults(
   defineProps<{

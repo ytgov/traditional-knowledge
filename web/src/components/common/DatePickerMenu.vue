@@ -23,7 +23,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from "vue"
 import { DateTime } from "luxon"
-import { VDatePicker, VTextField } from "vuetify/lib/components/index.mjs"
+import { VDatePicker, VTextField } from "vuetify/components"
 
 const props = withDefaults(
   defineProps<{

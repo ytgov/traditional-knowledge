@@ -22,7 +22,7 @@ export async function ensureAndAuthorizeCurrentUser(
 ) {
   const user = await User.findOne({
     where: { auth0Subject: req.auth?.sub || "" },
-    include: ["userPermissions"],
+    include: ["adminGroups", "adminInformationSharingAgreementAccessGrants"],
   })
 
   if (!isNil(user)) {
@@ -32,7 +32,10 @@ export async function ensureAndAuthorizeCurrentUser(
 
   try {
     const token = req.headers.authorization || ""
-    const user = await Users.EnsureFromAuth0TokenService.perform(token)
+    const user = await Users.EnsureFromAuth0TokenService.perform(token, [
+      "adminGroups",
+      "adminInformationSharingAgreementAccessGrants",
+    ])
     req.currentUser = user
     return next()
   } catch (error) {

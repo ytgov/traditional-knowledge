@@ -1,6 +1,6 @@
 import http from "@/api/http-client"
 import { type Policy } from "@/api/base-api"
-import { User } from "@/api/users-api"
+import { type User } from "@/api/users-api"
 
 export const currentUserApi = {
   async get(): Promise<{

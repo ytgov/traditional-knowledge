@@ -51,8 +51,12 @@
       class="mr-2"
       color="#f7f9ef"
       icon="mdi-archive-plus"
-      :to="{ name: 'archive-item/ArchiveItemNewPage' }"
+      :to="{
+        name: 'archive-items/ArchiveItemNewPage',
+      }"
     />
+
+    <NotificationMenu />
 
     <KebabMenu />
   </v-app-bar>
@@ -70,10 +74,12 @@
 import { ref, unref, watch } from "vue"
 import { useDisplay } from "vuetify"
 
-import SimpleBreadcrumbs from "@/components/common/SimpleBreadcrumbs.vue"
+import useBreadcrumbs from "@/use/use-breadcrumbs"
+
 import KebabMenu from "@/components/default-layout/KebabMenu.vue"
 import LeftSidebarNavigationDrawer from "@/components/default-layout/LeftSidebarNavigationDrawer.vue"
-import useBreadcrumbs from "@/use/use-breadcrumbs"
+import SimpleBreadcrumbs from "@/components/common/SimpleBreadcrumbs.vue"
+import NotificationMenu from "@/components/common/layouts/NotificationMenu.vue"
 
 const { mdAndUp } = useDisplay()
 

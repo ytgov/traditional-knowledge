@@ -28,10 +28,7 @@
       >
         <div
           class="d-flex align-center justify-center py-5"
-          style="
-            width: 100%;
-            background-color: #F9F4D4;
-          "
+          style="width: 100%; background-color: #f9f4d4"
           :style="{
             borderLeft: mdAndDown ? '10px #466653 solid' : '10px #466653 solid',
             marginLeft: mdAndDown ? '16px' : '-20px',
@@ -50,7 +47,7 @@
             <div class="mt-6 text-center">
               <v-btn
                 color="primary"
-                @click="signinWrapper"
+                @click="loginWithRedirect"
               >
                 Sign in
               </v-btn>
@@ -68,7 +65,7 @@
 <script lang="ts" setup>
 import { onMounted } from "vue"
 import { useAuth0 } from "@auth0/auth0-vue"
-import { useDisplay } from "vuetify/lib/framework.mjs"
+import { useDisplay } from "vuetify"
 
 import { APPLICATION_NAME } from "@/config"
 import useCurrentUser from "@/use/use-current-user"
@@ -82,12 +79,4 @@ const { loginWithRedirect } = useAuth0()
 onMounted(() => {
   resetCurrentUser()
 })
-
-function signinWrapper() {
-  loginWithRedirect({
-    appState: {
-      target: `/dashboard`,
-    },
-  })
-}
 </script>
