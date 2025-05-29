@@ -49,6 +49,9 @@ watch(
   }
 )
 
+/**
+ * NOTE: v-date-input returns Date | string, rather than just "string" like it's types imply.
+ */
 function emitStringResult(value: unknown) {
   if (value instanceof Date) {
     const dateTime = DateTime.fromJSDate(value)
