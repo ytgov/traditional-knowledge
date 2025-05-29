@@ -5,6 +5,13 @@ export function required(v: unknown): boolean | string {
     return "This field is required"
   }
 
+  if (
+    v instanceof Date &&
+    isNaN(v.getTime())
+  ) {
+    return "This field is required"
+  }
+
   if ((isArray(v) || isString(v) || isObject(v)) && isEmpty(v)) {
     return "This field is required"
   }
