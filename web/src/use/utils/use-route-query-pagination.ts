@@ -20,11 +20,15 @@ export function useRouteQueryPagination({
   perPage?: number
   routeQuerySuffix?: string
 } = {}) {
-  const queryPage = useRouteQuery<string, number>(`page${routeQuerySuffix}`, page.toString(), {
-    transform: integerTransformer,
-  })
+  const queryPage = useRouteQuery<string | undefined, number | undefined>(
+    `page${routeQuerySuffix}`,
+    page.toString(),
+    {
+      transform: integerTransformer,
+    }
+  )
 
-  const queryPerPage = useRouteQuery<string, number>(
+  const queryPerPage = useRouteQuery<string | undefined, number | undefined>(
     `perPage${routeQuerySuffix}`,
     perPage.toString(),
     {

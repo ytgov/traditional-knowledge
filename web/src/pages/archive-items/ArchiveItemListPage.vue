@@ -126,7 +126,7 @@ import { useRouteQuery } from "@vueuse/router"
 
 import useArchiveItems from "@/use/use-archive-items"
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
-import { ArchiveItem } from "@/api/archive-items-api"
+import { type ArchiveItem, ArchiveItemStatus } from "@/api/archive-items-api"
 import StatusSelect from "@/components/archive-items/StatusSelect.vue"
 
 const router = useRouter()
@@ -157,7 +157,7 @@ function updatePage(newPage: number) {
 const query = computed(() => {
   return {
     filters: { search: search.value },
-    where: { status: showDue.value ? "Expiring Soon" : undefined },
+    where: { status: showDue.value ? ArchiveItemStatus.EXPIRING_SOON : undefined },
     page: page.value,
     perPage: perPage.value,
   }
