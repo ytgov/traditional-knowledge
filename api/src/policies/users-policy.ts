@@ -38,6 +38,7 @@ export class UsersPolicy extends PolicyFactory(User) {
       "division",
       "branch",
       "unit",
+      "emailNotificationsEnabled",
     ]
 
     if (this.user.isSystemAdmin) {

@@ -17,6 +17,7 @@ export type UserShowView = Pick<
   | "branch"
   | "unit"
   | "deactivatedAt"
+  | "emailNotificationsEnabled"
   | "createdAt"
   | "updatedAt"
 > & {
@@ -44,6 +45,7 @@ export class ShowSerializer extends BaseSerializer<User> {
         "branch",
         "unit",
         "deactivatedAt",
+        "emailNotificationsEnabled",
         "createdAt",
         "updatedAt",
       ]),

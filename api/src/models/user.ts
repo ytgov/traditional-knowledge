@@ -102,6 +102,11 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @Attribute(DataTypes.DATE(0))
   declare deactivatedAt: Date | null
 
+  @Attribute(DataTypes.BOOLEAN)
+  @NotNull
+  @Default(false)
+  declare emailNotificationsEnabled: CreationOptional<boolean>
+
   @Attribute(DataTypes.DATE(0))
   @NotNull
   @Default(sql.fn("getutcdate"))
