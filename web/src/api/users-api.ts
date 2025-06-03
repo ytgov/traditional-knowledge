@@ -28,6 +28,7 @@ export type User = {
   branch: string | null
   unit: string | null
   deactivatedAt: string | null
+  emailNotificationsEnabled: boolean
   createdAt: string
   updatedAt: string
 
@@ -51,11 +52,12 @@ export type UserReferenceView = Pick<
   | "division"
   | "branch"
   | "unit"
+  | "emailNotificationsEnabled"
 >
 
 export type UserWhereOptions = WhereOptions<
   User,
-  "email" | "title" | "department" | "division" | "branch" | "unit"
+  "email" | "title" | "department" | "division" | "branch" | "unit" | "emailNotificationsEnabled"
 >
 
 export type UserFiltersOptions = FiltersOptions<{
