@@ -1,7 +1,7 @@
 import { Attributes } from "@sequelize/core"
 import { isNil } from "lodash"
 
-import { NotifyUserOfMembershipMailer } from "@/mailers/groups"
+import { NotifyUserOfMembershipMailer, NotifyAdminsOfAddedUserMailer } from "@/mailers/groups"
 import db, { Group, User, UserGroup } from "@/models"
 import BaseService from "@/services/base-service"
 import { Notifications } from "@/services"
@@ -47,7 +47,7 @@ export class CreateService extends BaseService {
       }
 
       await this.notifyUserOfMembership(user, group)
-      await NotifyUserOfMembershipMailer.perform(group, user)
+      await this.notifyAdminsOfMembership(user, group)
 
       return userGroup
     })
@@ -55,6 +55,12 @@ export class CreateService extends BaseService {
 
   private async notifyUserOfMembership(user: User, group: Group) {
     await Notifications.Groups.NotifyUserOfMembershipService.perform(user, group, this.currentUser)
+    await NotifyUserOfMembershipMailer.perform(group, user)
+  }
+
+  private async notifyAdminsOfMembership(user: User, group: Group) {
+    await Notifications.Groups.NotifyAdminsOfAddedUserService.perform(user, group, this.currentUser)
+    await NotifyAdminsOfAddedUserMailer.perform(group, user)
   }
 }
 

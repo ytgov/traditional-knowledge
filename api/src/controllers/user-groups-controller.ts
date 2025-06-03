@@ -3,7 +3,7 @@ import { isNil } from "lodash"
 import logger from "@/utils/logger"
 import { UserGroup } from "@/models"
 import { UserGroupPolicy } from "@/policies"
-import { CreateService } from "@/services/user-groups"
+import { CreateService, DestroyService } from "@/services/user-groups"
 import BaseController from "@/controllers/base-controller"
 
 export class UserGroupsController extends BaseController<UserGroup> {
@@ -131,8 +131,8 @@ export class UserGroupsController extends BaseController<UserGroup> {
         })
       }
 
-      await userGroup.destroy()
-      return this.response.status(204).send()
+      await DestroyService.perform(userGroup, this.currentUser)
+      return this.response.status(204).send({ message: "User group was deleted" })
     } catch (error) {
       logger.error(`Error deleting user group: ${error}`, { error })
       return this.response.status(422).json({
