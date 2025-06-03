@@ -70,6 +70,17 @@
               required
             />
           </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-switch
+              v-model="user.emailNotificationsEnabled"
+              label="Receive email notifications"
+              :false-value="false"
+              :true-value="true"
+            />
+          </v-col>
         </v-row>
       </v-card-text>
       <v-card-title>Organizational Details</v-card-title>
