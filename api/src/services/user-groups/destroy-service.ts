@@ -1,4 +1,4 @@
-import { isNil } from "lodash"
+import { isUndefined } from "lodash"
 
 import { NotifyUserOfRemovalMailer, NotifyAdminsOfRemovedUserMailer } from "@/mailers/groups"
 import db, { UserGroup, User, Group } from "@/models"
@@ -16,18 +16,17 @@ export class DestroyService extends BaseService {
   }
 
   async perform() {
+    if (isUndefined(this.userGroup.user)) {
+      throw new Error("Expected user association to be preloaded")
+    }
+
+    if (isUndefined(this.userGroup.group)) {
+      throw new Error("Expected group association to be preloaded")
+    }
+
+    const { user, group } = this.userGroup
+
     return db.transaction(async () => {
-      const user = await User.findByPk(this.userGroup.userId)
-      const group = await Group.findByPk(this.userGroup.groupId)
-
-      if (isNil(user)) {
-        throw new Error("User not found")
-      }
-
-      if (isNil(group)) {
-        throw new Error("Group not found")
-      }
-
       await this.notifyUserOfRemoval(user, group)
       await this.notifyAdminsOfRemoval(user, group)
       await this.userGroup.destroy()
