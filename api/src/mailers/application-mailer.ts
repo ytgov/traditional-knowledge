@@ -49,7 +49,10 @@ export class ApplicationMailer extends BaseMailer {
   }
 
   protected buildTo(users: User[]): string {
-    return users.map((user) => user.email).join(", ")
+    return users
+      .filter((user) => user.emailNotificationsEnabled)
+      .map((user) => user.email)
+      .join(", ")
   }
 }
 
