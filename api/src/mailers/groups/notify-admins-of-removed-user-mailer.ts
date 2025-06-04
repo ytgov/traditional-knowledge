@@ -8,7 +8,8 @@ import ApplicationMailer from "@/mailers/application-mailer"
 export class NotifyAdminsOfRemovedUserMailer extends ApplicationMailer {
   constructor(
     private group: Group,
-    private user: User
+    private user: User,
+    private currentUser: User
   ) {
     super(__filename)
   }
@@ -21,7 +22,8 @@ export class NotifyAdminsOfRemovedUserMailer extends ApplicationMailer {
 
     const groupAdmins = this.group.adminUsers ?? []
 
-    const groupAdminIds = groupAdmins.map((user) => user.id)
+    const excludedUserIds = groupAdmins.map((user) => user.id)
+    excludedUserIds.push(this.currentUser.id)
 
     const systemAdmins = await User.findAll({
       where: {
@@ -29,7 +31,7 @@ export class NotifyAdminsOfRemovedUserMailer extends ApplicationMailer {
           [Op.like]: `%${User.Roles.SYSTEM_ADMIN}%`,
         } as { [Op.like]: string },
         id: {
-          [Op.notIn]: groupAdminIds,
+          [Op.notIn]: excludedUserIds,
         },
       },
     })

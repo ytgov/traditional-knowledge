@@ -59,7 +59,7 @@ export class CreateService extends BaseService {
 
   private async notifyAdminsOfMembership(user: User, group: Group) {
     await Notifications.Groups.NotifyAdminsOfAddedUserService.perform(user, group, this.currentUser)
-    await NotifyAdminsOfAddedUserMailer.perform(group, user)
+    await NotifyAdminsOfAddedUserMailer.perform(group, user, this.currentUser)
   }
 }
 

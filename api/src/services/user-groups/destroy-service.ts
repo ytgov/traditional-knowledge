@@ -44,7 +44,7 @@ export class DestroyService extends BaseService {
       group,
       this.currentUser
     )
-    await NotifyAdminsOfRemovedUserMailer.perform(group, user)
+    await NotifyAdminsOfRemovedUserMailer.perform(group, user, this.currentUser)
   }
 }
 
