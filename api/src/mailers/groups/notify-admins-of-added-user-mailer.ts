@@ -24,12 +24,10 @@ export class NotifyAdminsOfAddedUserMailer extends ApplicationMailer {
 
     const excludedUserIds = groupAdmins.map((user) => user.id)
     excludedUserIds.push(this.currentUser.id)
+    excludedUserIds.push(this.user.id)
 
-    const systemAdmins = await User.findAll({
+    const systemAdmins = await User.withScope("isSystemAdmin").findAll({
       where: {
-        roles: {
-          [Op.like]: `%${User.Roles.SYSTEM_ADMIN}%`,
-        } as { [Op.like]: string },
         id: {
           [Op.notIn]: excludedUserIds,
         },
