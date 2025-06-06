@@ -17,11 +17,17 @@ export class NotifyAdminsOfAddedUserService extends BaseService {
   async perform() {
     await this.group.reload({ include: ["adminUsers"] })
 
+    const excludedUserIds = [this.user.id]
+
     const groupAdmins = this.group.adminUsers ?? []
 
-    const excludedUserIds = groupAdmins.map((user) => user.id)
-    excludedUserIds.push(this.currentUser.id)
-    excludedUserIds.push(this.user.id)
+    const nonExcludedGroupAdmins = groupAdmins.filter(
+      (admin) => !excludedUserIds.includes(admin.id)
+    )
+
+    nonExcludedGroupAdmins.forEach((admin) => {
+      excludedUserIds.push(admin.id)
+    })
 
     const systemAdmins = await User.withScope("isSystemAdmin").findAll({
       where: {
@@ -34,7 +40,7 @@ export class NotifyAdminsOfAddedUserService extends BaseService {
     const { name: groupName } = this.group
     const safeTitle = Notification.sanitizeAttribute("title", `User Added to Group: ${groupName}`)
 
-    for (const user of [...systemAdmins, ...groupAdmins]) {
+    for (const user of [...systemAdmins, ...nonExcludedGroupAdmins]) {
       await Notifications.CreateService.perform(
         {
           title: safeTitle,
