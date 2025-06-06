@@ -6,7 +6,6 @@ import { UsersPolicy } from "@/policies"
 import { CreateService } from "@/services/users"
 import { IndexSerializer, ShowSerializer } from "@/serializers/users"
 import BaseController from "@/controllers/base-controller"
-import MergeService from "@/services/user-permissions/merge-service"
 
 export class UsersController extends BaseController<User> {
   async index() {
@@ -20,7 +19,6 @@ export class UsersController extends BaseController<User> {
         where,
         limit: this.pagination.limit,
         offset: this.pagination.offset,
-        include: ["userPermissions"],
       })
       const serializedUsers = IndexSerializer.perform(users)
       return this.response.json({
@@ -97,12 +95,6 @@ export class UsersController extends BaseController<User> {
         })
       }
 
-      MergeService.perform({
-        user,
-        categoryIds: this.request.body.categories,
-        sourceIds: this.request.body.sources,
-      })
-
       const permittedAttributes = policy.permitAttributes(this.request.body)
       await user.update(permittedAttributes)
       const updatedUser = await this.loadUser()
@@ -151,7 +143,9 @@ export class UsersController extends BaseController<User> {
   }
 
   private async loadUser() {
-    const user = await User.findByPk(this.params.id, { include: ["userPermissions"] })
+    const user = await User.findByPk(this.params.id, {
+      include: ["adminGroups", "adminInformationSharingAgreementAccessGrants"],
+    })
 
     return user
   }

@@ -1,0 +1,3 @@
+The user "{{ firstName }} {{ lastName }}" has been added to the group "{{ groupName }}".
+
+If you no longer wish to receive these notifications, you can disable them in your profile settings.

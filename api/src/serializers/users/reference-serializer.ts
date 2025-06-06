@@ -15,6 +15,7 @@ export type UserReferenceView = Pick<
   | "division"
   | "branch"
   | "unit"
+  | "emailNotificationsEnabled"
 >
 
 export class ReferenceSerializer extends BaseSerializer<User> {
@@ -31,6 +32,7 @@ export class ReferenceSerializer extends BaseSerializer<User> {
         "division",
         "branch",
         "unit",
+        "emailNotificationsEnabled",
       ]),
     }
   }

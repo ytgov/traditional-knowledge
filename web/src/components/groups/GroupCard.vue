@@ -28,6 +28,7 @@
       </v-btn>
       <v-spacer />
       <v-btn
+        v-if="policy?.update"
         color="primary"
         v-bind="editButtonProps"
       >
@@ -41,7 +42,7 @@
 import { isEmpty, isNil } from "lodash"
 import { toRefs } from "vue"
 
-import { type VBtn } from "vuetify/lib/components/index.mjs"
+import { type VBtn } from "vuetify/components"
 
 import useGroup from "@/use/use-group"
 
@@ -71,7 +72,7 @@ const props = withDefaults(
 )
 
 const { groupId } = toRefs(props)
-const { group, isLoading } = useGroup(groupId)
+const { group, policy, isLoading } = useGroup(groupId)
 </script>
 
 <style scoped>

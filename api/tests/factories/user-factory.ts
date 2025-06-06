@@ -3,16 +3,29 @@ import { Factory } from "fishery"
 
 import { User } from "@/models"
 
-export const userFactory = Factory.define<User>(({ sequence, params, onCreate }) => {
-  onCreate((user) => user.save())
+export const userFactory = Factory.define<User>(({ sequence, onCreate }) => {
+  onCreate(async (user) => {
+    try {
+      await user.save()
+      return user
+    } catch (error) {
+      console.error(error)
+      throw new Error(
+        `Could not create User with attributes: ${JSON.stringify(user.dataValues, null, 2)}`
+      )
+    }
+  })
 
-  const firstName = params.firstName || faker.person.firstName()
-  const lastName = params.lastName || faker.person.lastName()
-  const email = params.email || faker.internet.email({ firstName, lastName })
+  const auth0Subject = faker.string.uuid()
+
+  const fakeFirstName = faker.person.firstName()
+  const firstName = `${fakeFirstName}-${sequence}`
+  const fakeLastName = faker.person.lastName()
+  const lastName = `${fakeLastName}-${sequence}`
+  const email = faker.internet.email({ firstName, lastName })
 
   return User.build({
-    id: sequence,
-    auth0Subject: params.auth0Subject || email,
+    auth0Subject,
     email,
     firstName,
     lastName,

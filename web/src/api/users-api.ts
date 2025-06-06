@@ -1,5 +1,12 @@
 import http from "@/api/http-client"
-import { type Policy } from "@/api/base-api"
+import {
+  type FiltersOptions,
+  type Policy,
+  type QueryOptions,
+  type WhereOptions,
+} from "@/api/base-api"
+import { type Group } from "@/api/groups-api"
+import { type InformationSharingAgreementAccessGrant } from "@/api/information-sharing-agreement-access-grants-api"
 
 /** Keep in sync with api/src/models/user.ts */
 export enum UserRoles {
@@ -21,42 +28,51 @@ export type User = {
   branch: string | null
   unit: string | null
   deactivatedAt: string | null
+  emailNotificationsEnabled: boolean
   createdAt: string
   updatedAt: string
 
   // Virtuals
   isActive: boolean
-  categories?: number[]
-  sources?: number[]
 
   // Associations
+  adminGroups?: Group[]
+  adminInformationSharingAgreementAccessGrants?: InformationSharingAgreementAccessGrant[]
 }
 
-export type UserWhereOptions = {
-  email?: string
-  title?: string
-  department?: string
-  division?: string
-  branch?: string
-  unit?: string
-}
+export type UserReferenceView = Pick<
+  User,
+  | "id"
+  | "email"
+  | "firstName"
+  | "lastName"
+  | "displayName"
+  | "title"
+  | "department"
+  | "division"
+  | "branch"
+  | "unit"
+  | "emailNotificationsEnabled"
+>
 
-export type UserFiltersOptions = {
-  search?: string | string[]
-  notInGroup?: number
+export type UserWhereOptions = WhereOptions<
+  User,
+  "email" | "title" | "department" | "division" | "branch" | "unit" | "emailNotificationsEnabled"
+>
+
+export type UserFiltersOptions = FiltersOptions<{
+  search: string | string[]
+  inGroup: number
+  notInGroup: number
+  withoutAccessGrantFor: number
   // TODO: implement isActive scope in back-end
-}
+}>
+
+export type UserQueryOptions = QueryOptions<UserWhereOptions, UserFiltersOptions>
 
 export const usersApi = {
   UserRoles,
-  async list(
-    params: {
-      where?: UserWhereOptions
-      filters?: UserFiltersOptions
-      page?: number
-      perPage?: number
-    } = {}
-  ): Promise<{
+  async list(params: UserQueryOptions = {}): Promise<{
     users: User[]
     totalCount: number
   }> {

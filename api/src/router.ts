@@ -21,13 +21,13 @@ import {
   ArchiveItemAuditsController,
   ArchiveItemFilesController,
   ArchiveItemsController,
-  CategoriesController,
   CurrentUserController,
-  DecisionsController,
   GroupsController,
-  IntegrationController,
-  RetentionsController,
-  SourcesController,
+  InformationSharingAgreementAccessGrantsController,
+  InformationSharingAgreementArchiveItemsController,
+  InformationSharingAgreementsController,
+  NotificationsController,
+  Notifications,
   UserGroupsController,
   UsersController,
 } from "@/controllers"
@@ -44,12 +44,18 @@ router.route("/_status").get((_req: Request, res: Response) => {
 
 router.use("/migrate", migrator.migrationRouter)
 
-router.route("/api/integrations/:sourceId").post(IntegrationController.create)
-
 // api routes
 router.use("/api", jwtMiddleware, ensureAndAuthorizeCurrentUser)
 
 router.route("/api/current-user").get(CurrentUserController.show)
+
+router.route("/api/notifications").get(NotificationsController.index)
+router.route("/api/notifications/:notificationId").get(NotificationsController.show)
+
+router
+  .route("/api/notifications/:notificationId/read")
+  .post(Notifications.ReadController.create)
+  .delete(Notifications.ReadController.destroy)
 
 router.route("/api/users").get(UsersController.index).post(UsersController.create)
 router
@@ -57,28 +63,6 @@ router
   .get(UsersController.show)
   .patch(UsersController.update)
   .delete(UsersController.destroy)
-
-router.route("/api/sources").get(SourcesController.index).post(SourcesController.create)
-router
-  .route("/api/sources/:id")
-  .get(SourcesController.show)
-  .patch(SourcesController.update)
-  .delete(SourcesController.destroy)
-
-router.route("/api/retentions").get(RetentionsController.index).post(RetentionsController.create)
-router
-  .route("/api/retentions/:id")
-  .get(RetentionsController.show)
-  .patch(RetentionsController.update)
-  .delete(RetentionsController.destroy)
-
-router.route("/api/categories").get(CategoriesController.index).post(CategoriesController.create)
-
-router
-  .route("/api/categories/:id")
-  .get(CategoriesController.show)
-  .patch(CategoriesController.update)
-  .delete(CategoriesController.destroy)
 
 router
   .route("/api/archive-items")
@@ -93,19 +77,44 @@ router
 router.route("/api/archive-items/:archiveItemId/files/:fileId").get(ArchiveItemFilesController.show)
 router.route("/api/archive-items/:archiveItemId/audits").get(ArchiveItemAuditsController.index)
 
-router.route("/api/decisions").get(DecisionsController.index).post(DecisionsController.create)
-router
-  .route("/api/decisions/:id")
-  .get(DecisionsController.show)
-  .patch(DecisionsController.update)
-  .delete(DecisionsController.destroy)
-
 router.route("/api/groups").get(GroupsController.index).post(GroupsController.create)
 router
   .route("/api/groups/:groupId")
   .get(GroupsController.show)
   .patch(GroupsController.update)
   .delete(GroupsController.destroy)
+
+router
+  .route("/api/information-sharing-agreements")
+  .get(InformationSharingAgreementsController.index)
+  .post(InformationSharingAgreementsController.create)
+router
+  .route("/api/information-sharing-agreements/:informationSharingAgreementId")
+  .get(InformationSharingAgreementsController.show)
+  .patch(InformationSharingAgreementsController.update)
+  .delete(InformationSharingAgreementsController.destroy)
+
+router
+  .route("/api/information-sharing-agreement-access-grants")
+  .get(InformationSharingAgreementAccessGrantsController.index)
+  .post(InformationSharingAgreementAccessGrantsController.create)
+router
+  .route(
+    "/api/information-sharing-agreement-access-grants/:informationSharingAgreementAccessGrantId"
+  )
+  .get(InformationSharingAgreementAccessGrantsController.show)
+  .patch(InformationSharingAgreementAccessGrantsController.update)
+  .delete(InformationSharingAgreementAccessGrantsController.destroy)
+
+router
+  .route("/api/information-sharing-agreement-archive-items")
+  .get(InformationSharingAgreementArchiveItemsController.index)
+  .post(InformationSharingAgreementArchiveItemsController.create)
+router
+  .route("/api/information-sharing-agreement-archive-items/:informationSharingAgreementArchiveItemId")
+  .get(InformationSharingAgreementArchiveItemsController.show)
+  .patch(InformationSharingAgreementArchiveItemsController.update)
+  .delete(InformationSharingAgreementArchiveItemsController.destroy)
 
 router.route("/api/user-groups").get(UserGroupsController.index).post(UserGroupsController.create)
 router

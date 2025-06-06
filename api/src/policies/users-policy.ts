@@ -2,7 +2,7 @@ import { Attributes, FindOptions } from "@sequelize/core"
 
 import { Path } from "@/utils/deep-pick"
 import { User } from "@/models"
-import { PolicyFactory } from "@/policies/base-policy"
+import { ALL_RECORDS_SCOPE, PolicyFactory } from "@/policies/base-policy"
 
 export class UsersPolicy extends PolicyFactory(User) {
   show(): boolean {
@@ -10,20 +10,20 @@ export class UsersPolicy extends PolicyFactory(User) {
   }
 
   create(): boolean {
-    if (this.user?.isSystemAdmin) return true
+    if (this.user.isSystemAdmin) return true
 
     return false
   }
 
   update(): boolean {
-    if (this.user?.isSystemAdmin) return true
-    if (this.user?.id === this.record.id) return true
+    if (this.user.isSystemAdmin) return true
+    if (this.user.id === this.record.id) return true
 
     return false
   }
 
   destroy(): boolean {
-    if (this.user?.isSystemAdmin) return true
+    if (this.user.isSystemAdmin) return true
 
     return false
   }
@@ -38,9 +38,10 @@ export class UsersPolicy extends PolicyFactory(User) {
       "division",
       "branch",
       "unit",
+      "emailNotificationsEnabled",
     ]
 
-    if (this.user?.isSystemAdmin) {
+    if (this.user.isSystemAdmin) {
       attributes.push("email", "roles", "deactivatedAt")
     }
 
@@ -52,7 +53,7 @@ export class UsersPolicy extends PolicyFactory(User) {
   }
 
   static policyScope(_user: User): FindOptions<Attributes<User>> {
-    return {}
+    return ALL_RECORDS_SCOPE
   }
 }
 

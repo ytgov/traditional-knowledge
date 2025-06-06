@@ -1,20 +1,31 @@
 <template>
-  <v-card class="border" title="Administration">
+  <v-card
+    class="border"
+    title="Administration"
+  >
     <v-card-text>
       <v-row>
-        <v-col cols="12" md="4">
+        <v-col
+          cols="12"
+          md="4"
+        >
           <v-card
-            color="#fff"
+            color="white"
             class="border"
             title="Users"
             subtitle="Manage Current Users"
-            :to="{ name: 'users/UsersPage' }"
+            :to="{
+              name: 'users/UsersPage',
+            }"
           >
           </v-card>
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col
+          cols="12"
+          md="4"
+        >
           <v-card
-            color="#fff"
+            color="white"
             class="border"
             title="Groups"
             subtitle="Manage Current Groups"
@@ -24,33 +35,18 @@
           >
           </v-card>
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col
+          cols="12"
+          md="4"
+        >
           <v-card
-            color="#fff"
+            color="white"
             class="border"
-            title="Sources"
-            subtitle="Manage Sources"
-            :to="{ name: 'administration/SourceListPage' }"
-          >
-          </v-card>
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-card
-            color="#fff"
-            class="border"
-            title="Retentions"
-            subtitle="Manage Current Users"
-            :to="{ name: 'administration/RetentionListPage' }"
-          >
-          </v-card>
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-card
-            color="#fff"
-            class="border"
-            title="Categories"
-            subtitle="Manage Current Users"
-            :to="{ name: 'administration/CategoryListPage' }"
+            title="Information Sharing Agreements"
+            subtitle="Manage Current Information Sharing Agreements"
+            :to="{
+              name: 'administration/InformationSharingAgreementsPage',
+            }"
           >
           </v-card>
         </v-col>

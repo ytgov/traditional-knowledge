@@ -1,6 +1,8 @@
-import archiveItemsApi, { ArchiveItemFile } from "@/api/archive-items-api"
 import { isNil } from "lodash"
 import { reactive, toRefs } from "vue"
+
+import archiveItemsApi from "@/api/archive-items-api"
+import { type ArchiveItemFile } from "@/api/archive-item-files-api"
 import useSnack from "@/use/use-snack"
 
 const snack = useSnack()

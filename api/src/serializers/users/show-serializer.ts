@@ -1,6 +1,6 @@
 import { isNil, pick } from "lodash"
 
-import { User } from "@/models"
+import { Group, InformationSharingAgreementAccessGrant, User } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
 
 export type UserShowView = Pick<
@@ -16,18 +16,21 @@ export type UserShowView = Pick<
   | "division"
   | "branch"
   | "unit"
-  | "categories"
-  | "sources"
-  | "userPermissions"
   | "deactivatedAt"
+  | "emailNotificationsEnabled"
   | "createdAt"
   | "updatedAt"
 > & {
   isActive: boolean
+} & {
+  adminGroups?: Group[]
+  adminInformationSharingAgreementAccessGrants?: InformationSharingAgreementAccessGrant[]
 }
 
 export class ShowSerializer extends BaseSerializer<User> {
   perform(): UserShowView {
+    // TODO: serialize nested associations with appropriate serializers.
+    const { adminGroups, adminInformationSharingAgreementAccessGrants } = this.record
     return {
       ...pick(this.record, [
         "id",
@@ -41,14 +44,14 @@ export class ShowSerializer extends BaseSerializer<User> {
         "division",
         "branch",
         "unit",
-        "categories",
-        "sources",
-        "userPermissions",
         "deactivatedAt",
+        "emailNotificationsEnabled",
         "createdAt",
         "updatedAt",
       ]),
       isActive: isNil(this.record.deactivatedAt),
+      adminGroups,
+      adminInformationSharingAgreementAccessGrants,
     }
   }
 }

@@ -11,12 +11,17 @@ import {
   DB_TRUST_SERVER_CERTIFICATE,
   NODE_ENV,
 } from "@/config"
+import compactSql from "@/utils/compact-sql"
 
 if (isEmpty(DB_DATABASE)) throw new Error("database name is unset.")
 if (isEmpty(DB_USERNAME)) throw new Error("database username is unset.")
 if (isEmpty(DB_PASSWORD)) throw new Error("database password is unset.")
 if (isEmpty(DB_HOST)) throw new Error("database host is unset.")
 if (isNil(DB_PORT) || isNaN(DB_PORT)) throw new Error("database port is unset.")
+
+function sqlLogger(query: string) {
+  console.log(compactSql(query))
+}
 
 // See https://sequelize.org/docs/v7/databases/mssql/
 export const SEQUELIZE_CONFIG: Options<MsSqlDialect> = {
@@ -35,7 +40,7 @@ export const SEQUELIZE_CONFIG: Options<MsSqlDialect> = {
   schema: "dbo", // default - explicit for clarity
   // Avoids need to have a signed certificate in development.
   trustServerCertificate: DB_TRUST_SERVER_CERTIFICATE,
-  logging: console.log, // NODE_ENV === "development" ? console.log : false,
+  logging: NODE_ENV === "development" ? sqlLogger : false,
   define: {
     underscored: true,
     timestamps: true, // default - explicit for clarity.

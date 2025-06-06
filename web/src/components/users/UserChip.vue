@@ -106,7 +106,7 @@ import { computed, toRefs } from "vue"
 import { isEmpty, isNil } from "lodash"
 import md5 from "md5"
 
-import { VChip } from "vuetify/lib/components/index.mjs"
+import { VChip } from "vuetify/components"
 
 import useUser from "@/use/use-user"
 import useCurrentUser from "@/use/use-current-user"
