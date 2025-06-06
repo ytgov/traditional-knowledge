@@ -1,7 +1,7 @@
 import { Attributes } from "@sequelize/core"
-import { isNil } from "lodash"
+import { isNil, isUndefined } from "lodash"
 
-import { NotifyUserOfMembershipMailer } from "@/mailers/groups"
+import { NotifyUserOfMembershipMailer, NotifyAdminsOfAddedUserMailer } from "@/mailers/groups"
 import db, { Group, User, UserGroup } from "@/models"
 import BaseService from "@/services/base-service"
 import { Notifications } from "@/services"
@@ -11,6 +11,8 @@ export type UserGroupCreationAttributes = Partial<Attributes<UserGroup>>
 export class CreateService extends BaseService {
   constructor(
     private attributes: UserGroupCreationAttributes,
+    private user: User,
+    private group: Group,
     private currentUser: User
   ) {
     super()
@@ -27,6 +29,14 @@ export class CreateService extends BaseService {
       throw new Error("Group ID is required")
     }
 
+    if (isUndefined(this.user)) {
+      throw new Error("Expected user association to be preloaded")
+    }
+
+    if (isUndefined(this.group)) {
+      throw new Error("Expected group association to be preloaded")
+    }
+
     return db.transaction(async () => {
       const userGroup = await UserGroup.create({
         ...optionalAttributes,
@@ -35,19 +45,8 @@ export class CreateService extends BaseService {
         groupId,
       })
 
-      const user = await User.findByPk(userId)
-      const group = await Group.findByPk(groupId)
-
-      if (isNil(user)) {
-        throw new Error("User not found")
-      }
-
-      if (isNil(group)) {
-        throw new Error("Group not found")
-      }
-
-      await this.notifyUserOfMembership(user, group)
-      await NotifyUserOfMembershipMailer.perform(group, user)
+      await this.notifyUserOfMembership(this.user, this.group)
+      await this.notifyAdminsOfMembership(this.user, this.group)
 
       return userGroup
     })
@@ -55,6 +54,12 @@ export class CreateService extends BaseService {
 
   private async notifyUserOfMembership(user: User, group: Group) {
     await Notifications.Groups.NotifyUserOfMembershipService.perform(user, group, this.currentUser)
+    await NotifyUserOfMembershipMailer.perform(group, user)
+  }
+
+  private async notifyAdminsOfMembership(user: User, group: Group) {
+    await Notifications.Groups.NotifyAdminsOfAddedUserService.perform(user, group, this.currentUser)
+    await NotifyAdminsOfAddedUserMailer.perform(group, user, this.currentUser)
   }
 }
 

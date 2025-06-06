@@ -272,6 +272,16 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   static establishScopes(): void {
     this.addSearchScope(["firstName", "lastName", "displayName", "email"])
 
+    this.addScope("isSystemAdmin", () => {
+      return {
+        where: {
+          roles: {
+            [Op.like]: `%${UserRoles.SYSTEM_ADMIN}%`,
+          },
+        },
+      }
+    })
+
     this.addScope("inGroup", (groupId: number) => {
       return {
         include: [
@@ -284,6 +294,7 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
         ],
       }
     })
+
     this.addScope("notInGroup", (groupId) => {
       return {
         where: {
