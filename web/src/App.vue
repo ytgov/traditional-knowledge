@@ -6,11 +6,11 @@
     -->
     <router-view v-else-if="isReady || isErrored" />
     <PageLoader
-      v-else-if="isReadyAuth0 && isLoadingCurrentUser"
+      v-else-if="isLoadingAuth0 || isLoadingCurrentUser"
       message="Fetching and syncing user"
     />
     <PageLoader
-      v-else-if="isLoadingAuth0"
+      v-else-if="!isReady"
       message="Checking authentication status ..."
     />
     <PageLoader
