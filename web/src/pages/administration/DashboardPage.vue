@@ -10,14 +10,21 @@
           md="4"
         >
           <v-card
-            color="white"
-            class="border"
-            title="Users"
-            subtitle="Manage Current Users"
+            class="toggle"
             :to="{
               name: 'users/UsersPage',
             }"
           >
+            <v-card-text class="d-flex">
+              <span class="d-sm-flex align-center me-3 d-none">
+                <v-icon size="50px">mdi-account</v-icon>
+              </span>
+
+              <div>
+                <div class="text-h6">Users</div>
+                <span class="text-subtitle-2">Manage Current Users</span>
+              </div>
+            </v-card-text>
           </v-card>
         </v-col>
         <v-col
@@ -25,14 +32,21 @@
           md="4"
         >
           <v-card
-            color="white"
-            class="border"
-            title="Groups"
-            subtitle="Manage Current Groups"
+            class="toggle"
             :to="{
               name: 'administration/GroupsPage',
             }"
           >
+            <v-card-text class="d-flex">
+              <span class="d-sm-flex align-center me-3 d-none">
+                <v-icon size="50px">mdi-account-group</v-icon>
+              </span>
+
+              <div>
+                <div class="text-h6">Groups</div>
+                <span class="text-subtitle-2">Manage Current Groups</span>
+              </div>
+            </v-card-text>
           </v-card>
         </v-col>
         <v-col
@@ -40,14 +54,21 @@
           md="4"
         >
           <v-card
-            color="white"
-            class="border"
-            title="Information Sharing Agreements"
-            subtitle="Manage Current Information Sharing Agreements"
+            class="toggle"
             :to="{
               name: 'administration/InformationSharingAgreementsPage',
             }"
           >
+            <v-card-text class="d-flex">
+              <span class="d-sm-flex align-center me-3 d-none">
+                <v-icon size="50px">mdi-file-sign</v-icon>
+              </span>
+
+              <div>
+                <div class="text-h6">Agreements</div>
+                <span class="text-subtitle-2">Information Sharing Agreements</span>
+              </div>
+            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -58,10 +79,5 @@
 <script lang="ts" setup>
 import useBreadcrumbs from "@/use/use-breadcrumbs"
 
-useBreadcrumbs("Administration Dashboard", [
-  /* {
-    title: "Administration Dashboard",
-    to: { name: "administration/DashboardPage" },
-  }, */
-])
+useBreadcrumbs("Administration Dashboard", [])
 </script>

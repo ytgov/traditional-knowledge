@@ -5,7 +5,7 @@
     v-model="isValid"
     @submit.prevent="saveWrapper"
   >
-    <v-card>
+    <v-card class="border">
       <FileDrop @files-dropped="handleFileDrop">
         <v-card-title>Archive Item Description</v-card-title>
         <v-card-text>
