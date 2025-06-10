@@ -1,14 +1,27 @@
 import { type RouteRecordRaw } from "vue-router"
 
 const routes: RouteRecordRaw[] = [
+  
+  {
+    path: "/",
+    name: "SignInPage",
+    component: () => import("@/pages/SignInPage.vue"),
+    meta: { requiresAuth: false, title: "Sign In" },
+  },
+  {
+    path: "/callback",
+    name: "CallbackPage",
+    component: () => import("@/pages/CallbackPage.vue"),
+    meta: { requiresAuth: false },
+  },
   {
     path: "/",
     component: () => import("@/layouts/DefaultLayout.vue"),
     children: [
-      {
+      /* {
         path: "",
         redirect: "dashboard",
-      },
+      }, */
       {
         path: "dashboard",
         name: "DashboardPage",
@@ -200,12 +213,6 @@ const routes: RouteRecordRaw[] = [
         ],
       },
     ],
-  },
-  {
-    path: "/sign-in",
-    name: "SignInPage",
-    component: () => import("@/pages/SignInPage.vue"),
-    meta: { requiresAuth: false, title: "Sign In" },
   },
   {
     path: "/status",

@@ -47,7 +47,7 @@
             <div class="mt-6 text-center">
               <v-btn
                 color="primary"
-                @click="loginWithRedirect"
+                @click="doLogin"
               >
                 Sign in
               </v-btn>
@@ -79,4 +79,10 @@ const { loginWithRedirect } = useAuth0()
 onMounted(() => {
   resetCurrentUser()
 })
+
+function doLogin() {
+  loginWithRedirect({
+    appState: { target: "/dashboard" },
+  })
+}
 </script>

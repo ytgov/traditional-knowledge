@@ -35,29 +35,40 @@ const route = useRoute()
 const isUnauthenticatedRoute = computed(() => route.meta.requiresAuth === false)
 
 const { isLoading: isLoadingAuth0, isAuthenticated } = useAuth0()
-const isReadyAuth0 = computed(() => !isLoadingAuth0.value && isAuthenticated.value)
+const { isLoading: isLoadingCurrentUser, fetch } = useCurrentUser()
 
-const { isReady: isReadyCurrentUser, isLoading: isLoadingCurrentUser, fetch } = useCurrentUser()
-
-const isReady = computed(() => isReadyAuth0.value && isReadyCurrentUser.value)
-
+const isReady = ref(false)
 const isErrored = ref(false)
+
 const router = useRouter()
 
 watch(
-  () => isReadyAuth0.value,
-  async (newIsReadyAuth0) => {
-    // Don't bother attempting to load current user for unathenticated routes
-    if (isUnauthenticatedRoute.value) return
+  () => [isLoadingAuth0.value, isAuthenticated.value],
+  async ([isLoad, isAuth]) => {
+    if (isLoad === true) return
 
-    if (newIsReadyAuth0 === true) {
+    if (isAuth === true) {
       try {
+        console.log("Loading current user")
         await fetch()
+        isReady.value = true
+
+        if (route.name == "SignInPage") {
+          //if (isSystemAdmin.value == true)
+          //router.push({ name: "administration/DashboardPage" })
+          //else router.push({ name: "individual/HomePage" })
+        }
       } catch (error) {
+        console.log("Failed to load current user:", error)
         isErrored.value = true
         await router.isReady()
+        //await router.push({ name: "UnauthorizedPage" })
         await router.push({ name: "SignInPage" })
       }
+    } else if (!isUnauthenticatedRoute.value === false) {
+      isReady.value = true
+    } else {
+      isReady.value = true
     }
   },
   { immediate: true }
