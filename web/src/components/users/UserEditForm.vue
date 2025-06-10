@@ -8,7 +8,7 @@
     ref="form"
     @submit.prevent="saveWrapper"
   >
-    <v-card>
+    <v-card class="border">
       <v-card-title>User Details</v-card-title>
       <v-card-text>
         <v-row>

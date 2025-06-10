@@ -11,9 +11,9 @@
       </span>
 
       <div>
-        <div class="text-h6">New Archive Item</div>
+        <div class="text-h6">New Knowledge Item</div>
         <span class="text-subtitle-2"
-          >Create an Archive Item by adding metadata and attaching files.</span
+          >Create a Knowledge Item by adding metadata and attaching files.</span
         >
       </div>
     </v-card-text>

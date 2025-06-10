@@ -84,10 +84,10 @@ function reloadArchiveItemAuditCard() {
   archiveItemAuditCard.value?.reload()
 }
 
-useBreadcrumbs("View Archive Item", [
+useBreadcrumbs("View Knowledge Item", [
   BASE_CRUMB,
   {
-    title: "Archive Items",
+    title: "Knowledge Items",
     to: {
       name: "archive-items/ArchiveItemListPage",
     },

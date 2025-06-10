@@ -3,8 +3,11 @@
     v-if="isNil(archiveItem)"
     type="card@2"
   />
-  <v-card v-else class="border">
-    <template #title>Archive Item Description</template>
+  <v-card
+    v-else
+    class="border"
+  >
+    <template #title>Knowledge Item Description</template>
     <template #text>
       <v-row>
         <v-col

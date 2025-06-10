@@ -10,7 +10,7 @@
           md="4"
         >
           <v-card
-            class="toggle"
+            class="toggle fill-height"
             :to="{
               name: 'users/UsersPage',
             }"
@@ -32,7 +32,7 @@
           md="4"
         >
           <v-card
-            class="toggle"
+            class="toggle fill-height"
             :to="{
               name: 'administration/GroupsPage',
             }"
@@ -54,7 +54,7 @@
           md="4"
         >
           <v-card
-            class="toggle"
+            class="toggle fill-height"
             :to="{
               name: 'administration/InformationSharingAgreementsPage',
             }"

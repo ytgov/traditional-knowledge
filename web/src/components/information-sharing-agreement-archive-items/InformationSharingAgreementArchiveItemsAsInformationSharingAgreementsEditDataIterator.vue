@@ -115,7 +115,7 @@ async function deleteInformationSharingAgreementArchiveItem(
     refresh()
     emit("deleted", informationSharingAgreementArchiveItemId)
   } catch (error) {
-    console.error(`Failed to remove information sharing agreement archive item: ${error}`, {
+    console.error(`Failed to remove information sharing agreement knowledge item: ${error}`, {
       error,
     })
     snack.error(`Failed to remove share to information sharing agreement: ${error}`)

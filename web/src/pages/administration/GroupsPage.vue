@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="border">
     <v-card-text>
       <div class="d-flex flex-wrap ga-4 mb-4">
         <FilterSearchDebouncedTextField

@@ -103,7 +103,14 @@ export default createVuetify({
     VTooltip: {
       location: "top",
     },
-    VSwitch: { color: "primary", density: "comfortable", hideDetails: "auto" },
+    VSwitch: {
+      color: "primary",
+      density: "compact",
+      hideDetails: "auto",
+      falseIcon: "mdi-close",
+      trueIcon: "mdi-check",
+      inset: true,
+    },
     VBtn: { color: "primary", flat: "true" },
   },
 })

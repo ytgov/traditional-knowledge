@@ -175,7 +175,7 @@ const routes: RouteRecordRaw[] = [
         path: "archive-items",
         name: "archive-items/ArchiveItemListPage",
         component: () => import("@/pages/archive-items/ArchiveItemListPage.vue"),
-        meta: { title: "Archive Items" },
+        meta: { title: "Traditional Knowledge" },
         props: true,
       },
       {

@@ -4,22 +4,23 @@
     :edit-button-props="editButtonProps"
   />
 
-  <v-card class="mt-5">
-    <v-card-title>
-      <v-tabs>
-        <v-tab
-          :to="{
-            name: 'administration/groups/GroupUsersPage',
-            params: {
-              groupId,
-            },
-          }"
-        >
-          Users
-        </v-tab>
-      </v-tabs>
-    </v-card-title>
-
+  <v-card class="mt-5 border">
+    <v-tabs
+      slider-color="primary"
+      bg-color="#ffffff77"
+    >
+      <v-tab
+        :to="{
+          name: 'administration/groups/GroupUsersPage',
+          params: {
+            groupId,
+          },
+        }"
+      >
+        Users
+      </v-tab>
+    </v-tabs>
+    <v-divider />
     <v-card-text>
       <router-view />
     </v-card-text>

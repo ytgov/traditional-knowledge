@@ -40,7 +40,7 @@ export function useInformationSharingAgreementArchiveItems(
       state.totalCount = totalCount
       return informationSharingAgreementArchiveItems
     } catch (error) {
-      console.error("Failed to fetch information sharing agreement archive items:", error)
+      console.error("Failed to fetch information sharing agreement knowledge items:", error)
       state.isErrored = true
       throw error
     } finally {

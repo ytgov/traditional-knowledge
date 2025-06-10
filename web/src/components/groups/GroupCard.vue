@@ -3,33 +3,42 @@
     v-if="isNil(group)"
     type="card"
   />
-  <v-card v-else>
+  <v-card
+    v-else
+    class="border"
+  >
     <template #title> Group Details </template>
     <template #text>
       <v-row>
-        <v-col cols="12">
-          {{ group.name }}<template v-if="!isEmpty(group.acronym)"> ({{ group.acronym }})</template>
+        <v-col cols="6">
+          <v-text-field
+            v-model="group.name"
+            label="Group Name"
+            readonly
+          />
+        </v-col>
+        <v-col cols="6">
+          <v-text-field
+            v-model="group.acronym"
+            label="Acronym"
+            readonly
+          />
         </v-col>
         <v-col cols="12">
-          <p class="whitespace-pre-wrap">
-            {{ group.description }}
-          </p>
+          <v-textarea
+            v-model="group.description"
+            label="Description"
+            readonly
+            auto-grow
+            rows="3"
+          />
         </v-col>
       </v-row>
-    </template>
-    <template #actions>
-      <v-btn
-        :loading="isLoading"
-        color="secondary"
-        variant="outlined"
-        v-bind="cancelButtonProps"
-      >
-        Return
-      </v-btn>
-      <v-spacer />
       <v-btn
         v-if="policy?.update"
+        class="mt-5"
         color="primary"
+        variant="flat"
         v-bind="editButtonProps"
       >
         Edit

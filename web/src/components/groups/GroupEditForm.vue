@@ -7,7 +7,7 @@
       v-if="isNil(group)"
       type="card"
     />
-    <v-card v-else>
+    <v-card v-else class="border">
       <v-card-title>Group Details</v-card-title>
       <v-card-text>
         <v-row>

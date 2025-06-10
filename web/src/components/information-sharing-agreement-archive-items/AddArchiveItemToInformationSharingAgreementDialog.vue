@@ -142,9 +142,9 @@ async function createAndHide() {
 
     await nextTick()
     emit("created", informationSharingAgreementArchiveItem.id)
-    snack.success("Archive item added to information sharing agreement")
+    snack.success("Knowledge item added to information sharing agreement")
   } catch (error) {
-    snack.error(`Failed to add archive item to information sharing agreement ${error}`)
+    snack.error(`Failed to add knowledge item to information sharing agreement ${error}`)
   } finally {
     isLoading.value = false
   }

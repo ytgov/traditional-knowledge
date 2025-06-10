@@ -3,7 +3,7 @@
     ref="form"
     @submit.prevent="saveWrapper"
   >
-    <v-card>
+    <v-card class="border">
       <v-card-title>Group Details</v-card-title>
       <v-card-text>
         <v-row>
@@ -44,8 +44,6 @@
             <v-switch
               v-model="groupAttributes.isHost"
               label="Is Host"
-              inset
-              color="primary"
             />
           </v-col>
         </v-row>

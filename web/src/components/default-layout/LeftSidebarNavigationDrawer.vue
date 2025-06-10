@@ -22,7 +22,7 @@
       </v-list-item>
 
       <v-list-item
-        title="Archive Items"
+        title="Knowledge Items"
         :to="{ name: 'archive-items/ArchiveItemListPage' }"
         :exact="false"
         prepend-icon="mdi-archive"
