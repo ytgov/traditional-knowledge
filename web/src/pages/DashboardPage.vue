@@ -22,7 +22,7 @@
             <v-col>
               <p>
                 <router-link :to="{ name: 'archive-items/ArchiveItemListPage' }"
-                  >View the Archive Items</router-link
+                  >View the Knowledge Items</router-link
                 >
               </p>
             </v-col>

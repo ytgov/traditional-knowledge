@@ -94,8 +94,8 @@
 
           <v-btn
             class="ml-6"
-            color="info"
-            text="New Archive Item"
+            color="primary"
+            text="New Knowledge Item"
             style="height: 40px"
             :to="{
               name: 'archive-items/ArchiveItemNewPage',
@@ -147,7 +147,7 @@ const headers = [
   { title: "Attachments", value: "archiveItemFileCount" },
 ]
 
-useBreadcrumbs("Archive Items", [BASE_CRUMB])
+useBreadcrumbs("Knowledge Items", [BASE_CRUMB])
 
 function updatePage(newPage: number) {
   if (isLoading.value) return

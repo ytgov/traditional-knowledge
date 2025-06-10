@@ -37,7 +37,7 @@ export function useArchiveItem(id: Ref<number | null | undefined>) {
       state.policy = policy
       return archiveItem
     } catch (error) {
-      console.error(`Failed to fetch archive item ${error}:`, { error })
+      console.error(`Failed to fetch knowledge item ${error}:`, { error })
       state.isErrored = true
       throw error
     } finally {
@@ -52,7 +52,7 @@ export function useArchiveItem(id: Ref<number | null | undefined>) {
     }
 
     if (isNil(state.archiveItem)) {
-      throw new Error("No archive item to save")
+      throw new Error("No knowledge item to save")
     }
 
     state.isLoading = true
@@ -62,7 +62,7 @@ export function useArchiveItem(id: Ref<number | null | undefined>) {
       state.archiveItem = archiveItem
       return archiveItem
     } catch (error) {
-      console.error(`Failed to save archive item ${error}:`, { error })
+      console.error(`Failed to save knowledge item ${error}:`, { error })
       state.isErrored = true
       throw error
     } finally {

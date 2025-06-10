@@ -44,8 +44,6 @@
             <v-switch
               v-model="shareWithEntireGroup"
               label="Share with entire group?"
-              inset
-              color="primary"
             />
           </v-col>
         </v-row>

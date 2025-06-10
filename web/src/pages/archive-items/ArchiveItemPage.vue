@@ -6,35 +6,35 @@
     >
       <ArchiveItemCard :archive-item-id="archiveItemIdAsNumber" />
 
-      <v-card class="mt-5">
-        <template #title>
-          <v-tabs>
-            <v-tab
-              :to="{
-                name: 'archive-items/ArchiveItemInformationSharingAgreementsPage',
-                params: {
-                  archiveItemId,
-                },
-              }"
-            >
-              Information Sharing Agreements
-            </v-tab>
-            <v-tab
-              :to="{
-                name: 'archive-items/ArchiveItemUsersWithAccessPage',
-                params: {
-                  archiveItemId,
-                },
-              }"
-            >
-              Users with Access
-            </v-tab>
-          </v-tabs>
-        </template>
-
-        <template #text>
-          <router-view />
-        </template>
+      <v-card class="mt-5 border">
+        <v-tabs
+          slider-color="primary"
+          grow
+          bg-color="#ffffff77"
+        >
+          <v-tab
+            :to="{
+              name: 'archive-items/ArchiveItemInformationSharingAgreementsPage',
+              params: {
+                archiveItemId,
+              },
+            }"
+          >
+            Information Sharing Agreements
+          </v-tab>
+          <v-tab
+            :to="{
+              name: 'archive-items/ArchiveItemUsersWithAccessPage',
+              params: {
+                archiveItemId,
+              },
+            }"
+          >
+            Users with Access
+          </v-tab>
+        </v-tabs>
+        <v-divider />
+        <router-view></router-view>
       </v-card>
     </v-col>
 
@@ -84,10 +84,10 @@ function reloadArchiveItemAuditCard() {
   archiveItemAuditCard.value?.reload()
 }
 
-useBreadcrumbs("View Archive Item", [
+useBreadcrumbs("View Knowledge Item", [
   BASE_CRUMB,
   {
-    title: "Archive Items",
+    title: "Knowledge Items",
     to: {
       name: "archive-items/ArchiveItemListPage",
     },

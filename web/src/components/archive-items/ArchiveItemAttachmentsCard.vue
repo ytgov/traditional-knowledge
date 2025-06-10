@@ -3,7 +3,10 @@
     v-if="isNil(archiveItem)"
     type="card"
   />
-  <v-card v-else>
+  <v-card
+    v-else
+    class="border"
+  >
     <template #title>Attachments</template>
     <template
       v-if="archiveItem.files && archiveItem.files.length > 0"

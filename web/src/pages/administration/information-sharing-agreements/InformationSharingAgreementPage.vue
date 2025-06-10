@@ -4,22 +4,24 @@
     :edit-button-props="editButtonProps"
   />
 
-  <v-card class="mt-5">
-    <v-card-title>
-      <!-- TODO: consider if we should have separate tabs for sharing and receiving groups access grants? -->
-      <v-tabs>
-        <v-tab
-          :to="{
-            name: 'administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage',
-            params: {
-              informationSharingAgreementId,
-            },
-          }"
-        >
-          Access Grants
-        </v-tab>
-      </v-tabs>
-    </v-card-title>
+  <v-card class="mt-5 border">
+    <!-- TODO: consider if we should have separate tabs for sharing and receiving groups access grants? -->
+    <v-tabs
+      slider-color="primary"
+      bg-color="#ffffff77"
+    >
+      <v-tab
+        :to="{
+          name: 'administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage',
+          params: {
+            informationSharingAgreementId,
+          },
+        }"
+      >
+        Access Grants
+      </v-tab>
+    </v-tabs>
+    <v-divider />
 
     <v-card-text>
       <router-view />

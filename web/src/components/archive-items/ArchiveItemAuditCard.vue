@@ -1,5 +1,8 @@
 <template>
-  <v-card :loading="isLoading">
+  <v-card
+    class="border"
+    :loading="isLoading"
+  >
     <v-card-title
       >Audit History
       <small>
@@ -48,7 +51,7 @@ const archiveItemId = computed(() => props.itemId)
 defineExpose({ reload })
 
 const page = ref(1)
-const perPage = ref(3)
+const perPage = ref(8)
 const pageCount = computed(() => Math.ceil(totalCount.value / perPage.value))
 
 const query = computed(() => {

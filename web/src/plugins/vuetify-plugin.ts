@@ -39,9 +39,9 @@ export default createVuetify({
     },
     VCardActions: {
       VBtn: {
-        variant: "elevated",
         color: "primary",
       },
+      class: "px-6 pb-5",
     },
     VTextField: {
       variant: "outlined",
@@ -103,7 +103,14 @@ export default createVuetify({
     VTooltip: {
       location: "top",
     },
-    VSwitch: { color: "primary", density: "comfortable", hideDetails: "auto" },
+    VSwitch: {
+      color: "primary",
+      density: "compact",
+      hideDetails: "auto",
+      falseIcon: "mdi-close",
+      trueIcon: "mdi-check",
+      inset: true,
+    },
     VBtn: { color: "primary", flat: "true" },
   },
 })

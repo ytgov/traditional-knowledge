@@ -7,7 +7,10 @@
       v-if="isNil(informationSharingAgreement)"
       type="card"
     />
-    <v-card v-else>
+    <v-card
+      v-else
+      class="border"
+    >
       <v-card-title>Information Sharing Agreement Details</v-card-title>
       <v-card-text>
         <v-row>

@@ -3,7 +3,7 @@
     ref="form"
     @submit.prevent="saveWrapper"
   >
-    <v-card>
+    <v-card class="border">
       <v-card-title>New Information Sharing Agreement</v-card-title>
       <v-card-text>
         <v-row>
@@ -23,8 +23,7 @@
               v-model="informationSharingAgreementAttributes.description"
               label="Description"
               auto-grow
-              clearable
-              rows="6"
+              rows="2"
             />
           </v-col>
           <v-col

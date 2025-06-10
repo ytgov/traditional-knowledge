@@ -41,17 +41,17 @@
             :size="smAndUp ? 200 : 100"
             >mdi-library</v-icon
           >
-          <div class="text-center">
-            <h2 class="text-h3 font-weight-semibold mb-2">Yukon's {{ APPLICATION_NAME }}</h2>
+          <div class="text-center px-5">
+            <h2 class="text-h3 font-weight-semibold mb-4 mx-10">Yukon's Traditional Knowledge Archive</h2>
             <div class="text-subtitle-1 mb-6 mt-n3 font-weight-bold">Yukon Government</div>
             <div class="mt-6 text-center">
               <v-btn
                 color="primary"
-                @click="loginWithRedirect"
+                @click="doLogin"
               >
                 Sign in
               </v-btn>
-              <div class="text-subtitle-1 mt-5">Using your YNET Credentials</div>
+              <div class="text-subtitle-1 mt-5">Using your MyYukon Credentials</div>
               <v-divider class="my-2" />
               <em style="font-weight: 700">Secure Digital Storage</em>
             </div>
@@ -67,7 +67,6 @@ import { onMounted } from "vue"
 import { useAuth0 } from "@auth0/auth0-vue"
 import { useDisplay } from "vuetify"
 
-import { APPLICATION_NAME } from "@/config"
 import useCurrentUser from "@/use/use-current-user"
 
 const { mdAndDown, smAndUp } = useDisplay()
@@ -79,4 +78,10 @@ const { loginWithRedirect } = useAuth0()
 onMounted(() => {
   resetCurrentUser()
 })
+
+function doLogin() {
+  loginWithRedirect({
+    appState: { target: "/dashboard" },
+  })
+}
 </script>

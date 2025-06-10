@@ -354,11 +354,16 @@ template {
   background-color: #eeeeee !important;
 }
 .v-card.toggle.active {
-  background-color: #D5A25E !important;
+  background-color: #d5a25e !important;
 }
 .v-card.toggle:not(.active) {
-  background-color: #D5A25E !important;
+  background-color: #d5a25e !important;
 }
+
+.v-card.toggle {
+  border: 1px #2e4336 solid;
+}
+
 .v-table {
   border: 1px #999 solid;
   border-radius: 4px !important;

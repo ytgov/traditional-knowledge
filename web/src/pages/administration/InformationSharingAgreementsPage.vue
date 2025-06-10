@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="border">
     <v-card-text>
       <div class="d-flex flex-wrap ga-4 mb-4">
         <FilterSearchDebouncedTextField
@@ -15,7 +15,7 @@
           }"
           style="height: 40px"
         >
-          <span class="text-pre-wrap">New Information Sharing Agreement</span>
+          <span class="text-pre-wrap">New Agreement</span>
         </v-btn>
       </div>
 

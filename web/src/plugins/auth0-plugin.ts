@@ -8,7 +8,7 @@ export default createAuth0({
   clientId: AUTH0_CLIENT_ID,
   authorizationParams: {
     audience: AUTH0_AUDIENCE,
-    redirect_uri: window.location.origin,
+    redirect_uri: `${window.location.origin}/callback`,
   },
   cacheLocation: ENVIRONMENT === "development" ? "localstorage" : "memory",
 })

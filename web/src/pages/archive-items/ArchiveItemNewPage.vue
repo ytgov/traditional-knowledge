@@ -7,10 +7,10 @@ import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 
 import ArchiveItemNewForm from "@/components/archive-items/ArchiveItemNewForm.vue"
 
-useBreadcrumbs("New Archive Item", [
+useBreadcrumbs("New Knowledge Item", [
   BASE_CRUMB,
   {
-    title: "Archive Items",
+    title: "Knowledge Items",
     to: {
       name: "archive-items/ArchiveItemListPage",
     },
