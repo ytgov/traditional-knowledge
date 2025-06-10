@@ -39,9 +39,9 @@ export default createVuetify({
     },
     VCardActions: {
       VBtn: {
-        variant: "elevated",
         color: "primary",
       },
+      class: "px-6 pb-5",
     },
     VTextField: {
       variant: "outlined",

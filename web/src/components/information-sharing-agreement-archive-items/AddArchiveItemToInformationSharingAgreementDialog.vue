@@ -30,6 +30,7 @@
           <v-btn
             :loading="isLoading"
             type="submit"
+            variant="flat"
           >
             Save
           </v-btn>
