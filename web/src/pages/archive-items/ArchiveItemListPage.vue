@@ -94,7 +94,7 @@
 
           <v-btn
             class="ml-6"
-            color="info"
+            color="primary"
             text="New Archive Item"
             style="height: 40px"
             :to="{
