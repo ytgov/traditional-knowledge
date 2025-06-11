@@ -7,7 +7,7 @@
     <v-divider />
     <v-card-text>
       <p class="text-subtitle-1 mb-3">
-        The Archive provides highly secure and durable long-term storage for digital files. Those packets are called <strong>Knowledge Items</strong>.
+        This archive provides highly secure and durable long-term storage for digital files. Those packets are called <strong>Knowledge Items</strong>.
       </p>
       <p class="mb-3">
         <strong>Knowledge Items</strong> include metadata and attachments. The metadata determines who
