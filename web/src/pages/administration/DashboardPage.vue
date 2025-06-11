@@ -1,57 +1,74 @@
 <template>
-  <v-card class="border" title="Administration">
+  <v-card
+    class="border"
+    title="Administration"
+  >
     <v-card-text>
       <v-row>
-        <v-col cols="12" md="4">
+        <v-col
+          cols="12"
+          md="4"
+        >
           <v-card
-            color="#fff"
-            class="border"
-            title="Users"
-            subtitle="Manage Current Users"
-            :to="{ name: 'users/UsersPage' }"
+            class="toggle fill-height"
+            :to="{
+              name: 'users/UsersPage',
+            }"
           >
+            <v-card-text class="d-flex">
+              <span class="d-sm-flex align-center me-3 d-none">
+                <v-icon size="50px">mdi-account</v-icon>
+              </span>
+
+              <div>
+                <div class="text-h6">Users</div>
+                <span class="text-subtitle-2">Manage Current Users</span>
+              </div>
+            </v-card-text>
           </v-card>
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col
+          cols="12"
+          md="4"
+        >
           <v-card
-            color="#fff"
-            class="border"
-            title="Groups"
-            subtitle="Manage Current Groups"
+            class="toggle fill-height"
             :to="{
               name: 'administration/GroupsPage',
             }"
           >
+            <v-card-text class="d-flex">
+              <span class="d-sm-flex align-center me-3 d-none">
+                <v-icon size="50px">mdi-account-group</v-icon>
+              </span>
+
+              <div>
+                <div class="text-h6">Groups</div>
+                <span class="text-subtitle-2">Manage Current Groups</span>
+              </div>
+            </v-card-text>
           </v-card>
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col
+          cols="12"
+          md="4"
+        >
           <v-card
-            color="#fff"
-            class="border"
-            title="Sources"
-            subtitle="Manage Sources"
-            :to="{ name: 'administration/SourceListPage' }"
+            class="toggle fill-height"
+            :to="{
+              name: 'administration/InformationSharingAgreementsPage',
+            }"
           >
-          </v-card>
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-card
-            color="#fff"
-            class="border"
-            title="Retentions"
-            subtitle="Manage Current Users"
-            :to="{ name: 'administration/RetentionListPage' }"
-          >
-          </v-card>
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-card
-            color="#fff"
-            class="border"
-            title="Categories"
-            subtitle="Manage Current Users"
-            :to="{ name: 'administration/CategoryListPage' }"
-          >
+            <v-card-text class="d-flex">
+              <span class="d-sm-flex align-center me-3 d-none">
+                <v-icon size="50px">mdi-file-sign</v-icon>
+              </span>
+
+              <div>
+                <div class="text-h6">Agreements</div>
+                <span class="text-subtitle-2">Information Sharing Agreements</span>
+              </div>
+            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -62,10 +79,5 @@
 <script lang="ts" setup>
 import useBreadcrumbs from "@/use/use-breadcrumbs"
 
-useBreadcrumbs("Administration Dashboard", [
-  /* {
-    title: "Administration Dashboard",
-    to: { name: "administration/DashboardPage" },
-  }, */
-])
+useBreadcrumbs("Administration Dashboard", [])
 </script>

@@ -1,9 +1,15 @@
+import { type GenericFormData } from "axios"
+
 import http from "@/api/http-client"
-import { type Policy } from "@/api/base-api"
-import { GenericFormData } from "axios"
-import { Category } from "./categories-api"
-import { User } from "./users-api"
-import { Source } from "./sources-api"
+import {
+  type FiltersOptions,
+  type Policy,
+  type QueryOptions,
+  type WhereOptions,
+} from "@/api/base-api"
+import { type ArchiveItemFile } from "@/api/archive-item-files-api"
+import { type User } from "@/api/users-api"
+import { type InformationSharingAgreementAccessGrant } from "@/api/information-sharing-agreement-access-grants-api"
 
 export enum SecurityLevel {
   LOW = 1,
@@ -15,17 +21,12 @@ export enum ArchiveItemStatus {
   ACCEPTED = "Accepted",
   REVIEWED = "Reviewed",
   HIDDEN = "Hidden",
-  "EXPIRING SOON" = "Expiring Soon",
+  EXPIRING_SOON = "Expiring Soon",
 }
 
 export type ArchiveItem = {
   id: number
   title: string
-  retentionName: string
-  calculatedExpireDate: Date
-  overrideExpireDate: Date | null
-  expireAction: string
-  sourceId: number | null
   userId: number | null
   description: string | null
   summary: string | null
@@ -36,63 +37,40 @@ export type ArchiveItem = {
   createdAt: Date | null
   updatedAt: Date | null
 
-  categories: Category[] | null
-  files: ArchiveItemFile[] | null
-  user: User | null
-  source: Source | null
-  users: User[] | null
-  permittedUsers: User[] | null
+  files: ArchiveItemFile[] | null // TODO: move to appropriate view?
 }
 
-export type ArchiveItemFile = {
-  id: number
-  archiveItemId: number | null
-  bucket: string | null
-  originalKey: string | null
-  originalFileName: string | null
-  originalMimeType: string
-  originalFileSize: number
-  pdfKey: string | null
-  pdfFileName: string | null
-  pdfMimeType: string | null
-  pdfFileSize: number | null
-  comment: string | null
-  createdAt: Date | null
-  updatedAt: Date | null
+export type ArchiveItemShowView = ArchiveItem & {
+  user: User
+  informationSharingAgreementAccessGrants: InformationSharingAgreementAccessGrant[]
 }
+
 export type ArchiveItemCreate = {
   title: string
-  retentionName: string | null
-  expireAction: string | null
-  calculatedExpireDate: Date | string | null
-  overrideExpireDate: Date | string | null
   description: string | null
   summary: string | null
   securityLevel: SecurityLevel
   tags: string[] | null
 
   files: File[] | null
-  categories: number[] | null
 }
 
-export type ArchiveItemWhereOptions = {
-  expiringSoon?: boolean | null
-  status?: string
-}
+export type ArchiveItemWhereOptions = WhereOptions<
+  ArchiveItem,
+  "id" | "title" | "userId" | "status" | "securityLevel"
+>
 
-export type ArchiveItemFiltersOptions = {
-  search?: string | string[]
-}
+export type ArchiveItemFiltersOptions = FiltersOptions<{
+  search: string | string[]
+}>
+
+export type ArchiveItemQueryOptions = QueryOptions<
+  ArchiveItemWhereOptions,
+  ArchiveItemFiltersOptions
+>
 
 export const archiveItemsApi = {
-  async list(
-    params: {
-      where?: ArchiveItemWhereOptions
-      filters?: ArchiveItemFiltersOptions
-      page?: number
-      perPage?: number
-    } = {}
-  ): Promise<{
+  async list(params: ArchiveItemQueryOptions): Promise<{
     archiveItems: ArchiveItem[]
     totalCount: number
   }> {
@@ -102,14 +80,14 @@ export const archiveItemsApi = {
     return data
   },
   async get(archiveItemId: number): Promise<{
-    archiveItem: ArchiveItem
+    archiveItem: ArchiveItemShowView
     policy: Policy
   }> {
     const { data } = await http.get(`/api/archive-items/${archiveItemId}`)
     return data
   },
   async create(attributes: FormData | GenericFormData | ArchiveItemCreate): Promise<{
-    archiveItem: ArchiveItem
+    archiveItem: ArchiveItemShowView
   }> {
     const { data } = await http.post("/api/archive-items", attributes, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -120,7 +98,7 @@ export const archiveItemsApi = {
     archiveItemId: number,
     attributes: Partial<ArchiveItem>
   ): Promise<{
-    archiveItem: ArchiveItem
+    archiveItem: ArchiveItemShowView
   }> {
     const { data } = await http.patch(`/api/archive-items/${archiveItemId}`, attributes)
     return data

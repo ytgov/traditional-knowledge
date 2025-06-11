@@ -3,50 +3,56 @@
     ref="form"
     @submit.prevent="saveWrapper"
   >
-    <v-card>
-      <template #title>Add User to Group</template>
-      <template #text>
-        <v-row>
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <UserSearchableAutocomplete
-              v-model="userGroupAttributes.userId"
-              label="User *"
-              :filters="userFilters"
-              :rules="[required]"
-              variant="outlined"
-              required
-            />
-          </v-col>
-        </v-row>
-      </template>
-      <template #actions>
-        <v-btn
-          :loading="isLoading"
-          color="secondary"
+    <h4 class="mb-4">Add User to Group</h4>
+    <v-row>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <UserSearchableAutocomplete
+          v-model="userGroupAttributes.userId"
+          label="User *"
+          :filters="userFilters"
+          :rules="[required]"
           variant="outlined"
-          :to="{
-            name: 'administration/groups/GroupUsersPage',
-            params: {
-              groupId,
-            },
-          }"
-        >
-          Cancel
-        </v-btn>
-        <v-spacer />
-        <v-btn
-          class="ml-3"
-          :loading="isLoading"
-          type="submit"
-          color="primary"
-        >
-          Add
-        </v-btn>
-      </template>
-    </v-card>
+          required
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <v-switch
+          v-model="userGroupAttributes.isAdmin"
+          label="Is group admin?"
+        />
+      </v-col>
+    </v-row>
+
+    <div class="d-flex mt-5">
+      <v-btn
+        :loading="isLoading"
+        color="secondary"
+        variant="outlined"
+        :to="{
+          name: 'administration/groups/GroupUsersPage',
+          params: {
+            groupId,
+          },
+        }"
+      >
+        Cancel
+      </v-btn>
+      <v-spacer />
+      <v-btn
+        class="ml-3"
+        :loading="isLoading"
+        type="submit"
+        color="primary"
+      >
+        Add
+      </v-btn>
+    </div>
   </v-form>
 </template>
 
@@ -55,7 +61,7 @@ import { isNil } from "lodash"
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 
-import { VForm } from "vuetify/lib/components/index.mjs"
+import { VForm } from "vuetify/components"
 
 import { required } from "@/utils/validators"
 import userGroupsApi, { type UserGroup } from "@/api/user-groups-api"

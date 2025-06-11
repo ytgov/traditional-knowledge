@@ -28,10 +28,7 @@
       >
         <div
           class="d-flex align-center justify-center py-5"
-          style="
-            width: 100%;
-            background-color: #F9F4D4;
-          "
+          style="width: 100%; background-color: #f9f4d4"
           :style="{
             borderLeft: mdAndDown ? '10px #466653 solid' : '10px #466653 solid',
             marginLeft: mdAndDown ? '16px' : '-20px',
@@ -44,17 +41,17 @@
             :size="smAndUp ? 200 : 100"
             >mdi-library</v-icon
           >
-          <div class="text-center">
-            <h2 class="text-h3 font-weight-semibold mb-2">Yukon's {{ APPLICATION_NAME }}</h2>
+          <div class="text-center px-5">
+            <h2 class="text-h3 font-weight-semibold mb-4 mx-10">Yukon's Traditional Knowledge Archive</h2>
             <div class="text-subtitle-1 mb-6 mt-n3 font-weight-bold">Yukon Government</div>
             <div class="mt-6 text-center">
               <v-btn
                 color="primary"
-                @click="signinWrapper"
+                @click="doLogin"
               >
                 Sign in
               </v-btn>
-              <div class="text-subtitle-1 mt-5">Using your YNET Credentials</div>
+              <div class="text-subtitle-1 mt-5">Using your MyYukon Credentials</div>
               <v-divider class="my-2" />
               <em style="font-weight: 700">Secure Digital Storage</em>
             </div>
@@ -68,9 +65,8 @@
 <script lang="ts" setup>
 import { onMounted } from "vue"
 import { useAuth0 } from "@auth0/auth0-vue"
-import { useDisplay } from "vuetify/lib/framework.mjs"
+import { useDisplay } from "vuetify"
 
-import { APPLICATION_NAME } from "@/config"
 import useCurrentUser from "@/use/use-current-user"
 
 const { mdAndDown, smAndUp } = useDisplay()
@@ -83,11 +79,9 @@ onMounted(() => {
   resetCurrentUser()
 })
 
-function signinWrapper() {
+function doLogin() {
   loginWithRedirect({
-    appState: {
-      target: `/dashboard`,
-    },
+    appState: { target: "/dashboard" },
   })
 }
 </script>

@@ -1,14 +1,27 @@
 import { type RouteRecordRaw } from "vue-router"
 
 const routes: RouteRecordRaw[] = [
+  
+  {
+    path: "/",
+    name: "SignInPage",
+    component: () => import("@/pages/SignInPage.vue"),
+    meta: { requiresAuth: false, title: "Sign In" },
+  },
+  {
+    path: "/callback",
+    name: "CallbackPage",
+    component: () => import("@/pages/CallbackPage.vue"),
+    meta: { requiresAuth: false },
+  },
   {
     path: "/",
     component: () => import("@/layouts/DefaultLayout.vue"),
     children: [
-      {
+      /* {
         path: "",
-        redirect: "sign-in",
-      },
+        redirect: "dashboard",
+      }, */
       {
         path: "dashboard",
         name: "DashboardPage",
@@ -22,6 +35,14 @@ const routes: RouteRecordRaw[] = [
         meta: { title: "My Profile" },
       },
       {
+        name: "NotificationsPage",
+        path: "notifications",
+        component: () => import("@/pages/NotificationsPage.vue"),
+        meta: {
+          title: "Notifications",
+        },
+      },
+      {
         path: "administration",
         children: [
           {
@@ -32,54 +53,6 @@ const routes: RouteRecordRaw[] = [
             path: "dashboard",
             name: "administration/DashboardPage",
             component: () => import("@/pages/administration/DashboardPage.vue"),
-          },
-          {
-            path: "sources",
-            name: "administration/SourceListPage",
-            component: () => import("@/pages/sources/SourceListPage.vue"),
-          },
-          {
-            path: "sources/new",
-            name: "administration/SourceNewPage",
-            component: () => import("@/pages/sources/SourceNewPage.vue"),
-          },
-          {
-            path: "sources/:sourceId/edit",
-            name: "administration/SourceEditPage",
-            component: () => import("@/pages/sources/SourceEditPage.vue"),
-            props: true,
-          },
-          {
-            path: "retentions",
-            name: "administration/RetentionListPage",
-            component: () => import("@/pages/retentions/RetentionListPage.vue"),
-          },
-          {
-            path: "retentions/new",
-            name: "administration/RetentionNewPage",
-            component: () => import("@/pages/retentions/RetentionNewPage.vue"),
-          },
-          {
-            path: "retentions/:retentionId/edit",
-            name: "administration/RetentionEditPage",
-            component: () => import("@/pages/retentions/RetentionEditPage.vue"),
-            props: true,
-          },
-          {
-            path: "categories",
-            name: "administration/CategoryListPage",
-            component: () => import("@/pages/categories/CategoryListPage.vue"),
-          },
-          {
-            path: "categories/new",
-            name: "administration/CategoryNewPage",
-            component: () => import("@/pages/categories/CategoryNewPage.vue"),
-          },
-          {
-            path: "categories/:categoryId/edit",
-            name: "administration/CategoryEditPage",
-            component: () => import("@/pages/categories/CategoryEditPage.vue"),
-            props: true,
           },
           {
             path: "groups",
@@ -124,6 +97,63 @@ const routes: RouteRecordRaw[] = [
             props: true,
           },
           {
+            path: "information-sharing-agreements",
+            name: "administration/InformationSharingAgreementsPage",
+            component: () => import("@/pages/administration/InformationSharingAgreementsPage.vue"),
+          },
+          {
+            path: "information-sharing-agreements/new",
+            name: "administration/information-sharing-agreements/InformationSharingAgreementNewPage",
+            component: () =>
+              import(
+                "@/pages/administration/information-sharing-agreements/InformationSharingAgreementNewPage.vue"
+              ),
+          },
+          {
+            path: "information-sharing-agreements/:informationSharingAgreementId",
+            component: () =>
+              import(
+                "@/pages/administration/information-sharing-agreements/InformationSharingAgreementPage.vue"
+              ),
+            props: true,
+            children: [
+              {
+                path: "",
+                name: "administration/information-sharing-agreements/InformationSharingAgreementPage",
+                redirect: {
+                  name: "administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage",
+                },
+              },
+              {
+                path: "access-grants",
+                name: "administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage",
+                component: () =>
+                  import(
+                    "@/pages/administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage.vue"
+                  ),
+                props: true,
+              },
+              {
+                path: "access-grants/new",
+                name: "administration/information-sharing-agreements/InformationSharingAgreementAccessGrantNewPage",
+                component: () =>
+                  import(
+                    "@/pages/administration/information-sharing-agreements/InformationSharingAgreementAccessGrantNewPage.vue"
+                  ),
+                props: true,
+              },
+            ],
+          },
+          {
+            path: "information-sharing-agreements/:informationSharingAgreementId/edit",
+            name: "administration/information-sharing-agreements/InformationSharingAgreementEditPage",
+            component: () =>
+              import(
+                "@/pages/administration/information-sharing-agreements/InformationSharingAgreementEditPage.vue"
+              ),
+            props: true,
+          },
+          {
             path: "users",
             name: "users/UsersPage",
             component: () => import("@/pages/users/UsersPage.vue"),
@@ -143,64 +173,46 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "archive-items",
-        children: [
-          {
-            path: "",
-            name: "archive-item/ArchiveItemListPage",
-            component: () => import("@/pages/archive-item/ArchiveItemListPage.vue"),
-            meta: { title: "Archive Items" },
-            props: true,
-          },
-          {
-            path: "new",
-            name: "archive-item/ArchiveItemNewPage",
-            component: () => import("@/pages/archive-item/ArchiveItemNewPage.vue"),
-            props: true,
-          },
-          {
-            path: ":archiveItemId/view",
-            name: "archive-item/ArchiveItemViewPage",
-            component: () => import("@/pages/archive-item/ArchiveItemViewPage.vue"),
-            props: true,
-          },
-        ],
+        name: "archive-items/ArchiveItemListPage",
+        component: () => import("@/pages/archive-items/ArchiveItemListPage.vue"),
+        meta: { title: "Traditional Knowledge" },
+        props: true,
       },
-
       {
-        path: "decisions",
+        path: "archive-items/new",
+        name: "archive-items/ArchiveItemNewPage",
+        component: () => import("@/pages/archive-items/ArchiveItemNewPage.vue"),
+        props: true,
+      },
+      {
+        path: "archive-items/:archiveItemId",
+        component: () => import("@/pages/archive-items/ArchiveItemPage.vue"),
+        props: true,
         children: [
           {
             path: "",
-            name: "decisions/DecisionListPage",
-            component: () => import("@/pages/decisions/DecisionListPage.vue"),
-            meta: { title: "Decision" },
+            name: "archive-items/ArchiveItemPage",
+            redirect: {
+              name: "archive-items/ArchiveItemInformationSharingAgreementsPage",
+            },
+          },
+
+          {
+            path: "information-sharing-agreements",
+            name: "archive-items/ArchiveItemInformationSharingAgreementsPage",
+            component: () =>
+              import("@/pages/archive-items/ArchiveItemInformationSharingAgreementsPage.vue"),
+            props: true,
           },
           {
-            path: "record",
-            name: "decisions/DecisionNewPage",
-            component: () => import("@/pages/decisions/DecisionNewPage.vue"),
-            meta: { title: "Decision" },
-          },
-          {
-            path: ":decisionId/view",
-            name: "decisions/DecisionViewPage",
-            component: () => import("@/pages/decisions/DecisionViewPage.vue"),
+            path: "users-with-access",
+            name: "archive-items/ArchiveItemUsersWithAccessPage",
+            component: () => import("@/pages/archive-items/ArchiveItemUsersWithAccessPage.vue"),
             props: true,
           },
         ],
       },
     ],
-  },
-  {
-    path: "/callback",
-    component: () => import("@/pages/CallbackPage.vue"),
-    meta: { requiresAuth: false, title: "Callback" },
-  },
-  {
-    path: "/sign-in",
-    name: "SignInPage",
-    component: () => import("@/pages/SignInPage.vue"),
-    meta: { requiresAuth: false, title: "Sign In" },
   },
   {
     path: "/status",

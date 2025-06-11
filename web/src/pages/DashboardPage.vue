@@ -21,8 +21,8 @@
           <v-row>
             <v-col>
               <p>
-                <router-link :to="{ name: 'archive-item/ArchiveItemListPage' }"
-                  >View the Archive Items</router-link
+                <router-link :to="{ name: 'archive-items/ArchiveItemListPage' }"
+                  >View the Knowledge Items</router-link
                 >
               </p>
             </v-col>
@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts" setup>
-import ArchiveItemNewButton from "@/components/archive-item/ArchiveItemNewButton.vue"
+import ArchiveItemNewButton from "@/components/archive-items/ArchiveItemNewButton.vue"
 import VaultInfoCard from "@/components/common/VaultInfoCard.vue"
 import VaultStatisticsCard from "@/components/common/VaultStatisticsCard.vue"
 import useBreadcrumbs from "@/use/use-breadcrumbs"

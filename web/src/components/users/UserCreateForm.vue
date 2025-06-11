@@ -3,7 +3,7 @@
     ref="form"
     @submit.prevent="saveWrapper"
   >
-    <v-card>
+    <v-card class="border">
       <v-card-title>User Details</v-card-title>
       <v-card-text>
         <v-row>
@@ -158,7 +158,7 @@ import { isNil } from "lodash"
 import { ref } from "vue"
 import { useRouter } from "vue-router"
 
-import { VForm } from "vuetify/lib/components/index.mjs"
+import { VForm } from "vuetify/components"
 
 import { required } from "@/utils/validators"
 import usersApi, { type User, UserRoles } from "@/api/users-api"

@@ -18,12 +18,13 @@ import {
   PrimaryKey,
   ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
-import { isNil } from "lodash"
+import { isEmpty, isNil, isUndefined } from "lodash"
 
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
+import InformationSharingAgreement from "@/models/information-sharing-agreement"
+import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
 import UserGroup from "@/models/user-group"
-import UserPermission from "@/models/user-permission"
 
 /** Keep in sync with web/src/api/users-api.ts */
 export enum UserRoles {
@@ -101,6 +102,11 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @Attribute(DataTypes.DATE(0))
   declare deactivatedAt: Date | null
 
+  @Attribute(DataTypes.BOOLEAN)
+  @NotNull
+  @Default(false)
+  declare emailNotificationsEnabled: CreationOptional<boolean>
+
   @Attribute(DataTypes.DATE(0))
   @NotNull
   @Default(sql.fn("getutcdate"))
@@ -119,25 +125,84 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     return this.roles?.some((role) => role === UserRoles.SYSTEM_ADMIN)
   }
 
-  get categories(): NonAttribute<number[]> {
-    if (this.userPermissions) {
-      return this.userPermissions
-        ?.map((permission) => permission.categoryId)
-        .filter((categoryId) => !isNil(categoryId))
+  get isGroupAdmin(): NonAttribute<boolean | undefined> {
+    if (isUndefined(this.adminGroups)) {
+      throw new Error("Expected adminGroups association to be pre-loaded.")
     }
-    return []
+
+    return !isEmpty(this.adminGroups)
   }
 
-  get sources(): NonAttribute<number[]> {
-    if (this.userPermissions) {
-      return this.userPermissions
-        ?.map((permission) => permission.sourceId)
-        .filter((sourceId) => !isNil(sourceId))
+  // Helper functions
+  isGroupAdminOf(groupId: number): boolean {
+    if (isUndefined(this.adminGroups)) {
+      throw new Error("Expected adminGroups association to be pre-loaded.")
     }
-    return []
+
+    return this.adminGroups.some((group) => group.id === groupId)
+  }
+
+  isAdminForInformationSharingAgreement(informationSharingAgreementId: number): boolean {
+    if (isUndefined(this.adminInformationSharingAgreementAccessGrants)) {
+      throw new Error(
+        "Expected adminInformationSharingAgreementAccessGrants association to be pre-loaded."
+      )
+    }
+
+    return this.adminInformationSharingAgreementAccessGrants.some(
+      (accessGrant) => accessGrant.informationSharingAgreementId === informationSharingAgreementId
+    )
   }
 
   // Associations
+  @HasMany(() => InformationSharingAgreement, {
+    foreignKey: "creatorId",
+    inverse: "creator",
+  })
+  declare createdInformationSharingAgreements?: NonAttribute<InformationSharingAgreement[]>
+
+  @HasMany(() => InformationSharingAgreement, {
+    foreignKey: "sharingGroupContactId",
+    inverse: "sharingGroupContact",
+  })
+  declare sharedInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
+
+  @HasMany(() => InformationSharingAgreement, {
+    foreignKey: "receivingGroupContactId",
+    inverse: "receivingGroupContact",
+  })
+  declare receivedInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
+
+  @HasMany(() => InformationSharingAgreementAccessGrant, {
+    foreignKey: "userId",
+    inverse: "user",
+  })
+  declare informationSharingAgreementAccessGrants?: NonAttribute<
+    InformationSharingAgreementAccessGrant[]
+  >
+
+  @HasMany(() => InformationSharingAgreementAccessGrant, {
+    foreignKey: "userId",
+    inverse: "user",
+    scope: {
+      // I would prefer to use InformationSharingAgreementAccessGrant.AccessLevels.ADMIN,
+      // but this causes a circular dependency. Sequelize does not seem to support
+      // lazy evaluation of scopes.
+      accessLevel: "admin",
+    },
+  })
+  declare adminInformationSharingAgreementAccessGrants?: NonAttribute<
+    InformationSharingAgreementAccessGrant[]
+  >
+
+  @HasMany(() => InformationSharingAgreementAccessGrant, {
+    foreignKey: "creatorId",
+    inverse: "creator",
+  })
+  declare createdInformationSharingAgreementAccessGrants?: NonAttribute<
+    InformationSharingAgreementAccessGrant[]
+  >
+
   @HasMany(() => UserGroup, {
     foreignKey: {
       name: "userId",
@@ -147,13 +212,26 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   })
   declare userOrganizations?: NonAttribute<UserGroup[]>
 
-  @HasMany(() => UserPermission, {
-    foreignKey: "userId",
-    inverse: {
-      as: "user",
+  @HasMany(() => UserGroup, {
+    foreignKey: {
+      name: "userId",
+      allowNull: false,
+    },
+    inverse: "user",
+  })
+  declare userGroups?: NonAttribute<UserGroup[]>
+
+  @HasMany(() => UserGroup, {
+    foreignKey: {
+      name: "userId",
+      allowNull: false,
+    },
+    inverse: "user",
+    scope: {
+      isAdmin: true,
     },
   })
-  declare userPermissions?: NonAttribute<UserPermission[]>
+  declare adminUserGroups?: NonAttribute<UserGroup[]>
 
   @BelongsToMany(() => Group, {
     through: () => UserGroup,
@@ -175,9 +253,47 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
    */
   declare userGroup?: NonAttribute<UserGroup>
 
+  @BelongsToMany(() => Group, {
+    through: {
+      model: () => UserGroup,
+      scope: {
+        isAdmin: true,
+      },
+    },
+    foreignKey: "userId",
+    otherKey: "groupId",
+    // TODO: set inverse to "adminUsers" once https://github.com/sequelize/sequelize/issues/16034 is fixed
+    // This workaround is necessary because the inverse fails to define symetrically so is never valid.
+    inverse: "inverseAdminGroups",
+  })
+  declare adminGroups?: NonAttribute<Group[]>
+
   // Scopes
   static establishScopes(): void {
-    this.addSearchScope(["firstName", "lastName", "displayName"])
+    this.addSearchScope(["firstName", "lastName", "displayName", "email"])
+
+    this.addScope("isSystemAdmin", () => {
+      return {
+        where: {
+          roles: {
+            [Op.like]: `%${UserRoles.SYSTEM_ADMIN}%`,
+          },
+        },
+      }
+    })
+
+    this.addScope("inGroup", (groupId: number) => {
+      return {
+        include: [
+          {
+            association: "userGroup",
+            where: {
+              groupId,
+            },
+          },
+        ],
+      }
+    })
 
     this.addScope("notInGroup", (groupId) => {
       return {
@@ -198,6 +314,29 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
         },
         replacements: {
           groupId,
+        },
+      }
+    })
+
+    this.addScope("withoutAccessGrantFor", (informationSharingAgreementId: number) => {
+      return {
+        where: {
+          id: {
+            [Op.notIn]: sql`
+              (
+                SELECT
+                  user_id
+                FROM
+                  information_sharing_agreement_access_grants
+                WHERE
+                  deleted_at IS NULL
+                  AND information_sharing_agreement_id = :informationSharingAgreementId
+              )
+            `,
+          },
+        },
+        replacements: {
+          informationSharingAgreementId,
         },
       }
     })

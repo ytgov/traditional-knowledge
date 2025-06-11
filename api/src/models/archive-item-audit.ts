@@ -16,9 +16,9 @@ import {
 } from "@sequelize/core/decorators-legacy"
 
 import BaseModel from "@/models/base-model"
-import ArchiveItem from "./archive-item"
-import ArchiveItemFile from "./archive-item-file"
-import User from "./user"
+import ArchiveItem from "@/models/archive-item"
+import ArchiveItemFile from "@/models/archive-item-file"
+import User from "@/models/user"
 
 export class ArchiveItemAudit extends BaseModel<
   InferAttributes<ArchiveItemAudit>,

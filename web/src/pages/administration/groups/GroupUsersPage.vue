@@ -1,17 +1,18 @@
 <template>
-  <div class="d-flex">
+  <div class="d-flex mb-4">
     <FilterSearchDebouncedTextField
       v-model="search"
-      class="mb-4 mr-5"
       label="Search"
       density="compact"
     />
     <v-btn
+      v-if="policy?.update"
+      class="ml-5"
       color="primary"
       :to="{
         name: 'administration/groups/GroupUserNewPage',
         params: {
-          groupId: props.groupId,
+          groupId,
         },
       }"
       style="height: 40px"
@@ -34,12 +35,15 @@ import FilterSearchDebouncedTextField from "@/components/common/tables/FilterSea
 import UserGroupsAsUsersEditDataTableServer from "@/components/user-groups/UserGroupsAsUsersEditDataTableServer.vue"
 
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
+import useGroup from "@/use/use-group"
 
 const props = defineProps<{
   groupId: string
 }>()
 
 const groupIdAsNumber = computed(() => parseInt(props.groupId))
+const { policy } = useGroup(groupIdAsNumber)
+
 const where = computed(() => ({
   groupId: groupIdAsNumber.value,
 }))

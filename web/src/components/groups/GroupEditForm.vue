@@ -7,7 +7,7 @@
       v-if="isNil(group)"
       type="card"
     />
-    <v-card v-else>
+    <v-card v-else class="border">
       <v-card-title>Group Details</v-card-title>
       <v-card-text>
         <v-row>
@@ -77,7 +77,7 @@
 import { isNil } from "lodash"
 import { computed, ref, toRefs } from "vue"
 
-import { type VBtn, type VForm } from "vuetify/lib/components/index.mjs"
+import { type VBtn, type VForm } from "vuetify/components"
 
 import { required } from "@/utils/validators"
 import useGroup from "@/use/use-group"

@@ -3,59 +3,57 @@ import db from "@/db/db-client"
 // Models
 import ArchiveItem from "@/models/archive-item"
 import ArchiveItemAudit from "@/models/archive-item-audit"
-import ArchiveItemCategory from "@/models/archive-item-category"
 import ArchiveItemFile from "@/models/archive-item-file"
-import Category from "@/models/category"
+import ArchiveItemInformationSharingAgreementAccessGrant from "@/models/archive-item-information-sharing-agreement-access-grant"
 import Group from "@/models/group"
-import Retention from "@/models/retention"
-import Source from "@/models/source"
-import SourceCategory from "@/models/source-category"
+import InformationSharingAgreement from "@/models/information-sharing-agreement"
+import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
+import InformationSharingAgreementAccessGrantSibling from "@/models/information-sharing-agreement-access-grant-sibling"
+import InformationSharingAgreementArchiveItem from "@/models/information-sharing-agreement-archive-item"
+import Notification from "@/models/notification"
 import User from "@/models/user"
 import UserGroup from "@/models/user-group"
-import UserPermission from "@/models/user-permission"
 
 db.addModels([
   ArchiveItem,
   ArchiveItemAudit,
-  ArchiveItemCategory,
   ArchiveItemFile,
-  Category,
+  ArchiveItemInformationSharingAgreementAccessGrant,
   Group,
-  Retention,
-  Source,
-  SourceCategory,
+  InformationSharingAgreement,
+  InformationSharingAgreementAccessGrant,
+  InformationSharingAgreementAccessGrantSibling,
+  InformationSharingAgreementArchiveItem,
+  Notification,
   User,
   UserGroup,
-  UserPermission,
 ])
 
 // Lazy load scopes
 ArchiveItem.establishScopes()
 ArchiveItemAudit.establishScopes()
-ArchiveItemCategory.establishScopes()
 ArchiveItemFile.establishScopes()
-Category.establishScopes()
 Group.establishScopes()
-Retention.establishScopes()
-Source.establishScopes()
-SourceCategory.establishScopes()
+InformationSharingAgreement.establishScopes()
+InformationSharingAgreementAccessGrant.establishScopes()
+InformationSharingAgreementArchiveItem.establishScopes()
+Notification.establishScopes()
 User.establishScopes()
 UserGroup.establishScopes()
-UserPermission.establishScopes()
 
 export {
   ArchiveItem,
   ArchiveItemAudit,
-  ArchiveItemCategory,
   ArchiveItemFile,
-  Category,
+  ArchiveItemInformationSharingAgreementAccessGrant,
   Group,
-  Retention,
-  Source,
-  SourceCategory,
+  InformationSharingAgreement,
+  InformationSharingAgreementAccessGrant,
+  InformationSharingAgreementAccessGrantSibling,
+  InformationSharingAgreementArchiveItem,
+  Notification,
   User,
   UserGroup,
-  UserPermission,
 }
 
 // Special db instance will all models loaded

@@ -1,26 +1,29 @@
 import { type Ref, reactive, toRefs, unref, watch } from "vue"
 import { isNil } from "lodash"
 
-import archiveItemsApi, { type ArchiveItemCreate, type ArchiveItem } from "@/api/archive-items-api"
+import { type Policy } from "@/api/base-api"
+import archiveItemsApi, {
+  type ArchiveItemShowView,
+  type ArchiveItemWhereOptions,
+  type ArchiveItemFiltersOptions,
+} from "@/api/archive-items-api"
 
-export { type ArchiveItem }
+export { type ArchiveItemShowView, type ArchiveItemWhereOptions, type ArchiveItemFiltersOptions }
 
 export function useArchiveItem(id: Ref<number | null | undefined>) {
   const state = reactive<{
-    item: ArchiveItem | null
-    createItem: ArchiveItemCreate | null
-    isUpdate: boolean
+    archiveItem: ArchiveItemShowView | null
+    policy: Policy | null
     isLoading: boolean
     isErrored: boolean
   }>({
-    item: null,
-    createItem: null,
-    isUpdate: !isNil(id.value),
+    archiveItem: null,
+    policy: null,
     isLoading: false,
     isErrored: false,
   })
 
-  async function fetch(): Promise<ArchiveItem> {
+  async function fetch(): Promise<ArchiveItemShowView> {
     const staticId = unref(id)
     if (isNil(staticId)) {
       throw new Error("id is required")
@@ -28,15 +31,13 @@ export function useArchiveItem(id: Ref<number | null | undefined>) {
 
     state.isLoading = true
     try {
-      const { archiveItem } = await archiveItemsApi.get(staticId)
+      const { archiveItem, policy } = await archiveItemsApi.get(staticId)
       state.isErrored = false
-      state.item = archiveItem
+      state.archiveItem = archiveItem
+      state.policy = policy
       return archiveItem
     } catch (error) {
-      console.error("Failed to fetch arhive item:", error)
-
-      
-
+      console.error(`Failed to fetch knowledge item ${error}:`, { error })
       state.isErrored = true
       throw error
     } finally {
@@ -44,55 +45,24 @@ export function useArchiveItem(id: Ref<number | null | undefined>) {
     }
   }
 
-  async function save(): Promise<ArchiveItem> {
-    if (state.isUpdate) return update()
-    else return create()
-  }
-
-  async function update(): Promise<ArchiveItem> {
+  async function save(): Promise<ArchiveItemShowView> {
     const staticId = unref(id)
-
     if (isNil(staticId)) {
       throw new Error("id is required")
     }
 
-    if (isNil(state.item)) {
-      throw new Error("No category to save")
+    if (isNil(state.archiveItem)) {
+      throw new Error("No knowledge item to save")
     }
 
     state.isLoading = true
     try {
-      const { archiveItem } = await archiveItemsApi.update(staticId, state.item)
+      const { archiveItem } = await archiveItemsApi.update(staticId, state.archiveItem)
       state.isErrored = false
-      state.item = archiveItem
+      state.archiveItem = archiveItem
       return archiveItem
     } catch (error) {
-      console.error("Failed to save archiveItem:", error)
-      state.isErrored = true
-      throw error
-    } finally {
-      state.isLoading = false
-    }
-  }
-
-  async function create(): Promise<ArchiveItem> {
-    const staticId = unref(id)
-    if (!isNil(staticId)) {
-      throw new Error("id is not required")
-    }
-
-    if (isNil(state.createItem)) {
-      throw new Error("No archiveItem to save")
-    }
-
-    state.isLoading = true
-    try {
-      const { archiveItem } = await archiveItemsApi.create(state.createItem)
-      state.isErrored = false
-      state.item = archiveItem
-      return archiveItem
-    } catch (error) {
-      console.error("Failed to create archiveItem:", error)
+      console.error(`Failed to save knowledge item ${error}:`, { error })
       state.isErrored = true
       throw error
     } finally {
@@ -103,11 +73,7 @@ export function useArchiveItem(id: Ref<number | null | undefined>) {
   watch(
     () => unref(id),
     async (newId) => {
-      if (isNil(newId)) {
-        ;(state.item as unknown) = { name: "" }
-
-        return
-      }
+      if (isNil(newId)) return
 
       await fetch()
     },
