@@ -65,6 +65,12 @@ ENV TZ=UTC
 ENV NODE_ENV=production
 USER node
 
+# Load SSL certificates and set permissions
+# Copy the private key (readable by root only)
+COPY --chown=root:root --chmod=0400 certs/icefog.pem /etc/ssl/private/icefog.pem
+# Copy the full chain (read-only for everyone is fine)
+COPY --chown=root:root --chmod=0444 certs/fullchain.pem /etc/ssl/certs/fullchain.pem
+
 WORKDIR /home/node/app
 RUN chown -R node:node /home/node/app
 
