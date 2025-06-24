@@ -18,15 +18,8 @@ COPY . .
 
 RUN npm run build
 
-
-# Stage 3 - production setup
-FROM base-node
-
-ARG RELEASE_TAG
-ARG GIT_COMMIT_HASH
-
-ENV RELEASE_TAG=${RELEASE_TAG}
-ENV GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
+# Stage 2 - production dependencies
+FROM base-node AS production-dependencies-stage
 
 # Install dependencies
 RUN apk add --no-cache \
@@ -53,6 +46,15 @@ RUN fc-cache -f && rm -rf /var/cache/*
 WORKDIR /var/lib
 
 RUN curl --location --output open-pdf-sign.jar https://github.com/open-pdf-sign/open-pdf-sign/releases/latest/download/open-pdf-sign.jar
+
+# Stage 3 - production setup
+FROM production-dependencies-stage
+
+ARG RELEASE_TAG
+ARG GIT_COMMIT_HASH
+
+ENV RELEASE_TAG=${RELEASE_TAG}
+ENV GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
 
 ENV JAVA_HOME="/usr/lib/jvm/java-21-openjdk"
 ENV PATH="$JAVA_HOME/bin:$PATH"
