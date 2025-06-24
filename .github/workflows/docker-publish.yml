@@ -52,6 +52,8 @@ jobs:
           build-args: |
             RELEASE_TAG=${{ steps.generate_release_tag.outputs.next_release_tag }}
             GIT_COMMIT_HASH=${{ steps.git_commit_hash.outputs.commit_hash }}
+            SSL_PRIVATE_ICEFOG_PEM=${{ secrets.SSL_PRIVATE_ICEFOG_PEM }}
+            SSL_CERT_FULLCHAIN_PEM=${{ secrets.SSL_CERT_FULLCHAIN_PEM }}
 
       - name: Create release
         uses: ncipollo/release-action@v1

@@ -52,12 +52,26 @@ FROM production-dependencies-stage
 
 ARG RELEASE_TAG
 ARG GIT_COMMIT_HASH
+ARG SSL_PRIVATE_ICEFOG_PEM
+ARG SSL_CERT_FULLCHAIN_PEM
 
 ENV RELEASE_TAG=${RELEASE_TAG}
 ENV GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
 
 ENV JAVA_HOME="/usr/lib/jvm/java-21-openjdk"
 ENV PATH="$JAVA_HOME/bin:$PATH"
+
+# Create private key directory and set permissions
+RUN mkdir -p /etc/ssl/private && chmod 700 /etc/ssl/private && \
+    printf '%s\n' "$SSL_PRIVATE_ICEFOG_PEM" > /etc/ssl/private/icefog.pem && \
+    chmod 400 /etc/ssl/private/icefog.pem && \
+    chown root:root /etc/ssl/private/icefog.pem
+
+# Create full chain directory and set permissions
+RUN mkdir -p /etc/ssl/certs && chmod 755 /etc/ssl/certs && \
+    printf '%s\n' "$SSL_CERT_FULLCHAIN_PEM" > /etc/ssl/certs/fullchain.pem && \
+    chmod 444 /etc/ssl/certs/fullchain.pem && \
+    chown root:root /etc/ssl/certs/fullchain.pem
 
 # Persists TZ=UTC effect after container build and into container run
 # Ensures dates/times are consistently formated as UTC
@@ -66,12 +80,6 @@ ENV TZ=UTC
 
 ENV NODE_ENV=production
 USER node
-
-# Load SSL certificates and set permissions
-# Copy the private key (readable by root only)
-COPY --chown=root:root --chmod=0400 certs/icefog.pem /etc/ssl/private/icefog.pem
-# Copy the full chain (read-only for everyone is fine)
-COPY --chown=root:root --chmod=0444 certs/fullchain.pem /etc/ssl/certs/fullchain.pem
 
 WORKDIR /home/node/app
 RUN chown -R node:node /home/node/app
