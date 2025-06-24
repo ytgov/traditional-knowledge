@@ -43,6 +43,16 @@ jobs:
             RELEASE_TAG=${{ steps.generate_release_tag.outputs.next_release_tag }}
             GIT_COMMIT_HASH=${{ steps.git_commit_hash.outputs.commit_hash }}
 
+      - name: Build and push archiver Docker image
+        uses: docker/build-push-action@v5.3.0
+        with:
+          context: ./archiver
+          push: true
+          tags: ${{ secrets.AZURECR_URL }}/traditional-knowledge-archiver:${{ steps.generate_release_tag.outputs.next_release_tag }} , ${{ secrets.AZURECR_URL }}/traditional-knowledge-archiver:latest
+          build-args: |
+            RELEASE_TAG=${{ steps.generate_release_tag.outputs.next_release_tag }}
+            GIT_COMMIT_HASH=${{ steps.git_commit_hash.outputs.commit_hash }}
+
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
