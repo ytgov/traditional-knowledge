@@ -170,8 +170,7 @@ services:
       - db_data:/var/opt/mssql/data
 
   mail:
-    image: maildev/maildev
-    user: root
+    image: maildev/maildev:2.2.1
     ports:
       - "1080:1080" # Web UI
       - "1025:1025" # SMTP
