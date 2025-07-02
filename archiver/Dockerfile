@@ -62,16 +62,18 @@ ENV JAVA_HOME="/usr/lib/jvm/java-21-openjdk"
 ENV PATH="$JAVA_HOME/bin:$PATH"
 
 # Create private key directory and set permissions
-RUN mkdir -p /etc/ssl/private && chmod 700 /etc/ssl/private && \
+RUN mkdir -p /etc/ssl/private && \
     printf '%s\n' "$SSL_PRIVATE_ICEFOG_PEM" > /etc/ssl/private/icefog.pem && \
-    chmod 400 /etc/ssl/private/icefog.pem && \
-    chown root:root /etc/ssl/private/icefog.pem
+    chown root:node /etc/ssl/private /etc/ssl/private/icefog.pem && \
+    chmod 750 /etc/ssl/private && \
+    chmod 440 /etc/ssl/private/icefog.pem
 
 # Create full chain directory and set permissions
-RUN mkdir -p /etc/ssl/certs && chmod 755 /etc/ssl/certs && \
+RUN mkdir -p /etc/ssl/certs && \
     printf '%s\n' "$SSL_CERT_FULLCHAIN_PEM" > /etc/ssl/certs/fullchain.pem && \
-    chmod 444 /etc/ssl/certs/fullchain.pem && \
-    chown root:root /etc/ssl/certs/fullchain.pem
+    chown root:node /etc/ssl/certs /etc/ssl/certs/fullchain.pem && \
+    chmod 755 /etc/ssl/certs && \
+    chmod 444 /etc/ssl/certs/fullchain.pem
 
 # Persists TZ=UTC effect after container build and into container run
 # Ensures dates/times are consistently formated as UTC
