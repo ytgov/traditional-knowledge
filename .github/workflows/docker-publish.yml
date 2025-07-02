@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v5.3.0
         with:
           context: .
-          push: true
+          push: ${{ env.DOCKER_PUSH || 'true' }}
           tags: ${{ secrets.AZURECR_URL }}/traditional-knowledge:${{ steps.generate_release_tag.outputs.next_release_tag }} , ${{ secrets.AZURECR_URL }}/traditional-knowledge:latest
           build-args: |
             RELEASE_TAG=${{ steps.generate_release_tag.outputs.next_release_tag }}
@@ -47,7 +47,7 @@ jobs:
         uses: docker/build-push-action@v5.3.0
         with:
           context: ./archiver
-          push: true
+          push: ${{ env.DOCKER_PUSH || 'true' }}
           tags: ${{ secrets.AZURECR_URL }}/traditional-knowledge-archiver:${{ steps.generate_release_tag.outputs.next_release_tag }} , ${{ secrets.AZURECR_URL }}/traditional-knowledge-archiver:latest
           build-args: |
             RELEASE_TAG=${{ steps.generate_release_tag.outputs.next_release_tag }}
