@@ -115,3 +115,6 @@ db/data
 note.md
 now.md
 now.sql
+
+# GitHub Actions
+.secrets
