@@ -325,7 +325,7 @@ Files:
    DB_DATABASE=traditional_knowledge_production
 
    VITE_API_BASE_URL="http://localhost:8080"
-   VITE_AUTH0_CLIENT_ID="mNqPwPZ5M1VXkEH6e8OgEaxmmWfxecwo"
+   VITE_AUTH0_CLIENT_ID="fsWyrDohhHtojdOpOFnAYtFMxwAMHUEF"
    VITE_AUTH0_AUDIENCE="testing"
    VITE_AUTH0_DOMAIN="https://dev-0tc6bn14.eu.auth0.com"
 
@@ -360,3 +360,33 @@ Files:
 4. Go to http://localhost:3000/ and log in.
 
 5. Navigate around the app and do some stuff and see if it works.
+
+## Testing GitHub Publish Locally
+
+- https://nektosact.com/installation/gh.html
+- https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+
+1. Install GitHub CLI, via:
+   ```sh
+   sudo apt install gh
+   ```
+   See https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+   NOTE: `snap` version of `gh` has permission limits, and will not work correctly, so use the `apt` version instead.
+2. Install GitHub publish library via:
+   ```sh
+   gh extension install https://github.com/nektos/gh-act
+   ```
+   See https://nektosact.com/installation/gh.html
+3. Generate secrets file via:
+   ```sh
+   ./bin/build-github-act-secrets-file.sh
+   ```
+4. Run publish action via:
+   ```sh
+   gh act push \
+      -P ubuntu-latest=-self-hosted \
+      --job build \
+      --env DOCKER_PUSH=false \
+      --secret-file .secrets
+   ```
+   Wait a long time, this will be very slow and not show much progress.
