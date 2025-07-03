@@ -57,8 +57,13 @@ ENV GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
 ENV TZ=UTC
 
 ENV NODE_ENV=production
-USER node
 
+# Updating npm did not fix this issue, though it might at a future date.
+# Fix Your cache folder contains root-owned files, due to a bug in previous versions of npm which has since been addressed.
+RUN mkdir -p /home/node/.npm
+RUN chown -R node:node "/home/node/.npm"
+
+USER node
 WORKDIR /home/node/app
 RUN chown -R node:node /home/node/app
 

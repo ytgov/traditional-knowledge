@@ -61,6 +61,13 @@ ENV GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
 ENV JAVA_HOME="/usr/lib/jvm/java-21-openjdk"
 ENV PATH="$JAVA_HOME/bin:$PATH"
 
+# Persists TZ=UTC effect after container build and into container run
+# Ensures dates/times are consistently formated as UTC
+# Conversion to local time should happen in the UI
+ENV TZ=UTC
+
+ENV NODE_ENV=production
+
 # Create private key directory and set permissions
 RUN mkdir -p /etc/ssl/private && \
     printf '%s\n' "$SSL_PRIVATE_ICEFOG_PEM" > /etc/ssl/private/icefog.pem && \
@@ -75,14 +82,12 @@ RUN mkdir -p /etc/ssl/certs && \
     chmod 755 /etc/ssl/certs && \
     chmod 444 /etc/ssl/certs/fullchain.pem
 
-# Persists TZ=UTC effect after container build and into container run
-# Ensures dates/times are consistently formated as UTC
-# Conversion to local time should happen in the UI
-ENV TZ=UTC
+# Updating npm did not fix this issue, though it might at a future date.
+# Fix Your cache folder contains root-owned files, due to a bug in previous versions of npm which has since been addressed.
+RUN mkdir -p /home/node/.npm
+RUN chown -R node:node "/home/node/.npm"
 
-ENV NODE_ENV=production
 USER node
-
 WORKDIR /home/node/app
 RUN chown -R node:node /home/node/app
 
