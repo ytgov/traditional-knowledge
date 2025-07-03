@@ -10,3 +10,5 @@ docs
 /now.*
 /*.now.*
 **/now.*
+
+.secrets

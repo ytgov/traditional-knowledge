@@ -19,8 +19,8 @@ export async function signPDFWithPAdES(
   return new Promise((resolve, reject) => {
     exec(cmd, { encoding: "buffer" }, (error, stderr) => {
       if (error) {
-        logger.error("open-pdf-sign error:", stderr.toString())
-        reject(new Error(`open-pdf-sign error: ${stderr.toString()}`))
+        logger.error(`open-pdf-sign error: ${error} -> ${stderr}`, { error, stderr })
+        reject(new Error(`open-pdf-sign error: ${stderr}`))
         return
       }
       resolve()

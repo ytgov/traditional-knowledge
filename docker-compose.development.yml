@@ -14,7 +14,7 @@ x-default-environment: &default-environment
   FRONTEND_URL: "http://localhost:8080"
   VITE_APPLICATION_NAME: "Traditional Knowledge"
   VITE_API_BASE_URL: "http://localhost:3000"
-  VITE_AUTH0_CLIENT_ID: "mNqPwPZ5M1VXkEH6e8OgEaxmmWfxecwo"
+  VITE_AUTH0_CLIENT_ID: "fsWyrDohhHtojdOpOFnAYtFMxwAMHUEF"
   VITE_AUTH0_AUDIENCE: "testing"
   VITE_AUTH0_DOMAIN: "https://dev-0tc6bn14.eu.auth0.com"
   RELEASE_TAG: "${RELEASE_TAG:-development}"
@@ -28,7 +28,7 @@ x-default-environment: &default-environment
   TIMESTAMP_SERVER: "http://timestamp.digicert.com"
   SSL_FULL_CHAIN_PATH: "/etc/ssl/certs/fullchain.pem"
   SSL_CERT_KEY_PATH: "/etc/ssl/private/icefog.pem"
-  BLOB_CONTAINER: "traditional-knowledge-development"
+  BLOB_CONTAINER: "the-vault"
 
 x-shared-watch:
   - &gitignore-sync
@@ -148,8 +148,7 @@ services:
   #     - ./web:/usr/src/web
 
   cache:
-    image: bitnami/redis:7.2.4
-    user: root
+    image: bitnami/redis:8.0.2
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
@@ -170,8 +169,7 @@ services:
       - db_data:/var/opt/mssql/data
 
   mail:
-    image: maildev/maildev
-    user: root
+    image: maildev/maildev:2.2.1
     ports:
       - "1080:1080" # Web UI
       - "1025:1025" # SMTP
