@@ -4,7 +4,7 @@ export const ENVIRONMENT = import.meta.env.MODE
 
 const prodConfig = {
   domain: "https://yukon.eu.auth0.com",
-  clientId: "fsWyrDohhHtojdOpOFnAYtFMxwAMHUEF",
+  clientId: "cGFfr4ZNoqn88sJGBS8VgnbG6oCV2ACc",
   audience: "generic-production",
   apiBaseUrl: "",
   applicationName: "Traditional Knowledge",
@@ -27,9 +27,9 @@ const devConfig = {
 }
 
 const localProductionConfig = {
-  domain: "https://dev-0tc6bn14.eu.auth0.com",
-  clientId: "fsWyrDohhHtojdOpOFnAYtFMxwAMHUEF",
-  audience: "testing",
+  domain: "https://yukon.eu.auth0.com",
+  clientId: "cGFfr4ZNoqn88sJGBS8VgnbG6oCV2ACc",
+  audience: "generic-production",
   apiBaseUrl: "http://localhost:8080",
   applicationName: "Traditional Knowledge",
 }
