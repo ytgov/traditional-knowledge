@@ -390,3 +390,12 @@ Files:
       --secret-file .secrets
    ```
    Wait a long time, this will be very slow and not show much progress.
+5. Check that the secrets built correctly:
+   ```bash
+   docker run --rm -it \
+     --entrypoint /bin/sh \
+     icefoganalytics.azurecr.io/traditional-knowledge-archiver:<LATEST_TAG>
+
+   cat /etc/ssl/private/icefog.pem # permission should be "denied"
+   cat /etc/ssl/certs/fullchain.pem # should show multi-line output
+   ```
