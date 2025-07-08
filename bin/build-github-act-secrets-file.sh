@@ -44,6 +44,6 @@ Run:
   gh act push \
       -P ubuntu-latest=-self-hosted \
       --job build \
-      --env DOCKER_PUSH=false \
+      --env PUSH_ENABLED=false \
       --secret-file .secrets
 "

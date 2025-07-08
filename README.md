@@ -386,7 +386,7 @@ Files:
    gh act push \
       -P ubuntu-latest=-self-hosted \
       --job build \
-      --env DOCKER_PUSH=false \
+      --env PUSH_ENABLED=false \
       --secret-file .secrets
    ```
    Wait a long time, this will be very slow and not show much progress.
