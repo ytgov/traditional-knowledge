@@ -72,7 +72,7 @@ ENV NODE_ENV=production
 RUN --mount=type=secret,id=icefog_pem \
     install -d -m 755 /etc/ssl/private && \
     cp /run/secrets/icefog_pem /etc/ssl/private/icefog.pem && \
-    chown root:node /etc/ssl/private && \
+    chown root:node /etc/ssl/private /etc/ssl/private/icefog.pem && \
     chmod 440 /etc/ssl/private/icefog.pem
 
 # Create full chain directory and set permissions
