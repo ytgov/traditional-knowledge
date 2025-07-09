@@ -29,18 +29,13 @@ ask AZURECR_URL      "Azure Container Registry URL (e.g. myregistry.azurecr.io)"
 ask AZURECR_USERNAME "ACR service-principal / robot user"
 ask AZURECR_PASSWORD "ACR password" yes
 
-# ---- encode PEMs as single-line strings ------------------------------------
-encode() { awk '{printf "%s\\n",$0}' "$1"; }        # replace LF → \n
-fullchain=$(encode "$CERT_DIR/fullchain.pem")
-icefog=$(encode "$CERT_DIR/icefog.pem")
-
 # ---- write .secrets --------------------------------------------------------
 cat > "$APP_DIRECTORY/.secrets" <<EOF
 AZURECR_URL=$AZURECR_URL
 AZURECR_USERNAME=$AZURECR_USERNAME
 AZURECR_PASSWORD=$AZURECR_PASSWORD
-SSL_CERT_FULLCHAIN_PEM="$fullchain"
-SSL_PRIVATE_ICEFOG_PEM="$icefog"
+SSL_CERT_FULLCHAIN_PEM="$(cat $CERT_DIR/fullchain.pem)"
+SSL_PRIVATE_ICEFOG_PEM="$(cat $CERT_DIR/icefog.pem)"
 GITHUB_TOKEN=$(gh auth token)
 EOF
 
@@ -49,6 +44,6 @@ Run:
   gh act push \
       -P ubuntu-latest=-self-hosted \
       --job build \
-      --env DOCKER_PUSH=false \
+      --env PUSH_ENABLED=false \
       --secret-file .secrets
 "

@@ -69,17 +69,17 @@ ENV TZ=UTC
 ENV NODE_ENV=production
 
 # Create private key directory and set permissions
-RUN mkdir -p /etc/ssl/private && \
-    printf '%s\n' "$SSL_PRIVATE_ICEFOG_PEM" > /etc/ssl/private/icefog.pem && \
-    chown root:node /etc/ssl/private /etc/ssl/private/icefog.pem && \
-    chmod 750 /etc/ssl/private && \
+RUN --mount=type=secret,id=icefog_pem \
+    install -d -m 750 /etc/ssl/private && \
+    cp /run/secrets/icefog_pem /etc/ssl/private/icefog.pem && \
+    chown root:node /etc/ssl/private/icefog.pem && \
     chmod 440 /etc/ssl/private/icefog.pem
 
 # Create full chain directory and set permissions
-RUN mkdir -p /etc/ssl/certs && \
-    printf '%s\n' "$SSL_CERT_FULLCHAIN_PEM" > /etc/ssl/certs/fullchain.pem && \
+RUN --mount=type=secret,id=fullchain_pem \
+    install -d -m 755 /etc/ssl/certs && \
+    cp /run/secrets/fullchain_pem /etc/ssl/certs/fullchain.pem && \
     chown root:node /etc/ssl/certs /etc/ssl/certs/fullchain.pem && \
-    chmod 755 /etc/ssl/certs && \
     chmod 444 /etc/ssl/certs/fullchain.pem
 
 # Updating npm did not fix this issue, though it might at a future date.
