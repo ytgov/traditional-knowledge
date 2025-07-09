@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v5.3.0
         with:
           context: .
-          push: ${{ env.DOCKER_PUSH || 'true' }}
+          push: ${{ env.PUSH_ENABLED != 'false' }}
           tags: ${{ secrets.AZURECR_URL }}/traditional-knowledge:${{ steps.generate_release_tag.outputs.next_release_tag }} , ${{ secrets.AZURECR_URL }}/traditional-knowledge:latest
           build-args: |
             RELEASE_TAG=${{ steps.generate_release_tag.outputs.next_release_tag }}
@@ -47,15 +47,17 @@ jobs:
         uses: docker/build-push-action@v5.3.0
         with:
           context: ./archiver
-          push: ${{ env.DOCKER_PUSH || 'true' }}
+          push: ${{ env.PUSH_ENABLED != 'false' }}
           tags: ${{ secrets.AZURECR_URL }}/traditional-knowledge-archiver:${{ steps.generate_release_tag.outputs.next_release_tag }} , ${{ secrets.AZURECR_URL }}/traditional-knowledge-archiver:latest
           build-args: |
             RELEASE_TAG=${{ steps.generate_release_tag.outputs.next_release_tag }}
             GIT_COMMIT_HASH=${{ steps.git_commit_hash.outputs.commit_hash }}
-            SSL_PRIVATE_ICEFOG_PEM=${{ secrets.SSL_PRIVATE_ICEFOG_PEM }}
-            SSL_CERT_FULLCHAIN_PEM=${{ secrets.SSL_CERT_FULLCHAIN_PEM }}
+          secrets: |
+            "icefog_pem=${{ secrets.SSL_PRIVATE_ICEFOG_PEM }}"
+            "fullchain_pem=${{ secrets.SSL_CERT_FULLCHAIN_PEM }}"
 
       - name: Create release
         uses: ncipollo/release-action@v1
+        if: ${{ env.PUSH_ENABLED != 'false' }}
         with:
           tag: ${{ steps.generate_release_tag.outputs.next_release_tag }}
