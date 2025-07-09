@@ -70,19 +70,17 @@ ENV NODE_ENV=production
 
 # Create private key directory and set permissions
 RUN --mount=type=secret,id=icefog_pem \
-    install -d -m 750 /etc/ssl/private && \
+    install -d -m 755 /etc/ssl/private && \
     cp /run/secrets/icefog_pem /etc/ssl/private/icefog.pem && \
-    chown root:node /etc/ssl/private /etc/ssl/private/icefog.pem && \
-    chmod 440 /etc/ssl/private/icefog.pem && \
-    usermod -aG node node
+    chown root:node /etc/ssl/private && \
+    chmod 440 /etc/ssl/private/icefog.pem
 
 # Create full chain directory and set permissions
 RUN --mount=type=secret,id=fullchain_pem \
     install -d -m 755 /etc/ssl/certs && \
     cp /run/secrets/fullchain_pem /etc/ssl/certs/fullchain.pem && \
     chown root:node /etc/ssl/certs /etc/ssl/certs/fullchain.pem && \
-    chmod 444 /etc/ssl/certs/fullchain.pem && \
-    usermod -aG node node
+    chmod 444 /etc/ssl/certs/fullchain.pem
 
 # Updating npm did not fix this issue, though it might at a future date.
 # Fix Your cache folder contains root-owned files, due to a bug in previous versions of npm which has since been addressed.
