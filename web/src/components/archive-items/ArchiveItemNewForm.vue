@@ -30,6 +30,77 @@
           </v-row>
         </v-card-text>
 
+        <v-card-title>Sharing Purpose</v-card-title>
+        <v-card-item>
+          <v-textarea
+                
+                label="Sharing Purpose"
+                rows="3"
+          />
+
+          <v-checkbox
+          
+            label="I confirm that I have received and agreed to the confidentiality terms."
+          />
+        </v-card-item>
+
+        <v-row>
+          <v-col
+              cols="12"
+              md="6"
+            >
+            <v-card-title>Security Levels</v-card-title>
+            <v-card-item>
+              <SecurityLevelSelect
+                  v-model="createItem.securityLevel"
+                  label="Security level"
+                />
+            </v-card-item>
+          </v-col>
+          <v-col
+              cols="12"
+              md="6"
+            >
+            <v-card-title>Retention</v-card-title>
+            <v-card-item>
+              <v-text-field
+                
+                label="Retention (days)"
+                type="number"
+                min="0"
+                outlined
+              />
+            </v-card-item>
+          </v-col>
+        </v-row>
+        <v-card-title>Categories</v-card-title>
+        <v-card-text>
+          <p class="mb-4">
+            Categories are used as filter criteria to find items in the archive. You can select as many as
+            are applicable to this item.
+          </p>
+          <v-combobox
+            
+            label="Categories"
+            multiple
+            chips
+            clearable
+          />
+        </v-card-text>
+
+        <v-card-title>Yukon First Nations</v-card-title>
+
+        <v-card-item>
+          <v-textarea
+                label="Yukon First Nations"
+                rows="1"
+          />
+
+        </v-card-item>
+
+
+
+
         <v-card-title>Tags</v-card-title>
         <v-card-text>
           <p class="mb-4">
@@ -79,7 +150,7 @@ import useSnack from "@/use/use-snack"
 import useArchiveItemLegacy from "@/use/use-archive-item-legacy"
 
 import { SecurityLevel } from "@/api/archive-items-api"
-
+import SecurityLevelSelect from "@/components/archive-items/SecurityLevelSelect.vue"
 import FileDrop from "@/components/common/FileDrop.vue"
 
 const rules = {
