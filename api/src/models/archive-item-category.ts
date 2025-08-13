@@ -1,23 +1,19 @@
 import {
   type CreationOptional,
   DataTypes,
-  type InferAttributes,
-  type InferCreationAttributes,
-  type NonAttribute,
+  InferAttributes,
+  InferCreationAttributes,
   sql,
 } from "@sequelize/core"
 import {
   Attribute,
   AutoIncrement,
-  BelongsTo,
   Default,
   NotNull,
   PrimaryKey,
 } from "@sequelize/core/decorators-legacy"
 
 import BaseModel from "@/models/base-model"
-import ArchiveItem from "@/models/archive-item"
-import Category from "@/models/category"
 
 export class ArchiveItemCategory extends BaseModel<
   InferAttributes<ArchiveItemCategory>,
@@ -56,10 +52,10 @@ export class ArchiveItemCategory extends BaseModel<
   declare deletedAt: Date | null
 
   // Associations
-  @BelongsTo(() => ArchiveItem, {
+  /*   @BelongsTo(() => ArchiveItem, {
     foreignKey: "archiveItemId",
     inverse: {
-      as: "archiveItemCategories",
+      as: "archiveItem",
       type: "hasMany",
     },
   })
@@ -68,12 +64,12 @@ export class ArchiveItemCategory extends BaseModel<
   @BelongsTo(() => Category, {
     foreignKey: "categoryId",
     inverse: {
-      as: "archiveItemCategories",
+      as: "category",
       type: "hasMany",
     },
   })
   declare category?: NonAttribute<Category>
- 
+ */
   // Scopes
   static establishScopes(): void {
     //this.addSearchScope(["name"])
