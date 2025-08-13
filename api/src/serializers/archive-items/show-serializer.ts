@@ -2,9 +2,10 @@ import { isUndefined, pick } from "lodash"
 
 import { ArchiveItem } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
-import { InformationSharingAgreementAccessGrants, Users } from "@/serializers"
+import { InformationSharingAgreementAccessGrants, Users, Categories } from "@/serializers"
 import { type UserReferenceView } from "@/serializers/users/reference-serializer"
 import { type InformationSharingAgreementAccessGrantShowView } from "@/serializers/information-sharing-agreement-access-grants/show-serializer"
+import { type IndexSerializer as CategoryIndexSerializer } from "@/serializers/categories/index-serializer"
 
 export type ArchiveItemShowView = Pick<
   ArchiveItem,
@@ -14,6 +15,9 @@ export type ArchiveItemShowView = Pick<
   | "title"
   | "description"
   | "summary"
+  | "sharingPurpose"
+  | "confidentialityReceipt"
+  | "yukonFirstNation"
   | "status"
   | "securityLevel"
   | "tags"
@@ -24,6 +28,7 @@ export type ArchiveItemShowView = Pick<
 > & {
   user?: UserReferenceView
   informationSharingAgreementAccessGrants?: InformationSharingAgreementAccessGrantShowView[]
+  categories: CategoryIndexSerializer[]
 }
 
 export class ShowSerializer extends BaseSerializer<ArchiveItem> {
@@ -52,6 +57,9 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
         "title",
         "description",
         "summary",
+        "sharingPurpose",
+        "confidentialityReceipt",
+        "yukonFirstNation",
         "status",
         "securityLevel",
         "tags",

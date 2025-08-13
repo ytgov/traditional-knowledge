@@ -1,6 +1,8 @@
 // Bundled exports
 export * as ArchiveItemAudits from "./archive-item-audits"
 export * as ArchiveItems from "./archive-items"
+export * as Categorys from "./categories"
+export * as Retentions from "./retentions"
 export * as Groups from "./groups"
 export * as InformationSharingAgreementAccessGrants from "./information-sharing-agreement-access-grants"
 export * as InformationSharingAgreementArchiveItems from "./information-sharing-agreement-archive-items"

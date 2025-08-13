@@ -1,20 +1,17 @@
 import { pick } from "lodash"
 
-import { ArchiveItem } from "@/models"
+import { Category } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
-import ReferenceSerializer, { UserReferenceView } from "@/serializers/users/reference-serializer"
 
-export type ArchiveItemIndexView = Pick<
-  ArchiveItem,
-  "title" | "description" | "sharingPurpose" | "summary" | "securityLevel" | "status"
-> & { user: UserReferenceView | null; archiveItemFileCount?: number }
+export type CategoryIndexView = Pick<
+  Category,
+  "id" | "name" | "description" | "retentionId" | "retention"
+>
 
-export class IndexSerializer extends BaseSerializer<ArchiveItem> {
-  perform(): ArchiveItemIndexView {
+export class IndexSerializer extends BaseSerializer<Category> {
+  perform(): CategoryIndexView {
     return {
-      ...pick(this.record, ["id", "title", "description", "sharingPurpose", "summary", "securityLevel", "status"]),
-      user: this.record.user ? ReferenceSerializer.perform(this.record.user) : null,
-      archiveItemFileCount: this.record.dataValues.archiveItemFileCount,
+      ...pick(this.record, ["id", "name", "description", "retentionId", "retention"]),
     }
   }
 }
