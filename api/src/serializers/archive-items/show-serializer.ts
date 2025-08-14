@@ -2,10 +2,10 @@ import { isUndefined, pick } from "lodash"
 
 import { ArchiveItem } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
-import { InformationSharingAgreementAccessGrants, Users, Categories } from "@/serializers"
+import { InformationSharingAgreementAccessGrants, Users } from "@/serializers"
 import { type UserReferenceView } from "@/serializers/users/reference-serializer"
 import { type InformationSharingAgreementAccessGrantShowView } from "@/serializers/information-sharing-agreement-access-grants/show-serializer"
-import { type IndexSerializer as CategoryIndexSerializer } from "@/serializers/categories/index-serializer"
+import CategoryIndexSerializer, { CategoryIndexView } from "@/serializers/categories/index-serializer"
 
 export type ArchiveItemShowView = Pick<
   ArchiveItem,
@@ -28,7 +28,7 @@ export type ArchiveItemShowView = Pick<
 > & {
   user?: UserReferenceView
   informationSharingAgreementAccessGrants?: InformationSharingAgreementAccessGrantShowView[]
-  categories: CategoryIndexSerializer[]
+  categories?: CategoryIndexView[]
 }
 
 export class ShowSerializer extends BaseSerializer<ArchiveItem> {
@@ -70,6 +70,8 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
       ]),
       user: serializedUser,
       informationSharingAgreementAccessGrants: serializedInformationSharingAgreementAccessGrants,
+      categories: this.record.categories?.map((category) => CategoryIndexSerializer.perform(category)),
+      
     }
   }
 }

@@ -3,13 +3,14 @@ import { isNil } from "lodash"
 
 import cache from "@/db/cache-client"
 
-import db, { ArchiveItem, ArchiveItemFile, User } from "@/models"
+import db, { ArchiveItem, ArchiveItemCategory, ArchiveItemFile, User } from "@/models"
 import BaseService from "@/services/base-service"
 import { ArchiveItemStatus } from "@/models/archive-item"
 import { FileStorageService } from "@/services/file-storage-service"
 
 export type ArchiveItemCreationAttributes = Partial<CreationAttributes<ArchiveItem>> & {
   files: File[] | null
+  categoryIds: number[] | null
 }
 
 export class CreateService extends BaseService {
@@ -21,7 +22,7 @@ export class CreateService extends BaseService {
   }
 
   async perform(): Promise<ArchiveItem> {
-    const { title, securityLevel, ...optionalAttributes } = this.attributes
+    const { title, securityLevel, sharingPurpose, confidentialityReceipt, yukonFirstNation, ...optionalAttributes } = this.attributes
 
     const status = ArchiveItemStatus.ACCEPTED
 
@@ -34,8 +35,14 @@ export class CreateService extends BaseService {
     if (isNil(securityLevel)) {
       throw new Error("Security level is required")
     }
-    if (isNil(title)) {
-      throw new Error("Title is required")
+    if (isNil(sharingPurpose)) {
+      throw new Error("Sharing Purpose is required")
+    }
+    if (isNil(confidentialityReceipt)) {
+      throw new Error("Confidentiality Receipt is required")
+    }
+    if (isNil(yukonFirstNation)) {
+      throw new Error("Sharing Purpose is required")
     }
 
     return db.transaction(async () => {
@@ -45,8 +52,23 @@ export class CreateService extends BaseService {
         title,
         status,
         securityLevel,
+        sharingPurpose,
+        confidentialityReceipt,
+        yukonFirstNation,
         userId: this.currentUser.id,
       })
+      
+      if (!isNil(this.attributes.categoryIds)) {
+        for (const categoryId of this.attributes.categoryIds) {
+          await ArchiveItemCategory.create(
+            {
+              archiveItemId: archiveItem.id,
+              categoryId: parseInt(`${categoryId}`),
+              setByUserId: this.currentUser.id,
+            }
+          )
+        }
+      }
 
       if (!isNil(this.attributes.files)) {
         const service = new FileStorageService()
