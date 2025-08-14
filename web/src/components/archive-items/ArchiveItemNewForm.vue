@@ -36,6 +36,7 @@
             v-model="createItem.sharingPurpose"
             label="Sharing Purpose"
             rows="2"
+            :rules="[rules.required]"
           />
 
           <v-checkbox
@@ -55,6 +56,7 @@
               <SecurityLevelSelect
                 v-model="createItem.securityLevel"
                 label="Security level"
+                :rules="[rules.required]"
               />
             </v-card-item>
           </v-col>
@@ -81,10 +83,12 @@
           </p>
           <CategoryComboBox
             v-model="createItem.categoryIds"
+            :retention-id="retentionId"
             label="Categories"
             multiple
             chips
             clearable
+            :rules="[rules.required]"
           />
         </v-card-text>
 
@@ -97,6 +101,7 @@
             multiple
             chips
             clearable
+            :rules="[rules.required]"
           />
         </v-card-item>
 
@@ -141,7 +146,7 @@
 
 <script setup lang="ts">
 import { isEmpty, isNil } from "lodash"
-import { onMounted, ref } from "vue"
+import { onMounted, ref, watch } from "vue"
 import { useRouter } from "vue-router"
 import { VForm } from "vuetify/components"
 
@@ -188,6 +193,10 @@ onMounted(() => {
     files: [],
     categoryIds: [],
   }
+})
+
+watch(retentionId, () => {
+  console.log("Retention changed", retentionId.value) 
 })
 
 function handleFileDrop(droppedFiles: File[]) {

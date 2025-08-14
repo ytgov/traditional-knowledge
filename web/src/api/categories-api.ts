@@ -18,6 +18,7 @@ export type Category = {
 
 export type CategoryWhereOptions = {
   name?: string
+  retentionId?: number
 }
 
 export type CategoryFiltersOptions = {

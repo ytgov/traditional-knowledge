@@ -1,38 +1,35 @@
 <template>
   <v-combobox
-    :model-value="props.modelValue"
-    :items="items"
+    v-model="selectedCategoryIds"
+    :items="categories"
     item-value="id"
     item-title="name"
     :return-object="false"
     multiple
     chips
     clearable
-    @update:model-value="emit('update:modelValue', $event)"
   />
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue"
+import { computed, onMounted } from "vue"
 import useCategories from "@/use/use-categories"
+import { CategoryWhereOptions } from "@/api/categories-api";
 
-const props = withDefaults(
-  defineProps<{
-    retentionId?: number | null
-    modelValue: number[] | null
-  }>(),
-  {
-    retentionId: null,
-  }
-)
-
-const emit = defineEmits<{
-  (e: "update:modelValue", value: number[]): void
+const props = defineProps<{
+  retentionId?: number | null
 }>()
+console.log("Retention ID", props.retentionId)
 
-const { items, list } = useCategories()
+const selectedCategoryIds = defineModel<number[] | null>()
+
+const retentionQuery = computed<CategoryWhereOptions>(() => ({
+  retentionId: props.retentionId ?? undefined,
+}));
+
+const { items: categories, list } = useCategories()
 
 onMounted(async () => {
-  await list({ perPage: 1000, page: 1 })
+  await list({ perPage: 1000, page: 1, where: retentionQuery.value })
 })
 </script>
