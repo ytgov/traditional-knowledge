@@ -31,79 +31,73 @@
         </v-card-text>
 
         <v-card-title>Sharing Purpose</v-card-title>
-        <v-card-item>
+        <v-card-text>
+          <p class="mb-3">For what purpose this traditional knowledge is shared?</p>
           <v-textarea
             v-model="createItem.sharingPurpose"
             label="Sharing Purpose"
             rows="2"
+            variant="outlined"
             :rules="[rules.required]"
           />
-
           <v-checkbox
             v-model="createItem.confidentialityReceipt"
             label="I confirm that I have received and agreed to the confidentiality terms."
-            type="boolean"
-          />
-        </v-card-item>
-
-        <v-row>
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-card-title>Security Levels</v-card-title>
-            <v-card-item>
-              <SecurityLevelSelect
-                v-model="createItem.securityLevel"
-                label="Security level"
-                :rules="[rules.required]"
-              />
-            </v-card-item>
-          </v-col>
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-card-title>Retention</v-card-title>
-            <v-card-item>
-              <RetentionSelect
-                v-model="retentionId"
-                label="Retention"
-                outlined
-              />
-            </v-card-item>
-          </v-col>
-        </v-row>
-
-        <v-card-title>Categories</v-card-title>
-        <v-card-text>
-          <p class="mb-4">
-            Categories are used as filter criteria to find items in the archive. You can select as
-            many as are applicable to this item.
-          </p>
-          <CategoryComboBox
-            v-model="createItem.categoryIds"
-            :retention-id="retentionId"
-            label="Categories"
-            multiple
-            chips
-            clearable
-            :rules="[rules.required]"
           />
         </v-card-text>
 
-        <v-card-title>Yukon First Nation</v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" md="6">
+              <SecurityLevelSelect
+                v-model="createItem.securityLevel"
+                label="Security level"
+                variant="outlined"
+                :rules="[rules.required]"
+              />
+            </v-col>
+            <v-col cols="12" md="6">
+              <RetentionSelect
+                v-model="retentionId"
+                label="Retention"
+                variant="outlined"
+              />
+            </v-col>
+          </v-row>
+        </v-card-text>
 
-        <v-card-item>
+        <template v-if="retentionId">
+          <v-card-title>Categories</v-card-title>
+          <v-card-text>
+            <p class="mb-4">
+              Categories are used as filter criteria to find items in the archive. You can select as
+              many as are applicable to this item.
+            </p>
+            <CategoryAutoComplete
+              v-model="createItem.categoryIds"
+              :retention-id="retentionId"
+              label="Categories"
+              multiple
+              chips
+              clearable
+              variant="outlined"
+              :rules="[rules.required]"
+            />
+          </v-card-text>
+        </template>
+
+        <v-card-title>Yukon First Nation</v-card-title>
+        <v-card-text>
           <v-combobox
             v-model="createItem.yukonFirstNations"
             label="Yukon First Nations"
             multiple
             chips
             clearable
+            variant="outlined"
             :rules="[rules.required]"
           />
-        </v-card-item>
+        </v-card-text>
 
         <v-card-title>Tags</v-card-title>
         <v-card-text>
@@ -157,7 +151,7 @@ import { SecurityLevel } from "@/api/archive-items-api"
 import SecurityLevelSelect from "@/components/archive-items/SecurityLevelSelect.vue"
 import FileDrop from "@/components/common/FileDrop.vue"
 import RetentionSelect from "@/components/retentions/RetentionSelect.vue"
-import CategoryComboBox from "@/components/categories/CategoryComboBox.vue"
+import CategoryAutoComplete from "@/components/categories/CategoryAutoComplete.vue"
 
 const rules = {
   required: (value: string | null) => !!value || "Field is required",
@@ -180,6 +174,7 @@ const isLoading = ref(false)
 const retentionId = ref<number | null>(null)
 const form = ref<InstanceType<typeof VForm> | null>(null)
 
+
 onMounted(() => {
   createItem.value = {
     title: "",
@@ -196,7 +191,9 @@ onMounted(() => {
 })
 
 watch(retentionId, () => {
-  console.log("Retention changed", retentionId.value) 
+  if (retentionId.value) {
+    if (createItem.value) createItem.value.categoryIds = []
+  }
 })
 
 function handleFileDrop(droppedFiles: File[]) {
@@ -221,6 +218,7 @@ async function saveWrapper() {
     else snack.success("Item created.")
 
     router.push({ name: "archive-items/ArchiveItemListPage" })
+    retentionId.value = null
   } catch (error) {
     snack.error("Save failed!")
     throw error

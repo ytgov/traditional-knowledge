@@ -1,5 +1,5 @@
 <template>
-  <v-combobox
+  <v-autocomplete
     v-model="selectedCategoryIds"
     :items="categories"
     item-value="id"
@@ -19,7 +19,6 @@ import { CategoryWhereOptions } from "@/api/categories-api";
 const props = defineProps<{
   retentionId?: number | null
 }>()
-console.log("Retention ID", props.retentionId)
 
 const selectedCategoryIds = defineModel<number[] | null>()
 
