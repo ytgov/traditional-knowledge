@@ -10,6 +10,7 @@ import {
 import { type ArchiveItemFile } from "@/api/archive-item-files-api"
 import { type User } from "@/api/users-api"
 import { type InformationSharingAgreementAccessGrant } from "@/api/information-sharing-agreement-access-grants-api"
+import { Category } from "@/api/categories-api"
 
 export enum SecurityLevel {
   LOW = 1,
@@ -28,6 +29,9 @@ export type ArchiveItem = {
   id: number
   title: string
   userId: number | null
+  sharingPurpose: string
+  confidentialityReceipt: boolean
+  yukonFirstNations: string[]
   description: string | null
   summary: string | null
   status: ArchiveItemStatus
@@ -38,6 +42,7 @@ export type ArchiveItem = {
   updatedAt: Date | null
 
   files: ArchiveItemFile[] | null // TODO: move to appropriate view?
+  categories: Category[] | null
 }
 
 export type ArchiveItemShowView = ArchiveItem & {
@@ -49,10 +54,14 @@ export type ArchiveItemCreate = {
   title: string
   description: string | null
   summary: string | null
+  sharingPurpose: string
+  confidentialityReceipt: boolean
+  yukonFirstNations: string[]
   securityLevel: SecurityLevel
   tags: string[] | null
 
   files: File[] | null
+  categoryIds: number[] | null
 }
 
 export type ArchiveItemWhereOptions = WhereOptions<

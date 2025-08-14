@@ -22,7 +22,7 @@ export class CreateService extends BaseService {
   }
 
   async perform(): Promise<ArchiveItem> {
-    const { title, securityLevel, sharingPurpose, confidentialityReceipt, yukonFirstNation, ...optionalAttributes } = this.attributes
+    const { title, securityLevel, sharingPurpose, confidentialityReceipt, yukonFirstNations, ...optionalAttributes } = this.attributes
 
     const status = ArchiveItemStatus.ACCEPTED
 
@@ -41,7 +41,7 @@ export class CreateService extends BaseService {
     if (isNil(confidentialityReceipt)) {
       throw new Error("Confidentiality Receipt is required")
     }
-    if (isNil(yukonFirstNation)) {
+    if (isNil(yukonFirstNations)) {
       throw new Error("Sharing Purpose is required")
     }
 
@@ -53,11 +53,11 @@ export class CreateService extends BaseService {
         status,
         securityLevel,
         sharingPurpose,
-        confidentialityReceipt,
-        yukonFirstNation,
+        confidentialityReceipt: Boolean(confidentialityReceipt),
+        yukonFirstNations,
         userId: this.currentUser.id,
       })
-      
+      console.log(this.attributes.categoryIds)
       if (!isNil(this.attributes.categoryIds)) {
         for (const categoryId of this.attributes.categoryIds) {
           await ArchiveItemCategory.create(

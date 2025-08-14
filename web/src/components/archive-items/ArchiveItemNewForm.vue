@@ -33,54 +33,54 @@
         <v-card-title>Sharing Purpose</v-card-title>
         <v-card-item>
           <v-textarea
-                
-                label="Sharing Purpose"
-                rows="3"
+            v-model="createItem.sharingPurpose"
+            label="Sharing Purpose"
+            rows="2"
           />
 
           <v-checkbox
-          
+            v-model="createItem.confidentialityReceipt"
             label="I confirm that I have received and agreed to the confidentiality terms."
+            type="boolean"
           />
         </v-card-item>
 
         <v-row>
           <v-col
-              cols="12"
-              md="6"
-            >
+            cols="12"
+            md="6"
+          >
             <v-card-title>Security Levels</v-card-title>
             <v-card-item>
               <SecurityLevelSelect
-                  v-model="createItem.securityLevel"
-                  label="Security level"
-                />
+                v-model="createItem.securityLevel"
+                label="Security level"
+              />
             </v-card-item>
           </v-col>
           <v-col
-              cols="12"
-              md="6"
-            >
+            cols="12"
+            md="6"
+          >
             <v-card-title>Retention</v-card-title>
             <v-card-item>
-              <v-text-field
-                
-                label="Retention (days)"
-                type="number"
-                min="0"
+              <RetentionSelect
+                v-model="retentionId"
+                label="Retention"
                 outlined
               />
             </v-card-item>
           </v-col>
         </v-row>
+
         <v-card-title>Categories</v-card-title>
         <v-card-text>
           <p class="mb-4">
-            Categories are used as filter criteria to find items in the archive. You can select as many as
-            are applicable to this item.
+            Categories are used as filter criteria to find items in the archive. You can select as
+            many as are applicable to this item.
           </p>
-          <v-combobox
-            
+          <CategoryComboBox
+            v-model="createItem.categoryIds"
             label="Categories"
             multiple
             chips
@@ -88,18 +88,17 @@
           />
         </v-card-text>
 
-        <v-card-title>Yukon First Nations</v-card-title>
+        <v-card-title>Yukon First Nation</v-card-title>
 
         <v-card-item>
-          <v-textarea
-                label="Yukon First Nations"
-                rows="1"
+          <v-combobox
+            v-model="createItem.yukonFirstNations"
+            label="Yukon First Nations"
+            multiple
+            chips
+            clearable
           />
-
         </v-card-item>
-
-
-
 
         <v-card-title>Tags</v-card-title>
         <v-card-text>
@@ -152,6 +151,8 @@ import useArchiveItemLegacy from "@/use/use-archive-item-legacy"
 import { SecurityLevel } from "@/api/archive-items-api"
 import SecurityLevelSelect from "@/components/archive-items/SecurityLevelSelect.vue"
 import FileDrop from "@/components/common/FileDrop.vue"
+import RetentionSelect from "@/components/retentions/RetentionSelect.vue"
+import CategoryComboBox from "@/components/categories/CategoryComboBox.vue"
 
 const rules = {
   required: (value: string | null) => !!value || "Field is required",
@@ -171,6 +172,7 @@ const router = useRouter()
 const { createItem, isUpdate, save } = useArchiveItemLegacy(ref(null))
 
 const isLoading = ref(false)
+const retentionId = ref<number | null>(null)
 const form = ref<InstanceType<typeof VForm> | null>(null)
 
 onMounted(() => {
@@ -179,8 +181,12 @@ onMounted(() => {
     securityLevel: SecurityLevel.LOW,
     description: null,
     summary: null,
+    sharingPurpose: "",
+    confidentialityReceipt: false,
+    yukonFirstNations: [],
     tags: [],
     files: [],
+    categoryIds: [],
   }
 })
 
@@ -199,6 +205,7 @@ async function saveWrapper() {
 
   isLoading.value = true
   try {
+    console.log("Saving item", createItem.value)
     await save()
 
     if (isUpdate) snack.success("Item saved.")

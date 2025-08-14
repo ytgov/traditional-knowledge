@@ -39,7 +39,7 @@ export class ArchiveItemsPolicy extends PolicyFactory(ArchiveItem) {
       "summary",
       "sharingPurpose",
       "confidentialityReceipt",
-      "yukonFirstNation",
+      "yukonFirstNations",
       "status",
       "securityLevel",
       "tags",

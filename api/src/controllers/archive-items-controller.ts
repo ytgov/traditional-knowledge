@@ -49,6 +49,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
         {
           ...permittedAttributes,
           files: this.request.body.files,
+          categoryIds: this.request.body.categoryIds,
         },
         this.currentUser
       )

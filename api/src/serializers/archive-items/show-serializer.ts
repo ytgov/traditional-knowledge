@@ -17,7 +17,7 @@ export type ArchiveItemShowView = Pick<
   | "summary"
   | "sharingPurpose"
   | "confidentialityReceipt"
-  | "yukonFirstNation"
+  | "yukonFirstNations"
   | "status"
   | "securityLevel"
   | "tags"
@@ -59,7 +59,7 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
         "summary",
         "sharingPurpose",
         "confidentialityReceipt",
-        "yukonFirstNation",
+        "yukonFirstNations",
         "status",
         "securityLevel",
         "tags",

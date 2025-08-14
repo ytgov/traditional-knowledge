@@ -120,7 +120,7 @@ export class ArchiveItem extends BaseModel<
       this.setDataValue("yukonFirstNations", values)
     },
   })
-  declare yukonFirstNation: string[] | null
+  declare yukonFirstNations: string[] | null
 
   @Attribute({
     type: DataTypes.STRING(255),
