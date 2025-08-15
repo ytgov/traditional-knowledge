@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue"
 import useCategories from "@/use/use-categories"
-import { CategoryWhereOptions } from "@/api/categories-api";
+import { CategoryWhereOptions } from "@/api/categories-api"
 
 const props = defineProps<{
   retentionId?: number | null
@@ -24,7 +24,7 @@ const selectedCategoryIds = defineModel<number[] | null>()
 
 const retentionQuery = computed<CategoryWhereOptions>(() => ({
   retentionId: props.retentionId ?? undefined,
-}));
+}))
 
 const { items: categories, list } = useCategories()
 

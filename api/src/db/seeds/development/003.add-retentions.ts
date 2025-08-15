@@ -15,12 +15,12 @@ export async function seed(_knex: Knex): Promise<void> {
       retentionDays: 10,
     },
     {
-      name: "Keep till December 31, 2024, then hide",
+      name: "Keep till December 31, 2025, then hide",
       description: "",
       isDefault: true,
       expireSchedule: "* 10 * *  *",
       expireAction: "Hide",
-      retentionDate: new Date(2024, 11, 31, 23, 59, 59),
+      retentionDate: new Date(2025, 11, 31, 23, 59, 59),
     },
   ]
   for (const attributes of retentions) {

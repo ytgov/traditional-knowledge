@@ -35,8 +35,6 @@ export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
     } catch (error) {
       console.error("Failed to fetch arhive item:", error)
 
-
-
       state.isErrored = true
       throw error
     } finally {

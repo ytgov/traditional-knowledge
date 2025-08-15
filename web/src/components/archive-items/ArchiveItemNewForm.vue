@@ -47,11 +47,17 @@
           />
         </v-card-text>
 
-        <v-divider thickness="3" class="mb-4"></v-divider>
+        <v-divider
+          thickness="3"
+          class="mb-4"
+        ></v-divider>
 
         <v-card-text>
           <v-row>
-            <v-col cols="12" md="6">
+            <v-col
+              cols="12"
+              md="6"
+            >
               <div class="text-h6 mb-2">Security Level</div>
               <SecurityLevelSelect
                 v-model="createItem.securityLevel"
@@ -61,7 +67,10 @@
               />
             </v-col>
 
-            <v-col cols="12" md="6">
+            <v-col
+              cols="12"
+              md="6"
+            >
               <div class="text-h6 mb-2">Retention type</div>
               <RetentionSelect
                 v-model="retentionId"
@@ -71,7 +80,6 @@
             </v-col>
           </v-row>
         </v-card-text>
-
 
         <template v-if="retentionId">
           <v-card-title>Categories</v-card-title>
@@ -96,10 +104,10 @@
         <v-card-title>Yukon First Nation</v-card-title>
         <v-card-text>
           <p class="mb-4">
-              Please select the Yukon First Nations that this Traditional Knowledge pertains to. You can select as
-              many as are applicable to this item. If it is not listed, please directly type in the
-              name and click enter.
-            </p>
+            Please select the Yukon First Nations that this Traditional Knowledge pertains to. You
+            can select as many as are applicable to this item. If it is not listed, please directly
+            type in the name and click enter.
+          </p>
           <YukonFirstNationsComboBox
             v-model="createItem.yukonFirstNations"
             label="Yukon First Nations"
@@ -186,7 +194,6 @@ const { createItem, isUpdate, save } = useArchiveItemLegacy(ref(null))
 const isLoading = ref(false)
 const retentionId = ref<number | null>(null)
 const form = ref<InstanceType<typeof VForm> | null>(null)
-
 
 onMounted(() => {
   createItem.value = {
