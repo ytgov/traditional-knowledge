@@ -128,7 +128,9 @@ router
   .get(InformationSharingAgreementArchiveItemsController.index)
   .post(InformationSharingAgreementArchiveItemsController.create)
 router
-  .route("/api/information-sharing-agreement-archive-items/:informationSharingAgreementArchiveItemId")
+  .route(
+    "/api/information-sharing-agreement-archive-items/:informationSharingAgreementArchiveItemId"
+  )
   .get(InformationSharingAgreementArchiveItemsController.show)
   .patch(InformationSharingAgreementArchiveItemsController.update)
   .delete(InformationSharingAgreementArchiveItemsController.destroy)

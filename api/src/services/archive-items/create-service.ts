@@ -22,7 +22,14 @@ export class CreateService extends BaseService {
   }
 
   async perform(): Promise<ArchiveItem> {
-    const { title, securityLevel, sharingPurpose, confidentialityReceipt, yukonFirstNations, ...optionalAttributes } = this.attributes
+    const {
+      title,
+      securityLevel,
+      sharingPurpose,
+      confidentialityReceipt,
+      yukonFirstNations,
+      ...optionalAttributes
+    } = this.attributes
 
     const status = ArchiveItemStatus.ACCEPTED
 
@@ -60,13 +67,11 @@ export class CreateService extends BaseService {
       console.log(this.attributes.categoryIds)
       if (!isNil(this.attributes.categoryIds)) {
         for (const categoryId of this.attributes.categoryIds) {
-          await ArchiveItemCategory.create(
-            {
-              archiveItemId: archiveItem.id,
-              categoryId: parseInt(`${categoryId}`),
-              setByUserId: this.currentUser.id,
-            }
-          )
+          await ArchiveItemCategory.create({
+            archiveItemId: archiveItem.id,
+            categoryId: parseInt(`${categoryId}`),
+            setByUserId: this.currentUser.id,
+          })
         }
       }
 

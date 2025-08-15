@@ -5,7 +5,9 @@ import BaseSerializer from "@/serializers/base-serializer"
 import { InformationSharingAgreementAccessGrants, Users } from "@/serializers"
 import { type UserReferenceView } from "@/serializers/users/reference-serializer"
 import { type InformationSharingAgreementAccessGrantShowView } from "@/serializers/information-sharing-agreement-access-grants/show-serializer"
-import CategoryIndexSerializer, { CategoryIndexView } from "@/serializers/categories/index-serializer"
+import CategoryIndexSerializer, {
+  CategoryIndexView,
+} from "@/serializers/categories/index-serializer"
 
 export type ArchiveItemShowView = Pick<
   ArchiveItem,
@@ -70,8 +72,9 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
       ]),
       user: serializedUser,
       informationSharingAgreementAccessGrants: serializedInformationSharingAgreementAccessGrants,
-      categories: this.record.categories?.map((category) => CategoryIndexSerializer.perform(category)),
-      
+      categories: this.record.categories?.map((category) =>
+        CategoryIndexSerializer.perform(category)
+      ),
     }
   }
 }

@@ -102,7 +102,7 @@ export class ArchiveItem extends BaseModel<
   })
   declare securityLevel: SecurityLevel
 
-   @Attribute({
+  @Attribute({
     type: DataTypes.STRING(255),
     get(): string[] | null {
       const yukonFirstNations = this.getDataValue("yukonFirstNations")
@@ -205,7 +205,6 @@ export class ArchiveItem extends BaseModel<
     },
   })
   declare user?: NonAttribute<User>
-
 
   @BelongsToMany(() => Category, {
     through: { model: ArchiveItemCategory },
