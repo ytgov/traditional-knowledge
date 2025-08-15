@@ -43,12 +43,16 @@
           <v-checkbox
             v-model="createItem.confidentialityReceipt"
             label="I confirm that I have received and agreed to the confidentiality terms."
+            class="mt-3"
           />
         </v-card-text>
+
+        <v-divider thickness="3" class="mb-4"></v-divider>
 
         <v-card-text>
           <v-row>
             <v-col cols="12" md="6">
+              <div class="text-h6 mb-2">Security Level</div>
               <SecurityLevelSelect
                 v-model="createItem.securityLevel"
                 label="Security level"
@@ -56,7 +60,9 @@
                 :rules="[rules.required]"
               />
             </v-col>
+
             <v-col cols="12" md="6">
+              <div class="text-h6 mb-2">Retention type</div>
               <RetentionSelect
                 v-model="retentionId"
                 label="Retention"
@@ -65,6 +71,7 @@
             </v-col>
           </v-row>
         </v-card-text>
+
 
         <template v-if="retentionId">
           <v-card-title>Categories</v-card-title>
@@ -88,7 +95,12 @@
 
         <v-card-title>Yukon First Nation</v-card-title>
         <v-card-text>
-          <v-combobox
+          <p class="mb-4">
+              Please select the Yukon First Nations that this Traditional Knowledge pertains to. You can select as
+              many as are applicable to this item. If it is not listed, please directly type in the
+              name and click enter.
+            </p>
+          <YukonFirstNationsComboBox
             v-model="createItem.yukonFirstNations"
             label="Yukon First Nations"
             multiple
@@ -152,6 +164,7 @@ import SecurityLevelSelect from "@/components/archive-items/SecurityLevelSelect.
 import FileDrop from "@/components/common/FileDrop.vue"
 import RetentionSelect from "@/components/retentions/RetentionSelect.vue"
 import CategoryAutoComplete from "@/components/categories/CategoryAutoComplete.vue"
+import YukonFirstNationsComboBox from "@/components/archive-items/YukonFirstNationsComboBox.vue"
 
 const rules = {
   required: (value: string | null) => !!value || "Field is required",
