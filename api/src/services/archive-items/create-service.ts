@@ -64,7 +64,7 @@ export class CreateService extends BaseService {
         yukonFirstNations,
         userId: this.currentUser.id,
       })
-      console.log(this.attributes.categoryIds)
+      
       if (!isNil(this.attributes.categoryIds)) {
         for (const categoryId of this.attributes.categoryIds) {
           await ArchiveItemCategory.create({

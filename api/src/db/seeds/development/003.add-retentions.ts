@@ -1,8 +1,8 @@
 import { Knex } from "knex"
 import { isNil } from "lodash"
 
-import logger from "@/utils/logger"
 import { Retention } from "@/models"
+import logger from "@/utils/logger"
 
 export async function seed(_knex: Knex): Promise<void> {
   const retentions = [

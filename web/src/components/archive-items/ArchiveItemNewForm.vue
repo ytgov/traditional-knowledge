@@ -159,20 +159,22 @@
 </template>
 
 <script setup lang="ts">
-import { isEmpty, isNil } from "lodash"
 import { onMounted, ref, watch } from "vue"
 import { useRouter } from "vue-router"
+import { isEmpty, isNil } from "lodash"
 import { VForm } from "vuetify/components"
 
-import useSnack from "@/use/use-snack"
 import useArchiveItemLegacy from "@/use/use-archive-item-legacy"
+import useSnack from "@/use/use-snack"
 
 import { SecurityLevel } from "@/api/archive-items-api"
-import SecurityLevelSelect from "@/components/archive-items/SecurityLevelSelect.vue"
+
+import CategoryAutoComplete from "@/components/categories/CategoryAutoComplete.vue"
 import FileDrop from "@/components/common/FileDrop.vue"
 import RetentionSelect from "@/components/retentions/RetentionSelect.vue"
-import CategoryAutoComplete from "@/components/categories/CategoryAutoComplete.vue"
+import SecurityLevelSelect from "@/components/archive-items/SecurityLevelSelect.vue"
 import YukonFirstNationsComboBox from "@/components/archive-items/YukonFirstNationsComboBox.vue"
+
 
 const rules = {
   required: (value: string | null) => !!value || "Field is required",

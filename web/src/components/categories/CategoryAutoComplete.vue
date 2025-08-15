@@ -13,8 +13,9 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from "vue"
-import useCategories from "@/use/use-categories"
+
 import { CategoryWhereOptions } from "@/api/categories-api"
+import useCategories from "@/use/use-categories"
 
 const props = defineProps<{
   retentionId?: number | null

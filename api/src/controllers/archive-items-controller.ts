@@ -1,11 +1,11 @@
 import { isNil } from "lodash"
 
-import logger from "@/utils/logger"
 import { ArchiveItem, ArchiveItemAudit } from "@/models"
 import { ArchiveItemsPolicy } from "@/policies"
+import BaseController from "@/controllers/base-controller"
 import { CreateService } from "@/services/archive-items"
 import { IndexSerializer, ShowSerializer } from "@/serializers/archive-items"
-import BaseController from "@/controllers/base-controller"
+import logger from "@/utils/logger"
 
 export class ArchiveItemsController extends BaseController<ArchiveItem> {
   async index() {

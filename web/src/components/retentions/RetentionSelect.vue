@@ -7,8 +7,9 @@
 </template>
 
 <script setup lang="ts">
-import useRetentions from "@/use/use-retentions"
 import { onMounted } from "vue"
+
+import useRetentions from "@/use/use-retentions"
 
 const { items, list } = useRetentions()
 
