@@ -47,9 +47,7 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
     }
 
     if (isUndefined(categories)) {
-      throw new Error(
-        "Expected categories association to be preloaded"
-      )
+      throw new Error("Expected categories association to be preloaded")
     }
 
     const serializedUser = Users.ReferenceSerializer.perform(user)
@@ -57,7 +55,9 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
       InformationSharingAgreementAccessGrants.ShowSerializer.perform(
         informationSharingAgreementAccessGrants
       )
-    const serializedCategories = categories.map((category) => CategoryIndexSerializer.perform(category))
+    const serializedCategories = categories.map((category) =>
+      CategoryIndexSerializer.perform(category)
+    )
     return {
       ...pick(this.record, [
         "id",
@@ -79,7 +79,7 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
       ]),
       user: serializedUser,
       informationSharingAgreementAccessGrants: serializedInformationSharingAgreementAccessGrants,
-      categories: serializedCategories
+      categories: serializedCategories,
     }
   }
 }
