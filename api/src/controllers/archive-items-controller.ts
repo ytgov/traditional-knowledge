@@ -118,7 +118,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
       include: [
         "files",
         "user",
-        "categories",
+        { association: "categories", through: { attributes: [] } },
         {
           association: "informationSharingAgreementAccessGrants",
           through: {

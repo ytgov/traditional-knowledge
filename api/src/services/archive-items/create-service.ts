@@ -111,7 +111,7 @@ export class CreateService extends BaseService {
         include: [
           "files",
           "user",
-          "categories",
+          { association: "categories", through: { attributes: [] } },
           {
             association: "informationSharingAgreementAccessGrants",
             through: {
