@@ -13,8 +13,8 @@ import InformationSharingAgreementAccessGrant from "@/models/information-sharing
 import InformationSharingAgreementAccessGrantSibling from "@/models/information-sharing-agreement-access-grant-sibling"
 import InformationSharingAgreementArchiveItem from "@/models/information-sharing-agreement-archive-item"
 import Source from "@/models/source"
-import Retention from "@/models/retention"
 import Notification from "@/models/notification"
+import Retention from "@/models/retention"
 import User from "@/models/user"
 import UserGroup from "@/models/user-group"
 
