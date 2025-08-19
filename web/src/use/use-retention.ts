@@ -1,9 +1,14 @@
 import { type Ref, reactive, toRefs, unref, watch } from "vue"
 import { isNil } from "lodash"
 
-import retentionsApi, { Retention } from "@/api/retentions-api"
+import retentionsApi, {
+  type Retention,
+  type RetentionWhereOptions,
+  type RetentionFiltersOptions,
+} from "@/api/retentions-api"
 
-export { type Retention }
+export { type Retention, type RetentionWhereOptions, type RetentionFiltersOptions }
+
 
 export function useRetention(id: Ref<number | null | undefined>) {
   const state = reactive<{
