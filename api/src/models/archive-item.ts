@@ -207,7 +207,15 @@ export class ArchiveItem extends BaseModel<
   declare user?: NonAttribute<User>
 
   @BelongsToMany(() => Category, {
-    through: { model: ArchiveItemCategory },
+    through: () => ArchiveItemCategory,
+    foreignKey: "archiveItemId",
+    otherKey: "categoryId",
+    throughAssociations: {
+      fromSource: "archiveItemCategories",
+      toSource: "archiveItem",
+      fromTarget: "archiveItemCategories",
+      toTarget: "category",
+    },
   })
   declare categories?: NonAttribute<Category[]>
 
