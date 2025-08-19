@@ -5,7 +5,6 @@ import retentionsApi, {
 } from "@/api/retentions-api"
 import { reactive, toRefs } from "vue"
 
-// Global state for breadcrumbs
 const state = reactive<{
   items: Retention[]
   totalCount: number
@@ -19,8 +18,6 @@ const state = reactive<{
 })
 
 export function useRetentions() {
-  // state.breadcrumbs = [BASE_CRUMB, ...breadcrumbs]
-
   async function list(
     params: {
       where?: RetentionWhereOptions

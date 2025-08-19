@@ -5,7 +5,6 @@ import categoriesApi, {
 } from "@/api/categories-api"
 import { reactive, toRefs } from "vue"
 
-// Global state for breadcrumbs
 const state = reactive<{
   items: Category[]
   totalCount: number
@@ -19,8 +18,6 @@ const state = reactive<{
 })
 
 export function useCategories() {
-  // state.breadcrumbs = [BASE_CRUMB, ...breadcrumbs]
-
   async function list(
     params: {
       where?: CategoryWhereOptions

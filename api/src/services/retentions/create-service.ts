@@ -38,8 +38,9 @@ export class CreateService extends BaseService {
 
     if (isNil(retentionDate) && isNil(retentionDays)) {
       throw new Error("A retention value is required")
-    } else {
-      if (!isNil(retentionDate) && !isNil(retentionDays)) retentionDays = null
+    }
+    if (!isNil(retentionDate) || !isNil(retentionDays)) {
+      retentionDays = null
     }
 
     const retention = await Retention.create({
