@@ -1,6 +1,6 @@
 <template>
   <v-select
-    :items="items"
+    :items="categories"
     item-value="id"
     item-title="name"
   />
@@ -8,11 +8,7 @@
 
 <script setup lang="ts">
 import useCategories from "@/use/use-categories"
-import { onMounted } from "vue"
 
-const { items, list } = useCategories()
+const { categories } = useCategories()
 
-onMounted(async () => {
-  await list({ perPage: 1000, page: 1 })
-})
 </script>

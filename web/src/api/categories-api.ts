@@ -1,7 +1,11 @@
 import http from "@/api/http-client"
 
-import { type Policy } from "@/api/base-api"
-/** Keep in sync with api/src/models/categories.ts */
+import {
+  type FiltersOptions,
+  type Policy,
+  type QueryOptions,
+  type WhereOptions,
+} from "@/api/base-api"
 
 export type Category = {
   id: number
@@ -11,22 +15,18 @@ export type Category = {
   updatedAt: string
 }
 
-export type CategoryWhereOptions = {
-  name?: string
-}
+export type CategoryWhereOptions = WhereOptions<Category,
+  "name">
 
-export type CategoryFiltersOptions = {
+export type CategoryFiltersOptions = FiltersOptions<{
   search?: string | string[]
-}
+}>
+
+export type CategoryQueryOptions = QueryOptions<CategoryWhereOptions, CategoryFiltersOptions>
 
 export const categoriesApi = {
   async list(
-    params: {
-      where?: CategoryWhereOptions
-      filters?: CategoryFiltersOptions
-      page?: number
-      perPage?: number
-    } = {}
+    params: CategoryQueryOptions = {}
   ): Promise<{
     categories: Category[]
     totalCount: number

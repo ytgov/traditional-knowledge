@@ -1,36 +1,35 @@
+import { type Ref, reactive, ref, toRefs, unref, watch } from "vue"
+
 import categoriesApi, {
   Category,
   CategoryFiltersOptions,
   CategoryWhereOptions,
+  CategoryQueryOptions
 } from "@/api/categories-api"
-import { reactive, toRefs } from "vue"
 
-const state = reactive<{
-  items: Category[]
+export { type Category, type CategoryWhereOptions, type CategoryFiltersOptions, type CategoryQueryOptions }
+
+export function useCategories(
+  queryOptions: Ref<CategoryQueryOptions> = ref({}),
+  { skipWatchIf = () => false }: { skipWatchIf?: () => boolean } = {}
+) {
+  const state = reactive<{
+  categories: Category[]
   totalCount: number
   isLoading: boolean
   isErrored: boolean
 }>({
-  items: [],
+  categories: [],
   totalCount: 0,
   isLoading: false,
   isErrored: false,
 })
-
-export function useCategories() {
-  async function list(
-    params: {
-      where?: CategoryWhereOptions
-      filters?: CategoryFiltersOptions
-      page?: number
-      perPage?: number
-    } = {}
-  ): Promise<void> {
+  async function fetch(): Promise<void> {
     state.isLoading = true
     try {
-      const { categories, totalCount } = await categoriesApi.list(params)
+      const { categories, totalCount } = await categoriesApi.list(unref(queryOptions))
       state.isErrored = false
-      state.items = categories
+      state.categories = categories
       state.totalCount = totalCount
     } catch (error) {
       console.error("Failed to fetch status:", error)
@@ -41,9 +40,20 @@ export function useCategories() {
     }
   }
 
+  watch(
+    () => [skipWatchIf(), unref(queryOptions)],
+    async ([skip]) => {
+      if (skip) return
+
+      await fetch()
+    },
+    { deep: true, immediate: true }
+  )
+
   return {
     ...toRefs(state),
-    list,
+    fetch,
+    refresh: fetch,
   }
 }
 
