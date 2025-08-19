@@ -75,7 +75,6 @@
           />
         </v-card-text>
 
-
         <v-divider
           thickness="3"
           class="mb-4"
@@ -121,7 +120,6 @@
           -->
           </v-row>
         </v-card-text>
-
 
         <v-card-title>Categories and Tags</v-card-title>
         <v-card-text>
@@ -190,7 +188,6 @@ import FileDrop from "@/components/common/FileDrop.vue"
 import RetentionSelect from "@/components/retentions/RetentionSelect.vue"
 import SecurityLevelSelect from "@/components/archive-items/SecurityLevelSelect.vue"
 import YukonFirstNationsComboBox from "@/components/archive-items/YukonFirstNationsComboBox.vue"
-
 
 const rules = {
   required: (value: string | null) => !!value || "Field is required",

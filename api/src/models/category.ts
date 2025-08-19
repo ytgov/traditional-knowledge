@@ -29,7 +29,6 @@ export class Category extends BaseModel<
   @AutoIncrement
   declare id: CreationOptional<number>
 
-
   @Attribute(DataTypes.STRING(255))
   @NotNull
   @Index({ unique: true })
