@@ -54,7 +54,6 @@
             chips
             clearable
             variant="outlined"
-            :rules="[rules.required]"
           />
         </v-card-text>
 
@@ -66,7 +65,6 @@
             label="Sharing Purpose"
             rows="2"
             variant="outlined"
-            :rules="[rules.required]"
           />
           <v-checkbox
             v-model="createItem.confidentialityReceipt"
@@ -124,10 +122,8 @@
         <v-card-title>Categories and Tags</v-card-title>
         <v-card-text>
           <p class="mb-4">
-            Categories and Tags are used as filter criteria to find items in the archive as well as
-            determine who can see the items. You can select as many of each as are applicable to
-            this item. Additional categories potentially increase the number of people that can see
-            this information, but also make it more accessible in the future.
+            Categories and Tags are used as filter criteria to find items. You can select as many of
+            each as are applicable to this item.
           </p>
           <CategorySelect
             v-model="createItem.categoryIds"
@@ -173,7 +169,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue"
+import { onMounted, ref } from "vue"
 import { useRouter } from "vue-router"
 import { isEmpty, isNil } from "lodash"
 import { VForm } from "vuetify/components"
@@ -216,18 +212,12 @@ onMounted(() => {
     securityLevel: SecurityLevel.LOW,
     description: null,
     summary: null,
-    sharingPurpose: "",
+    sharingPurpose: null,
     confidentialityReceipt: false,
-    yukonFirstNations: [],
+    yukonFirstNations: null,
     tags: [],
     files: [],
     categoryIds: [],
-  }
-})
-
-watch(retentionId, () => {
-  if (retentionId.value) {
-    if (createItem.value) createItem.value.categoryIds = []
   }
 })
 

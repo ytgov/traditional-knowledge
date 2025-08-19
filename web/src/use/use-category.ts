@@ -7,9 +7,7 @@ import categoriesApi, {
   CategoryWhereOptions,
 } from "@/api/categories-api"
 
-
 export { type Category, type CategoryWhereOptions, type CategoryFiltersOptions }
-
 
 export function useCategory(id: Ref<number | null | undefined>) {
   const state = reactive<{

@@ -55,7 +55,6 @@ export class Category extends BaseModel<
     through: () => ArchiveItemCategory,
     foreignKey: "categoryId",
     otherKey: "archiveItemId",
-    inverse: "categories",
     throughAssociations: {
       fromSource: "archiveItemCategories",
       toSource: "category",

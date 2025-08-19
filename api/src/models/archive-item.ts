@@ -69,8 +69,7 @@ export class ArchiveItem extends BaseModel<
   declare title: string
 
   @Attribute(DataTypes.STRING(2000))
-  @NotNull
-  declare sharingPurpose: string
+  declare sharingPurpose: string | null
 
   @Attribute(DataTypes.BOOLEAN)
   @NotNull
@@ -104,14 +103,14 @@ export class ArchiveItem extends BaseModel<
 
   @Attribute({
     type: DataTypes.STRING(255),
-    get(): string[] {
+    get(): string[] | null {
       const yukonFirstNations = this.getDataValue("yukonFirstNations")
       if (isNil(yukonFirstNations) || isEmpty(yukonFirstNations)) {
         return []
       }
       return yukonFirstNations.split(",")
     },
-    set(value: string[]) {
+    set(value: string[] | null) {
       if (value === null) {
         this.setDataValue("yukonFirstNations", null)
         return
@@ -120,7 +119,7 @@ export class ArchiveItem extends BaseModel<
       this.setDataValue("yukonFirstNations", values)
     },
   })
-  declare yukonFirstNations: string[]
+  declare yukonFirstNations: string[] | null
 
   @Attribute({
     type: DataTypes.STRING(255),

@@ -4,26 +4,31 @@ import retentionsApi, {
   Retention,
   RetentionWhereOptions,
   RetentionFiltersOptions,
-  RetentionQueryOptions
+  RetentionQueryOptions,
 } from "@/api/retentions-api"
 
-export { type Retention, type RetentionWhereOptions, type RetentionFiltersOptions, type RetentionQueryOptions }
+export {
+  type Retention,
+  type RetentionWhereOptions,
+  type RetentionFiltersOptions,
+  type RetentionQueryOptions,
+}
 
 export function useRetentions(
   queryOptions: Ref<RetentionQueryOptions> = ref({}),
   { skipWatchIf = () => false }: { skipWatchIf?: () => boolean } = {}
 ) {
   const state = reactive<{
-  retentions: Retention[]
-  totalCount: number
-  isLoading: boolean
-  isErrored: boolean
-}>({
-  retentions: [],
-  totalCount: 0,
-  isLoading: false,
-  isErrored: false,
-})
+    retentions: Retention[]
+    totalCount: number
+    isLoading: boolean
+    isErrored: boolean
+  }>({
+    retentions: [],
+    totalCount: 0,
+    isLoading: false,
+    isErrored: false,
+  })
   async function fetch(): Promise<void> {
     state.isLoading = true
     try {

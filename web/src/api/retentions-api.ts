@@ -1,11 +1,10 @@
 import http from "@/api/http-client"
-import {   
+import {
   type FiltersOptions,
   type Policy,
   type QueryOptions,
   type WhereOptions,
 } from "@/api/base-api"
-
 
 export type Retention = {
   id: number
@@ -28,9 +27,7 @@ export type RetentionFiltersOptions = FiltersOptions<{
 }>
 
 export const retentionsApi = {
-  async list(
-    params: RetentionQueryOptions = {}
-  ): Promise<{
+  async list(params: RetentionQueryOptions = {}): Promise<{
     retentions: Retention[]
     totalCount: number
   }> {

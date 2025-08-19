@@ -22,14 +22,7 @@ export class CreateService extends BaseService {
   }
 
   async perform(): Promise<ArchiveItem> {
-    const {
-      title,
-      securityLevel,
-      sharingPurpose,
-      confidentialityReceipt,
-      yukonFirstNations,
-      ...optionalAttributes
-    } = this.attributes
+    const { title, securityLevel, confidentialityReceipt, ...optionalAttributes } = this.attributes
 
     const status = ArchiveItemStatus.ACCEPTED
 
@@ -42,14 +35,8 @@ export class CreateService extends BaseService {
     if (isNil(securityLevel)) {
       throw new Error("Security level is required")
     }
-    if (isNil(sharingPurpose)) {
-      throw new Error("Sharing Purpose is required")
-    }
     if (isNil(confidentialityReceipt)) {
       throw new Error("Confidentiality Receipt is required")
-    }
-    if (isNil(yukonFirstNations)) {
-      throw new Error("Sharing Purpose is required")
     }
 
     return db.transaction(async () => {
@@ -59,9 +46,7 @@ export class CreateService extends BaseService {
         title,
         status,
         securityLevel,
-        sharingPurpose,
         confidentialityReceipt: Boolean(confidentialityReceipt),
-        yukonFirstNations,
         userId: this.currentUser.id,
       })
 

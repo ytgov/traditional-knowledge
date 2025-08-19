@@ -4,26 +4,31 @@ import categoriesApi, {
   Category,
   CategoryFiltersOptions,
   CategoryWhereOptions,
-  CategoryQueryOptions
+  CategoryQueryOptions,
 } from "@/api/categories-api"
 
-export { type Category, type CategoryWhereOptions, type CategoryFiltersOptions, type CategoryQueryOptions }
+export {
+  type Category,
+  type CategoryWhereOptions,
+  type CategoryFiltersOptions,
+  type CategoryQueryOptions,
+}
 
 export function useCategories(
   queryOptions: Ref<CategoryQueryOptions> = ref({}),
   { skipWatchIf = () => false }: { skipWatchIf?: () => boolean } = {}
 ) {
   const state = reactive<{
-  categories: Category[]
-  totalCount: number
-  isLoading: boolean
-  isErrored: boolean
-}>({
-  categories: [],
-  totalCount: 0,
-  isLoading: false,
-  isErrored: false,
-})
+    categories: Category[]
+    totalCount: number
+    isLoading: boolean
+    isErrored: boolean
+  }>({
+    categories: [],
+    totalCount: 0,
+    isLoading: false,
+    isErrored: false,
+  })
   async function fetch(): Promise<void> {
     state.isLoading = true
     try {

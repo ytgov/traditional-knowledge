@@ -9,7 +9,6 @@ import retentionsApi, {
 
 export { type Retention, type RetentionWhereOptions, type RetentionFiltersOptions }
 
-
 export function useRetention(id: Ref<number | null | undefined>) {
   const state = reactive<{
     item: Retention | null

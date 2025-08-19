@@ -29,9 +29,9 @@ export type ArchiveItem = {
   id: number
   title: string
   userId: number | null
-  sharingPurpose: string
+  sharingPurpose: string | null
   confidentialityReceipt: boolean
-  yukonFirstNations: string[]
+  yukonFirstNations: string[] | null
   description: string | null
   summary: string | null
   status: ArchiveItemStatus
@@ -54,9 +54,9 @@ export type ArchiveItemCreate = {
   title: string
   description: string | null
   summary: string | null
-  sharingPurpose: string
+  sharingPurpose: string | null
   confidentialityReceipt: boolean
-  yukonFirstNations: string[]
+  yukonFirstNations: string[] | null
   securityLevel: SecurityLevel
   tags: string[] | null
 

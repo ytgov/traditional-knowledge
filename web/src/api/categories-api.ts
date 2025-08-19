@@ -15,8 +15,7 @@ export type Category = {
   updatedAt: string
 }
 
-export type CategoryWhereOptions = WhereOptions<Category,
-  "name">
+export type CategoryWhereOptions = WhereOptions<Category, "name">
 
 export type CategoryFiltersOptions = FiltersOptions<{
   search?: string | string[]
@@ -25,9 +24,7 @@ export type CategoryFiltersOptions = FiltersOptions<{
 export type CategoryQueryOptions = QueryOptions<CategoryWhereOptions, CategoryFiltersOptions>
 
 export const categoriesApi = {
-  async list(
-    params: CategoryQueryOptions = {}
-  ): Promise<{
+  async list(params: CategoryQueryOptions = {}): Promise<{
     categories: Category[]
     totalCount: number
   }> {

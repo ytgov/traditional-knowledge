@@ -10,5 +10,4 @@
 import useRetentions from "@/use/use-retentions"
 
 const { retentions } = useRetentions()
-
 </script>
