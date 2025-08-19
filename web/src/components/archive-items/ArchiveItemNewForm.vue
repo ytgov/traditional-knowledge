@@ -40,6 +40,24 @@
           </v-row>
         </v-card-text>
 
+        <v-card-title>Yukon First Nation</v-card-title>
+        <v-card-text>
+          <p class="mb-4">
+            Please select the Yukon First Nations that this Traditional Knowledge pertains to. You
+            can select as many as are applicable to this item. If it is not listed, please directly
+            type in the name and click enter.
+          </p>
+          <YukonFirstNationsComboBox
+            v-model="createItem.yukonFirstNations"
+            label="Yukon First Nations"
+            multiple
+            chips
+            clearable
+            variant="outlined"
+            :rules="[rules.required]"
+          />
+        </v-card-text>
+
         <v-card-title>Sharing Purpose</v-card-title>
         <v-card-text>
           <p class="mb-3">For what purpose this traditional knowledge is shared?</p>
@@ -56,6 +74,7 @@
             class="mt-3"
           />
         </v-card-text>
+
 
         <v-divider
           thickness="3"
@@ -101,24 +120,6 @@
             </v-col>
           -->
           </v-row>
-        </v-card-text>
-        
-        <v-card-title>Yukon First Nation</v-card-title>
-        <v-card-text>
-          <p class="mb-4">
-            Please select the Yukon First Nations that this Traditional Knowledge pertains to. You
-            can select as many as are applicable to this item. If it is not listed, please directly
-            type in the name and click enter.
-          </p>
-          <YukonFirstNationsComboBox
-            v-model="createItem.yukonFirstNations"
-            label="Yukon First Nations"
-            multiple
-            chips
-            clearable
-            variant="outlined"
-            :rules="[rules.required]"
-          />
         </v-card-text>
 
 
