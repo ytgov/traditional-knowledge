@@ -246,7 +246,6 @@ async function saveWrapper() {
 
   isLoading.value = true
   try {
-    console.log("Saving item", createItem.value)
     await save()
 
     if (isUpdate) snack.success("Item saved.")
