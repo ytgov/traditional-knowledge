@@ -24,7 +24,6 @@ export class CategoriesController extends BaseController<Category> {
         where,
         limit: this.pagination.limit,
         offset: this.pagination.offset,
-        include: ["retention"],
       })
       const serializedCategories = IndexSerializer.perform(categories)
       return this.cacheAndSendJson({

@@ -5,13 +5,13 @@ import BaseSerializer from "@/serializers/base-serializer"
 
 export type CategoryIndexView = Pick<
   Category,
-  "id" | "name" | "description" | "retentionId" | "retention"
+  "id" | "name" | "description"
 >
 
 export class IndexSerializer extends BaseSerializer<Category> {
   perform(): CategoryIndexView {
     return {
-      ...pick(this.record, ["id", "name", "description", "retentionId", "retention"]),
+      ...pick(this.record, ["id", "name", "description"]),
     }
   }
 }

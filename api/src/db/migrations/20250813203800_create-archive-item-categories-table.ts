@@ -6,7 +6,6 @@ export async function up(knex: Knex): Promise<void> {
     table.integer("archive_item_id").notNullable().references("id").inTable("archive_items")
     table.integer("category_id").notNullable().references("id").inTable("categories")
 
-    table.integer("set_by_source_id").nullable().references("id").inTable("sources")
     table.integer("set_by_user_id").nullable().references("id").inTable("users")
 
     table

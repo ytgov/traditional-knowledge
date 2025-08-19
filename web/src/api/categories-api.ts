@@ -1,25 +1,18 @@
 import http from "@/api/http-client"
 
 import { type Policy } from "@/api/base-api"
-import { Retention } from "@/api/retentions-api"
-
 /** Keep in sync with api/src/models/categories.ts */
 
 export type Category = {
   id: number
   name: string
   description: string | null
-  retentionId: number
   createdAt: string
   updatedAt: string
-
-  // Associations
-  retention: Retention | null
 }
 
 export type CategoryWhereOptions = {
   name?: string
-  retentionId?: number
 }
 
 export type CategoryFiltersOptions = {

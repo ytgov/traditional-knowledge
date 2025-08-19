@@ -33,9 +33,6 @@ export class ArchiveItemCategory extends BaseModel<
   declare categoryId: number
 
   @Attribute(DataTypes.INTEGER)
-  declare setBySourceId: number | null
-
-  @Attribute(DataTypes.INTEGER)
   declare setByUserId: number | null
 
   @Attribute(DataTypes.DATE(0))

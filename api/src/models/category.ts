@@ -9,7 +9,6 @@ import {
 import {
   Attribute,
   AutoIncrement,
-  BelongsTo,
   BelongsToMany,
   Default,
   Index,
@@ -18,7 +17,6 @@ import {
 } from "@sequelize/core/decorators-legacy"
 
 import BaseModel from "@/models/base-model"
-import Retention from "./retention"
 import ArchiveItem from "./archive-item"
 import ArchiveItemCategory from "./archive-item-category"
 
@@ -31,9 +29,6 @@ export class Category extends BaseModel<
   @AutoIncrement
   declare id: CreationOptional<number>
 
-  @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare retentionId: number
 
   @Attribute(DataTypes.STRING(255))
   @NotNull
@@ -57,15 +52,6 @@ export class Category extends BaseModel<
   declare deletedAt: Date | null
 
   // Associations
-  @BelongsTo(() => Retention, {
-    foreignKey: "retentionId",
-    inverse: {
-      as: "retentions",
-      type: "hasMany",
-    },
-  })
-  declare retention?: NonAttribute<Retention>
-
   @BelongsToMany(() => ArchiveItem, {
     through: { model: ArchiveItemCategory },
   })
