@@ -12,13 +12,23 @@
           <v-row>
             <v-col
               cols="12"
-              md="12"
+              md="8"
             >
               <v-text-field
                 v-model="createItem.title"
                 label="Title"
                 :rules="[rules.required]"
               ></v-text-field>
+            </v-col>
+            <v-col
+              cols="12"
+              md="4"
+            >
+              <SecurityLevelSelect
+                v-model="createItem.securityLevel"
+                :rules="[rules.required]"
+                label="Security level"
+              />
             </v-col>
             <v-col cols="12">
               <v-textarea
@@ -52,55 +62,47 @@
           class="mb-4"
         ></v-divider>
 
+        <v-card-title>Retention</v-card-title>
         <v-card-text>
           <v-row>
             <v-col
               cols="12"
-              md="6"
+              md="4"
             >
-              <div class="text-h6 mb-2">Security Level</div>
-              <SecurityLevelSelect
-                v-model="createItem.securityLevel"
-                label="Security level"
-                variant="outlined"
-                :rules="[rules.required]"
-              />
-            </v-col>
-
-            <v-col
-              cols="12"
-              md="6"
-            >
-              <div class="text-h6 mb-2">Retention type</div>
               <RetentionSelect
                 v-model="retentionId"
-                label="Retention"
-                variant="outlined"
+                :rules="[rules.required]"
+                return-object
+                label="Policy"
               />
             </v-col>
+            <!--<v-col
+              v-if="retentionId"
+              cols="12"
+              md="4"
+              ><v-text-field
+                :model-value="formatDate(createItem.calculatedExpireDate)"
+                label="Expires on"
+                append-inner-icon="mdi-lock"
+                readonly
+              />
+            </v-col>
+            <v-col
+              v-if="retentionId"
+              cols="12"
+              md="4"
+            >
+              <v-text-field
+                :model-value="createItem.expireAction"
+                label="When item expires"
+                append-inner-icon="mdi-lock"
+                readonly
+              />
+            </v-col>
+          -->
           </v-row>
         </v-card-text>
-
-        <template v-if="retentionId">
-          <v-card-title>Categories</v-card-title>
-          <v-card-text>
-            <p class="mb-4">
-              Categories are used as filter criteria to find items in the archive. You can select as
-              many as are applicable to this item.
-            </p>
-            <CategoryAutoComplete
-              v-model="createItem.categoryIds"
-              :retention-id="retentionId"
-              label="Categories"
-              multiple
-              chips
-              clearable
-              variant="outlined"
-              :rules="[rules.required]"
-            />
-          </v-card-text>
-        </template>
-
+        
         <v-card-title>Yukon First Nation</v-card-title>
         <v-card-text>
           <p class="mb-4">
@@ -119,12 +121,25 @@
           />
         </v-card-text>
 
-        <v-card-title>Tags</v-card-title>
+
+        <v-card-title>Categories and Tags</v-card-title>
         <v-card-text>
           <p class="mb-4">
-            Tags are used as filter criteria to find items in the archive. You can select as many as
-            are applicable to this item.
+            Categories and Tags are used as filter criteria to find items in the archive as well as
+            determine who can see the items. You can select as many of each as are applicable to
+            this item. Additional categories potentially increase the number of people that can see
+            this information, but also make it more accessible in the future.
           </p>
+          <CategorySelect
+            v-model="createItem.categoryIds"
+            :rules="[rules.required]"
+            :hide-details="false"
+            label="Categories"
+            hide-selected
+            clearable
+            multiple
+            chips
+          />
           <v-combobox
             v-model="createItem.tags"
             label="Tags"
@@ -169,7 +184,7 @@ import useSnack from "@/use/use-snack"
 
 import { SecurityLevel } from "@/api/archive-items-api"
 
-import CategoryAutoComplete from "@/components/categories/CategoryAutoComplete.vue"
+import CategorySelect from "@/components/categories/CategorySelect.vue"
 import FileDrop from "@/components/common/FileDrop.vue"
 import RetentionSelect from "@/components/retentions/RetentionSelect.vue"
 import SecurityLevelSelect from "@/components/archive-items/SecurityLevelSelect.vue"
