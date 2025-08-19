@@ -1,36 +1,35 @@
+import { type Ref, reactive, toRefs, ref, unref, watch } from "vue"
+
 import retentionsApi, {
   Retention,
   RetentionWhereOptions,
   RetentionFiltersOptions,
+  RetentionQueryOptions
 } from "@/api/retentions-api"
-import { reactive, toRefs } from "vue"
 
-const state = reactive<{
-  items: Retention[]
+export { type Retention, type RetentionWhereOptions, type RetentionFiltersOptions, type RetentionQueryOptions }
+
+export function useRetentions(
+  queryOptions: Ref<RetentionQueryOptions> = ref({}),
+  { skipWatchIf = () => false }: { skipWatchIf?: () => boolean } = {}
+) {
+  const state = reactive<{
+  retentions: Retention[]
   totalCount: number
   isLoading: boolean
   isErrored: boolean
 }>({
-  items: [],
+  retentions: [],
   totalCount: 0,
   isLoading: false,
   isErrored: false,
 })
-
-export function useRetentions() {
-  async function list(
-    params: {
-      where?: RetentionWhereOptions
-      filters?: RetentionFiltersOptions
-      page?: number
-      perPage?: number
-    } = {}
-  ): Promise<void> {
+  async function fetch(): Promise<void> {
     state.isLoading = true
     try {
-      const { retentions, totalCount } = await retentionsApi.list(params)
+      const { retentions, totalCount } = await retentionsApi.list(unref(queryOptions))
       state.isErrored = false
-      state.items = retentions
+      state.retentions = retentions
       state.totalCount = totalCount
     } catch (error) {
       console.error("Failed to fetch status:", error)
@@ -41,9 +40,20 @@ export function useRetentions() {
     }
   }
 
+  watch(
+    () => [skipWatchIf(), unref(queryOptions)],
+    async ([skip]) => {
+      if (skip) return
+
+      await fetch()
+    },
+    { deep: true, immediate: true }
+  )
+
   return {
     ...toRefs(state),
-    list,
+    fetch,
+    refresh: fetch,
   }
 }
 

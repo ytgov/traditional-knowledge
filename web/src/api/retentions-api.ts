@@ -1,7 +1,11 @@
 import http from "@/api/http-client"
-import { type Policy } from "@/api/base-api"
+import {   
+  type FiltersOptions,
+  type Policy,
+  type QueryOptions,
+  type WhereOptions,
+} from "@/api/base-api"
 
-/** Keep in sync with api/src/models/retention.ts */
 
 export type Retention = {
   id: number
@@ -14,27 +18,18 @@ export type Retention = {
   retentionDate: Date | null
   createdAt: string
   updatedAt: string
-
-  // Associations
-  // add as needed
 }
 
-export type RetentionWhereOptions = {
-  name?: string
-}
+export type RetentionWhereOptions = WhereOptions<Retention, "name">
+export type RetentionQueryOptions = QueryOptions<RetentionWhereOptions, RetentionFiltersOptions>
 
-export type RetentionFiltersOptions = {
+export type RetentionFiltersOptions = FiltersOptions<{
   search?: string | string[]
-}
+}>
 
 export const retentionsApi = {
   async list(
-    params: {
-      where?: RetentionWhereOptions
-      filters?: RetentionFiltersOptions
-      page?: number
-      perPage?: number
-    } = {}
+    params: RetentionQueryOptions = {}
   ): Promise<{
     retentions: Retention[]
     totalCount: number
