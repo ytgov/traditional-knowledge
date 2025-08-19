@@ -104,14 +104,14 @@ export class ArchiveItem extends BaseModel<
 
   @Attribute({
     type: DataTypes.STRING(255),
-    get(): string[] | null {
+    get(): string[] {
       const yukonFirstNations = this.getDataValue("yukonFirstNations")
       if (isNil(yukonFirstNations) || isEmpty(yukonFirstNations)) {
         return []
       }
       return yukonFirstNations.split(",")
     },
-    set(value: string[] | null) {
+    set(value: string[]) {
       if (value === null) {
         this.setDataValue("yukonFirstNations", null)
         return
@@ -120,7 +120,7 @@ export class ArchiveItem extends BaseModel<
       this.setDataValue("yukonFirstNations", values)
     },
   })
-  declare yukonFirstNations: string[] | null
+  declare yukonFirstNations: string[]
 
   @Attribute({
     type: DataTypes.STRING(255),
