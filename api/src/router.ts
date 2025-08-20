@@ -21,6 +21,7 @@ import {
   ArchiveItemAuditsController,
   ArchiveItemFilesController,
   ArchiveItemsController,
+  CategoriesController,
   CurrentUserController,
   GroupsController,
   InformationSharingAgreementAccessGrantsController,
@@ -28,6 +29,7 @@ import {
   InformationSharingAgreementsController,
   NotificationsController,
   Notifications,
+  RetentionsController,
   UserGroupsController,
   UsersController,
 } from "@/controllers"
@@ -63,6 +65,21 @@ router
   .get(UsersController.show)
   .patch(UsersController.update)
   .delete(UsersController.destroy)
+
+router.route("/api/retentions").get(RetentionsController.index).post(RetentionsController.create)
+router
+  .route("/api/retentions/:id")
+  .get(RetentionsController.show)
+  .patch(RetentionsController.update)
+  .delete(RetentionsController.destroy)
+
+router.route("/api/categories").get(CategoriesController.index).post(CategoriesController.create)
+
+router
+  .route("/api/categories/:id")
+  .get(CategoriesController.show)
+  .patch(CategoriesController.update)
+  .delete(CategoriesController.destroy)
 
 router
   .route("/api/archive-items")
@@ -111,7 +128,9 @@ router
   .get(InformationSharingAgreementArchiveItemsController.index)
   .post(InformationSharingAgreementArchiveItemsController.create)
 router
-  .route("/api/information-sharing-agreement-archive-items/:informationSharingAgreementArchiveItemId")
+  .route(
+    "/api/information-sharing-agreement-archive-items/:informationSharingAgreementArchiveItemId"
+  )
   .get(InformationSharingAgreementArchiveItemsController.show)
   .patch(InformationSharingAgreementArchiveItemsController.update)
   .delete(InformationSharingAgreementArchiveItemsController.destroy)

@@ -25,6 +25,8 @@ import InformationSharingAgreementArchiveItem from "@/models/information-sharing
 import User from "@/models/user"
 import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
 import ArchiveItemInformationSharingAgreementAccessGrant from "@/models/archive-item-information-sharing-agreement-access-grant"
+import Category from "@/models/category"
+import ArchiveItemCategory from "@/models/archive-item-category"
 
 /** Keep in sync with web/src/api/users-api.ts */
 export enum SecurityLevel {
@@ -66,6 +68,13 @@ export class ArchiveItem extends BaseModel<
   @NotNull
   declare title: string
 
+  @Attribute(DataTypes.STRING(2000))
+  declare sharingPurpose: string | null
+
+  @Attribute(DataTypes.BOOLEAN)
+  @NotNull
+  declare confidentialityReceipt: boolean
+
   @Attribute(DataTypes.TEXT)
   declare description: string | null
 
@@ -91,6 +100,26 @@ export class ArchiveItem extends BaseModel<
     },
   })
   declare securityLevel: SecurityLevel
+
+  @Attribute({
+    type: DataTypes.STRING(255),
+    get(): string[] | null {
+      const yukonFirstNations = this.getDataValue("yukonFirstNations")
+      if (isNil(yukonFirstNations) || isEmpty(yukonFirstNations)) {
+        return []
+      }
+      return yukonFirstNations.split(",")
+    },
+    set(value: string[] | null) {
+      if (value === null) {
+        this.setDataValue("yukonFirstNations", null)
+        return
+      }
+      const values = value.join(",")
+      this.setDataValue("yukonFirstNations", values)
+    },
+  })
+  declare yukonFirstNations: string[] | null
 
   @Attribute({
     type: DataTypes.STRING(255),
@@ -175,6 +204,19 @@ export class ArchiveItem extends BaseModel<
     },
   })
   declare user?: NonAttribute<User>
+
+  @BelongsToMany(() => Category, {
+    through: () => ArchiveItemCategory,
+    foreignKey: "archiveItemId",
+    otherKey: "categoryId",
+    throughAssociations: {
+      fromSource: "archiveItemCategories",
+      toSource: "archiveItem",
+      fromTarget: "archiveItemCategories",
+      toTarget: "category",
+    },
+  })
+  declare categories?: NonAttribute<Category[]>
 
   @HasMany(() => InformationSharingAgreementArchiveItem, {
     foreignKey: "archiveItemId",

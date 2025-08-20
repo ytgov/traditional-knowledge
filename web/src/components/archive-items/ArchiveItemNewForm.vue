@@ -12,13 +12,23 @@
           <v-row>
             <v-col
               cols="12"
-              md="12"
+              md="8"
             >
               <v-text-field
                 v-model="createItem.title"
                 label="Title"
                 :rules="[rules.required]"
               ></v-text-field>
+            </v-col>
+            <v-col
+              cols="12"
+              md="4"
+            >
+              <SecurityLevelSelect
+                v-model="createItem.securityLevel"
+                :rules="[rules.required]"
+                label="Security level"
+              />
             </v-col>
             <v-col cols="12">
               <v-textarea
@@ -30,12 +40,101 @@
           </v-row>
         </v-card-text>
 
-        <v-card-title>Tags</v-card-title>
+        <v-card-title>Yukon First Nation</v-card-title>
         <v-card-text>
           <p class="mb-4">
-            Tags are used as filter criteria to find items in the archive. You can select as many as
-            are applicable to this item.
+            Please select the Yukon First Nations that this Traditional Knowledge pertains to. You
+            can select as many as are applicable to this item. If it is not listed, please directly
+            type in the name and click enter.
           </p>
+          <YukonFirstNationsComboBox
+            v-model="createItem.yukonFirstNations"
+            label="Yukon First Nations"
+            multiple
+            chips
+            clearable
+            variant="outlined"
+          />
+        </v-card-text>
+
+        <v-card-title>Sharing Purpose</v-card-title>
+        <v-card-text>
+          <p class="mb-3">For what purpose this traditional knowledge is shared?</p>
+          <v-textarea
+            v-model="createItem.sharingPurpose"
+            label="Sharing Purpose"
+            rows="2"
+            variant="outlined"
+          />
+          <v-checkbox
+            v-model="createItem.confidentialityReceipt"
+            label="I confirm that I have received and agreed to the confidentiality terms."
+            class="mt-3"
+          />
+        </v-card-text>
+
+        <v-divider
+          thickness="3"
+          class="mb-4"
+        ></v-divider>
+
+        <v-card-title>Retention</v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col
+              cols="12"
+              md="4"
+            >
+              <RetentionSelect
+                v-model="retentionId"
+                :rules="[rules.required]"
+                return-object
+                label="Policy"
+              />
+            </v-col>
+            <!--<v-col
+              v-if="retentionId"
+              cols="12"
+              md="4"
+              ><v-text-field
+                :model-value="formatDate(createItem.calculatedExpireDate)"
+                label="Expires on"
+                append-inner-icon="mdi-lock"
+                readonly
+              />
+            </v-col>
+            <v-col
+              v-if="retentionId"
+              cols="12"
+              md="4"
+            >
+              <v-text-field
+                :model-value="createItem.expireAction"
+                label="When item expires"
+                append-inner-icon="mdi-lock"
+                readonly
+              />
+            </v-col>
+          -->
+          </v-row>
+        </v-card-text>
+
+        <v-card-title>Categories and Tags</v-card-title>
+        <v-card-text>
+          <p class="mb-4">
+            Categories and Tags are used as filter criteria to find items. You can select as many of
+            each as are applicable to this item.
+          </p>
+          <CategorySelect
+            v-model="createItem.categoryIds"
+            :rules="[rules.required]"
+            :hide-details="false"
+            label="Categories"
+            hide-selected
+            clearable
+            multiple
+            chips
+          />
           <v-combobox
             v-model="createItem.tags"
             label="Tags"
@@ -70,17 +169,21 @@
 </template>
 
 <script setup lang="ts">
-import { isEmpty, isNil } from "lodash"
 import { onMounted, ref } from "vue"
 import { useRouter } from "vue-router"
+import { isEmpty, isNil } from "lodash"
 import { VForm } from "vuetify/components"
 
-import useSnack from "@/use/use-snack"
 import useArchiveItemLegacy from "@/use/use-archive-item-legacy"
+import useSnack from "@/use/use-snack"
 
 import { SecurityLevel } from "@/api/archive-items-api"
 
+import CategorySelect from "@/components/categories/CategorySelect.vue"
 import FileDrop from "@/components/common/FileDrop.vue"
+import RetentionSelect from "@/components/retentions/RetentionSelect.vue"
+import SecurityLevelSelect from "@/components/archive-items/SecurityLevelSelect.vue"
+import YukonFirstNationsComboBox from "@/components/archive-items/YukonFirstNationsComboBox.vue"
 
 const rules = {
   required: (value: string | null) => !!value || "Field is required",
@@ -100,6 +203,7 @@ const router = useRouter()
 const { createItem, isUpdate, save } = useArchiveItemLegacy(ref(null))
 
 const isLoading = ref(false)
+const retentionId = ref<number | null>(null)
 const form = ref<InstanceType<typeof VForm> | null>(null)
 
 onMounted(() => {
@@ -108,8 +212,12 @@ onMounted(() => {
     securityLevel: SecurityLevel.LOW,
     description: null,
     summary: null,
+    sharingPurpose: null,
+    confidentialityReceipt: false,
+    yukonFirstNations: null,
     tags: [],
     files: [],
+    categoryIds: [],
   }
 })
 
@@ -134,6 +242,7 @@ async function saveWrapper() {
     else snack.success("Item created.")
 
     router.push({ name: "archive-items/ArchiveItemListPage" })
+    retentionId.value = null
   } catch (error) {
     snack.error("Save failed!")
     throw error
