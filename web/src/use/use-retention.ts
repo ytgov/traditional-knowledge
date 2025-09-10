@@ -1,26 +1,28 @@
 import { type Ref, reactive, toRefs, unref, watch } from "vue"
 import { isNil } from "lodash"
 
-import archiveItemsApi, { type ArchiveItemCreate, type ArchiveItem } from "@/api/archive-items-api"
+import retentionsApi, {
+  type Retention,
+  type RetentionWhereOptions,
+  type RetentionFiltersOptions,
+} from "@/api/retentions-api"
 
-export { type ArchiveItem }
+export { type Retention, type RetentionWhereOptions, type RetentionFiltersOptions }
 
-export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
+export function useRetention(id: Ref<number | null | undefined>) {
   const state = reactive<{
-    item: ArchiveItem | null
-    createItem: ArchiveItemCreate | null
+    item: Retention | null
     isUpdate: boolean
     isLoading: boolean
     isErrored: boolean
   }>({
     item: null,
-    createItem: null,
     isUpdate: !isNil(id.value),
     isLoading: false,
     isErrored: false,
   })
 
-  async function fetch(): Promise<ArchiveItem> {
+  async function fetch(): Promise<Retention> {
     const staticId = unref(id)
     if (isNil(staticId)) {
       throw new Error("id is required")
@@ -28,13 +30,12 @@ export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
 
     state.isLoading = true
     try {
-      const { archiveItem } = await archiveItemsApi.get(staticId)
+      const { retention } = await retentionsApi.get(staticId)
       state.isErrored = false
-      state.item = archiveItem
-      return archiveItem
+      state.item = retention
+      return retention
     } catch (error) {
-      console.error("Failed to fetch arhive item:", error)
-
+      console.error("Failed to fetch retention:", error)
       state.isErrored = true
       throw error
     } finally {
@@ -42,12 +43,12 @@ export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
     }
   }
 
-  async function save(): Promise<ArchiveItem> {
+  async function save(): Promise<Retention> {
     if (state.isUpdate) return update()
     else return create()
   }
 
-  async function update(): Promise<ArchiveItem> {
+  async function update(): Promise<Retention> {
     const staticId = unref(id)
 
     if (isNil(staticId)) {
@@ -55,17 +56,17 @@ export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
     }
 
     if (isNil(state.item)) {
-      throw new Error("No category to save")
+      throw new Error("No retention to save")
     }
 
     state.isLoading = true
     try {
-      const { archiveItem } = await archiveItemsApi.update(staticId, state.item)
+      const { retention } = await retentionsApi.update(staticId, state.item)
       state.isErrored = false
-      state.item = archiveItem
-      return archiveItem
+      state.item = retention
+      return retention
     } catch (error) {
-      console.error("Failed to save archiveItem:", error)
+      console.error("Failed to save retention:", error)
       state.isErrored = true
       throw error
     } finally {
@@ -73,24 +74,24 @@ export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
     }
   }
 
-  async function create(): Promise<ArchiveItem> {
+  async function create(): Promise<Retention> {
     const staticId = unref(id)
     if (!isNil(staticId)) {
       throw new Error("id is not required")
     }
 
-    if (isNil(state.createItem)) {
-      throw new Error("No archiveItem to save")
+    if (isNil(state.item)) {
+      throw new Error("No retention to save")
     }
 
     state.isLoading = true
     try {
-      const { archiveItem } = await archiveItemsApi.create(state.createItem)
+      const { retention } = await retentionsApi.create(state.item)
       state.isErrored = false
-      state.item = archiveItem
-      return archiveItem
+      state.item = retention
+      return retention
     } catch (error) {
-      console.error("Failed to create archiveItem:", error)
+      console.error("Failed to create retention:", error)
       state.isErrored = true
       throw error
     } finally {
@@ -103,7 +104,6 @@ export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
     async (newId) => {
       if (isNil(newId)) {
         ;(state.item as unknown) = { name: "" }
-
         return
       }
 
@@ -120,4 +120,4 @@ export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
   }
 }
 
-export default useArchiveItemLegacy
+export default useRetention

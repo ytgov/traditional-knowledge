@@ -1,10 +1,13 @@
 import { isUndefined, pick } from "lodash"
 
 import { ArchiveItem } from "@/models"
-import BaseSerializer from "@/serializers/base-serializer"
 import { InformationSharingAgreementAccessGrants, Users } from "@/serializers"
-import { type UserReferenceView } from "@/serializers/users/reference-serializer"
+import CategoryIndexSerializer, {
+  CategoryIndexView,
+} from "@/serializers/categories/index-serializer"
 import { type InformationSharingAgreementAccessGrantShowView } from "@/serializers/information-sharing-agreement-access-grants/show-serializer"
+import BaseSerializer from "@/serializers/base-serializer"
+import { type UserReferenceView } from "@/serializers/users/reference-serializer"
 
 export type ArchiveItemShowView = Pick<
   ArchiveItem,
@@ -14,6 +17,9 @@ export type ArchiveItemShowView = Pick<
   | "title"
   | "description"
   | "summary"
+  | "sharingPurpose"
+  | "confidentialityReceipt"
+  | "yukonFirstNations"
   | "status"
   | "securityLevel"
   | "tags"
@@ -24,11 +30,12 @@ export type ArchiveItemShowView = Pick<
 > & {
   user?: UserReferenceView
   informationSharingAgreementAccessGrants?: InformationSharingAgreementAccessGrantShowView[]
+  categories?: CategoryIndexView[]
 }
 
 export class ShowSerializer extends BaseSerializer<ArchiveItem> {
   perform(): ArchiveItemShowView {
-    const { user, informationSharingAgreementAccessGrants } = this.record
+    const { user, informationSharingAgreementAccessGrants, categories } = this.record
     if (isUndefined(user)) {
       throw new Error("Expected user association to be preloaded")
     }
@@ -39,11 +46,18 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
       )
     }
 
+    if (isUndefined(categories)) {
+      throw new Error("Expected categories association to be preloaded")
+    }
+
     const serializedUser = Users.ReferenceSerializer.perform(user)
     const serializedInformationSharingAgreementAccessGrants =
       InformationSharingAgreementAccessGrants.ShowSerializer.perform(
         informationSharingAgreementAccessGrants
       )
+    const serializedCategories = categories.map((category) =>
+      CategoryIndexSerializer.perform(category)
+    )
     return {
       ...pick(this.record, [
         "id",
@@ -52,6 +66,9 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
         "title",
         "description",
         "summary",
+        "sharingPurpose",
+        "confidentialityReceipt",
+        "yukonFirstNations",
         "status",
         "securityLevel",
         "tags",
@@ -62,6 +79,7 @@ export class ShowSerializer extends BaseSerializer<ArchiveItem> {
       ]),
       user: serializedUser,
       informationSharingAgreementAccessGrants: serializedInformationSharingAgreementAccessGrants,
+      categories: serializedCategories,
     }
   }
 }

@@ -1,26 +1,28 @@
 import { type Ref, reactive, toRefs, unref, watch } from "vue"
 import { isNil } from "lodash"
 
-import archiveItemsApi, { type ArchiveItemCreate, type ArchiveItem } from "@/api/archive-items-api"
+import categoriesApi, {
+  Category,
+  CategoryFiltersOptions,
+  CategoryWhereOptions,
+} from "@/api/categories-api"
 
-export { type ArchiveItem }
+export { type Category, type CategoryWhereOptions, type CategoryFiltersOptions }
 
-export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
+export function useCategory(id: Ref<number | null | undefined>) {
   const state = reactive<{
-    item: ArchiveItem | null
-    createItem: ArchiveItemCreate | null
+    category: Category | null
     isUpdate: boolean
     isLoading: boolean
     isErrored: boolean
   }>({
-    item: null,
-    createItem: null,
+    category: null,
     isUpdate: !isNil(id.value),
     isLoading: false,
     isErrored: false,
   })
 
-  async function fetch(): Promise<ArchiveItem> {
+  async function fetch(): Promise<Category> {
     const staticId = unref(id)
     if (isNil(staticId)) {
       throw new Error("id is required")
@@ -28,13 +30,12 @@ export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
 
     state.isLoading = true
     try {
-      const { archiveItem } = await archiveItemsApi.get(staticId)
+      const { category } = await categoriesApi.get(staticId)
       state.isErrored = false
-      state.item = archiveItem
-      return archiveItem
+      state.category = category
+      return category
     } catch (error) {
-      console.error("Failed to fetch arhive item:", error)
-
+      console.error("Failed to fetch category:", error)
       state.isErrored = true
       throw error
     } finally {
@@ -42,30 +43,30 @@ export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
     }
   }
 
-  async function save(): Promise<ArchiveItem> {
+  async function save(): Promise<Category> {
     if (state.isUpdate) return update()
     else return create()
   }
 
-  async function update(): Promise<ArchiveItem> {
+  async function update(): Promise<Category> {
     const staticId = unref(id)
 
     if (isNil(staticId)) {
       throw new Error("id is required")
     }
 
-    if (isNil(state.item)) {
+    if (isNil(state.category)) {
       throw new Error("No category to save")
     }
 
     state.isLoading = true
     try {
-      const { archiveItem } = await archiveItemsApi.update(staticId, state.item)
+      const { category } = await categoriesApi.update(staticId, state.category)
       state.isErrored = false
-      state.item = archiveItem
-      return archiveItem
+      state.category = category
+      return category
     } catch (error) {
-      console.error("Failed to save archiveItem:", error)
+      console.error("Failed to save category:", error)
       state.isErrored = true
       throw error
     } finally {
@@ -73,24 +74,24 @@ export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
     }
   }
 
-  async function create(): Promise<ArchiveItem> {
+  async function create(): Promise<Category> {
     const staticId = unref(id)
     if (!isNil(staticId)) {
       throw new Error("id is not required")
     }
 
-    if (isNil(state.createItem)) {
-      throw new Error("No archiveItem to save")
+    if (isNil(state.category)) {
+      throw new Error("No category to save")
     }
 
     state.isLoading = true
     try {
-      const { archiveItem } = await archiveItemsApi.create(state.createItem)
+      const { category } = await categoriesApi.create(state.category)
       state.isErrored = false
-      state.item = archiveItem
-      return archiveItem
+      state.category = category
+      return category
     } catch (error) {
-      console.error("Failed to create archiveItem:", error)
+      console.error("Failed to create category:", error)
       state.isErrored = true
       throw error
     } finally {
@@ -102,7 +103,7 @@ export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
     () => unref(id),
     async (newId) => {
       if (isNil(newId)) {
-        ;(state.item as unknown) = { name: "" }
+        ;(state.category as unknown) = { name: "" }
 
         return
       }
@@ -120,4 +121,4 @@ export function useArchiveItemLegacy(id: Ref<number | null | undefined>) {
   }
 }
 
-export default useArchiveItemLegacy
+export default useCategory
