@@ -1,7 +1,6 @@
 <template>
   <v-form
-    ref="form"
-    v-model="isValid"
+    ref="formRef"
     @submit.prevent="saveWrapper"
   >
     <v-card>
@@ -17,7 +16,7 @@
           >
             <v-text-field
               v-model="category.name"
-              :rules="[rules.required]"
+              :rules="[required]"
               label="Name"
             />
           </v-col>
@@ -46,18 +45,17 @@
 
         <div class="d-flex">
           <v-btn
-            :disabled="!isValid"
             :loading="isLoading"
             type="submit"
-            >Save</v-btn
-          >
+            text="Save"
+          />
           <v-spacer />
           <v-btn
             color="secondary"
             variant="outlined"
             :to="{ name: 'administration/CategoriesPage' }"
-            >Cancel</v-btn
-          >
+            text="Cancel"
+          />
         </div>
       </v-card-text>
     </v-card>
@@ -65,27 +63,16 @@
 </template>
 
 <script setup lang="ts">
-import { isEmpty, isNil } from "lodash"
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 import { VForm } from "vuetify/components"
+
+import { required } from "@/utils/validators"
 
 import useSnack from "@/use/use-snack"
 import useCategory from "@/use/use-category"
 
 //import RetentionSelect from "../retentions/RetentionSelect.vue"
-
-const rules = {
-  required: (value: string | null) => !!value || "Field is required",
-
-  email(value: string | null) {
-    if (isNil(value) || isEmpty(value)) return true
-    if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true
-    return "Must be a valid e-mail."
-  },
-}
-
-const isValid = ref(false)
 
 const props = defineProps<{
   categoryId: string | null
@@ -99,12 +86,12 @@ const router = useRouter()
 const { category, isUpdate, save } = useCategory(categoryId)
 
 const isLoading = ref(false)
-const form = ref<InstanceType<typeof VForm> | null>(null)
+const formRef = ref<InstanceType<typeof VForm> | null>(null)
 
 async function saveWrapper() {
-  if (isNil(form.value)) return
+  if (formRef.value === null) return
 
-  const { valid } = await form.value.validate()
+  const { valid } = await formRef.value.validate()
   if (!valid) {
     snack.error("Please fill out all required fields")
     return
@@ -119,8 +106,8 @@ async function saveWrapper() {
 
     router.push({ name: "administration/CategoriesPage" })
   } catch (error) {
-    snack.error("Save failed!")
-    throw error
+    console.error(error)
+    snack.error(`${error}`)
   } finally {
     isLoading.value = false
   }
