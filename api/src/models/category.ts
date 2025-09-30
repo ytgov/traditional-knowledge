@@ -31,7 +31,7 @@ export class Category extends BaseModel<
 
   @Attribute(DataTypes.STRING(255))
   @NotNull
-  @Index({ unique: true })
+  @Index({ unique: true, msg: "Category name must be unique" })
   declare name: string
 
   @Attribute(DataTypes.STRING(2000))
