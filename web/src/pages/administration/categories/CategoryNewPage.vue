@@ -18,5 +18,11 @@ useBreadcrumbs("New Category", [
       name: "administration/CategoriesPage",
     },
   },
+  {
+    title: "New",
+    to: {
+      name: "administration/CategoryNewPage",
+    },
+  },
 ])
 </script>

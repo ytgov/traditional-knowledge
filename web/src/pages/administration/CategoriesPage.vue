@@ -21,7 +21,11 @@
         :headers="headers"
         @update:options="loadItems"
         @click:row="openItem"
-      ></v-data-table-server>
+      >
+        <template #item.retention="{ item }">
+          {{ item.retention?.name }}
+        </template>
+      </v-data-table-server>
     </v-card-text>
   </v-card>
 </template>
@@ -40,6 +44,8 @@ import CategoryNewButton from "@/components/categories/CategoryNewButton.vue"
 const router = useRouter()
 const { isLoading, categories, totalCount, fetch } = useCategories()
 
+console.log(categories)
+
 onMounted(async () => {
   if (!isLoading.value) await loadItems()
 })
@@ -51,9 +57,13 @@ const perPage = useRouteQuery("perPage", "10", { transform: Number })
 const headers = [
   { title: "Name", value: "name" },
   { title: "Description", value: "description" },
+  { title: "Retention Policy", value: "retention" },
 ]
 
-useBreadcrumbs("Categories", [ADMIN_CRUMB])
+useBreadcrumbs("Categories", [
+  ADMIN_CRUMB,
+  { title: "Categories", to: { name: "administration/CategoriesPage" } },
+])
 
 async function loadItems() {
   fetch()

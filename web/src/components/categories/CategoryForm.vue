@@ -24,11 +24,10 @@
             cols="12"
             md="6"
           >
-            <!--<RetentionSelect
+            <RetentionSelect
               v-model="category.retentionId"
-              :rules="[rules.required]"
               label="Retention"
-            /> -->
+            />
           </v-col>
 
           <v-col
@@ -72,7 +71,7 @@ import { required } from "@/utils/validators"
 import useSnack from "@/use/use-snack"
 import useCategory from "@/use/use-category"
 
-//import RetentionSelect from "../retentions/RetentionSelect.vue"
+import RetentionSelect from "@/components/retentions/RetentionSelect.vue"
 
 const props = defineProps<{
   categoryId: string | null
