@@ -6,16 +6,21 @@ import {
   type QueryOptions,
   type WhereOptions,
 } from "@/api/base-api"
+import { Retention } from "@/api/retentions-api"
 
 export type Category = {
   id: number
   name: string
   description: string | null
+  retentionId: number | null
   createdAt: string
   updatedAt: string
+
+  // Associations
+  retention?: Retention | null
 }
 
-export type CategoryWhereOptions = WhereOptions<Category, "name">
+export type CategoryWhereOptions = WhereOptions<Category, "name" | "retentionId">
 
 export type CategoryFiltersOptions = FiltersOptions<{
   search?: string | string[]
