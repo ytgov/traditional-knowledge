@@ -25,7 +25,7 @@ export class CategoryPolicy extends PolicyFactory(Category) {
   }
 
   permittedAttributes(): Path[] {
-    const attributes: (keyof Attributes<Category>)[] = ["name", "description"]
+    const attributes: (keyof Attributes<Category>)[] = ["name", "description", "retentionId"]
 
     return attributes
   }
