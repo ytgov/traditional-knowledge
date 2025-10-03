@@ -9,6 +9,7 @@ import {
 import {
   Attribute,
   AutoIncrement,
+  BelongsTo,
   BelongsToMany,
   Default,
   Index,
@@ -19,6 +20,7 @@ import {
 import BaseModel from "@/models/base-model"
 import ArchiveItem from "./archive-item"
 import ArchiveItemCategory from "./archive-item-category"
+import Retention from "@/models/retention"
 
 export class Category extends BaseModel<
   InferAttributes<Category>,
@@ -33,6 +35,9 @@ export class Category extends BaseModel<
   @NotNull
   @Index({ unique: true, msg: "Category name must be unique" })
   declare name: string
+
+  @Attribute(DataTypes.INTEGER)
+  declare retentionId: number | null
 
   @Attribute(DataTypes.STRING(2000))
   declare description: string | null
@@ -51,6 +56,15 @@ export class Category extends BaseModel<
   declare deletedAt: Date | null
 
   // Associations
+  @BelongsTo(() => Retention, {
+    foreignKey: "retentionId",
+    inverse: {
+      as: "categories",
+      type: "hasMany",
+    },
+  })
+  declare retention?: NonAttribute<Retention>
+
   @BelongsToMany(() => ArchiveItem, {
     through: () => ArchiveItemCategory,
     foreignKey: "categoryId",
