@@ -35,7 +35,17 @@
             v-model="archiveItem.description"
             label="Description"
             readonly
-            rows="3"
+            rows="2"
+            auto-grow
+          />
+        </v-col>
+        <v-col cols="12">
+          <v-textarea
+            v-model="archiveItem.yukonFirstNations"
+            label="Yukon First Nations"
+            readonly
+            rows="2"
+            auto-grow
           />
         </v-col>
       </v-row>

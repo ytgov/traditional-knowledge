@@ -69,6 +69,7 @@
           <v-checkbox
             v-model="createItem.confidentialityReceipt"
             label="I confirm that I have received and agreed to the confidentiality terms."
+            hide-details
             class="mt-3"
           />
         </v-card-text>
@@ -78,8 +79,8 @@
           class="mb-4"
         ></v-divider>
 
-        <v-card-title>Retention</v-card-title>
-        <v-card-text>
+        <v-card-title class="d-none">Retention</v-card-title>
+        <v-card-text class="d-none">
           <v-row>
             <v-col
               cols="12"
@@ -87,10 +88,9 @@
             >
               <RetentionSelect
                 v-model="retentionId"
-                :rules="[rules.required]"
                 return-object
                 label="Policy"
-              />
+              /><!--:rules="[rules.required]" -->
             </v-col>
             <!--<v-col
               v-if="retentionId"
