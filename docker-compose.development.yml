@@ -148,7 +148,7 @@ services:
   #     - ./web:/usr/src/web
 
   cache:
-    image: bitnami/redis:8.0.2
+    image: bitnamilegacy/redis:8.0.2
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
