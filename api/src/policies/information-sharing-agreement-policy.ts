@@ -14,7 +14,7 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
 
   create(): boolean {
     if (this.user.isSystemAdmin) return true
-    if (this.user.isGroupAdminOf(this.record.sharingGroupId)) return true
+    //if (this.user.isGroupAdminOf(this.record.sharingGroupId)) return true
 
     return false
   }
