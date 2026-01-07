@@ -13,20 +13,52 @@ export type AgreementShowView = Pick<
   | "sharingGroupContactId"
   | "receivingGroupId"
   | "receivingGroupContactId"
+  | "identifier"
+  | "sharingGroupInfo"
+  | "receivingGroupInfo"
+  | "sharingGroupContactName"
+  | "receivingGroupContactName"
+  | "sharingGroupContactTitle"
+  | "receivingGroupContactTitle"
+  | "sharingGroupSignedBy"
+  | "receivingGroupSignedBy"
   | "title"
   | "description"
+  | "purpose"
+  | "detailLevel"
+  | "detailNotes"
+  | "formats"
+  | "accessLevels"
+  | "accessNotes"
+  | "confidentiality"
+  | "authorizedApplication"
+  | "creditLines"
+  | "creditNotes"
+  | "expirationActions"
+  | "expirationNotes"
+  | "breachActions"
+  | "breachNotes"
+  | "disclosureNotes"
   | "createdAt"
   | "updatedAt"
 > & {
   startDate: string
   endDate: string
+  sharingGroupSignedDate: string | null
+  receivingGroupSignedDate: string | null
 }
 
 export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> {
   perform(): AgreementShowView {
-    const { startDate, endDate } = this.record
+    const { startDate, endDate, sharingGroupSignedDate, receivingGroupSignedDate } = this.record
     const formattedStartDate = formatDate(startDate)
     const formattedEndDate = formatDate(endDate)
+    const formattedSharingGroupSignedDate = sharingGroupSignedDate
+      ? formatDate(sharingGroupSignedDate)
+      : null
+    const formattedReceivingGroupSignedDate = receivingGroupSignedDate
+      ? formatDate(receivingGroupSignedDate)
+      : null
 
     return {
       ...pick(this.record, [
@@ -36,13 +68,39 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "sharingGroupContactId",
         "receivingGroupId",
         "receivingGroupContactId",
+        "identifier",
+        "sharingGroupInfo",
+        "receivingGroupInfo",
+        "sharingGroupContactName",
+        "receivingGroupContactName",
+        "sharingGroupContactTitle",
+        "receivingGroupContactTitle",
+        "sharingGroupSignedBy",
+        "receivingGroupSignedBy",
         "title",
         "description",
+        "purpose",
+        "detailLevel",
+        "detailNotes",
+        "formats",
+        "accessLevels",
+        "accessNotes",
+        "confidentiality",
+        "authorizedApplication",
+        "creditLines",
+        "creditNotes",
+        "expirationActions",
+        "expirationNotes",
+        "breachActions",
+        "breachNotes",
+        "disclosureNotes",
         "createdAt",
         "updatedAt",
       ]),
       startDate: formattedStartDate,
       endDate: formattedEndDate,
+      sharingGroupSignedDate: formattedSharingGroupSignedDate,
+      receivingGroupSignedDate: formattedReceivingGroupSignedDate,
     }
   }
 }

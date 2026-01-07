@@ -9,12 +9,38 @@ import {
 export type InformationSharingAgreement = {
   id: number
   creatorId: number
-  sharingGroupId: number
-  sharingGroupContactId: number
-  receivingGroupId: number
-  receivingGroupContactId: number
+  sharingGroupId: number | null
+  sharingGroupContactId: number | null
+  receivingGroupId: number | null
+  receivingGroupContactId: number | null
+  identifier: string | null
+  sharingGroupInfo: string | null
+  receivingGroupInfo: string | null
+  sharingGroupContactName: string | null
+  receivingGroupContactName: string | null
+  sharingGroupContactTitle: string | null
+  receivingGroupContactTitle: string | null
+  sharingGroupSignedBy: string | null
+  receivingGroupSignedBy: string | null
+  sharingGroupSignedDate: string | null
+  receivingGroupSignedDate: string | null
   title: string
   description: string | null
+  purpose: string | null
+  detailLevel: string | null
+  detailNotes: string | null
+  formats: string | null
+  accessLevels: string | null
+  accessNotes: string | null
+  confidentiality: string | null
+  authorizedApplication: string | null
+  creditLines: string | null
+  creditNotes: string | null
+  expirationActions: string | null
+  expirationNotes: string | null
+  breachActions: string | null
+  breachNotes: string | null
+  disclosureNotes: string | null
   startDate: string
   endDate: string
   createdAt: string
@@ -28,8 +54,34 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "sharingGroupContactId"
   | "receivingGroupId"
   | "receivingGroupContactId"
+  | "identifier"
+  | "sharingGroupInfo"
+  | "receivingGroupInfo"
+  | "sharingGroupContactName"
+  | "receivingGroupContactName"
+  | "sharingGroupContactTitle"
+  | "receivingGroupContactTitle"
+  | "sharingGroupSignedBy"
+  | "receivingGroupSignedBy"
+  | "sharingGroupSignedDate"
+  | "receivingGroupSignedDate"
   | "title"
   | "description"
+  | "purpose"
+  | "detailLevel"
+  | "detailNotes"
+  | "formats"
+  | "accessLevels"
+  | "accessNotes"
+  | "confidentiality"
+  | "authorizedApplication"
+  | "creditLines"
+  | "creditNotes"
+  | "expirationActions"
+  | "expirationNotes"
+  | "breachActions"
+  | "breachNotes"
+  | "disclosureNotes"
   | "startDate"
   | "endDate"
 >

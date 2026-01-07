@@ -38,20 +38,49 @@ export class InformationSharingAgreement extends BaseModel<
   declare creatorId: number
 
   @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare sharingGroupId: number
+  declare sharingGroupId: number | null
 
   @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare sharingGroupContactId: number
+  declare sharingGroupContactId: number | null
 
   @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare receivingGroupId: number
+  declare receivingGroupId: number | null
 
   @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare receivingGroupContactId: number
+  declare receivingGroupContactId: number | null
+
+  @Attribute(DataTypes.STRING(100))
+  declare identifier: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare sharingGroupInfo: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare receivingGroupInfo: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare sharingGroupContactName: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare receivingGroupContactName: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare sharingGroupContactTitle: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare receivingGroupContactTitle: string | null
+
+  @Attribute(DataTypes.STRING(100))
+  declare sharingGroupSignedBy: string | null
+
+  @Attribute(DataTypes.STRING(100))
+  declare receivingGroupSignedBy: string | null
+
+  @Attribute(DataTypes.DATE)
+  declare sharingGroupSignedDate: Date | null
+
+  @Attribute(DataTypes.DATE)
+  declare receivingGroupSignedDate: Date | null
 
   @Attribute(DataTypes.STRING)
   @NotNull
@@ -59,6 +88,51 @@ export class InformationSharingAgreement extends BaseModel<
 
   @Attribute(DataTypes.TEXT)
   declare description: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare purpose: string | null
+
+  @Attribute(DataTypes.STRING(250))
+  declare detailLevel: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare detailNotes: string | null
+
+  @Attribute(DataTypes.STRING(500))
+  declare formats: string | null
+
+  @Attribute(DataTypes.STRING(500))
+  declare accessLevels: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare accessNotes: string | null
+
+  @Attribute(DataTypes.STRING(500))
+  declare confidentiality: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare authorizedApplication: string | null
+
+  @Attribute(DataTypes.STRING(500))
+  declare creditLines: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare creditNotes: string | null
+
+  @Attribute(DataTypes.STRING(500))
+  declare expirationActions: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare expirationNotes: string | null
+
+  @Attribute(DataTypes.STRING(500))
+  declare breachActions: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare breachNotes: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare disclosureNotes: string | null
 
   @Attribute(DataTypes.DATE)
   @NotNull

@@ -18,35 +18,10 @@ export class CreateService extends BaseService {
   }
 
   async perform(): Promise<InformationSharingAgreement> {
-    const {
-      title,
-      sharingGroupId,
-      sharingGroupContactId,
-      receivingGroupId,
-      receivingGroupContactId,
-      startDate,
-      endDate,
-      ...optionalAttributes
-    } = this.attributes
+    const { title, startDate, endDate, ...optionalAttributes } = this.attributes
 
     if (isNil(title)) {
       throw new Error("Title is required")
-    }
-
-    if (isNil(sharingGroupId)) {
-      throw new Error("Sharing group is required")
-    }
-
-    if (isNil(sharingGroupContactId)) {
-      throw new Error("Sharing group contact is required")
-    }
-
-    if (isNil(receivingGroupId)) {
-      throw new Error("Receiving group is required")
-    }
-
-    if (isNil(receivingGroupContactId)) {
-      throw new Error("Receiving group contact is required")
     }
 
     if (isNil(startDate)) {
@@ -61,23 +36,26 @@ export class CreateService extends BaseService {
       const informationSharingAgreement = await InformationSharingAgreement.create({
         creatorId: this.currentUser.id,
         title,
-        sharingGroupId,
-        sharingGroupContactId,
-        receivingGroupId,
-        receivingGroupContactId,
         startDate,
         endDate,
         ...optionalAttributes,
       })
 
-      await this.ensureAdminAccessGrants(
-        informationSharingAgreement.id,
-        informationSharingAgreement.sharingGroupId,
-        informationSharingAgreement.sharingGroupContactId,
-        informationSharingAgreement.receivingGroupId,
-        informationSharingAgreement.receivingGroupContactId,
-        this.currentUser
-      )
+      if (
+        !isNil(informationSharingAgreement.sharingGroupId) &&
+        !isNil(informationSharingAgreement.sharingGroupContactId) &&
+        !isNil(informationSharingAgreement.receivingGroupId) &&
+        !isNil(informationSharingAgreement.receivingGroupContactId)
+      ) {
+        await this.ensureAdminAccessGrants(
+          informationSharingAgreement.id,
+          informationSharingAgreement.sharingGroupId,
+          informationSharingAgreement.sharingGroupContactId,
+          informationSharingAgreement.receivingGroupId,
+          informationSharingAgreement.receivingGroupContactId,
+          this.currentUser
+        )
+      }
 
       return informationSharingAgreement
     })

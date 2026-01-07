@@ -21,14 +21,21 @@ export class UpdateService extends BaseService {
     return db.transaction(async () => {
       await this.informationSharingAgreement.update(this.attributes)
 
-      await this.ensureAdminAccessGrants(
-        this.informationSharingAgreement.id,
-        this.informationSharingAgreement.sharingGroupId,
-        this.informationSharingAgreement.sharingGroupContactId,
-        this.informationSharingAgreement.receivingGroupId,
-        this.informationSharingAgreement.receivingGroupContactId,
-        this.currentUser
-      )
+      if (
+        this.informationSharingAgreement.sharingGroupId &&
+        this.informationSharingAgreement.sharingGroupContactId &&
+        this.informationSharingAgreement.receivingGroupId &&
+        this.informationSharingAgreement.receivingGroupContactId
+      ) {
+        await this.ensureAdminAccessGrants(
+          this.informationSharingAgreement.id,
+          this.informationSharingAgreement.sharingGroupId,
+          this.informationSharingAgreement.sharingGroupContactId,
+          this.informationSharingAgreement.receivingGroupId,
+          this.informationSharingAgreement.receivingGroupContactId,
+          this.currentUser
+        )
+      }
 
       return this.informationSharingAgreement
     })
