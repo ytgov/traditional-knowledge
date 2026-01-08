@@ -134,6 +134,48 @@ export class InformationSharingAgreement extends BaseModel<
   @Attribute(DataTypes.TEXT)
   declare disclosureNotes: string | null
 
+  @Attribute(DataTypes.STRING)
+  declare fileName: string | null
+
+  @Attribute({
+    type: DataTypes.BLOB,
+    set(value: Buffer | string | null | undefined) {
+      console.log("fileData setter called with:", {
+        type: typeof value,
+        isNull: value === null,
+        isUndefined: value === undefined,
+        isString: typeof value === "string",
+        stringValue: typeof value === "string" ? value : "N/A",
+        length: typeof value === "string" ? value.length : "N/A",
+      })
+
+      if (value === null || value === undefined) {
+        console.log("Setting fileData to NULL")
+        this.setDataValue("fileData", null)
+      } else if (typeof value === "string") {
+        // Don't convert empty strings
+        if (value === "" || value === "null" || value === "undefined") {
+          console.log("Setting fileData to NULL (empty/invalid string)")
+          this.setDataValue("fileData", null)
+        } else {
+          // Convert base64 string to Buffer
+          const buffer = Buffer.from(value, "base64")
+          console.log("Converted base64 to buffer, buffer length:", buffer.length)
+          this.setDataValue("fileData", buffer)
+        }
+      } else {
+        this.setDataValue("fileData", value)
+      }
+    },
+  })
+  declare fileData: Buffer | null
+
+  @Attribute(DataTypes.STRING)
+  declare fileMimeType: string | null
+
+  @Attribute(DataTypes.INTEGER)
+  declare fileSize: number | null
+
   @Attribute(DataTypes.DATE)
   @NotNull
   declare startDate: Date

@@ -39,6 +39,9 @@ export type AgreementShowView = Pick<
   | "breachActions"
   | "breachNotes"
   | "disclosureNotes"
+  | "fileName"
+  | "fileMimeType"
+  | "fileSize"
   | "createdAt"
   | "updatedAt"
 > & {
@@ -94,6 +97,9 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "breachActions",
         "breachNotes",
         "disclosureNotes",
+        "fileName",
+        "fileMimeType",
+        "fileSize",
         "createdAt",
         "updatedAt",
       ]),

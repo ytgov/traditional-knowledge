@@ -41,6 +41,10 @@ export type InformationSharingAgreement = {
   breachActions: string | null
   breachNotes: string | null
   disclosureNotes: string | null
+  fileName: string | null
+  fileData: string | null
+  fileMimeType: string | null
+  fileSize: number | null
   startDate: string
   endDate: string
   createdAt: string
@@ -82,6 +86,9 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "breachActions"
   | "breachNotes"
   | "disclosureNotes"
+  | "fileName"
+  | "fileMimeType"
+  | "fileSize"
   | "startDate"
   | "endDate"
 >
@@ -136,6 +143,24 @@ export const informationSharingAgreementsApi = {
   async delete(informationSharingAgreementId: number): Promise<void> {
     const { data } = await http.delete(
       `/api/information-sharing-agreements/${informationSharingAgreementId}`
+    )
+    return data
+  },
+  async downloadFile(informationSharingAgreementId: number): Promise<Blob> {
+    const { data } = await http.get(
+      `/api/information-sharing-agreements/${informationSharingAgreementId}/file`,
+      {
+        responseType: "blob",
+      }
+    )
+    return data
+  },
+  async generateDocument(informationSharingAgreementId: number): Promise<Blob> {
+    const { data } = await http.get(
+      `/api/information-sharing-agreements/${informationSharingAgreementId}/generate-document`,
+      {
+        responseType: "blob",
+      }
     )
     return data
   },

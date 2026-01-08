@@ -38,19 +38,22 @@ export class CreateService extends BaseService {
       informationSharingAgreementId
     )
     const { sharingGroupId, receivingGroupId } = informationSharingAgreement
-    await this.assertGroupIdIsValidInformationSharingAgreementGroup(
-      groupId,
-      sharingGroupId,
-      receivingGroupId
-    )
 
-    const { userId } = this.attributes
-    if (!isNil(userId)) {
-      await this.assertUserIdIsValidInformationSharingAgreementGroupMember(
-        userId,
+    if (!isNil(sharingGroupId) && !isNil(receivingGroupId)) {
+      await this.assertGroupIdIsValidInformationSharingAgreementGroup(
+        groupId,
         sharingGroupId,
         receivingGroupId
       )
+
+      const { userId } = this.attributes
+      if (!isNil(userId)) {
+        await this.assertUserIdIsValidInformationSharingAgreementGroupMember(
+          userId,
+          sharingGroupId,
+          receivingGroupId
+        )
+      }
     }
 
     const informationSharingAgreementAccessGrant =

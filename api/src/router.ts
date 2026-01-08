@@ -112,6 +112,14 @@ router
   .delete(InformationSharingAgreementsController.destroy)
 
 router
+  .route("/api/information-sharing-agreements/:informationSharingAgreementId/file")
+  .get(InformationSharingAgreementsController.downloadFile)
+
+router
+  .route("/api/information-sharing-agreements/:informationSharingAgreementId/generate-document")
+  .get(InformationSharingAgreementsController.generateDocument)
+
+router
   .route("/api/information-sharing-agreement-access-grants")
   .get(InformationSharingAgreementAccessGrantsController.index)
   .post(InformationSharingAgreementAccessGrantsController.create)

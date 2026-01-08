@@ -37,10 +37,17 @@ export async function up(knex: Knex): Promise<void> {
     table.string("breach_actions", 500)
     table.text("breach_notes")
     table.text("disclosure_notes")
+
+    table.string("file_name").nullable()
+    table.binary("file_data").nullable()
+    table.string("file_mime_type").nullable()
+    table.integer("file_size").nullable()
   })
 }
 
 export async function down(knex: Knex): Promise<void> {
+  await knex("information_sharing_agreements").delete()
+
   await knex.schema.alterTable("information_sharing_agreements", (table) => {
     table.dropNullable("receiving_group_contact_id")
     table.dropNullable("receiving_group_id")
@@ -77,5 +84,10 @@ export async function down(knex: Knex): Promise<void> {
     table.dropColumn("breach_actions")
     table.dropColumn("breach_notes")
     table.dropColumn("disclosure_notes")
+
+    table.dropColumn("file_name")
+    table.dropColumn("file_data")
+    table.dropColumn("file_mime_type")
+    table.dropColumn("file_size")
   })
 }

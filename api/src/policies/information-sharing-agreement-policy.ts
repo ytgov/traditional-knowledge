@@ -21,6 +21,7 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
 
   update(): boolean {
     if (this.user.isAdminForInformationSharingAgreement(this.record.id)) return true
+    if (this.user.isSystemAdmin) return true
 
     return false
   }
@@ -63,6 +64,10 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
       "breachActions",
       "breachNotes",
       "disclosureNotes",
+      "fileName",
+      "fileData",
+      "fileMimeType",
+      "fileSize",
       "startDate",
       "endDate",
     ]
