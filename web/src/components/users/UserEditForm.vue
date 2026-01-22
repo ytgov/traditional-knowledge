@@ -153,6 +153,16 @@
             <v-btn
               class="ml-3"
               :loading="isLoading"
+              color="primary"
+              variant="outlined"
+              @click="sync"
+            >
+              <v-icon class="mr-2">mdi-sync</v-icon>
+              Sync
+            </v-btn>
+            <v-btn
+              class="ml-3"
+              :loading="isLoading"
               type="submit"
               color="primary"
             >
@@ -172,9 +182,13 @@ import { ref, toRefs } from "vue"
 import { type VBtn, type VForm } from "vuetify/components"
 
 import { required } from "@/utils/validators"
+import usersApi from "@/api/users-api"
+
+import useCurrentUser from "@/use/use-current-user"
 import useSnack from "@/use/use-snack"
 import useUser from "@/use/use-user"
-import UserRolesSelect from "./UserRolesSelect.vue"
+
+import UserRolesSelect from "@/components/users/UserRolesSelect.vue"
 
 type CancelButtonOptions = VBtn["$props"]
 
@@ -200,20 +214,51 @@ const emit = defineEmits<{
 const { userId } = toRefs(props)
 const { user, save, isLoading } = useUser(userId)
 
-const snack = useSnack()
-
 const form = ref<InstanceType<typeof VForm> | null>(null)
+const snack = useSnack()
+const { currentUser, refresh: refreshCurrentUser } = useCurrentUser<true>()
 
 async function saveWrapper() {
+  if (isNil(user.value)) return
   if (isNil(form.value)) return
 
   const { valid } = await form.value.validate()
   if (!valid) return
 
+  try {
+    await save()
+
+    if (user.value.id === currentUser.value.id) {
+      await refreshCurrentUser()
+      snack.info("Saved and reloaded current user!")
+    } else {
+      snack.success("User saved!")
+    }
+
+    emit("saved", user.value.id)
+  } catch (error) {
+    console.error(`Failed to save user: ${error}`, { error })
+    snack.error(`Failed to save user: ${error}`)
+  }
+}
+
+async function sync() {
   if (isNil(user.value)) return
 
-  await save()
-  snack.success("User saved!")
-  emit("saved", user.value.id)
+  try {
+    await usersApi.directorySync(user.value.id)
+
+    if (user.value.id === currentUser.value.id) {
+      await refreshCurrentUser()
+      snack.info("Synced and reloaded current user!")
+    } else {
+      snack.success("User synced!")
+    }
+
+    emit("saved", user.value.id)
+  } catch (error) {
+    console.error(`Failed to sync user: ${error}`, { error })
+    snack.error(`Failed to sync user: ${error}`)
+  }
 }
 </script>

@@ -13,16 +13,6 @@
         >
           Back
         </v-btn>
-        <v-btn
-          class="ml-md-3"
-          title="Refresh"
-          color="primary"
-          append-icon="mdi-sync"
-          :loading="isSyncing"
-          @click="sync"
-        >
-          Sync
-        </v-btn>
       </div>
     </div>
 
@@ -40,34 +30,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue"
 import { isNil } from "lodash"
-
-import usersApi from "@/api/users-api"
 
 import useBreadcrumbs from "@/use/use-breadcrumbs"
 import useCurrentUser from "@/use/use-current-user"
-import useSnack from "@/use/use-snack"
 
 import UserEditForm from "@/components/users/UserEditForm.vue"
 
 const { currentUser, refresh } = useCurrentUser<true>()
-
-const isSyncing = ref(false)
-const snack = useSnack()
-
-async function sync() {
-  try {
-    isSyncing.value = true
-    await usersApi.directorySync(currentUser.value.id)
-    await refresh()
-  } catch (error) {
-    console.error(`Failed to sync user: ${error}`, { error })
-    snack.error(`Failed to sync user: ${error}`)
-  } finally {
-    isSyncing.value = false
-  }
-}
 
 useBreadcrumbs("My Profile")
 </script>
