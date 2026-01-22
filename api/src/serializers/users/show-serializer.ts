@@ -1,11 +1,13 @@
-import { isNil, pick } from "lodash"
+import { isNil, isUndefined, pick } from "lodash"
 
-import { Group, InformationSharingAgreementAccessGrant, User } from "@/models"
+import { User } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
+import { Groups, InformationSharingAgreementAccessGrants } from "@/serializers"
 
-export type UserShowView = Pick<
+export type UserAsShow = Pick<
   User,
   | "id"
+  | "externalDirectoryIdentifier"
   | "email"
   | "firstName"
   | "lastName"
@@ -18,22 +20,43 @@ export type UserShowView = Pick<
   | "unit"
   | "deactivatedAt"
   | "emailNotificationsEnabled"
+  | "lastSyncSuccessAt"
+  | "lastSyncFailureAt"
   | "createdAt"
   | "updatedAt"
 > & {
   isActive: boolean
 } & {
-  adminGroups?: Group[]
-  adminInformationSharingAgreementAccessGrants?: InformationSharingAgreementAccessGrant[]
+  adminGroups: Groups.AsReference[]
+  adminInformationSharingAgreementAccessGrants: InformationSharingAgreementAccessGrants.AsReference[]
 }
 
 export class ShowSerializer extends BaseSerializer<User> {
-  perform(): UserShowView {
-    // TODO: serialize nested associations with appropriate serializers.
+  perform(): UserAsShow {
     const { adminGroups, adminInformationSharingAgreementAccessGrants } = this.record
+    if (isUndefined(adminGroups)) {
+      throw new Error("Expected adminGroups association to be preloaded")
+    }
+
+    const serializedAdminGroups = Groups.ReferenceSerializer.perform(adminGroups)
+
+    if (isUndefined(adminInformationSharingAgreementAccessGrants)) {
+      throw new Error(
+        "Expected adminInformationSharingAgreementAccessGrants association to be preloaded"
+      )
+    }
+
+    const serializedAdminInformationSharingAgreementAccessGrants =
+      InformationSharingAgreementAccessGrants.ReferenceSerializer.perform(
+        adminInformationSharingAgreementAccessGrants
+      )
+
+    const isActive = isNil(this.record.deactivatedAt)
+
     return {
       ...pick(this.record, [
         "id",
+        "externalDirectoryIdentifier",
         "email",
         "firstName",
         "lastName",
@@ -46,12 +69,15 @@ export class ShowSerializer extends BaseSerializer<User> {
         "unit",
         "deactivatedAt",
         "emailNotificationsEnabled",
+        "lastSyncSuccessAt",
+        "lastSyncFailureAt",
         "createdAt",
         "updatedAt",
       ]),
-      isActive: isNil(this.record.deactivatedAt),
-      adminGroups,
-      adminInformationSharingAgreementAccessGrants,
+      isActive,
+      adminGroups: serializedAdminGroups,
+      adminInformationSharingAgreementAccessGrants:
+        serializedAdminInformationSharingAgreementAccessGrants,
     }
   }
 }
