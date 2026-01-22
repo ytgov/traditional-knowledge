@@ -17,6 +17,8 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 - [Backend Patterns & Conventions](#backend-patterns--conventions)
   - [Code Style](#code-style)
   - [Architecture Patterns](#architecture-patterns)
+  - [Models](#models)
+  - [Database](#database)
   - [Testing](#testing)
 - [Frontend Patterns & Conventions](#frontend-patterns--conventions)
   - [Code Style](#code-style-1)
@@ -133,11 +135,29 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 - **Role checks:** Use `user.isSystemAdmin` property directly
 - **Policy Inheritance:** Extend `PolicyFactory(ModelClass)` instead of `BasePolicy`
 
+**Models:**
+
+- **Soft deletes:** All models support `deletedAt` timestamp (paranoid mode enabled globally)
+- **Index Decorators:** When using `createIndexDecorator` on models:
+  - First parameter (decorator identifier): Use kebab-case following JS/TS conventions
+  - `name` property: Use snake_case to match the actual database index name from migrations
+  - Always include both the decorator identifier AND the name property
+  - Example:
+  ```ts
+  createIndexDecorator("user-groups-user-id-group-id-unique", {
+    name: "user_groups_user_id_group_id_unique",
+    unique: true,
+    where: {
+      deletedAt: null,
+    },
+    msg: "User group combination must be unique",
+  })
+  ```
+
 **Database:**
 
 - Knex for migrations, Sequelize for ORM
 - Database: snake_case, Models: camelCase (Sequelize maps automatically)
-- **Soft deletes:** All models support `deletedAt` timestamp (paranoid mode enabled globally)
 
 ### Testing
 
