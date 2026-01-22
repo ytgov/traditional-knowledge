@@ -13,12 +13,18 @@
     "
   >
     <template #item.sharingGroupId="{ item }">
-      <GroupChip :group-id="item.sharingGroupId" />
-      <UserChip :user-id="item.sharingGroupContactId" />
+      <em v-if="isNil(item.sharingGroupId) || isNil(item.sharingGroupContactId)">No sharing group</em>
+      <template v-else>
+        <GroupChip :group-id="item.sharingGroupId" />
+        <UserChip :user-id="item.sharingGroupContactId" />
+      </template>
     </template>
     <template #item.receivingGroupId="{ item }">
-      <GroupChip :group-id="item.receivingGroupId" />
-      <UserChip :user-id="item.receivingGroupContactId" />
+      <em v-if="isNil(item.receivingGroupId) || isNil(item.receivingGroupContactId)">No receiving group</em>
+      <template v-else>
+        <GroupChip :group-id="item.receivingGroupId" />
+        <UserChip :user-id="item.receivingGroupContactId" />
+      </template>
     </template>
     <template #item.creatorId="{ item }">
       <UserChip :user-id="item.creatorId" />
@@ -59,6 +65,7 @@
 import { computed, ref } from "vue"
 import { useRouter } from "vue-router"
 import { useRouteQuery } from "@vueuse/router"
+import { isNil } from "lodash"
 
 import { formatDate } from "@/utils/formatters"
 
