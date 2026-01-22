@@ -310,6 +310,14 @@ to create a comprehensive admin interface for Knowledge Entries.
 
 Workflows are designed to be used with AI coding assistants and provide step-by-step guidance for complex, multi-step processes.
 
+**Plan File Naming Convention:**
+
+When creating new plan files in `/agents/plans/`, use the format:
+- File name: `Plan, <Ticket-ID> - <Descriptive Title>, <YYYY-MM-DD>.md`
+- Example: `Plan, TK-26 - Add Internal User from the Active Directory, 2026-01-22.md`
+
+This ensures consistent naming and easy chronological sorting of plan documents.
+
 ---
 
 ## Code Patterns (Found in 3+ Places)
