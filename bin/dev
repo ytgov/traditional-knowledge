@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require "shellwords"
 require "rdoc"
 
 require_relative "./github_api"
@@ -310,11 +311,37 @@ class DevHelper
 
   def compose_command(*args, **kwargs)
     environment = kwargs.fetch(:environment, "development")
-    "cd #{project_root} && docker compose -f docker-compose.#{environment}.yml #{args.join(" ")}"
+    pipe_input = kwargs.delete(:pipe_input)
+
+    go_to_project_root = "cd #{project_root}"
+    bootstrap_docker = "docker compose -f docker-compose.#{environment}.yml #{args.join(" ")}"
+
+    if pipe_input
+      shell_safe_pipe_input = Shellwords.escape(pipe_input)
+      pipe_input_to_compose = "printf '%s\\n' #{shell_safe_pipe_input} |"
+
+      <<~BASH
+        #{go_to_project_root} && \
+        #{pipe_input_to_compose} #{dynamic_environment_variables} #{bootstrap_docker}
+      BASH
+    else
+      <<~BASH
+        #{go_to_project_root} && \
+        #{dynamic_environment_variables} #{bootstrap_docker}
+      BASH
+    end
   end
 
   def project_root
     @project_root ||= File.absolute_path("#{__dir__}/..")
+  end
+
+  def dynamic_environment_variables
+    if RUBY_PLATFORM =~ /linux/
+      %(HOST_USER_ID="#{user_id}" HOST_GROUP_ID="#{group_id}")
+    else
+      ""
+    end
   end
 
   def take_over_needed?(file_or_directory)
