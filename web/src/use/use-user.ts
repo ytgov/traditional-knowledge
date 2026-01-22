@@ -1,13 +1,13 @@
 import { type Ref, reactive, toRefs, unref, watch } from "vue"
 import { isNil } from "lodash"
 
-import usersApi, { type User } from "@/api/users-api"
+import usersApi, { type UserAsShow } from "@/api/users-api"
 
-export { type User }
+export { type UserAsShow }
 
 export function useUser(id: Ref<number | null | undefined>) {
   const state = reactive<{
-    user: User | null
+    user: UserAsShow | null
     isLoading: boolean
     isErrored: boolean
   }>({
@@ -16,7 +16,7 @@ export function useUser(id: Ref<number | null | undefined>) {
     isErrored: false,
   })
 
-  async function fetch(): Promise<User> {
+  async function fetch(): Promise<UserAsShow> {
     const staticId = unref(id)
     if (isNil(staticId)) {
       throw new Error("id is required")
@@ -29,7 +29,7 @@ export function useUser(id: Ref<number | null | undefined>) {
       state.user = user
       return user
     } catch (error) {
-      console.error("Failed to fetch user:", error)
+      console.error(`Failed to fetch user: ${error}`, { error })
       state.isErrored = true
       throw error
     } finally {
@@ -37,7 +37,7 @@ export function useUser(id: Ref<number | null | undefined>) {
     }
   }
 
-  async function save(): Promise<User> {
+  async function save(): Promise<UserAsShow> {
     const staticId = unref(id)
     if (isNil(staticId)) {
       throw new Error("id is required")
@@ -51,10 +51,10 @@ export function useUser(id: Ref<number | null | undefined>) {
     try {
       const { user } = await usersApi.update(staticId, state.user)
       state.isErrored = false
-      //state.user = user
+      state.user = user
       return user
     } catch (error) {
-      console.error("Failed to save user:", error)
+      console.error(`Failed to save user: ${error}`, { error })
       state.isErrored = true
       throw error
     } finally {
