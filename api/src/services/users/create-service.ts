@@ -34,7 +34,7 @@ export class CreateService extends BaseService {
     const firstNameOrFallback = firstName || firstNameFallback
     const lastNameOrFallback = lastName || lastNameFallback
 
-    const workflowCategory = await User.create({
+    const user = await User.create({
       ...optionalAttributes,
       email,
       auth0Subject: auth0SubjectOrFallback,
@@ -44,7 +44,9 @@ export class CreateService extends BaseService {
       roles: [User.Roles.USER],
     })
 
-    return workflowCategory
+    return user.reload({
+      include: ["adminGroups", "adminInformationSharingAgreementAccessGrants"],
+    })
   }
 }
 
