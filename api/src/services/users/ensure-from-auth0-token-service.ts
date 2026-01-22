@@ -36,18 +36,25 @@ export class EnsureFromAuth0TokenService extends BaseService {
       return firstTimeUser
     }
 
-    await CreateService.perform({
-      auth0Subject,
-      email,
-      firstName,
-      lastName,
-    })
-    const newUser = await User.findOne({
-      where: { auth0Subject },
+    const systemUser = await User.findOne({
+      where: {
+        email: "system.user@yukon.ca",
+      },
       rejectOnEmpty: true,
+    })
+
+    const newUser = await CreateService.perform(
+      {
+        auth0Subject,
+        email,
+        firstName,
+        lastName,
+      },
+      systemUser
+    )
+    return newUser.reload({
       include: this.include,
     })
-    return newUser
   }
 }
 

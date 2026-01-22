@@ -1,13 +1,18 @@
 import { CreationAttributes } from "@sequelize/core"
 import { isNil, random } from "lodash"
 
-import { User } from "@/models"
+import db, { User } from "@/models"
 import BaseService from "@/services/base-service"
+import logger from "@/utils/logger"
+import { Users } from "@/services"
 
 export type UserCreationAttributes = Partial<CreationAttributes<User>>
 
 export class CreateService extends BaseService {
-  constructor(private attributes: UserCreationAttributes) {
+  constructor(
+    private attributes: UserCreationAttributes,
+    private currentUser: User
+  ) {
     super()
   }
 
@@ -34,19 +39,31 @@ export class CreateService extends BaseService {
     const firstNameOrFallback = firstName || firstNameFallback
     const lastNameOrFallback = lastName || lastNameFallback
 
-    const user = await User.create({
-      ...optionalAttributes,
-      email,
-      auth0Subject: auth0SubjectOrFallback,
-      firstName: firstNameOrFallback,
-      lastName: lastNameOrFallback,
-      displayName: `${firstNameOrFallback} ${lastNameOrFallback}`,
-      roles: [User.Roles.USER],
-    })
+    return db.transaction(async () => {
+      const user = await User.create({
+        ...optionalAttributes,
+        email,
+        auth0Subject: auth0SubjectOrFallback,
+        firstName: firstNameOrFallback,
+        lastName: lastNameOrFallback,
+        displayName: `${firstNameOrFallback} ${lastNameOrFallback}`,
+        roles: [User.Roles.USER],
+      })
 
-    return user.reload({
-      include: ["adminGroups", "adminInformationSharingAgreementAccessGrants"],
+      await this.safeAttemptDirectorySync(user, this.currentUser)
+
+      return user.reload({
+        include: ["adminGroups", "adminInformationSharingAgreementAccessGrants"],
+      })
     })
+  }
+
+  private async safeAttemptDirectorySync(user: User, currentUser: User) {
+    try {
+      await Users.DirectorySyncService.perform(user, currentUser)
+    } catch (error) {
+      logger.info(`Error syncing user ${user.id} with directory: ${error}`, { error })
+    }
   }
 }
 

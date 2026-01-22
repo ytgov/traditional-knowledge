@@ -71,7 +71,7 @@ export class UsersController extends BaseController<User> {
       }
 
       const permittedAttributes = policy.permitAttributesForCreate(this.request.body)
-      const user = await CreateService.perform(permittedAttributes)
+      const user = await CreateService.perform(permittedAttributes, this.currentUser)
       const serializedUser = ShowSerializer.perform(user)
       return this.response.status(201).json({
         user: serializedUser,
