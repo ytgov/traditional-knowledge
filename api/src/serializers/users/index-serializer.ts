@@ -18,6 +18,8 @@ export type UserIndexView = Pick<
   | "unit"
   | "deactivatedAt"
   | "emailNotificationsEnabled"
+  | "createdAt"
+  | "updatedAt"
 > & {
   isActive: boolean
 }
@@ -39,6 +41,8 @@ export class IndexSerializer extends BaseSerializer<User> {
         "unit",
         "deactivatedAt",
         "emailNotificationsEnabled",
+        "createdAt",
+        "updatedAt",
       ]),
       isActive: isNil(this.record.deactivatedAt),
     }

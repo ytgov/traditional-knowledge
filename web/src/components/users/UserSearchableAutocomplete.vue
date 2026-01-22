@@ -55,7 +55,7 @@
 
 <!-- Special module scope (non-setup) required for exports -->
 <script lang="ts">
-export { type User, type UserWhereOptions, type UserFiltersOptions } from "@/use/use-users"
+export { type UserAsIndex, type UserWhereOptions, type UserFiltersOptions } from "@/use/use-users"
 </script>
 
 <script lang="ts" setup>
@@ -64,7 +64,7 @@ import { debounce, isEmpty, isNil, omit, uniqBy } from "lodash"
 
 import useUser from "@/use/use-user"
 import useUsers, {
-  type User,
+  type UserAsIndex,
   type UserWhereOptions,
   type UserFiltersOptions,
 } from "@/use/use-users"
@@ -127,7 +127,7 @@ const usersQuery = computed<{
 })
 const { users, totalCount, isLoading, refresh } = useUsers(usersQuery)
 
-const allUsers = computed<User[]>(() => {
+const allUsers = computed<UserAsIndex[]>(() => {
   if (isNil(user.value)) {
     return users.value
   }

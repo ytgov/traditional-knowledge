@@ -45,6 +45,7 @@ export type UserAsIndex = Pick<
   | "firstName"
   | "lastName"
   | "displayName"
+  | "roles"
   | "title"
   | "department"
   | "division"

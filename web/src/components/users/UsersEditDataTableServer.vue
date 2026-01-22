@@ -39,13 +39,13 @@ import usersApi from "@/api/users-api"
 import useCurrentUser from "@/use/use-current-user"
 import useSnack from "@/use/use-snack"
 import useUsers, {
-  type User,
+  type UserAsIndex,
   type UserFiltersOptions,
   type UserWhereOptions,
 } from "@/use/use-users"
 
 type UserTableRow = {
-  item: User
+  item: UserAsIndex
 }
 
 const props = withDefaults(
@@ -80,7 +80,7 @@ const headers = ref([
     title: "Department",
     key: "department",
     value: (item: unknown) => {
-      const { department, division, branch, unit } = item as User
+      const { department, division, branch, unit } = item as UserAsIndex
       return [department, division, branch, unit].filter(Boolean).join(" - ")
     },
   },
@@ -88,7 +88,7 @@ const headers = ref([
     title: "Role",
     key: "roles",
     value: (item: unknown) => {
-      const { roles } = item as User
+      const { roles } = item as UserAsIndex
       const formatedRoleTypes = roles.map((role) => t(`user.roles.${role}`, role))
       return formatedRoleTypes.join(", ")
     },
@@ -137,7 +137,7 @@ function goToUserEditPage(userId: number) {
 const snack = useSnack()
 const isDeleting = ref(false)
 
-async function confirmThenDelete(user: User) {
+async function confirmThenDelete(user: UserAsIndex) {
   const { displayName, email } = user
   const result = confirm(`Are you sure you want to delete ${displayName}: ${email}.`)
   if (result === false) return
