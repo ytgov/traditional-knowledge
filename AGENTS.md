@@ -48,13 +48,14 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 
 ### Common Commands
 
-- `dev up` - Start all services
-- `dev up --watch` or `dev watch` - Boot with watch mode
+- `dev up` - Start all services (includes watch mode by default)
 - `dev down` - Stop services
 - `dev down -v` - Stop and wipe database
 - `dev sqlcmd` - Access database CLI (MSSQL)
-- `dev test_api` - Run all API tests
-- `dev test_web` - Run all web tests
+- `dev test` or `dev test api` - Run all API tests
+- `dev test web` - Run all web tests
+- `dev test_api` - Run all API tests (legacy)
+- `dev test_web` - Run all web tests (legacy)
 - `dev migrate up` or `dev migrate latest` - Run migrations
 - `dev migrate down` - Rollback last migration
 - `dev migrate make create-table-name` - Create new migration
@@ -142,10 +143,13 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 
 **Running tests:**
 
-- All tests: `dev test api`
-- Specific file: `dev test api -- tests/services/example.test.ts --run`
+- All API tests: `dev test` or `dev test api`
+- All web tests: `dev test web`
+- Specific API file: `dev test api -- tests/services/example.test.ts --run`
+- Specific web file: `dev test web -- tests/components/example.test.ts --run`
 - Watch mode: omit `--run`
-- Pattern: `dev test api -- --grep "pattern"`
+- Pattern matching: `dev test api -- --grep "pattern"`
+- Legacy commands: `dev test_api` and `dev test_web` still work
 
 **Test structure:**
 

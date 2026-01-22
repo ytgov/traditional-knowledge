@@ -53,8 +53,8 @@ N/A
 
 # Testing Instructions
 
-1. Run the test suite via `npm run test`.
-2. Boot the app via `npm run dev`.
+1. Run the test suite via `dev test`.
+2. Boot the app via `dev up`.
 3. Log in to the app at http://localhost:3000.
 4. <specific step>
 EOF
@@ -123,8 +123,8 @@ Relates to:
 
 # Testing Instructions
 
-1. Run the test suite via `npm run test`.
-2. Boot the app via `npm run dev`.
+1. Run the test suite via `dev test`.
+2. Boot the app via `dev up`.
 3. Log in to the app at http://localhost:3000.
 4. <Specific testing step>
 ```
@@ -207,8 +207,8 @@ Investigation revealed that the search indexing was not considering Indigenous l
 
 **Always start with these three steps:**
 ```markdown
-1. Run the test suite via `npm run test`.
-2. Boot the app via `npm run dev`.
+1. Run the test suite via `dev test`.
+2. Boot the app via `dev up`.
 3. Log in to the app at http://localhost:3000.
 ```
 
@@ -324,8 +324,8 @@ Investigation revealed that the search indexing was not considering Indigenous l
 
 # Testing Instructions
 
-1. Run the test suite via `npm run test`.
-2. Boot the app via `npm run dev`.
+1. Run the test suite via `dev test`.
+2. Boot the app via `dev up`.
 3. Log in to the app at http://localhost:3000.
 4. Navigate to **Knowledge Base**.
 5. Search for a traditional knowledge entry using Indigenous language terms.
@@ -401,8 +401,8 @@ Investigation revealed that the search indexing was not considering Indigenous l
 
 # Testing Instructions
 
-1. Run the test suite via `npm run test`.
-2. Boot the app via `npm run dev`.
+1. Run the test suite via `dev test`.
+2. Boot the app via `dev up`.
 3. Log in to the app at http://localhost:3000.
 4. Navigate to **Knowledge Base**.
 5. Search for a traditional knowledge entry using Indigenous language terms.
@@ -437,8 +437,8 @@ The current system only supports screen viewing and printing, making it difficul
 
 # Testing Instructions
 
-1. Run the test suite via `npm run test`.
-2. Boot the app via `npm run dev`.
+1. Run the test suite via `dev test`.
+2. Boot the app via `dev up`.
 3. Log in to the app at http://localhost:3000.
 4. Navigate to an existing traditional knowledge entry.
 5. Click the **Export to PDF** button.
@@ -455,7 +455,7 @@ The current system only supports screen viewing and printing, making it difficul
 | No screenshots for UI | Always include for visual changes |
 | Unclear scope | Separate core changes from side fixes |
 | Missing links | Include Fixes/Relates to URLs |
-| Wrong test commands | Use `npm run test` not generic test commands |
+| Wrong test commands | Use `dev test` not generic test commands |
 | Type checking ignored | Always run `npm run type-check` |
 
 ---
