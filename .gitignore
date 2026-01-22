@@ -118,3 +118,6 @@ now.sql
 
 # GitHub Actions
 .secrets
+
+# Claude AI local settings
+.claude/settings.local.json
