@@ -12,11 +12,13 @@ export class UsersController extends BaseController<User> {
     try {
       const where = this.buildWhere()
       const scopes = this.buildFilterScopes()
+      const order = this.buildOrder()
       const scopedUsers = UsersPolicy.applyScope(scopes, this.currentUser)
 
       const totalCount = await scopedUsers.count({ where })
       const users = await scopedUsers.findAll({
         where,
+        order,
         limit: this.pagination.limit,
         offset: this.pagination.offset,
       })
