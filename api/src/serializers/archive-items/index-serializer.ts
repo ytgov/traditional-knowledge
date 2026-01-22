@@ -2,12 +2,12 @@ import { pick } from "lodash"
 
 import { ArchiveItem } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
-import ReferenceSerializer, { UserReferenceView } from "@/serializers/users/reference-serializer"
+import ReferenceSerializer, { UserAsReference } from "@/serializers/users/reference-serializer"
 
 export type ArchiveItemIndexView = Pick<
   ArchiveItem,
   "title" | "description" | "sharingPurpose" | "summary" | "securityLevel" | "status"
-> & { user: UserReferenceView | null; archiveItemFileCount?: number }
+> & { user: UserAsReference | null; archiveItemFileCount?: number }
 
 export class IndexSerializer extends BaseSerializer<ArchiveItem> {
   perform(): ArchiveItemIndexView {
