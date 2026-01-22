@@ -1,6 +1,7 @@
 import path from "path"
 import * as dotenv from "dotenv"
 
+import logger from "@/utils/logger"
 import { stripTrailingSlash } from "@/utils/strip-trailing-slash"
 
 // ====================
@@ -22,10 +23,13 @@ switch (process.env.NODE_ENV) {
     dotEnvPath = path.resolve(APP_ROOT_PATH, ".env.development")
 }
 
-dotenv.config({ path: dotEnvPath })
+dotenv.config({
+  path: dotEnvPath,
+  override: true,
+})
 
 if (process.env.NODE_ENV !== "test") {
-  console.log("Loading env: ", dotEnvPath)
+  logger.debug(`Loading env: ${dotEnvPath}`)
 }
 
 // ====================
@@ -102,7 +106,8 @@ export const BLOB_CONNECTION_STRING = process.env.BLOB_CONNECTION_STRING || ""
 export const BLOB_CONTAINER = process.env.BLOB_CONTAINER || ""
 
 // Yukon Government Directory API
-export const YUKON_GOVERNMENT_DIRECTORY_API_KEY = process.env.YUKON_GOVERNMENT_DIRECTORY_API_KEY || ""
+export const YUKON_GOVERNMENT_DIRECTORY_API_KEY =
+  process.env.YUKON_GOVERNMENT_DIRECTORY_API_KEY || ""
 
 // ====================
 // Build & Release Information
