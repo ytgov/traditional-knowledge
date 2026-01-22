@@ -3,6 +3,10 @@ import * as dotenv from "dotenv"
 
 import { stripTrailingSlash } from "@/utils/strip-trailing-slash"
 
+// ====================
+// Bootstrap & Initialization
+// ====================
+
 export const NODE_ENV = process.env.NODE_ENV || "development"
 export const APP_ROOT_PATH = path.resolve(__dirname, "..")
 
@@ -24,16 +28,30 @@ if (process.env.NODE_ENV !== "test") {
   console.log("Loading env: ", dotEnvPath)
 }
 
+// ====================
+// Server Configuration
+// ====================
+
 export const API_PORT = process.env.API_PORT || "3000"
 export const JOB_PORT = process.env.JOB_PORT || "3001"
-
 export const FRONTEND_URL = process.env.FRONTEND_URL || ""
+export const APPLICATION_NAME = process.env.VITE_APPLICATION_NAME || ""
+export const RUN_SCHEDULER = process.env.RUN_SCHEDULER || "false"
+
+// ====================
+// Authentication & Authorization
+// ====================
+
+// Auth0 Configuration
 export const AUTH0_DOMAIN = stripTrailingSlash(process.env.VITE_AUTH0_DOMAIN || "")
 export const AUTH0_AUDIENCE = process.env.VITE_AUTH0_AUDIENCE
 export const AUTH0_REDIRECT = process.env.VITE_AUTH0_REDIRECT || process.env.FRONTEND_URL || ""
 
-export const APPLICATION_NAME = process.env.VITE_APPLICATION_NAME || ""
+// ====================
+// Database & Cache Configuration
+// ====================
 
+// Database Configuration
 export const DB_HOST = process.env.DB_HOST || ""
 export const DB_USERNAME = process.env.DB_USERNAME || ""
 export const DB_PASSWORD = process.env.DB_PASSWORD || ""
@@ -41,8 +59,10 @@ export const DB_DATABASE = process.env.DB_DATABASE || ""
 export const DB_PORT = parseInt(process.env.DB_PORT || "1433")
 export const DB_TRUST_SERVER_CERTIFICATE = process.env.DB_TRUST_SERVER_CERTIFICATE === "true"
 
+// Redis Configuration
 export const REDIS_CONNECTION_URL = process.env.REDIS_CONNECTION_URL || ""
 
+// Database Health Check Configuration
 export const DB_HEALTH_CHECK_INTERVAL_SECONDS = parseInt(
   process.env.DB_HEALTH_CHECK_INTERVAL_SECONDS || "5"
 )
@@ -54,15 +74,11 @@ export const DB_HEALTH_CHECK_START_PERIOD_SECONDS = parseInt(
   process.env.DB_HEALTH_CHECK_START_PERIOD_SECONDS || "5"
 )
 
-export const RELEASE_TAG = process.env.RELEASE_TAG || ""
-export const GIT_COMMIT_HASH = process.env.GIT_COMMIT_HASH || ""
+// ====================
+// External Service Integrations
+// ====================
 
-export const RUN_SCHEDULER = process.env.RUN_SCHEDULER || "false"
-
-export const AD_CLIENT_ID = process.env.AD_CLIENT_ID || ""
-export const AD_CLIENT_SECRET = process.env.AD_CLIENT_SECRET || ""
-export const AD_TENANT_ID = process.env.AD_TENANT_ID || ""
-
+// AWS Logging Configuration
 export const AWS_LOGGING_ENABLED = process.env.AWS_LOGGING_ENABLED || "false"
 export const AWS_LOGGING_GROUP = process.env.AWS_LOGGING_GROUP || ""
 export const AWS_LOGGING_STREAM = process.env.AWS_LOGGING_STREAM || ""
@@ -71,6 +87,7 @@ export const AWS_LOGGING_ACCESS_ID = process.env.AWS_LOGGING_ACCESS_ID || ""
 export const AWS_LOGGING_ACCESS_KEY = process.env.AWS_LOGGING_ACCESS_KEY || ""
 export const DEFAULT_LOG_LEVEL = process.env.DEFAULT_LOG_LEVEL || "debug"
 
+// Mail Configuration
 export const MAIL_FROM = process.env.MAIL_FROM || "traditional-knowledge@yukon.ca"
 export const MAIL_HOST = process.env.MAIL_HOST || "smtp.gov.yk.ca"
 export const MAIL_PORT = parseInt(process.env.MAIL_PORT || "25")
@@ -80,12 +97,22 @@ export const MAIL_SERVICE = process.env.MAIL_SERVICE || "Outlook365"
 export const MAIL_USER = process.env.MAIL_USER || ""
 export const MAIL_PASS = process.env.MAIL_PASS || ""
 
+// Azure Blob Storage Configuration
 export const BLOB_CONNECTION_STRING = process.env.BLOB_CONNECTION_STRING || ""
 export const BLOB_CONTAINER = process.env.BLOB_CONTAINER || ""
 
+// ====================
+// Build & Release Information
+// ====================
+
+export const RELEASE_TAG = process.env.RELEASE_TAG || ""
+export const GIT_COMMIT_HASH = process.env.GIT_COMMIT_HASH || ""
+
+// ====================
 // Internal Helpers
+// ====================
+
 export const SOURCE_ROOT_PATH =
   NODE_ENV === "production" ? path.join(APP_ROOT_PATH, "dist") : path.join(APP_ROOT_PATH, "src")
 export const TEMPLATE_ROOT_PATH = path.join(SOURCE_ROOT_PATH, "templates")
-
 export const VUESQUE_TEMPLATE_DELIMINATOR_REGEX = /{{([\s\S]+?)}}/g
