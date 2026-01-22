@@ -27,10 +27,11 @@ import {
   InformationSharingAgreementAccessGrantsController,
   InformationSharingAgreementArchiveItemsController,
   InformationSharingAgreementsController,
-  NotificationsController,
   Notifications,
+  NotificationsController,
   RetentionsController,
   UserGroupsController,
+  Users,
   UsersController,
 } from "@/controllers"
 
@@ -65,6 +66,8 @@ router
   .get(UsersController.show)
   .patch(UsersController.update)
   .delete(UsersController.destroy)
+
+router.route("/api/users/:userId/directory-sync").post(Users.DirectorySyncController.create)
 
 router.route("/api/retentions").get(RetentionsController.index).post(RetentionsController.create)
 router
