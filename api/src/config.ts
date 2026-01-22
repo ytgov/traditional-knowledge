@@ -101,6 +101,9 @@ export const MAIL_PASS = process.env.MAIL_PASS || ""
 export const BLOB_CONNECTION_STRING = process.env.BLOB_CONNECTION_STRING || ""
 export const BLOB_CONTAINER = process.env.BLOB_CONTAINER || ""
 
+// Yukon Government Directory API
+export const YUKON_GOVERNMENT_DIRECTORY_API_KEY = process.env.YUKON_GOVERNMENT_DIRECTORY_API_KEY || ""
+
 // ====================
 // Build & Release Information
 // ====================
