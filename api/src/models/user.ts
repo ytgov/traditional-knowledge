@@ -20,6 +20,8 @@ import {
 } from "@sequelize/core/decorators-legacy"
 import { isEmpty, isNil, isUndefined } from "lodash"
 
+import { UserExternalDirectoryIdentifierUniqueIndex } from "@/models/indexes"
+
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
@@ -49,6 +51,10 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @NotNull
   @Index({ unique: true })
   declare auth0Subject: string
+
+  @Attribute(DataTypes.STRING(255))
+  @UserExternalDirectoryIdentifierUniqueIndex
+  declare externalDirectoryIdentifier: string | null
 
   @Attribute(DataTypes.STRING(100))
   @NotNull
@@ -98,6 +104,12 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
 
   @Attribute(DataTypes.STRING(100))
   declare unit: string | null
+
+  @Attribute(DataTypes.DATE(0))
+  declare lastSyncSuccessAt: Date | null
+
+  @Attribute(DataTypes.DATE(0))
+  declare lastSyncFailureAt: Date | null
 
   @Attribute(DataTypes.DATE(0))
   declare deactivatedAt: Date | null
