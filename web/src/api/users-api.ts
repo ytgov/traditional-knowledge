@@ -5,8 +5,8 @@ import {
   type QueryOptions,
   type WhereOptions,
 } from "@/api/base-api"
-import { type Group } from "@/api/groups-api"
-import { type InformationSharingAgreementAccessGrant } from "@/api/information-sharing-agreement-access-grants-api"
+import { type GroupAsReference } from "@/api/groups-api"
+import { type InformationSharingAgreementAccessGrantAsReference } from "@/api/information-sharing-agreement-access-grants-api"
 
 /** Keep in sync with api/src/models/user.ts */
 export enum UserRoles {
@@ -14,8 +14,10 @@ export enum UserRoles {
   USER = "user",
 }
 
+/** Keep in sync with api/src/models/user.ts */
 export type User = {
   id: number
+  externalDirectoryIdentifier: string | null
   email: string
   auth0Subject: string
   firstName: string
@@ -29,18 +31,63 @@ export type User = {
   unit: string | null
   deactivatedAt: string | null
   emailNotificationsEnabled: boolean
+  lastSyncSuccessAt: string | null
+  lastSyncFailureAt: string | null
   createdAt: string
   updatedAt: string
-
-  // Virtuals
-  isActive: boolean
-
-  // Associations
-  adminGroups?: Group[]
-  adminInformationSharingAgreementAccessGrants?: InformationSharingAgreementAccessGrant[]
 }
 
-export type UserReferenceView = Pick<
+/** Keep in sync with api/src/serializers/users/index-serializer.ts */
+export type UserAsIndex = Pick<
+  User,
+  | "id"
+  | "email"
+  | "firstName"
+  | "lastName"
+  | "displayName"
+  | "title"
+  | "department"
+  | "division"
+  | "branch"
+  | "unit"
+  | "deactivatedAt"
+  | "emailNotificationsEnabled"
+  | "createdAt"
+  | "updatedAt"
+> & {
+  isActive: boolean
+}
+
+/** Keep in sync with api/src/serializers/users/show-serializer.ts */
+export type UserAsShow = Pick<
+  User,
+  | "id"
+  | "externalDirectoryIdentifier"
+  | "email"
+  | "firstName"
+  | "lastName"
+  | "displayName"
+  | "roles"
+  | "title"
+  | "department"
+  | "division"
+  | "branch"
+  | "unit"
+  | "deactivatedAt"
+  | "emailNotificationsEnabled"
+  | "lastSyncSuccessAt"
+  | "lastSyncFailureAt"
+  | "createdAt"
+  | "updatedAt"
+> & {
+  isActive: boolean
+} & {
+  adminGroups: GroupAsReference[]
+  adminInformationSharingAgreementAccessGrants: InformationSharingAgreementAccessGrantAsReference[]
+}
+
+/** Keep in sync with api/src/serializers/users/reference-serializer.ts */
+export type UserAsReference = Pick<
   User,
   | "id"
   | "email"
@@ -55,11 +102,14 @@ export type UserReferenceView = Pick<
   | "emailNotificationsEnabled"
 >
 
+export type UserPolicy = Policy
+
 export type UserWhereOptions = WhereOptions<
   User,
   "email" | "title" | "department" | "division" | "branch" | "unit" | "emailNotificationsEnabled"
 >
 
+/** must match model scopes */
 export type UserFiltersOptions = FiltersOptions<{
   search: string | string[]
   inGroup: number
@@ -72,8 +122,9 @@ export type UserQueryOptions = QueryOptions<UserWhereOptions, UserFiltersOptions
 
 export const usersApi = {
   UserRoles,
+
   async list(params: UserQueryOptions = {}): Promise<{
-    users: User[]
+    users: UserAsIndex[]
     totalCount: number
   }> {
     const { data } = await http.get("/api/users", {
@@ -81,30 +132,45 @@ export const usersApi = {
     })
     return data
   },
+
   async get(userId: number): Promise<{
-    user: User
-    policy: Policy
+    user: UserAsShow
+    policy: UserPolicy
   }> {
     const { data } = await http.get(`/api/users/${userId}`)
     return data
   },
+
   async create(attributes: Partial<User>): Promise<{
-    user: User
+    user: UserAsShow
+    policy: UserPolicy
   }> {
     const { data } = await http.post("/api/users", attributes)
     return data
   },
+
   async update(
     userId: number,
     attributes: Partial<User>
   ): Promise<{
-    user: User
+    user: UserAsShow
+    policy: UserPolicy
   }> {
     const { data } = await http.patch(`/api/users/${userId}`, attributes)
     return data
   },
+
   async delete(userId: number): Promise<void> {
     const { data } = await http.delete(`/api/users/${userId}`)
+    return data
+  },
+
+  // Special Actions
+  async directorySync(userId: number): Promise<{
+    user: UserAsShow
+    policy: UserPolicy
+  }> {
+    const { data } = await http.post(`/api/users/${userId}/directory-sync`)
     return data
   },
 }
