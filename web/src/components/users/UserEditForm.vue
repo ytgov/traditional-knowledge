@@ -74,6 +74,26 @@
             cols="12"
             md="6"
           >
+            <!-- TODO: split user edit and user display into two separate components -->
+            <v-text-field
+              :model-value="formatRelative(user.lastActiveAt)"
+              label="Last Accessed"
+              append-inner-icon="mdi-clock-outline"
+              readonly
+              bg-color="gray lighten-4"
+            >
+              <v-tooltip
+                activator="parent"
+                location="top"
+              >
+                {{ formatDateTime(user.lastActiveAt) }}
+              </v-tooltip>
+            </v-text-field>
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
             <v-switch
               v-model="user.emailNotificationsEnabled"
               label="Receive email notifications"
@@ -182,6 +202,7 @@ import { ref, toRefs } from "vue"
 import { type VBtn, type VForm } from "vuetify/components"
 
 import { required } from "@/utils/validators"
+import { formatRelative, formatDateTime } from "@/utils/formatters"
 import usersApi from "@/api/users-api"
 
 import useCurrentUser from "@/use/use-current-user"
