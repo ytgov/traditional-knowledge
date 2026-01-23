@@ -14,6 +14,7 @@ import {
   Default,
   HasMany,
   Index,
+  ModelValidator,
   NotNull,
   PrimaryKey,
   ValidateAttribute,
@@ -170,6 +171,18 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     return this.adminInformationSharingAgreementAccessGrants.some(
       (accessGrant) => accessGrant.informationSharingAgreementId === informationSharingAgreementId
     )
+  }
+
+  // Model Validators
+  @ModelValidator
+  ensureUserDeactivatedAtDeactivationReasonConsistency() {
+    if (!isNil(this.deactivatedAt) && isNil(this.deactivationReason)) {
+      throw new Error("Deactivation reason is required when deactivating a user")
+    }
+
+    if (isNil(this.deactivatedAt) && !isNil(this.deactivationReason)) {
+      throw new Error("Deactivation reason should not be present for active users")
+    }
   }
 
   // Associations
