@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require "shellwords"
 require "rdoc"
 
 require_relative "./github_api"
@@ -15,6 +16,9 @@ class DevHelper
     "changes-from" => :changes_from,
     "description-from" => :description_from,
     "edit-pr" => :edit_pr,
+    "bash-completions" => :bash_completions,
+    "plantuml-to-png" => :plantuml_to_png,
+    "sqlcmd-query" => :sqlcmd_query,
   }
   METHOD_TO_COMMAND = COMMAND_TO_METHOD.invert
 
@@ -58,7 +62,7 @@ class DevHelper
   end
 
   def up(*args, **kwargs)
-    compose(*%w[up --remove-orphans --watch], *args, **kwargs)
+    compose(*%w[up --remove-orphans --force-recreate], *args, **kwargs)
   end
 
   def down(*args, **kwargs)
@@ -71,6 +75,10 @@ class DevHelper
 
   def run(*args, **kwargs)
     compose(*%w[run --rm], *args, **kwargs)
+  end
+
+  def ps(*args, **kwargs)
+    compose(*%w[ps], *args, **kwargs)
   end
 
   # Custom helpers
@@ -110,12 +118,21 @@ class DevHelper
       run(*%w[web npm run check-types], *args, **kwargs)
   end
 
+  def test(*args, **kwargs)
+    service = args[0]
+    if service == "api"
+      test_api(*args.drop(1), **kwargs)
+    elsif service == "web"
+      test_web(*args.drop(1), **kwargs)
+    else
+      test_api(*args, **kwargs)
+    end
+  end
+
   def test_api(*args, **kwargs)
     reformat_project_relative_path_filter_for_vitest!(args, "api/")
     run(*%w[test_api npm run test], *args, **kwargs)
   end
-
-  alias test test_api
 
   def test_web(*args, **kwargs)
     reformat_project_relative_path_filter_for_vitest!(args, "web/")
@@ -123,15 +140,15 @@ class DevHelper
   end
 
   def knex(*args, **kwargs)
-    case args[0]
-    when "migrate:make"
-      knex_command = compose_command(*%w[exec api npm run knex], *args, **kwargs)
-      copy_command = compose_command("cp api:/usr/src/api/src/db/migrations/. ./api/src/db/migrations")
-      command = "#{knex_command} && #{copy_command}"
-      puts "Running: #{command}"
-      exec(command)
+    if RUBY_PLATFORM =~ /linux/
+      run(*%w[api npm run knex], *args, execution_mode: WAIT_FOR_PROCESS, **kwargs)
+
+      file_or_directory = "api/src/db"
+      exit(0) unless take_over_needed?(file_or_directory)
+
+      ownit file_or_directory
     else
-      compose(*%w[exec api npm run knex], *args, **kwargs)
+      run(*%w[api npm run knex], *args, **kwargs)
     end
   end
 
@@ -303,11 +320,37 @@ class DevHelper
 
   def compose_command(*args, **kwargs)
     environment = kwargs.fetch(:environment, "development")
-    "cd #{project_root} && docker compose -f docker-compose.#{environment}.yml #{args.join(" ")}"
+    pipe_input = kwargs.delete(:pipe_input)
+
+    go_to_project_root = "cd #{project_root}"
+    bootstrap_docker = "docker compose -f docker-compose.#{environment}.yml #{args.join(" ")}"
+
+    if pipe_input
+      shell_safe_pipe_input = Shellwords.escape(pipe_input)
+      pipe_input_to_compose = "printf '%s\\n' #{shell_safe_pipe_input} |"
+
+      <<~BASH
+        #{go_to_project_root} && \
+        #{pipe_input_to_compose} #{dynamic_environment_variables} #{bootstrap_docker}
+      BASH
+    else
+      <<~BASH
+        #{go_to_project_root} && \
+        #{dynamic_environment_variables} #{bootstrap_docker}
+      BASH
+    end
   end
 
   def project_root
     @project_root ||= File.absolute_path("#{__dir__}/..")
+  end
+
+  def dynamic_environment_variables
+    if RUBY_PLATFORM =~ /linux/ && user_id == '1000' && group_id == '1000'
+      %(HOST_USER_ID="#{user_id}" HOST_GROUP_ID="#{group_id}")
+    else
+      ""
+    end
   end
 
   def take_over_needed?(file_or_directory)
@@ -346,6 +389,91 @@ class DevHelper
       end
 
       puts "Reformatted path filter from project relative to service relative for vitest."
+    end
+  end
+
+  ##
+  # Generate bash completions for the dev command.
+  def bash_completions(*_args, **_kwargs)
+    public_methods(false)
+      .sort
+      .map { |word| METHOD_TO_COMMAND.fetch(word, word) }
+      .join("\n")
+  end
+
+  ##
+  # Convert PlantUML file to PNG using local PlantUML server.
+  def plantuml_to_png(*args, **kwargs)
+    file_path = args.pop
+    raise ScriptError, "Must provide a file path." if file_path.nil?
+
+    png_path = file_path.gsub(/\. (wsd|pu|puml|plantuml|uml)$/, ".png")
+
+    command = <<~BASH
+      curl #{args.join(" ")} \
+        --data-binary @'#{file_path}' \
+        http://localhost:9999/png > '#{png_path}'
+    BASH
+
+    system(command)
+    puts "Generated PNG: #{png_path}"
+  end
+
+  ##
+  # Execute SQL query directly using sqlcmd.
+  def sqlcmd_query(query, *args, **kwargs)
+    if query.nil? || query.strip.empty?
+      raise ArgumentError, "Query cannot be nil or empty"
+    end
+
+    sqlcmd(args, enable_tty: true, pipe_input: query, **kwargs)
+  end
+
+  def container_id(container_name, *args, **kwargs)
+    command = compose_command(*%w[ps -q], container_name, *args, **kwargs)
+    puts "Running: #{command}"
+    id_of_container = `#{command}`.chomp
+    puts "Container id is: #{id_of_container}"
+    id_of_container
+  end
+
+  def service_running?(container_name)
+    ps(*%w[-q --status=running], execution_mode: WAIT_FOR_PROCESS, slient: true) != ""
+  end
+
+  ##
+  # Generate help documentation.
+  def help(*args, **kwargs)
+    rdoc = RDoc::RDoc.new
+    rdoc_arguments = %w[--dry-run --quiet] + [__FILE__]
+    rdoc.document(rdoc_arguments)
+    rdoc_data_for_class = rdoc.store.classes_hash["DevHelper"]
+
+    puts <<~HELP.chomp
+      Development Helper.
+
+      Usage:
+        dev <command> [args]
+
+      Available commands:
+    HELP
+
+    all_public_methods = public_methods(false).sort
+    all_public_methods.delete(:call)
+    longest_command_length = all_public_methods.map(&:length).max
+
+    all_public_methods.each do |method_name|
+      method_doc = rdoc_data_for_class.find_method_named(method_name.to_s)
+      command = METHOD_TO_COMMAND.fetch(method_name, method_name)
+      comment = method_doc.comment
+
+      print "  #{command}"
+      unless comment.empty?
+        first_line_of_comment = comment.to_s.lines[0].strip
+        pad = '-' * (longest_command_length - command.length + 1)
+        print " #{pad} #{first_line_of_comment}"
+      end
+      puts
     end
   end
 end
