@@ -80,7 +80,7 @@
               label="Last Accessed"
               append-inner-icon="mdi-clock-outline"
               readonly
-              bg-color="gray lighten-4"
+              bg-color="grey-lighten-3"
             >
               <v-tooltip
                 activator="parent"
