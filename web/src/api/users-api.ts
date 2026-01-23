@@ -33,6 +33,7 @@ export type User = {
   emailNotificationsEnabled: boolean
   lastSyncSuccessAt: string | null
   lastSyncFailureAt: string | null
+  lastActiveAt: string | null
   createdAt: string
   updatedAt: string
 }
@@ -53,6 +54,7 @@ export type UserAsIndex = Pick<
   | "unit"
   | "deactivatedAt"
   | "emailNotificationsEnabled"
+  | "lastActiveAt"
   | "createdAt"
   | "updatedAt"
 > & {
@@ -78,6 +80,7 @@ export type UserAsShow = Pick<
   | "emailNotificationsEnabled"
   | "lastSyncSuccessAt"
   | "lastSyncFailureAt"
+  | "lastActiveAt"
   | "createdAt"
   | "updatedAt"
 > & {

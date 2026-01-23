@@ -22,6 +22,7 @@ export type UserAsShow = Pick<
   | "emailNotificationsEnabled"
   | "lastSyncSuccessAt"
   | "lastSyncFailureAt"
+  | "lastActiveAt"
   | "createdAt"
   | "updatedAt"
 > & {
@@ -71,6 +72,7 @@ export class ShowSerializer extends BaseSerializer<User> {
         "emailNotificationsEnabled",
         "lastSyncSuccessAt",
         "lastSyncFailureAt",
+        "lastActiveAt",
         "createdAt",
         "updatedAt",
       ]),

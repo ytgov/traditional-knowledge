@@ -9,6 +9,23 @@
     :loading="isLoading"
     @click:row="(_event: unknown, { item }: UserTableRow) => goToUserEditPage(item.id)"
   >
+    <template #item.lastActiveAt="{ item }">
+      <span v-if="item.lastActiveAt">
+        {{ formatRelative(item.lastActiveAt) }}
+        <v-tooltip
+          activator="parent"
+          location="top"
+        >
+          {{ formatDateTime(item.lastActiveAt) }}
+        </v-tooltip>
+      </span>
+      <span
+        v-else
+        class="text-grey"
+      >
+        Never
+      </span>
+    </template>
     <template #item.actions="{ item }">
       <div class="d-flex justify-end align-center">
         <v-btn
@@ -32,6 +49,7 @@ import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
 import { useRouteQuery } from "@vueuse/router"
 
+import { formatRelative, formatDateTime } from "@/utils/formatters"
 import useVuetifySortByToSafeRouteQuery from "@/use/utils/use-vuetify-sort-by-to-safe-route-query"
 import useVuetifySortByToSequelizeSafeOrder from "@/use/utils/use-vuetify-sort-by-to-sequelize-safe-order"
 
@@ -93,6 +111,10 @@ const headers = ref([
       return formatedRoleTypes.join(", ")
     },
     sortable: false,
+  },
+  {
+    title: "Last Accessed",
+    key: "lastActiveAt",
   },
   {
     title: "Actions",
