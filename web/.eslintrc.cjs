@@ -19,7 +19,7 @@ module.exports = {
     extraFileExtensions: [".vue"],
     parser: "@typescript-eslint/parser",
     tsconfigRootDir: __dirname,
-    project: ["./tsconfig.node.json", "./tsconfig.json"],
+    project: ["./tsconfig.node.json", "./tsconfig.json", "./tests/tsconfig.json"],
     sourceType: "module",
   },
   plugins: ["vue", "@typescript-eslint"],
@@ -29,6 +29,18 @@ module.exports = {
       "error",
       {
         allowModifiers: true,
+      },
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        args: "all",
+        argsIgnorePattern: "^_",
+        caughtErrors: "all",
+        caughtErrorsIgnorePattern: "^_",
+        destructuredArrayIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        ignoreRestSiblings: true,
       },
     ],
   },
