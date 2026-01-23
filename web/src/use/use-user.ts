@@ -1,17 +1,19 @@
 import { type Ref, reactive, toRefs, unref, watch } from "vue"
 import { isNil } from "lodash"
 
-import usersApi, { type UserAsShow } from "@/api/users-api"
+import usersApi, { type UserAsShow, type UserPolicy } from "@/api/users-api"
 
 export { type UserAsShow }
 
 export function useUser(id: Ref<number | null | undefined>) {
   const state = reactive<{
     user: UserAsShow | null
+    policy: UserPolicy | null
     isLoading: boolean
     isErrored: boolean
   }>({
     user: null,
+    policy: null,
     isLoading: false,
     isErrored: false,
   })
@@ -24,9 +26,10 @@ export function useUser(id: Ref<number | null | undefined>) {
 
     state.isLoading = true
     try {
-      const { user } = await usersApi.get(staticId)
+      const { user, policy } = await usersApi.get(staticId)
       state.isErrored = false
       state.user = user
+      state.policy = policy
       return user
     } catch (error) {
       console.error(`Failed to fetch user: ${error}`, { error })
@@ -49,9 +52,10 @@ export function useUser(id: Ref<number | null | undefined>) {
 
     state.isLoading = true
     try {
-      const { user } = await usersApi.update(staticId, state.user)
+      const { user, policy } = await usersApi.update(staticId, state.user)
       state.isErrored = false
       state.user = user
+      state.policy = policy
       return user
     } catch (error) {
       console.error(`Failed to save user: ${error}`, { error })

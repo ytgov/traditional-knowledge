@@ -171,6 +171,7 @@
             </v-btn>
             <v-spacer />
             <v-btn
+              v-if="policy?.update"
               class="ml-3"
               :loading="isLoading"
               color="primary"
@@ -233,7 +234,7 @@ const emit = defineEmits<{
 }>()
 
 const { userId } = toRefs(props)
-const { user, save, isLoading } = useUser(userId)
+const { user, policy, save, isLoading } = useUser(userId)
 
 const form = ref<InstanceType<typeof VForm> | null>(null)
 const snack = useSnack()
