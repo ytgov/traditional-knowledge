@@ -139,11 +139,11 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   declare deletedAt: Date | null
 
   // Magic Attributes
-  get isSystemAdmin(): NonAttribute<boolean | undefined> {
-    return this.roles?.some((role) => role === UserRoles.SYSTEM_ADMIN)
+  get isSystemAdmin(): NonAttribute<boolean> {
+    return this.roles.some((role) => role === UserRoles.SYSTEM_ADMIN)
   }
 
-  get isGroupAdmin(): NonAttribute<boolean | undefined> {
+  get isGroupAdmin(): NonAttribute<boolean> {
     if (isUndefined(this.adminGroups)) {
       throw new Error("Expected adminGroups association to be pre-loaded.")
     }
