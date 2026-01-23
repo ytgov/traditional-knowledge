@@ -15,7 +15,11 @@ import { APPLICATION_NAME, GIT_COMMIT_HASH, NODE_ENV, RELEASE_TAG } from "@/conf
 import { logger } from "@/utils/logger"
 import migrator from "@/db/migrator"
 
-import { jwtMiddleware, ensureAndAuthorizeCurrentUser } from "@/middlewares"
+import {
+  jwtMiddleware,
+  ensureAndAuthorizeCurrentUser,
+  trackLastActiveMiddleware,
+} from "@/middlewares"
 
 import {
   ArchiveItemAuditsController,
@@ -48,7 +52,7 @@ router.route("/_status").get((_req: Request, res: Response) => {
 router.use("/migrate", migrator.migrationRouter)
 
 // api routes
-router.use("/api", jwtMiddleware, ensureAndAuthorizeCurrentUser)
+router.use("/api", jwtMiddleware, ensureAndAuthorizeCurrentUser, trackLastActiveMiddleware)
 
 router.route("/api/current-user").get(CurrentUserController.show)
 
