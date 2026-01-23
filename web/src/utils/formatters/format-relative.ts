@@ -1,13 +1,13 @@
-import { isEmpty, isNil } from "lodash"
+import { isNil } from "lodash"
 import { DateTime } from "luxon"
 
 export function formatRelative(input: string | Date | undefined | null): string {
-  if (isNil(input) || isEmpty(input)) return ""
+  if (isNil(input) || input === "") return ""
 
   const dateTime =
     typeof input === "string"
       ? DateTime.fromISO(input).toLocal()
-      : DateTime.fromJSDate(input!).toLocal()
+      : DateTime.fromJSDate(input).toLocal()
 
   if (!dateTime.isValid) return ""
 
