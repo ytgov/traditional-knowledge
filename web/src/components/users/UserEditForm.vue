@@ -91,6 +91,18 @@
             </v-text-field>
           </v-col>
           <v-col
+            v-if="isSystemAdmin"
+            cols="12"
+            md="3"
+          >
+            <UserAccountActivationSwitch
+              label="Acount Active"
+              :user-id="user.id"
+              :is-active="isNil(user.deactivatedAt)"
+              @success="refresh"
+            />
+          </v-col>
+          <v-col
             cols="12"
             md="6"
           >
@@ -211,6 +223,7 @@ import useSnack from "@/use/use-snack"
 import useUser from "@/use/use-user"
 
 import UserRolesSelect from "@/components/users/UserRolesSelect.vue"
+import UserAccountActivationSwitch from "@/components/users/UserAccountActivationSwitch.vue"
 
 type CancelButtonOptions = VBtn["$props"]
 
@@ -234,11 +247,11 @@ const emit = defineEmits<{
 }>()
 
 const { userId } = toRefs(props)
-const { user, policy, save, isLoading } = useUser(userId)
+const { user, policy, isLoading, save, refresh: refreshUser } = useUser(userId)
 
 const form = ref<InstanceType<typeof VForm> | null>(null)
 const snack = useSnack()
-const { currentUser, refresh: refreshCurrentUser } = useCurrentUser<true>()
+const { currentUser, isSystemAdmin, refresh: refreshCurrentUser } = useCurrentUser<true>()
 
 async function saveWrapper() {
   if (isNil(user.value)) return
@@ -261,6 +274,14 @@ async function saveWrapper() {
   } catch (error) {
     console.error(`Failed to save user: ${error}`, { error })
     snack.error(`Failed to save user: ${error}`)
+  }
+}
+
+async function refresh() {
+  await refreshUser()
+
+  if (user.value?.id === currentUser.value.id) {
+    await refreshCurrentUser()
   }
 }
 

@@ -172,6 +172,17 @@ export const usersApi = {
     return data
   },
 
+  // Stateful Actions
+  async activate(userId: number): Promise<{ user: UserAsShow }> {
+    const { data } = await http.delete(`/api/users/${userId}/deactivate`)
+    return data
+  },
+
+  async deactivate(userId: number, attributes: Partial<User>): Promise<{ user: UserAsShow }> {
+    const { data } = await http.post(`/api/users/${userId}/deactivate`, attributes)
+    return data
+  },
+
   // Special Actions
   async directorySync(userId: number): Promise<{
     user: UserAsShow
