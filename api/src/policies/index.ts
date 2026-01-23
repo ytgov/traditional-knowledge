@@ -1,3 +1,5 @@
+export { type BaseScopeOptions } from "./base-policy"
+
 export { ArchiveItemAuditsPolicy } from "./archive-item-audits-policy"
 export { ArchiveItemsPolicy } from "./archive-items-policy"
 export { CategoryPolicy } from "./category-policy"
@@ -7,6 +9,8 @@ export { InformationSharingAgreementArchiveItemPolicy } from "./information-shar
 export { InformationSharingAgreementPolicy } from "./information-sharing-agreement-policy"
 export { NotificationsPolicy } from "./notifications-policy"
 export { RetentionPolicy } from "./retention-policy"
-export { type BaseScopeOptions } from "./base-policy"
 export { UserGroupPolicy } from "./user-group-policy"
 export { UsersPolicy } from "./users-policy"
+
+// Bundled Exports
+export * as Users from "./users"

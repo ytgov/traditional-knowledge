@@ -19,6 +19,7 @@ export type UserAsShow = Pick<
   | "branch"
   | "unit"
   | "deactivatedAt"
+  | "deactivationReason"
   | "emailNotificationsEnabled"
   | "lastSyncSuccessAt"
   | "lastSyncFailureAt"
@@ -69,6 +70,7 @@ export class ShowSerializer extends BaseSerializer<User> {
         "branch",
         "unit",
         "deactivatedAt",
+        "deactivationReason",
         "emailNotificationsEnabled",
         "lastSyncSuccessAt",
         "lastSyncFailureAt",

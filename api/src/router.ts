@@ -72,6 +72,10 @@ router
   .delete(UsersController.destroy)
 
 router.route("/api/users/:userId/directory-sync").post(Users.DirectorySyncController.create)
+router
+  .route("/api/users/:userId/deactivate")
+  .post(Users.DeactivationController.create)
+  .delete(Users.DeactivationController.destroy)
 
 router.route("/api/retentions").get(RetentionsController.index).post(RetentionsController.create)
 router

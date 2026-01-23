@@ -17,6 +17,7 @@ export type UserIndexView = Pick<
   | "branch"
   | "unit"
   | "deactivatedAt"
+  | "deactivationReason"
   | "emailNotificationsEnabled"
   | "lastActiveAt"
   | "createdAt"
@@ -41,6 +42,7 @@ export class IndexSerializer extends BaseSerializer<User> {
         "branch",
         "unit",
         "deactivatedAt",
+        "deactivationReason",
         "emailNotificationsEnabled",
         "lastActiveAt",
         "createdAt",
