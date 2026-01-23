@@ -114,6 +114,9 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @Attribute(DataTypes.DATE(0))
   declare deactivatedAt: Date | null
 
+  @Attribute(DataTypes.DATE(0))
+  declare lastActiveAt: Date | null
+
   @Attribute(DataTypes.BOOLEAN)
   @NotNull
   @Default(false)
