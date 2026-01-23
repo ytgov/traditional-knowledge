@@ -5,6 +5,7 @@ import logger from "@/utils/logger"
 import BaseController from "@/controllers/base-controller"
 import { User } from "@/models"
 import { DeactivationPolicy } from "@/policies/users"
+import { Users } from "@/serializers"
 import { ActivateService, DeactivateService } from "@/services/users"
 
 export class DeactivationController extends BaseController {
@@ -30,8 +31,9 @@ export class DeactivationController extends BaseController {
         permittedAttributes,
         this.currentUser
       )
+      const serializedUser = Users.ShowSerializer.perform(updatedUser)
       return this.response.json({
-        user: updatedUser,
+        user: serializedUser,
         policy,
       })
     } catch (error) {
@@ -59,8 +61,9 @@ export class DeactivationController extends BaseController {
       }
 
       const updatedUser = await ActivateService.perform(user, this.currentUser)
+      const serializedUser = Users.ShowSerializer.perform(updatedUser)
       return this.response.json({
-        user: updatedUser,
+        user: serializedUser,
         policy,
       })
     } catch (error) {
