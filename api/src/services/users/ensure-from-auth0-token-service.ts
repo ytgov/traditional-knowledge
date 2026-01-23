@@ -1,4 +1,5 @@
 import { Includeable } from "@sequelize/core"
+import { isNil } from "lodash"
 
 import { auth0Integration } from "@/integrations"
 import { User } from "@/models"
@@ -23,7 +24,9 @@ export class EnsureFromAuth0TokenService extends BaseService {
       include: this.include,
     })
 
-    if (existingUser) {
+    if (!isNil(existingUser) && !isNil(existingUser.deactivatedAt)) {
+      throw new Error("User is deactivated.")
+    } else if (!isNil(existingUser)) {
       return existingUser
     }
 
@@ -31,7 +34,9 @@ export class EnsureFromAuth0TokenService extends BaseService {
       where: { auth0Subject: email },
       include: this.include,
     })
-    if (firstTimeUser) {
+    if (!isNil(firstTimeUser) && !isNil(firstTimeUser.deactivatedAt)) {
+      throw new Error("User is deactivated.")
+    } else if (!isNil(firstTimeUser)) {
       await firstTimeUser.update({ auth0Subject })
       return firstTimeUser
     }
