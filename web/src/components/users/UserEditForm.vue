@@ -99,8 +99,12 @@
               label="Acount Active"
               :user-id="user.id"
               :is-active="isNil(user.deactivatedAt)"
+              :disabled="user.id === currentUser.id"
               @success="refresh"
             />
+            <v-tooltip activator="parent">
+              <span>You cannot change account activation of current user.</span>
+            </v-tooltip>
           </v-col>
           <v-col
             cols="12"
