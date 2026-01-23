@@ -30,6 +30,7 @@ export type User = {
   branch: string | null
   unit: string | null
   deactivatedAt: string | null
+  deactivationReason: string | null
   emailNotificationsEnabled: boolean
   lastSyncSuccessAt: string | null
   lastSyncFailureAt: string | null
@@ -53,6 +54,7 @@ export type UserAsIndex = Pick<
   | "branch"
   | "unit"
   | "deactivatedAt"
+  | "deactivationReason"
   | "emailNotificationsEnabled"
   | "lastActiveAt"
   | "createdAt"
@@ -77,6 +79,7 @@ export type UserAsShow = Pick<
   | "branch"
   | "unit"
   | "deactivatedAt"
+  | "deactivationReason"
   | "emailNotificationsEnabled"
   | "lastSyncSuccessAt"
   | "lastSyncFailureAt"

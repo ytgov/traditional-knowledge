@@ -26,6 +26,14 @@
         Never
       </span>
     </template>
+    <template #item.deactivatedAt="{ value }">
+      <v-chip
+        :color="isNil(value) ? 'success' : 'error'"
+        size="small"
+      >
+        {{ isNil(value) ? "Active" : "Inactive" }}
+      </v-chip>
+    </template>
     <template #item.actions="{ item }">
       <div class="d-flex justify-end align-center">
         <v-btn
@@ -48,6 +56,7 @@ import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
 import { useRouteQuery } from "@vueuse/router"
+import { isNil } from "lodash"
 
 import { formatRelative, formatDateTime } from "@/utils/formatters"
 import useVuetifySortByToSafeRouteQuery from "@/use/utils/use-vuetify-sort-by-to-safe-route-query"
@@ -111,6 +120,10 @@ const headers = ref([
       return formatedRoleTypes.join(", ")
     },
     sortable: false,
+  },
+  {
+    title: "Status",
+    key: "deactivatedAt",
   },
   {
     title: "Last Accessed",
