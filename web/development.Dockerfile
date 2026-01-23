@@ -6,7 +6,7 @@ WORKDIR /usr/src/web
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm clean-install
 
 COPY . .
 
