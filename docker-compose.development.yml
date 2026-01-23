@@ -35,9 +35,6 @@ services:
     build:
       context: ./api
       dockerfile: development.Dockerfile
-      args:
-        USER_ID: ${HOST_USER_ID:-1000}
-        GROUP_ID: ${HOST_GROUP_ID:-1000}
     env_file:
       - ./api/.env.development
     environment:
@@ -63,9 +60,6 @@ services:
     build:
       context: ./web
       dockerfile: development.Dockerfile
-      args:
-        USER_ID: ${HOST_USER_ID:-1000}
-        GROUP_ID: ${HOST_GROUP_ID:-1000}
     environment:
       <<: *default-environment
     user: "${HOST_USER_ID:-0}:${HOST_GROUP_ID:-0}"
@@ -83,9 +77,6 @@ services:
     build:
       context: ./api
       dockerfile: development.Dockerfile
-      args:
-        USER_ID: ${HOST_USER_ID:-1000}
-        GROUP_ID: ${HOST_GROUP_ID:-1000}
     command: /bin/true
     env_file:
       - ./api/.env.development
@@ -112,9 +103,6 @@ services:
     build:
       context: ./web
       dockerfile: development.Dockerfile
-      args:
-        USER_ID: ${HOST_USER_ID:-1000}
-        GROUP_ID: ${HOST_GROUP_ID:-1000}
     command: /bin/true
     environment:
       <<: *default-environment
@@ -170,9 +158,6 @@ services:
     build:
       context: ./archiver
       dockerfile: development.Dockerfile
-      args:
-        USER_ID: ${HOST_USER_ID:-1000}
-        GROUP_ID: ${HOST_GROUP_ID:-1000}
     env_file:
       - ./archiver/.env.development
     environment:
