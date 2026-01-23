@@ -22,6 +22,10 @@ export class DeactivateService extends BaseService {
       throw new Error("User is already deactivated")
     }
 
+    if (this.user.id === this.currentUser.id) {
+      throw new Error("Cannot deactivate self")
+    }
+
     const { deactivationReason } = this.attributes
 
     if (isNil(deactivationReason) || isEmpty(deactivationReason.trim())) {

@@ -18,6 +18,10 @@ export class ActivateService extends BaseService {
       throw new Error("User is already active")
     }
 
+    if (this.user.id === this.currentUser.id) {
+      throw new Error("Cannot activate self")
+    }
+
     await this.user.update({
       deactivatedAt: null,
       deactivationReason: null,
