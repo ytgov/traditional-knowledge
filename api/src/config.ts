@@ -1,7 +1,6 @@
 import path from "path"
 import * as dotenv from "dotenv"
 
-import logger from "@/utils/logger"
 import { stripTrailingSlash } from "@/utils/strip-trailing-slash"
 
 // ====================
@@ -29,7 +28,7 @@ dotenv.config({
 })
 
 if (process.env.NODE_ENV !== "test") {
-  logger.debug(`Loading env: ${dotEnvPath}`)
+  console.debug(`Loading env: ${dotEnvPath}`)
 }
 
 // ====================
