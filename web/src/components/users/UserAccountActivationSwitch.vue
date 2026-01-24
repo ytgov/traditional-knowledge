@@ -9,8 +9,8 @@
         ref="userDeactivationDialogRef"
         @success="emitSuccess"
       />
-      <UserActivatationDialog
-        ref="userActivatationDialogRef"
+      <UserActivationDialog
+        ref="userActivationDialogRef"
         @success="emitSuccess"
       />
     </template>
@@ -21,7 +21,7 @@
 import { isNil } from "lodash"
 import { useTemplateRef } from "vue"
 
-import UserActivatationDialog from "@/components/users/UserActivatationDialog.vue"
+import UserActivationDialog from "@/components/users/UserActivationDialog.vue"
 import UserDeactivationDialog from "@/components/users/UserDeactivationDialog.vue"
 
 const props = defineProps<{
@@ -34,15 +34,13 @@ const emit = defineEmits<{
 }>()
 
 const userDeactivationDialogRef = useTemplateRef("userDeactivationDialogRef")
-const userActivatationDialogRef = useTemplateRef("userActivatationDialogRef")
+const userActivationDialogRef = useTemplateRef("userActivationDialogRef")
 
 async function toggleUserActivation(isActive: boolean | null) {
-  console.log("toggleUserActivation", { isActive })
-  console.log(`userActivatationDialogRef.value:`, userActivatationDialogRef.value)
   if (isNil(isActive)) return
 
   if (isActive) {
-    userActivatationDialogRef.value?.open(props.userId)
+    userActivationDialogRef.value?.open(props.userId)
   } else {
     userDeactivationDialogRef.value?.open(props.userId)
   }

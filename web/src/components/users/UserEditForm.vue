@@ -96,7 +96,6 @@
             md="3"
           >
             <UserAccountActivationSwitch
-              label="Acount Active"
               :user-id="user.id"
               :is-active="isNil(user.deactivatedAt)"
               :disabled="user.id === currentUser.id"
