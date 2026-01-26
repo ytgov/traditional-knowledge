@@ -101,7 +101,10 @@
               :disabled="user.id === currentUser.id"
               @success="refresh"
             />
-            <v-tooltip activator="parent">
+            <v-tooltip
+              v-if="user.id === currentUser.id"
+              activator="parent"
+            >
               <span>You cannot change account activation of current user.</span>
             </v-tooltip>
           </v-col>
