@@ -12,7 +12,7 @@ WORKDIR /usr/src/archiver
 
 COPY ./package*.json ./
 COPY ./tsconfig*.json ./
-RUN npm install
+RUN npm clean-install
 
 COPY . .
 
@@ -92,7 +92,7 @@ WORKDIR /home/node/app
 RUN chown -R node:node /home/node/app
 
 COPY --from=archiver-build-stage --chown=node:node /usr/src/archiver/package*.json ./
-RUN npm install && npm cache clean --force --loglevel=error
+RUN npm clean-install && npm cache clean --force --loglevel=error
 
 COPY --from=archiver-build-stage --chown=node:node /usr/src/archiver/dist ./dist/
 

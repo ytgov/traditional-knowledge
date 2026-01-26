@@ -1,37 +1,53 @@
-import { isEmpty } from "lodash"
-import { type Ref } from "vue"
-import { useRouteQuery } from "@vueuse/router"
+import { isEmpty, isNil, isString } from "lodash"
+import { Ref } from "vue"
 
 import { type VDataTable } from "vuetify/components"
 
-import { jsonTransformer } from "@/utils/use-route-query-transformers"
+import useRouteQueryEnhanced from "@/use/utils/use-route-query-enhanced"
 
 export type SortItem = VDataTable["sortBy"][0]
+
+/**
+ * Must not conflict with web/src/use/utils/use-vuetify-sort-by-to-sequelize-safe-order.ts SEPARATOR.
+ */
+const SEPARATOR = "_"
 
 export function useVuetifySortByToSafeRouteQuery(
   name: string,
   defaultValue?: SortItem[] | undefined
 ): Ref<SortItem[] | undefined> {
-  const defaultValueString = jsonTransformer.set(defaultValue)
+  function parse(newSortBy: string[] | string | undefined): SortItem[] | undefined {
+    if (isNil(newSortBy) || isEmpty(newSortBy)) {
+      return
+    }
 
-  function get<T>(value: string | undefined): T | undefined {
-    if (isEmpty(value)) return undefined
+    if (isString(newSortBy)) {
+      newSortBy = [newSortBy]
+    }
 
-    return jsonTransformer.get<T>(value)
+    return newSortBy.map((entry) => {
+      const [key, order] = entry.split(SEPARATOR)
+      return { key, order } as SortItem
+    })
   }
 
-  function set<T>(value: T | undefined): string | undefined {
-    if (isEmpty(value)) return undefined
+  function stringify(sortByValue: SortItem[] | undefined): string[] | undefined {
+    if (isNil(sortByValue) || isEmpty(sortByValue)) {
+      return
+    }
 
-    return jsonTransformer.set<T>(value)
+    return sortByValue.map(({ key, order }) => `${key}${SEPARATOR}${order}`)
   }
 
-  return useRouteQuery<string | undefined, SortItem[] | undefined>(name, defaultValueString, {
-    transform: {
-      get,
-      set,
-    },
-  })
+  const defaultValueString = stringify(defaultValue)
+  return useRouteQueryEnhanced<string[] | undefined, SortItem[] | undefined>(
+    name,
+    defaultValueString,
+    {
+      parse,
+      stringify,
+    }
+  )
 }
 
 export default useVuetifySortByToSafeRouteQuery

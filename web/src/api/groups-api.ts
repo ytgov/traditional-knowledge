@@ -17,6 +17,9 @@ export type Group = {
   updatedAt: string
 }
 
+/** Keep in sync with api/src/serializers/groups/reference-serializer.ts */
+export type GroupAsReference = Pick<Group, "id" | "name" | "acronym" | "description" | "isHost">
+
 export type GroupWhereOptions = WhereOptions<Group, "name" | "acronym" | "isHost">
 
 export type GroupFiltersOptions = FiltersOptions<{

@@ -18,7 +18,7 @@ auto_execution_mode: 1
 **Decision Rules:**
 - **Title format:** Use `Issue-<number>: Description` for GitHub issues, `TICKET-ID: Description` for Jira tickets, `Fix: Description` for bug fixes, or `Action Verb + Noun` for features. Always use AP style title case.
 - **Implementation section:** Focus on purpose and intent, not specific files. A reviewer can see file changes in the diff - the Implementation section explains the reasoning behind those changes.
-- **Screenshots:** Required for UI changes, "N/A - backend changes only" for non-UI
+- **Screenshots:** Check the diff for `web/src/components/` or `web/src/pages/` changes. If present, write "TODO" and let user add screenshots. Only write "N/A - backend changes only" if there are truly no frontend changes.
 - **Draft mode:** Always create PRs as drafts first
 
 This workflow covers the process of creating and editing well-structured pull requests that follow the established patterns in the Traditional Knowledge project.
@@ -49,7 +49,7 @@ Relates to:
 
 # Screenshots
 
-N/A
+TODO - check diff for web/src/components/ or web/src/pages/ changes
 
 # Testing Instructions
 
@@ -137,7 +137,7 @@ The GitHub PR template provides the basic structure. Fill in each section follow
 - **Relates to:** Add related PRs/issues or remove this section entirely
 - **Context:** Explain the problem, user reports, or motivation for the change
 - **Implementation:** List all changes made in numbered format
-- **Screenshots:** Add screenshots for UI changes or "N/A - backend changes only"
+- **Screenshots:** Check diff for frontend changes; write "TODO" and let user add screenshots if UI changed, "N/A" only if no frontend files changed
 - **Testing Instructions:** Always start with the standard 3 steps, then add specific steps
 
 ### 4. Section Guidelines
@@ -191,10 +191,18 @@ Investigation revealed that the search indexing was not considering Indigenous l
 
 #### Screenshots Section
 
-- Required for UI changes
+**Before writing this section, check the diff:**
+```bash
+git diff main...HEAD --name-only | grep -E "^web/src/(components|pages)/"
+```
+
+- **If files are returned:** UI changes exist - write "TODO" and let user add screenshots
+- **If no files returned:** Write "N/A - backend changes only"
+
+**For humans adding screenshots:**
 - Use `<img>` tags with width/height
-- Include before/after comparisons
-- Write "N/A - backend changes only" for non-UI changes
+- Include before/after comparisons for visual changes
+- Capture the relevant UI state after the change
 
 **Example:**
 ```markdown
@@ -453,6 +461,7 @@ The current system only supports screen viewing and printing, making it difficul
 | Vague context | Be specific about the problem and user impact |
 | Missing testing steps | Start with standard 3 steps for Traditional Knowledge |
 | No screenshots for UI | Always include for visual changes |
+| Marking screenshots N/A when UI changed | Check diff for `web/src/components/` or `web/src/pages/` before writing N/A |
 | Unclear scope | Separate core changes from side fixes |
 | Missing links | Include Fixes/Relates to URLs |
 | Wrong test commands | Use `dev test` not generic test commands |
@@ -460,6 +469,6 @@ The current system only supports screen viewing and printing, making it difficul
 
 ---
 
-**Last Updated:** 2026-01-22
+**Last Updated:** 2026-01-23
 
 *Update this workflow when you discover better patterns or Traditional Knowledge project conventions evolve.*

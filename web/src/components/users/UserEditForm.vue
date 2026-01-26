@@ -74,6 +74,44 @@
             cols="12"
             md="6"
           >
+            <!-- TODO: split user edit and user display into two separate components -->
+            <v-text-field
+              :model-value="formatRelative(user.lastActiveAt)"
+              label="Last Accessed"
+              append-inner-icon="mdi-clock-outline"
+              readonly
+              bg-color="grey-lighten-3"
+            >
+              <v-tooltip
+                activator="parent"
+                location="top"
+              >
+                {{ formatDateTime(user.lastActiveAt) }}
+              </v-tooltip>
+            </v-text-field>
+          </v-col>
+          <v-col
+            v-if="isSystemAdmin"
+            cols="12"
+            md="3"
+          >
+            <UserAccountActivationSwitch
+              :user-id="user.id"
+              :is-active="isNil(user.deactivatedAt)"
+              :disabled="user.id === currentUser.id"
+              @success="refresh"
+            />
+            <v-tooltip
+              v-if="user.id === currentUser.id"
+              activator="parent"
+            >
+              <span>You cannot change account activation of current user.</span>
+            </v-tooltip>
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
             <v-switch
               v-model="user.emailNotificationsEnabled"
               label="Receive email notifications"
@@ -151,6 +189,17 @@
             </v-btn>
             <v-spacer />
             <v-btn
+              v-if="policy?.update"
+              class="ml-3"
+              :loading="isLoading"
+              color="primary"
+              variant="outlined"
+              @click="sync"
+            >
+              <v-icon class="mr-2">mdi-sync</v-icon>
+              Sync
+            </v-btn>
+            <v-btn
               class="ml-3"
               :loading="isLoading"
               type="submit"
@@ -172,9 +221,15 @@ import { ref, toRefs } from "vue"
 import { type VBtn, type VForm } from "vuetify/components"
 
 import { required } from "@/utils/validators"
+import { formatRelative, formatDateTime } from "@/utils/formatters"
+import usersApi from "@/api/users-api"
+
+import useCurrentUser from "@/use/use-current-user"
 import useSnack from "@/use/use-snack"
 import useUser from "@/use/use-user"
-import UserRolesSelect from "./UserRolesSelect.vue"
+
+import UserRolesSelect from "@/components/users/UserRolesSelect.vue"
+import UserAccountActivationSwitch from "@/components/users/UserAccountActivationSwitch.vue"
 
 type CancelButtonOptions = VBtn["$props"]
 
@@ -198,22 +253,65 @@ const emit = defineEmits<{
 }>()
 
 const { userId } = toRefs(props)
-const { user, save, isLoading } = useUser(userId)
-
-const snack = useSnack()
+const { user, policy, isLoading, save, refresh: refreshUser } = useUser(userId)
 
 const form = ref<InstanceType<typeof VForm> | null>(null)
+const snack = useSnack()
+const { currentUser, isSystemAdmin, refresh: refreshCurrentUser } = useCurrentUser<true>()
 
 async function saveWrapper() {
+  if (isNil(user.value)) return
   if (isNil(form.value)) return
 
   const { valid } = await form.value.validate()
   if (!valid) return
 
+  try {
+    await save()
+
+    if (user.value.id === currentUser.value.id) {
+      await refreshCurrentUser()
+      snack.info("Saved and reloaded current user!")
+    } else {
+      snack.success("User saved!")
+    }
+
+    emit("saved", user.value.id)
+  } catch (error) {
+    console.error(`Failed to save user: ${error}`, { error })
+    snack.error(`Failed to save user: ${error}`)
+  }
+}
+
+async function refresh() {
+  await refreshUser()
+
+  if (user.value?.id === currentUser.value.id) {
+    await refreshCurrentUser()
+  }
+}
+
+async function sync() {
   if (isNil(user.value)) return
 
-  await save()
-  snack.success("User saved!")
-  emit("saved", user.value.id)
+  isLoading.value = true
+  try {
+    await usersApi.directorySync(user.value.id)
+
+    if (user.value.id === currentUser.value.id) {
+      await refreshCurrentUser()
+      snack.info("Synced and reloaded current user!")
+    } else {
+      await refreshUser()
+      snack.success("User synced!")
+    }
+
+    emit("saved", user.value.id)
+  } catch (error) {
+    console.error(`Failed to sync user: ${error}`, { error })
+    snack.error(`Failed to sync user: ${error}`)
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>

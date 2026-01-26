@@ -3,7 +3,7 @@ import { isNil } from "lodash"
 import logger from "@/utils/logger"
 import { User } from "@/models"
 import { UsersPolicy } from "@/policies"
-import { CreateService, DestroyService } from "@/services/users"
+import { CreateService, DestroyService, UpdateService } from "@/services/users"
 import { IndexSerializer, ShowSerializer } from "@/serializers/users"
 import BaseController from "@/controllers/base-controller"
 
@@ -12,11 +12,13 @@ export class UsersController extends BaseController<User> {
     try {
       const where = this.buildWhere()
       const scopes = this.buildFilterScopes()
+      const order = this.buildOrder()
       const scopedUsers = UsersPolicy.applyScope(scopes, this.currentUser)
 
       const totalCount = await scopedUsers.count({ where })
       const users = await scopedUsers.findAll({
         where,
+        order,
         limit: this.pagination.limit,
         offset: this.pagination.offset,
       })
@@ -26,7 +28,7 @@ export class UsersController extends BaseController<User> {
         totalCount,
       })
     } catch (error) {
-      logger.error("Error fetching users" + error)
+      logger.error(`Error fetching users: ${error}`, { error })
       return this.response.status(400).json({
         message: `Error fetching users: ${error}`,
       })
@@ -49,10 +51,12 @@ export class UsersController extends BaseController<User> {
         })
       }
       const serializedUser = ShowSerializer.perform(user)
-
-      return this.response.json({ user: serializedUser, policy })
+      return this.response.json({
+        user: serializedUser,
+        policy,
+      })
     } catch (error) {
-      logger.error("Error fetching user" + error)
+      logger.error(`Error fetching user: ${error}`, { error })
       return this.response.status(400).json({
         message: `Error fetching user: ${error}`,
       })
@@ -69,10 +73,14 @@ export class UsersController extends BaseController<User> {
       }
 
       const permittedAttributes = policy.permitAttributesForCreate(this.request.body)
-      const user = await CreateService.perform(permittedAttributes)
-      return this.response.status(201).json({ user })
+      const user = await CreateService.perform(permittedAttributes, this.currentUser)
+      const serializedUser = ShowSerializer.perform(user)
+      return this.response.status(201).json({
+        user: serializedUser,
+        policy,
+      })
     } catch (error) {
-      logger.error("Error creating user" + error)
+      logger.error(`Error creating user: ${error}`, { error })
       return this.response.status(422).json({
         message: `Error creating user: ${error}`,
       })
@@ -96,20 +104,14 @@ export class UsersController extends BaseController<User> {
       }
 
       const permittedAttributes = policy.permitAttributes(this.request.body)
-      await user.update(permittedAttributes)
-      const updatedUser = await this.loadUser()
-
-      if (isNil(updatedUser)) {
-        return this.response.status(404).json({
-          message: "User not found",
-        })
-      }
-
+      const updatedUser = await UpdateService.perform(user, permittedAttributes, this.currentUser)
       const serializedUser = ShowSerializer.perform(updatedUser)
-
-      return this.response.json({ user: serializedUser })
+      return this.response.json({
+        user: serializedUser,
+        policy,
+      })
     } catch (error) {
-      logger.error("Error updating user" + error)
+      logger.error(`Error updating user: ${error}`, { error })
       return this.response.status(422).json({
         message: `Error updating user: ${error}`,
       })
@@ -137,7 +139,7 @@ export class UsersController extends BaseController<User> {
         message: "User was deleted",
       })
     } catch (error) {
-      logger.error("Error deleting user" + error)
+      logger.error(`Error deleting user: ${error}`, { error })
       return this.response.status(422).json({
         message: `Error deleting user: ${error}`,
       })
@@ -145,11 +147,9 @@ export class UsersController extends BaseController<User> {
   }
 
   private async loadUser() {
-    const user = await User.findByPk(this.params.id, {
+    return User.findByPk(this.params.id, {
       include: ["adminGroups", "adminInformationSharingAgreementAccessGrants"],
     })
-
-    return user
   }
 
   private buildPolicy(user: User = User.build()) {

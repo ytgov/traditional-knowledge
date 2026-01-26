@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from "express"
 import { type Attributes, type Model, type Order, type WhereOptions } from "@sequelize/core"
-import { isEmpty, isNil } from "lodash"
+import { dropRight, isEmpty, isNil, uniqBy } from "lodash"
 
 import User from "@/models/user"
 import { type BaseScopeOptions } from "@/policies"
@@ -212,7 +212,13 @@ export class BaseController<TModel extends Model = never> {
       return [...nonOverridableOrder, ...overridableOrder]
     }
 
-    return [...nonOverridableOrder, ...orderQuery, ...overridableOrder]
+    const order = [...nonOverridableOrder, ...orderQuery, ...overridableOrder]
+    const uniqueOrder = uniqBy(order, (order) => {
+      const orderExcludingDirection = dropRight(order)
+      return orderExcludingDirection.join(".").toLowerCase()
+    })
+
+    return uniqueOrder
   }
 
   private determineLimit(perPage: number) {

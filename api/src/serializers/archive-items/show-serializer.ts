@@ -7,7 +7,7 @@ import CategoryIndexSerializer, {
 } from "@/serializers/categories/index-serializer"
 import { type InformationSharingAgreementAccessGrantShowView } from "@/serializers/information-sharing-agreement-access-grants/show-serializer"
 import BaseSerializer from "@/serializers/base-serializer"
-import { type UserReferenceView } from "@/serializers/users/reference-serializer"
+import { type UserAsReference } from "@/serializers/users/reference-serializer"
 
 export type ArchiveItemShowView = Pick<
   ArchiveItem,
@@ -28,7 +28,7 @@ export type ArchiveItemShowView = Pick<
   | "createdAt"
   | "updatedAt"
 > & {
-  user?: UserReferenceView
+  user?: UserAsReference
   informationSharingAgreementAccessGrants?: InformationSharingAgreementAccessGrantShowView[]
   categories?: CategoryIndexView[]
 }

@@ -14,3 +14,6 @@ export { NotificationsController } from "./notifications-controller"
 export { RetentionsController } from "./retentions-controller"
 export { UserGroupsController } from "./user-groups-controller"
 export { UsersController } from "./users-controller"
+
+// Bundled exports
+export * as Users from "./users"

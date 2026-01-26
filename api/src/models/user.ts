@@ -14,11 +14,14 @@ import {
   Default,
   HasMany,
   Index,
+  ModelValidator,
   NotNull,
   PrimaryKey,
   ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
 import { isEmpty, isNil, isUndefined } from "lodash"
+
+import { UserExternalDirectoryIdentifierUniqueIndex } from "@/models/indexes"
 
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
@@ -49,6 +52,10 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @NotNull
   @Index({ unique: true })
   declare auth0Subject: string
+
+  @Attribute(DataTypes.STRING(255))
+  @UserExternalDirectoryIdentifierUniqueIndex
+  declare externalDirectoryIdentifier: string | null
 
   @Attribute(DataTypes.STRING(100))
   @NotNull
@@ -100,7 +107,19 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   declare unit: string | null
 
   @Attribute(DataTypes.DATE(0))
+  declare lastSyncSuccessAt: Date | null
+
+  @Attribute(DataTypes.DATE(0))
+  declare lastSyncFailureAt: Date | null
+
+  @Attribute(DataTypes.DATE(0))
   declare deactivatedAt: Date | null
+
+  @Attribute(DataTypes.TEXT)
+  declare deactivationReason: string | null
+
+  @Attribute(DataTypes.DATE(0))
+  declare lastActiveAt: Date | null
 
   @Attribute(DataTypes.BOOLEAN)
   @NotNull
@@ -121,11 +140,11 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   declare deletedAt: Date | null
 
   // Magic Attributes
-  get isSystemAdmin(): NonAttribute<boolean | undefined> {
-    return this.roles?.some((role) => role === UserRoles.SYSTEM_ADMIN)
+  get isSystemAdmin(): NonAttribute<boolean> {
+    return this.roles.some((role) => role === UserRoles.SYSTEM_ADMIN)
   }
 
-  get isGroupAdmin(): NonAttribute<boolean | undefined> {
+  get isGroupAdmin(): NonAttribute<boolean> {
     if (isUndefined(this.adminGroups)) {
       throw new Error("Expected adminGroups association to be pre-loaded.")
     }
@@ -152,6 +171,18 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     return this.adminInformationSharingAgreementAccessGrants.some(
       (accessGrant) => accessGrant.informationSharingAgreementId === informationSharingAgreementId
     )
+  }
+
+  // Model Validators
+  @ModelValidator
+  ensureUserDeactivatedAtDeactivationReasonConsistency() {
+    if (!isNil(this.deactivatedAt) && isNil(this.deactivationReason)) {
+      throw new Error("Deactivation reason is required when deactivating a user")
+    }
+
+    if (isNil(this.deactivatedAt) && !isNil(this.deactivationReason)) {
+      throw new Error("Deactivation reason should not be present for active users")
+    }
   }
 
   // Associations

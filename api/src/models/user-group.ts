@@ -23,7 +23,7 @@ import whereFieldsOptionallyLikeTerms from "@/utils/search/where-fields-optional
 import BaseModel from "@/models/base-model"
 import User from "@/models/user"
 import Group from "@/models/group"
-import { UserGroupUniqueIndex } from "@/models/complex-multi-column-indexes"
+import { UserGroupUniqueIndex } from "@/models/indexes"
 
 export class UserGroup extends BaseModel<
   InferAttributes<UserGroup>,

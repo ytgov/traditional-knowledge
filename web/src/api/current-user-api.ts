@@ -1,10 +1,10 @@
 import http from "@/api/http-client"
 import { type Policy } from "@/api/base-api"
-import { type User } from "@/api/users-api"
+import { type UserAsShow } from "@/api/users-api"
 
 export const currentUserApi = {
   async get(): Promise<{
-    user: User
+    user: UserAsShow
     policy: Policy
   }> {
     const { data } = await http.get(`/api/current-user`)

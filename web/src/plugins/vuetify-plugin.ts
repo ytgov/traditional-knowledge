@@ -19,8 +19,8 @@ import darkTheme from "@/theme/DarkTheme"
 export default createVuetify({
   theme: {
     variations: {
-      colors: ["primary", "secondary"],
-      lighten: 2,
+      colors: ["primary", "secondary", "grey"],
+      lighten: 3,
       darken: 1,
     },
     defaultTheme: "darkTheme",

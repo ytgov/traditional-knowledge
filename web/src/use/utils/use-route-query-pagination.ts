@@ -6,7 +6,7 @@ const DEFAULT_PAGE = 1
 const DEFAULT_PER_PAGE = 10
 
 /**
- * Usage: use in conjunction with RouteQueryPagination component.
+ * Usage: use in conjunction with EnhancedPagination component.
  * @param {Object} [options] - Options object.
  * @param {number} [options.page=1] - Initial page number. Default is 1.
  * @param {number} [options.perPage=10] - Initial items per page. Default is 10.
@@ -20,15 +20,11 @@ export function useRouteQueryPagination({
   perPage?: number
   routeQuerySuffix?: string
 } = {}) {
-  const queryPage = useRouteQuery<string | undefined, number | undefined>(
-    `page${routeQuerySuffix}`,
-    page.toString(),
-    {
-      transform: integerTransformer,
-    }
-  )
+  const queryPage = useRouteQuery<string, number>(`page${routeQuerySuffix}`, page.toString(), {
+    transform: integerTransformer,
+  })
 
-  const queryPerPage = useRouteQuery<string | undefined, number | undefined>(
+  const queryPerPage = useRouteQuery<string, number>(
     `perPage${routeQuerySuffix}`,
     perPage.toString(),
     {

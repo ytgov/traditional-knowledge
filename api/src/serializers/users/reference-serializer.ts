@@ -3,7 +3,7 @@ import { pick } from "lodash"
 import { User } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
 
-export type UserReferenceView = Pick<
+export type UserAsReference = Pick<
   User,
   | "id"
   | "email"
@@ -19,7 +19,7 @@ export type UserReferenceView = Pick<
 >
 
 export class ReferenceSerializer extends BaseSerializer<User> {
-  perform(): UserReferenceView {
+  perform(): UserAsReference {
     return {
       ...pick(this.record, [
         "id",

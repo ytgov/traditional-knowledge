@@ -9,6 +9,31 @@
     :loading="isLoading"
     @click:row="(_event: unknown, { item }: UserTableRow) => goToUserEditPage(item.id)"
   >
+    <template #item.lastActiveAt="{ item }">
+      <span v-if="item.lastActiveAt">
+        {{ formatRelative(item.lastActiveAt) }}
+        <v-tooltip
+          activator="parent"
+          location="top"
+        >
+          {{ formatDateTime(item.lastActiveAt) }}
+        </v-tooltip>
+      </span>
+      <span
+        v-else
+        class="text-grey"
+      >
+        Never
+      </span>
+    </template>
+    <template #item.deactivatedAt="{ value }">
+      <v-chip
+        :color="isNil(value) ? 'success' : 'error'"
+        size="small"
+      >
+        {{ isNil(value) ? "Active" : "Inactive" }}
+      </v-chip>
+    </template>
     <template #item.actions="{ item }">
       <div class="d-flex justify-end align-center">
         <v-btn
@@ -31,7 +56,9 @@ import { computed, ref } from "vue"
 import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
 import { useRouteQuery } from "@vueuse/router"
+import { isNil } from "lodash"
 
+import { formatRelative, formatDateTime } from "@/utils/formatters"
 import useVuetifySortByToSafeRouteQuery from "@/use/utils/use-vuetify-sort-by-to-safe-route-query"
 import useVuetifySortByToSequelizeSafeOrder from "@/use/utils/use-vuetify-sort-by-to-sequelize-safe-order"
 
@@ -39,13 +66,13 @@ import usersApi from "@/api/users-api"
 import useCurrentUser from "@/use/use-current-user"
 import useSnack from "@/use/use-snack"
 import useUsers, {
-  type User,
+  type UserAsIndex,
   type UserFiltersOptions,
   type UserWhereOptions,
 } from "@/use/use-users"
 
 type UserTableRow = {
-  item: User
+  item: UserAsIndex
 }
 
 const props = withDefaults(
@@ -80,7 +107,7 @@ const headers = ref([
     title: "Department",
     key: "department",
     value: (item: unknown) => {
-      const { department, division, branch, unit } = item as User
+      const { department, division, branch, unit } = item as UserAsIndex
       return [department, division, branch, unit].filter(Boolean).join(" - ")
     },
   },
@@ -88,11 +115,19 @@ const headers = ref([
     title: "Role",
     key: "roles",
     value: (item: unknown) => {
-      const { roles } = item as User
+      const { roles } = item as UserAsIndex
       const formatedRoleTypes = roles.map((role) => t(`user.roles.${role}`, role))
       return formatedRoleTypes.join(", ")
     },
     sortable: false,
+  },
+  {
+    title: "Status",
+    key: "deactivatedAt",
+  },
+  {
+    title: "Last Accessed",
+    key: "lastActiveAt",
   },
   {
     title: "Actions",
@@ -137,7 +172,7 @@ function goToUserEditPage(userId: number) {
 const snack = useSnack()
 const isDeleting = ref(false)
 
-async function confirmThenDelete(user: User) {
+async function confirmThenDelete(user: UserAsIndex) {
   const { displayName, email } = user
   const result = confirm(`Are you sure you want to delete ${displayName}: ${email}.`)
   if (result === false) return
