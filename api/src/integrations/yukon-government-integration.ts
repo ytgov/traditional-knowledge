@@ -5,10 +5,10 @@ import { YUKON_GOVERNMENT_DIRECTORY_API_KEY } from "@/config"
 
 // TODO: once the API Gateway is fixed, use optimized direct URL for production, and the slow open API Gateway URL for development.
 // const baseURL = NODE_ENV === "production" ? "https://directory-api-prd.ynet.gov.yk.ca" : "https://api.gov.yk.ca"
-const baseUrl = "https://api.gov.yk.ca"
+const baseURL = "https://api.gov.yk.ca"
 
 const yukonGovernmentApi = axios.create({
-  baseURL: baseUrl,
+  baseURL,
   headers: {
     "Ocp-Apim-Subscription-Key": YUKON_GOVERNMENT_DIRECTORY_API_KEY,
   },
@@ -61,7 +61,7 @@ export const yukonGovernmentIntegration = {
     if (isEmpty(employees)) return null
 
     if (employees.length > 1) {
-      let errorMessage = `Found more than one employee info at ${baseUrl}/directory/employees?email=${email}`
+      let errorMessage = `Found more than one employee info at ${baseURL}/directory/employees?email=${email}`
       const emails = pick(employees, "email")
       errorMessage = errorMessage.concat(`\nemails found: ${JSON.stringify(emails)}`)
       throw new Error(errorMessage)
