@@ -294,6 +294,7 @@ async function refresh() {
 async function sync() {
   if (isNil(user.value)) return
 
+  isLoading.value = true
   try {
     await usersApi.directorySync(user.value.id)
 
@@ -301,6 +302,7 @@ async function sync() {
       await refreshCurrentUser()
       snack.info("Synced and reloaded current user!")
     } else {
+      await refreshUser()
       snack.success("User synced!")
     }
 
@@ -308,6 +310,8 @@ async function sync() {
   } catch (error) {
     console.error(`Failed to sync user: ${error}`, { error })
     snack.error(`Failed to sync user: ${error}`)
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
