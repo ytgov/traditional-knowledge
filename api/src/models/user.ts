@@ -43,6 +43,10 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @AutoIncrement
   declare id: CreationOptional<number>
 
+  @Attribute(DataTypes.INTEGER)
+  @NotNull
+  declare createdById: number
+
   @Attribute(DataTypes.STRING(100))
   @NotNull
   @Index({ unique: true })
@@ -56,6 +60,11 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @Attribute(DataTypes.UUID)
   @UserActiveDirectoryIdentifierUniqueIndex
   declare activeDirectoryIdentifier: string | null
+
+  @Attribute(DataTypes.BOOLEAN)
+  @NotNull
+  @Default(false)
+  declare isExternal: CreationOptional<boolean>
 
   @Attribute(DataTypes.STRING(100))
   @NotNull
@@ -105,6 +114,9 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
 
   @Attribute(DataTypes.STRING(100))
   declare unit: string | null
+
+  @Attribute(DataTypes.STRING(50))
+  declare phoneNumber: string | null
 
   @Attribute(DataTypes.DATE(0))
   declare lastSyncSuccessAt: Date | null
@@ -186,6 +198,7 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   }
 
   // Associations
+
   @HasMany(() => InformationSharingAgreement, {
     foreignKey: "creatorId",
     inverse: "creator",
@@ -233,6 +246,12 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   declare createdInformationSharingAgreementAccessGrants?: NonAttribute<
     InformationSharingAgreementAccessGrant[]
   >
+
+  @HasMany(() => User, {
+    foreignKey: "createdById",
+    inverse: "createdBy",
+  })
+  declare createdUsers?: NonAttribute<User[]>
 
   @HasMany(() => UserGroup, {
     foreignKey: {
