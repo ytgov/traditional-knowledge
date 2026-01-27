@@ -257,7 +257,7 @@ class DevHelper
   end
 
   ##
-  # Generate bash completions
+  # Generate bash completions for the dev command.
   def bash_completions
     all_public_methods = public_methods(false).sort
     all_public_methods.delete(:call)
@@ -269,8 +269,8 @@ class DevHelper
   # Generate help documentation.
   def help(*args, **kwargs)
     rdoc = RDoc::RDoc.new
-    rdoc_arguements = %w[--dry-run --quiet] + [__FILE__]
-    rdoc.document(rdoc_arguements)
+    rdoc_arguments = %w[--dry-run --quiet] + [__FILE__]
+    rdoc.document(rdoc_arguments)
     rdoc_data_for_class = rdoc.store.classes_hash["DevHelper"]
 
     puts <<~HELP.chomp
@@ -393,15 +393,6 @@ class DevHelper
   end
 
   ##
-  # Generate bash completions for the dev command.
-  def bash_completions(*_args, **_kwargs)
-    public_methods(false)
-      .sort
-      .map { |word| METHOD_TO_COMMAND.fetch(word, word) }
-      .join("\n")
-  end
-
-  ##
   # Convert PlantUML file to PNG using local PlantUML server.
   def plantuml_to_png(*args, **kwargs)
     file_path = args.pop
@@ -429,52 +420,8 @@ class DevHelper
     sqlcmd(args, enable_tty: true, pipe_input: query, **kwargs)
   end
 
-  def container_id(container_name, *args, **kwargs)
-    command = compose_command(*%w[ps -q], container_name, *args, **kwargs)
-    puts "Running: #{command}"
-    id_of_container = `#{command}`.chomp
-    puts "Container id is: #{id_of_container}"
-    id_of_container
-  end
-
   def service_running?(container_name)
     ps(*%w[-q --status=running], execution_mode: WAIT_FOR_PROCESS, slient: true) != ""
-  end
-
-  ##
-  # Generate help documentation.
-  def help(*args, **kwargs)
-    rdoc = RDoc::RDoc.new
-    rdoc_arguments = %w[--dry-run --quiet] + [__FILE__]
-    rdoc.document(rdoc_arguments)
-    rdoc_data_for_class = rdoc.store.classes_hash["DevHelper"]
-
-    puts <<~HELP.chomp
-      Development Helper.
-
-      Usage:
-        dev <command> [args]
-
-      Available commands:
-    HELP
-
-    all_public_methods = public_methods(false).sort
-    all_public_methods.delete(:call)
-    longest_command_length = all_public_methods.map(&:length).max
-
-    all_public_methods.each do |method_name|
-      method_doc = rdoc_data_for_class.find_method_named(method_name.to_s)
-      command = METHOD_TO_COMMAND.fetch(method_name, method_name)
-      comment = method_doc.comment
-
-      print "  #{command}"
-      unless comment.empty?
-        first_line_of_comment = comment.to_s.lines[0].strip
-        pad = '-' * (longest_command_length - command.length + 1)
-        print " #{pad} #{first_line_of_comment}"
-      end
-      puts
-    end
   end
 end
 
