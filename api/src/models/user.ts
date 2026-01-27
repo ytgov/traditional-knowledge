@@ -220,6 +220,17 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     }
   }
 
+  @ModelValidator
+  ensureIsExternalUserHasExternalOrganization() {
+    if (this.isExternal && isNil(this.externalOrganization)) {
+      throw new Error("External user must have an external organization")
+    }
+
+    if (!this.isExternal && !isNil(this.externalOrganization)) {
+      throw new Error("Non-external user must not reference an external organization")
+    }
+  }
+
   // Associations
   @BelongsTo(() => ExternalOrganization, {
     foreignKey: "externalOrganizationId",
