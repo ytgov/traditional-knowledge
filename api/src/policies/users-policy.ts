@@ -38,6 +38,8 @@ export class UsersPolicy extends PolicyFactory(User) {
       "division",
       "branch",
       "unit",
+      "phoneNumber",
+      "yukonFirstNation",
       "emailNotificationsEnabled",
     ]
 
@@ -49,7 +51,7 @@ export class UsersPolicy extends PolicyFactory(User) {
   }
 
   permittedAttributesForCreate(): Path[] {
-    return [...this.permittedAttributes()]
+    return ["isExternal", ...this.permittedAttributes()]
   }
 
   static policyScope(_user: User): FindOptions<Attributes<User>> {

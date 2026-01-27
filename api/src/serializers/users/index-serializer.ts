@@ -6,7 +6,11 @@ import BaseSerializer from "@/serializers/base-serializer"
 export type UserIndexView = Pick<
   User,
   | "id"
+  | "createdById"
   | "email"
+  | "auth0Subject"
+  | "activeDirectoryIdentifier"
+  | "isExternal"
   | "firstName"
   | "lastName"
   | "displayName"
@@ -16,10 +20,14 @@ export type UserIndexView = Pick<
   | "division"
   | "branch"
   | "unit"
+  | "phoneNumber"
+  | "yukonFirstNation"
+  | "lastSyncSuccessAt"
+  | "lastSyncFailureAt"
   | "deactivatedAt"
   | "deactivationReason"
-  | "emailNotificationsEnabled"
   | "lastActiveAt"
+  | "emailNotificationsEnabled"
   | "createdAt"
   | "updatedAt"
 > & {
@@ -31,7 +39,11 @@ export class IndexSerializer extends BaseSerializer<User> {
     return {
       ...pick(this.record, [
         "id",
+        "createdById",
         "email",
+        "auth0Subject",
+        "activeDirectoryIdentifier",
+        "isExternal",
         "firstName",
         "lastName",
         "displayName",
@@ -41,10 +53,14 @@ export class IndexSerializer extends BaseSerializer<User> {
         "division",
         "branch",
         "unit",
+        "phoneNumber",
+        "yukonFirstNation",
+        "lastSyncSuccessAt",
+        "lastSyncFailureAt",
         "deactivatedAt",
         "deactivationReason",
-        "emailNotificationsEnabled",
         "lastActiveAt",
+        "emailNotificationsEnabled",
         "createdAt",
         "updatedAt",
       ]),

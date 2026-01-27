@@ -15,11 +15,32 @@ export enum UserRoles {
 }
 
 /** Keep in sync with api/src/models/user.ts */
+export enum UserYukonFirstNations {
+  CARCROSS_TAGISH_FIRST_NATION = "Carcross/Tagish First Nation",
+  CHAMPAGNE_AND_AISHIHIK_FIRST_NATIONS = "Champagne and Aishihik First Nations",
+  COUNCIL_OF_YUKON_FIRST_NATIONS = "Council of Yukon First Nations",
+  FIRST_NATION_OF_NACHO_NYAK_DUN = "First Nation of Na-Cho Nyäk Dun",
+  KLUANE_FIRST_NATION = "Kluane First Nation",
+  KWANLIN_DUN_FIRST_NATION = "Kwanlin Dün First Nation",
+  LIARD_FIRST_NATION = "Liard First Nation",
+  LITTLE_SALMON_CARMACKS_FIRST_NATION = "Little Salmon/Carmacks First Nation",
+  ROSS_RIVER_DENA_COUNCIL = "Ross River Dena Council",
+  SELKIRK_FIRST_NATION = "Selkirk First Nation",
+  TAAN_KWACHAN_COUNCIL = "Ta'an Kwäch'än Council",
+  TESLIN_TLINGIT_COUNCIL = "Teslin Tlingit Council",
+  TRONDEK_HWECHIN = "Tr'ondëk Hwëch'in",
+  VUNTUT_GWITCHIN_FIRST_NATION = "Vuntut Gwitchin First Nation",
+  WHITE_RIVER_FIRST_NATION = "White River First Nation",
+}
+
+/** Keep in sync with api/src/models/user.ts */
 export type User = {
   id: number
-  activeDirectoryIdentifier: string | null
+  createdById: number
   email: string
   auth0Subject: string
+  activeDirectoryIdentifier: string | null
+  isExternal: boolean
   firstName: string
   lastName: string
   displayName: string
@@ -29,12 +50,14 @@ export type User = {
   division: string | null
   branch: string | null
   unit: string | null
-  deactivatedAt: string | null
-  deactivationReason: string | null
-  emailNotificationsEnabled: boolean
+  phoneNumber: string | null
+  yukonFirstNation: UserYukonFirstNations | null
   lastSyncSuccessAt: string | null
   lastSyncFailureAt: string | null
+  deactivatedAt: string | null
+  deactivationReason: string | null
   lastActiveAt: string | null
+  emailNotificationsEnabled: boolean
   createdAt: string
   updatedAt: string
 }
@@ -43,7 +66,11 @@ export type User = {
 export type UserAsIndex = Pick<
   User,
   | "id"
+  | "createdById"
   | "email"
+  | "auth0Subject"
+  | "activeDirectoryIdentifier"
+  | "isExternal"
   | "firstName"
   | "lastName"
   | "displayName"
@@ -53,10 +80,14 @@ export type UserAsIndex = Pick<
   | "division"
   | "branch"
   | "unit"
+  | "phoneNumber"
+  | "yukonFirstNation"
+  | "lastSyncSuccessAt"
+  | "lastSyncFailureAt"
   | "deactivatedAt"
   | "deactivationReason"
-  | "emailNotificationsEnabled"
   | "lastActiveAt"
+  | "emailNotificationsEnabled"
   | "createdAt"
   | "updatedAt"
 > & {
@@ -67,8 +98,11 @@ export type UserAsIndex = Pick<
 export type UserAsShow = Pick<
   User,
   | "id"
-  | "activeDirectoryIdentifier"
+  | "createdById"
   | "email"
+  | "auth0Subject"
+  | "activeDirectoryIdentifier"
+  | "isExternal"
   | "firstName"
   | "lastName"
   | "displayName"
@@ -78,12 +112,14 @@ export type UserAsShow = Pick<
   | "division"
   | "branch"
   | "unit"
-  | "deactivatedAt"
-  | "deactivationReason"
-  | "emailNotificationsEnabled"
+  | "phoneNumber"
+  | "yukonFirstNation"
   | "lastSyncSuccessAt"
   | "lastSyncFailureAt"
+  | "deactivatedAt"
+  | "deactivationReason"
   | "lastActiveAt"
+  | "emailNotificationsEnabled"
   | "createdAt"
   | "updatedAt"
 > & {
