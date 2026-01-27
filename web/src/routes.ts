@@ -200,6 +200,22 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@/pages/users/UserExternalNewPage.vue"),
           },
           {
+            path: "external-organizations",
+            name: "admin/ExternalOrganizationsPage",
+            component: () => import("@/pages/admin/external-organizations/ExternalOrganizationsPage.vue"),
+          },
+          {
+            path: "external-organizations/new",
+            name: "admin/ExternalOrganizationsNewPage",
+            component: () => import("@/pages/admin/external-organizations/ExternalOrganizationsNewPage.vue"),
+          },
+          {
+            path: "external-organizations/:externalOrganizationId/edit",
+            name: "admin/ExternalOrganizationsEditPage",
+            component: () => import("@/pages/admin/external-organizations/ExternalOrganizationsEditPage.vue"),
+            props: true,
+          },
+          {
             path: "users/:userId/edit",
             name: "users/UserEditPage",
             component: () => import("@/pages/users/UserEditPage.vue"),
