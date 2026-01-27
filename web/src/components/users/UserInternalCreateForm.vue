@@ -8,13 +8,16 @@
       <v-card-text>
         <v-row>
           <v-col cols="12">
-            <v-text-field
-              v-model="userAttributes.email"
-              label="Email *"
-              :rules="[required]"
-              required
+            <YukonGovernmentEmployeeSearchableAutocomplete
+              v-model="selectedEmployeeEmail"
+              @selected="populateUserAttributes"
             />
           </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-title>User Details</v-card-title>
+      <v-card-text>
+        <v-row>
           <v-col
             cols="12"
             md="6"
@@ -154,11 +157,28 @@ import usersApi, { type User, UserRoles } from "@/api/users-api"
 import useSnack from "@/use/use-snack"
 
 import UserRolesSelect from "@/components/users/UserRolesSelect.vue"
+import YukonGovernmentEmployeeSearchableAutocomplete, {
+  YukonGovernmentEmployee,
+} from "@/components/yukon-government-directory/YukonGovernmentEmployeeSearchableAutocomplete.vue"
+
+const selectedEmployeeEmail = ref<string | null>(null)
 
 const userAttributes = ref<Partial<User>>({
   roles: [UserRoles.USER],
   isExternal: false,
 })
+
+function populateUserAttributes(employee: YukonGovernmentEmployee) {
+  userAttributes.value.email = employee.email
+  userAttributes.value.firstName = employee.firstName
+  userAttributes.value.lastName = employee.lastName
+  userAttributes.value.displayName = employee.displayName
+  userAttributes.value.department = employee.department
+  userAttributes.value.division = employee.division
+  userAttributes.value.branch = employee.branch
+  userAttributes.value.unit = employee.unit
+  userAttributes.value.title = employee.title
+}
 
 const isLoading = ref(false)
 const form = useTemplateRef("form")

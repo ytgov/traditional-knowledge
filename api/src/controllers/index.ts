@@ -18,3 +18,4 @@ export { UsersController } from "./users-controller"
 
 // Bundled exports
 export * as Users from "./users"
+export * as YukonGovernmentDirectory from "./yukon-government-directory"

@@ -38,6 +38,7 @@ import {
   UserGroupsController,
   Users,
   UsersController,
+  YukonGovernmentDirectory,
 } from "@/controllers"
 
 export const router = Router()
@@ -77,6 +78,10 @@ router
   .route("/api/users/:userId/deactivate")
   .post(Users.DeactivationController.create)
   .delete(Users.DeactivationController.destroy)
+
+router
+  .route("/api/yukon-government-directory/employees")
+  .get(YukonGovernmentDirectory.EmployeesController.index)
 
 router.route("/api/retentions").get(RetentionsController.index).post(RetentionsController.create)
 router
