@@ -153,11 +153,21 @@ This file follows the format from https://agents.md/ for AI agent documentation.
     msg: "User group combination must be unique",
   })
   ```
+- **Enum patterns:**
+  - Place enums directly in relevant model files (not separate utilities)
+  - Include model name in enum description: `UserYukonFirstNations` not generic `YukonFirstNations`
+  - Add validation decorators with `@ValidateAttribute` and `isIn` for enum fields
 
 **Database:**
 
 - Knex for migrations, Sequelize for ORM
 - Database: snake_case, Models: camelCase (Sequelize maps automatically)
+- **Migration patterns:**
+  - Keep migrations clean without extraneous comments
+  - When adding foreign key fields that need to be non-null to existing tables, add them as nullable initially, backfill existing records, then make non-nullable
+  - Use self-referencing foreign keys with proper constraint naming
+  - Find system user by email (`system.user@yukon.ca`) not auth0Subject
+  - Use proper TypeScript generics: `.returning<{ id: number }[]>(["id"])`
 
 ### Testing
 
