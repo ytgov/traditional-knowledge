@@ -10,6 +10,7 @@ import {
 import {
   Attribute,
   AutoIncrement,
+  BelongsTo,
   BelongsToMany,
   Default,
   HasMany,
@@ -28,6 +29,7 @@ import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
 import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
 import UserGroup from "@/models/user-group"
+import ExternalOrganization from "@/models/external-organization"
 
 /** Keep in sync with web/src/api/users-api.ts */
 export enum UserRoles {
@@ -61,10 +63,6 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @AutoIncrement
   declare id: CreationOptional<number>
 
-  @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare createdById: number
-
   @Attribute(DataTypes.STRING(100))
   @NotNull
   @Index({ unique: true })
@@ -83,6 +81,9 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @NotNull
   @Default(false)
   declare isExternal: CreationOptional<boolean>
+
+  @Attribute(DataTypes.INTEGER)
+  declare externalOrganizationId: number | null
 
   @Attribute(DataTypes.STRING(100))
   @NotNull
@@ -136,15 +137,6 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @Attribute(DataTypes.STRING(50))
   declare phoneNumber: string | null
 
-  @Attribute(DataTypes.STRING(100))
-  @ValidateAttribute({
-    isIn: {
-      args: [Object.values(UserYukonFirstNations)],
-      msg: `Yukon First Nation must be one of ${Object.values(UserYukonFirstNations).join(", ")}`,
-    },
-  })
-  declare yukonFirstNation: UserYukonFirstNations | null
-
   @Attribute(DataTypes.DATE(0))
   declare lastSyncSuccessAt: Date | null
 
@@ -164,6 +156,10 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @NotNull
   @Default(false)
   declare emailNotificationsEnabled: CreationOptional<boolean>
+
+  @Attribute(DataTypes.INTEGER)
+  @NotNull
+  declare createdById: number
 
   @Attribute(DataTypes.DATE(0))
   @NotNull
@@ -225,6 +221,14 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   }
 
   // Associations
+  @BelongsTo(() => ExternalOrganization, {
+    foreignKey: "externalOrganizationId",
+    inverse: {
+      as: "users",
+      type: "hasMany",
+    },
+  })
+  declare externalOrganization?: NonAttribute<ExternalOrganization>
 
   @HasMany(() => InformationSharingAgreement, {
     foreignKey: "creatorId",
