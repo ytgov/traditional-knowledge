@@ -37,24 +37,6 @@ export enum UserRoles {
   USER = "user",
 }
 
-export enum UserYukonFirstNations {
-  CARCROSS_TAGISH_FIRST_NATION = "Carcross/Tagish First Nation",
-  CHAMPAGNE_AND_AISHIHIK_FIRST_NATIONS = "Champagne and Aishihik First Nations",
-  COUNCIL_OF_YUKON_FIRST_NATIONS = "Council of Yukon First Nations",
-  FIRST_NATION_OF_NACHO_NYAK_DUN = "First Nation of Na-Cho Nyäk Dun",
-  KLUANE_FIRST_NATION = "Kluane First Nation",
-  KWANLIN_DUN_FIRST_NATION = "Kwanlin Dün First Nation",
-  LIARD_FIRST_NATION = "Liard First Nation",
-  LITTLE_SALMON_CARMACKS_FIRST_NATION = "Little Salmon/Carmacks First Nation",
-  ROSS_RIVER_DENA_COUNCIL = "Ross River Dena Council",
-  SELKIRK_FIRST_NATION = "Selkirk First Nation",
-  TAAN_KWACHAN_COUNCIL = "Ta'an Kwäch'än Council",
-  TESLIN_TLINGIT_COUNCIL = "Teslin Tlingit Council",
-  TRONDEK_HWECHIN = "Tr'ondëk Hwëch'in",
-  VUNTUT_GWITCHIN_FIRST_NATION = "Vuntut Gwitchin First Nation",
-  WHITE_RIVER_FIRST_NATION = "White River First Nation",
-}
-
 export class User extends BaseModel<InferAttributes<User>, InferCreationAttributes<User>> {
   static readonly Roles = UserRoles
 

@@ -7,11 +7,11 @@ import { Groups, InformationSharingAgreementAccessGrants } from "@/serializers"
 export type UserAsShow = Pick<
   User,
   | "id"
-  | "createdById"
   | "email"
   | "auth0Subject"
   | "activeDirectoryIdentifier"
   | "isExternal"
+  | "externalOrganizationId"
   | "firstName"
   | "lastName"
   | "displayName"
@@ -22,13 +22,13 @@ export type UserAsShow = Pick<
   | "branch"
   | "unit"
   | "phoneNumber"
-  | "yukonFirstNation"
   | "lastSyncSuccessAt"
   | "lastSyncFailureAt"
   | "deactivatedAt"
   | "deactivationReason"
   | "lastActiveAt"
   | "emailNotificationsEnabled"
+  | "createdById"
   | "createdAt"
   | "updatedAt"
 > & {
@@ -63,11 +63,11 @@ export class ShowSerializer extends BaseSerializer<User> {
     return {
       ...pick(this.record, [
         "id",
-        "createdById",
         "email",
         "auth0Subject",
         "activeDirectoryIdentifier",
         "isExternal",
+        "externalOrganizationId",
         "firstName",
         "lastName",
         "displayName",
@@ -78,13 +78,13 @@ export class ShowSerializer extends BaseSerializer<User> {
         "branch",
         "unit",
         "phoneNumber",
-        "yukonFirstNation",
         "lastSyncSuccessAt",
         "lastSyncFailureAt",
         "deactivatedAt",
         "deactivationReason",
         "lastActiveAt",
         "emailNotificationsEnabled",
+        "createdById",
         "createdAt",
         "updatedAt",
       ]),
