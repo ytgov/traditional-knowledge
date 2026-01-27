@@ -7,10 +7,12 @@ This directory contains AI workflows and agent-specific configurations for the T
 ```
 agents/
 ├── README.md              (this file)
-├── workflows/             (shared workflow repository)
-│   ├── README.md
+├── templates/             (reusable code templates)
+│   ├── backend/           (model, controller, policy, services, serializers)
+│   └── frontend/          (api-client, composables, components, pages, searchable-autocomplete)
+├── workflows/             (multi-step task guides)
 │   ├── create-admin-ui.md
-│   ├── github-issue-creation.md
+│   ├── jira-issue-creation.md
 │   └── pull-request-management.md
 ├── plans/                 (implementation plans)
 │   └── .gitkeep
@@ -24,33 +26,55 @@ agents/
 
 ---
 
-## What are Workflows?
+## Templates vs Workflows
 
-Workflows are AI-readable documents that guide coding assistants through complex, multi-step tasks. They include:
+**Templates** are copy-paste-ready code snippets for specific file types. Use when you know exactly what you need.
 
-- Step-by-step instructions
-- Code templates
-- Implementation checklists
-- Common pitfalls to avoid
-- Testing strategies
+**Workflows** are multi-step guides that orchestrate multiple templates. Use when building complete features.
 
-**Available Workflows:**
-- [create-admin-ui.md](workflows/create-admin-ui.md) - Add full CRUD admin UI for any model
-- [github-issue-creation.md](workflows/github-issue-creation.md) - Create well-structured GitHub issues
-- [jira-issue-creation.md](workflows/jira-issue-creation.md) - Create well-structured Jira issues in TK project
-- [pull-request-management.md](workflows/pull-request-management.md) - Create and manage pull requests
+### Templates (`agents/templates/`)
+
+Reusable code patterns organized by layer:
+
+**Backend:**
+- [model.md](templates/backend/model.md) - Sequelize model with scopes
+- [controller.md](templates/backend/controller.md) - CRUD controller
+- [policy.md](templates/backend/policy.md) - Authorization rules
+- [services.md](templates/backend/services.md) - Create, Update, Destroy
+- [serializers.md](templates/backend/serializers.md) - Index, Show, Reference
+
+**Frontend:**
+- [api-client.md](templates/frontend/api-client.md) - Type-safe HTTP client
+- [composables.md](templates/frontend/composables.md) - Reactive data fetching
+- [components.md](templates/frontend/components.md) - DataTable, Forms, UniqueTextField
+- [pages.md](templates/frontend/pages.md) - List, New, Edit pages
+- [searchable-autocomplete.md](templates/frontend/searchable-autocomplete.md) - Debounced search component
+
+### Workflows (`agents/workflows/`)
+
+Multi-step task guides:
+
+- [create-admin-ui.md](workflows/create-admin-ui.md) - Full CRUD admin UI (references templates)
+- [jira-issue-creation.md](workflows/jira-issue-creation.md) - Create Jira issues in TK project
+- [pull-request-management.md](workflows/pull-request-management.md) - Create and manage PRs
 
 ---
 
-## Using Workflows with AI Assistants
+## Using Templates and Workflows with AI Assistants
 
 ### Method 1: Direct Reference (Simplest)
 
-Just reference the workflow directly:
+Reference templates or workflows directly:
 
 ```
-Hey Claude, follow the workflow in agents/workflows/create-admin-ui.md
-to create admin UI for the TraditionalKnowledge model.
+# For a complete feature (workflow)
+Follow agents/workflows/create-admin-ui.md to create admin UI for Categories.
+
+# For a specific file type (template)
+Follow agents/templates/frontend/searchable-autocomplete.md to create CategorySearchableAutocomplete.
+
+# For backend only (templates)
+Follow agents/templates/backend/ to create the API for Categories.
 ```
 
 ### Method 2: Hardlinks (Recommended for Multiple Agents)
@@ -372,14 +396,37 @@ ln agents/workflows/create-admin-ui.md .claude/workflows/create-admin-ui.md
 
 ## Examples
 
+### Using Templates
+
+```bash
+# Single template
+"Follow agents/templates/frontend/searchable-autocomplete.md to create UserSearchableAutocomplete"
+
+# Backend templates only
+"Follow agents/templates/backend/ to create the Retention model, controller, and services"
+
+# Specific component type
+"Follow agents/templates/frontend/components.md to create RetentionsDataTable"
+```
+
+### Using Workflows
+
+```bash
+# Full admin UI
+"Follow agents/workflows/create-admin-ui.md to create admin UI for Retentions"
+
+# PR management
+"Follow agents/workflows/pull-request-management.md to create a PR for this branch"
+```
+
 ### Using with Claude Code
 
 ```bash
 # Reference workflow directly
 claude "Follow agents/workflows/create-admin-ui.md to create admin UI for TraditionalKnowledge model"
 
-# Or with hardlink in place
-claude "Use the create-admin-ui workflow for TraditionalKnowledge model"
+# Or reference a template
+claude "Follow agents/templates/frontend/searchable-autocomplete.md for Groups"
 ```
 
 ### Using with Windsurf
@@ -393,7 +440,7 @@ Create admin UI for TraditionalKnowledge model
 ### Using with Cursor
 
 ```
-Use .cursor/workflows/create-admin-ui.md to implement admin UI for TraditionalKnowledge model
+Use agents/templates/backend/model.md to create the Retention model
 ```
 
 ---
@@ -419,5 +466,5 @@ When adding workflows:
 
 ---
 
-**Last Updated:** 2026-01-22
+**Last Updated:** 2026-01-27
 **Maintained By:** Development Team

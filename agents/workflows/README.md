@@ -11,36 +11,26 @@ These workflows exist to ensure consistent, high-quality output from AI agents. 
 
 **For AI Agents:** Follow steps literally. When unsure, prefer the explicit example over inference.
 
+**Related:** Workflows reference reusable templates in [`agents/templates/`](../templates/).
+
 ## Available Workflows
 
 ### [create-admin-ui.md](create-admin-ui.md)
 
 Complete workflow for adding full CRUD admin UI for any model.
 
-**Includes:**
+**Uses templates from:** [`agents/templates/`](../templates/)
+
+**Produces:**
 - Backend: Model, Controller, Policy, Services, Serializers, Routes
-- Frontend: API Client, Composables, Components, Pages, Integration
-- Testing checklist
-- Common pitfalls
+- Frontend: API Client, Composables, Components, Pages
 
-**Reference:** Traditional Knowledge implementation
+**Key Features:**
+- References reusable templates from `agents/templates/`
+- Includes implementation order, checklists, common pitfalls
+- Matches actual implementation from External Organizations
 
----
-
-### [github-issue-creation.md](github-issue-creation.md)
-
-Complete workflow for creating well-structured GitHub issues using the project's issue templates.
-
-**Includes:**
-- Step-by-step guidance for bug reports and feature requests
-- Proper template field completion
-- Label and assignment best practices
-- Quality checklists for different issue types
-- Examples from actual project issues
-
-**Reference Files:**
-- `.github/ISSUE_TEMPLATE/bug_report.md` (Bug report template)
-- `.github/ISSUE_TEMPLATE/feature_request.md` (Feature request template)
+**Reference:** External Organizations (`d4a9366`, `1f1dac8`)
 
 ---
 
@@ -85,19 +75,26 @@ Complete workflow for creating and editing well-structured pull requests followi
 
 Workflows are designed to be used with AI coding assistants like Claude or Windsurf.
 
-**Example:**
+**Example - Full Admin UI:**
 ```
 Follow the workflow in agents/workflows/create-admin-ui.md
 to create admin UI for the KnowledgeCategory model.
 ```
 
+**Example - Specific Template:**
 ```
-Follow the workflow in agents/workflows/github-issue-creation.md
-to create a bug report for the authentication issue.
+Follow the template in agents/templates/frontend/components.md
+to create the KnowledgeCategoriesDataTable component.
+```
+
+**Example - Backend Only:**
+```
+Follow the backend templates in agents/templates/backend/
+to create the API for KnowledgeCategory.
 ```
 
 See parent [agents/README.md](../README.md) for setup instructions.
 
 ---
 
-**Last Updated:** 2026-01-22
+**Last Updated:** 2026-01-27

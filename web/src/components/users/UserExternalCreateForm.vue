@@ -22,8 +22,8 @@
             cols="12"
             md="6"
           >
-            <ExternalOrganizationsAutcomplete
-              v-model="userAttributes.yukonFirstNation"
+            <ExternalOrganizationSearchableAutocomplete
+              v-model="userAttributes.externalOrganizationId"
               label="Yukon First Nation *"
               :rules="[required]"
               required
@@ -119,7 +119,7 @@ import { required } from "@/utils/validators"
 import usersApi, { type User } from "@/api/users-api"
 import useSnack from "@/use/use-snack"
 
-import ExternalOrganizationsAutcomplete from "@/components/external-organizations/ExternalOrganizationsAutcomplete.vue"
+import ExternalOrganizationSearchableAutocomplete from "@/components/external-organizations/ExternalOrganizationSearchableAutocomplete.vue"
 
 const userAttributes = ref<Partial<User>>({
   // Role is set in back-end for external users
