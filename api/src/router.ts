@@ -27,6 +27,7 @@ import {
   ArchiveItemsController,
   CategoriesController,
   CurrentUserController,
+  ExternalOrganizationsController,
   GroupsController,
   InformationSharingAgreementAccessGrantsController,
   InformationSharingAgreementArchiveItemsController,
@@ -104,6 +105,16 @@ router
 
 router.route("/api/archive-items/:archiveItemId/files/:fileId").get(ArchiveItemFilesController.show)
 router.route("/api/archive-items/:archiveItemId/audits").get(ArchiveItemAuditsController.index)
+
+router
+  .route("/api/external-organizations")
+  .get(ExternalOrganizationsController.index)
+  .post(ExternalOrganizationsController.create)
+router
+  .route("/api/external-organizations/:externalOrganizationId")
+  .get(ExternalOrganizationsController.show)
+  .patch(ExternalOrganizationsController.update)
+  .delete(ExternalOrganizationsController.destroy)
 
 router.route("/api/groups").get(GroupsController.index).post(GroupsController.create)
 router
