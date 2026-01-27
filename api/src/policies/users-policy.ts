@@ -39,19 +39,18 @@ export class UsersPolicy extends PolicyFactory(User) {
       "branch",
       "unit",
       "phoneNumber",
-      "yukonFirstNation",
       "emailNotificationsEnabled",
     ]
 
     if (this.user.isSystemAdmin) {
-      attributes.push("email", "roles", "deactivatedAt")
+      attributes.push("email", "roles")
     }
 
     return attributes
   }
 
   permittedAttributesForCreate(): Path[] {
-    return ["isExternal", ...this.permittedAttributes()]
+    return ["isExternal", "externalOrganizationId", ...this.permittedAttributes()]
   }
 
   static policyScope(_user: User): FindOptions<Attributes<User>> {
