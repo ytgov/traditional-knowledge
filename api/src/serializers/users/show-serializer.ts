@@ -7,7 +7,7 @@ import { Groups, InformationSharingAgreementAccessGrants } from "@/serializers"
 export type UserAsShow = Pick<
   User,
   | "id"
-  | "externalDirectoryIdentifier"
+  | "activeDirectoryIdentifier"
   | "email"
   | "firstName"
   | "lastName"
@@ -58,7 +58,7 @@ export class ShowSerializer extends BaseSerializer<User> {
     return {
       ...pick(this.record, [
         "id",
-        "externalDirectoryIdentifier",
+        "activeDirectoryIdentifier",
         "email",
         "firstName",
         "lastName",

@@ -19,6 +19,7 @@ export class DirectorySyncService extends BaseService {
   async perform(): Promise<User> {
     return db.transaction(async () => {
       try {
+        // TODO: switch to MS Graph API so I can get the activeDirectoryIdentifier?
         const employee = await yukonGovernmentIntegration.fetchEmployee(this.user.email)
 
         if (isNil(employee)) {
@@ -41,7 +42,7 @@ export class DirectorySyncService extends BaseService {
           branch: employee.branch,
           unit: employee.unit,
           title: employee.title,
-          externalDirectoryIdentifier: employee.username,
+          activeDirectoryIdentifier: employee.username,
           lastSyncSuccessAt: new Date(),
           lastSyncFailureAt: null,
         }

@@ -29,7 +29,7 @@ describe("api/src/services/users/ensure-from-auth0-token-service.ts", () => {
           email: "jane.doe@example.com",
           firstName: "Jane",
           lastName: "Doe",
-          externalDirectoryIdentifier: "123456",
+          activeDirectoryIdentifier: null,
         })
 
         // Act
@@ -54,7 +54,7 @@ describe("api/src/services/users/ensure-from-auth0-token-service.ts", () => {
           email: "jane.doe@example.com",
           firstName: "Jane",
           lastName: "Doe",
-          externalDirectoryIdentifier: "123456",
+          activeDirectoryIdentifier: null,
         })
 
         // Act & Assert
@@ -79,7 +79,7 @@ describe("api/src/services/users/ensure-from-auth0-token-service.ts", () => {
           email,
           firstName: "Jane",
           lastName: "Doe",
-          externalDirectoryIdentifier: "123456",
+          activeDirectoryIdentifier: null,
         })
 
         // Act
@@ -110,7 +110,7 @@ describe("api/src/services/users/ensure-from-auth0-token-service.ts", () => {
           email,
           firstName: "Jane",
           lastName: "Doe",
-          externalDirectoryIdentifier: "123456",
+          activeDirectoryIdentifier: null,
         })
 
         // Act & Assert
@@ -131,7 +131,7 @@ describe("api/src/services/users/ensure-from-auth0-token-service.ts", () => {
           email: "jane.doe@example.com",
           firstName: "Jane",
           lastName: "Doe",
-          externalDirectoryIdentifier: "123456",
+          activeDirectoryIdentifier: null,
         })
         mockedYukonGovernmentIntegration.fetchEmployee.mockResolvedValue(null)
 

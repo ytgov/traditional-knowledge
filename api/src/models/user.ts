@@ -21,7 +21,7 @@ import {
 } from "@sequelize/core/decorators-legacy"
 import { isEmpty, isNil, isUndefined } from "lodash"
 
-import { UserExternalDirectoryIdentifierUniqueIndex } from "@/models/indexes"
+import { UserActiveDirectoryIdentifierUniqueIndex } from "@/models/indexes"
 
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
@@ -53,9 +53,9 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @Index({ unique: true })
   declare auth0Subject: string
 
-  @Attribute(DataTypes.STRING(255))
-  @UserExternalDirectoryIdentifierUniqueIndex
-  declare externalDirectoryIdentifier: string | null
+  @Attribute(DataTypes.UUID)
+  @UserActiveDirectoryIdentifierUniqueIndex
+  declare activeDirectoryIdentifier: string | null
 
   @Attribute(DataTypes.STRING(100))
   @NotNull

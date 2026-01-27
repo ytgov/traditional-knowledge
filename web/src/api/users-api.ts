@@ -17,7 +17,7 @@ export enum UserRoles {
 /** Keep in sync with api/src/models/user.ts */
 export type User = {
   id: number
-  externalDirectoryIdentifier: string | null
+  activeDirectoryIdentifier: string | null
   email: string
   auth0Subject: string
   firstName: string
@@ -67,7 +67,7 @@ export type UserAsIndex = Pick<
 export type UserAsShow = Pick<
   User,
   | "id"
-  | "externalDirectoryIdentifier"
+  | "activeDirectoryIdentifier"
   | "email"
   | "firstName"
   | "lastName"
