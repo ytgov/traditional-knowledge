@@ -190,9 +190,14 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@/pages/users/UsersPage.vue"),
           },
           {
-            path: "users/new",
-            name: "users/UserNewPage",
-            component: () => import("@/pages/users/UserNewPage.vue"),
+            path: "users/new/internal",
+            name: "users/UserInternalNewPage",
+            component: () => import("@/pages/users/UserInternalNewPage.vue"),
+          },
+          {
+            path: "users/new/external",
+            name: "users/UserExternalNewPage",
+            component: () => import("@/pages/users/UserExternalNewPage.vue"),
           },
           {
             path: "users/:userId/edit",

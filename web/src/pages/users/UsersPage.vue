@@ -7,14 +7,29 @@
           label="Search"
           density="compact"
         />
-        <v-btn
+        <div
           v-if="isSystemAdmin"
-          color="primary"
-          :to="{ name: 'users/UserNewPage' }"
-          style="height: 40px"
+          class="d-flex ga-2"
         >
-          New User
-        </v-btn>
+          <v-btn
+            color="primary"
+            :to="{
+              name: 'users/UserInternalNewPage',
+            }"
+            height="40px"
+          >
+            New Internal User
+          </v-btn>
+          <v-btn
+            color="secondary"
+            :to="{
+              name: 'users/UserExternalNewPage',
+            }"
+            height="40px"
+          >
+            New External User
+          </v-btn>
+        </div>
       </div>
 
       <UsersEditDataTableServer :filters="filters" />

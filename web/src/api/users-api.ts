@@ -14,7 +14,10 @@ export enum UserRoles {
   USER = "user",
 }
 
-/** Keep in sync with api/src/models/user.ts */
+/**
+ * Keep in sync with api/src/models/user.ts
+ * information from https://yukon.ca/en/your-government/about-yukon/find-out-about-yukon-first-nations
+ */
 export enum UserYukonFirstNations {
   CARCROSS_TAGISH_FIRST_NATION = "Carcross/Tagish First Nation",
   CHAMPAGNE_AND_AISHIHIK_FIRST_NATIONS = "Champagne and Aishihik First Nations",
