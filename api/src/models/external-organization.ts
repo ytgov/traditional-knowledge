@@ -1,5 +1,6 @@
 import {
   DataTypes,
+  Op,
   sql,
   type CreationOptional,
   type InferAttributes,
@@ -15,6 +16,8 @@ import {
   NotNull,
   PrimaryKey,
 } from "@sequelize/core/decorators-legacy"
+
+import { arrayWrap } from "@/utils/array-wrap"
 
 import BaseModel from "@/models/base-model"
 import User from "@/models/user"
@@ -56,6 +59,17 @@ export class ExternalOrganization extends BaseModel<
   // Scopes
   static establishScopes(): void {
     this.addSearchScope(["name"])
+
+    this.addScope("excludeById", (externalOrganizationIdOrIds: number) => {
+      const externalOrganizationIds = arrayWrap(externalOrganizationIdOrIds)
+      return {
+        where: {
+          id: {
+            [Op.notIn]: externalOrganizationIds,
+          },
+        },
+      }
+    })
   }
 }
 

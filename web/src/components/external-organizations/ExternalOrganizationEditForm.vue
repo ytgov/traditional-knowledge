@@ -19,7 +19,7 @@
               v-model="externalOrganization.name"
               label="Name *"
               :rules="[required]"
-              variant="outlined"
+              :filters="externalOrganizationNameFilters"
               required
             />
           </v-col>
@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 import { isNil } from "lodash"
-import { ref, toRefs } from "vue"
+import { computed, ref, toRefs } from "vue"
 
 import { type VBtn, type VForm } from "vuetify/components"
 
@@ -87,6 +87,10 @@ const emit = defineEmits<{
 
 const { externalOrganizationId } = toRefs(props)
 const { externalOrganization, save, isLoading } = useExternalOrganization(externalOrganizationId)
+
+const externalOrganizationNameFilters = computed(() => ({
+  excludeById: externalOrganizationId.value,
+}))
 
 const snack = useSnack()
 

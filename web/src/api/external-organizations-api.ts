@@ -39,6 +39,7 @@ export type ExternalOrganizationWhereOptions = WhereOptions<ExternalOrganization
 /** must match model scopes */
 export type ExternalOrganizationFiltersOptions = FiltersOptions<{
   search: string | string[]
+  excludeById: number | number[]
 }>
 
 export type ExternalOrganizationQueryOptions = QueryOptions<
