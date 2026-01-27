@@ -19,7 +19,9 @@ export class DirectorySyncService extends BaseService {
   async perform(): Promise<User> {
     return db.transaction(async () => {
       try {
-        // TODO: switch to MS Graph API so I can get the activeDirectoryIdentifier?
+        // TODO: switch to MS Graph API so I can get the activeDirectoryIdentifier.
+        // At that point I'll be syncing by OID instead of email.
+        // The current yukonGovernmentIntegration will be use for UI auto-fill but not sync.
         const employee = await yukonGovernmentIntegration.fetchEmployee(this.user.email)
 
         if (isNil(employee)) {
@@ -42,7 +44,6 @@ export class DirectorySyncService extends BaseService {
           branch: employee.branch,
           unit: employee.unit,
           title: employee.title,
-          activeDirectoryIdentifier: employee.username,
           lastSyncSuccessAt: new Date(),
           lastSyncFailureAt: null,
         }
