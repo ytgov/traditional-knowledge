@@ -48,6 +48,7 @@ export class CreateService extends BaseService {
         lastName: lastNameOrFallback,
         displayName: `${firstNameOrFallback} ${lastNameOrFallback}`,
         roles: [User.Roles.USER],
+        createdById: this.currentUser.id,
       })
 
       await this.safeAttemptDirectorySync(user, this.currentUser)
