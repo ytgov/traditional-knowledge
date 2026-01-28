@@ -65,7 +65,7 @@ export class CreateInternalService extends BaseService {
     try {
       await Users.DirectorySyncService.perform(user, currentUser)
     } catch (error) {
-      logger.info(`Error syncing user ${user.id} with directory: ${error}`, { error })
+      logger.warn(`Error syncing user ${user.id} with directory: ${error}`, { error })
     }
   }
 }
