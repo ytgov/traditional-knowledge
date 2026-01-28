@@ -190,12 +190,12 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@/pages/users/UsersPage.vue"),
           },
           {
-            path: "users/new/internal",
+            path: "users/internal-new",
             name: "users/UserInternalNewPage",
             component: () => import("@/pages/users/UserInternalNewPage.vue"),
           },
           {
-            path: "users/new/external",
+            path: "users/external-new",
             name: "users/UserExternalNewPage",
             component: () => import("@/pages/users/UserExternalNewPage.vue"),
           },
