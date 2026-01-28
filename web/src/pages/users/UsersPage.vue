@@ -12,7 +12,8 @@
           class="d-flex ga-2"
         >
           <v-btn
-            color="primary"
+            color="secondary"
+            variant="outlined"
             :to="{
               name: 'users/UserInternalNewPage',
             }"
@@ -21,7 +22,7 @@
             New Internal User
           </v-btn>
           <v-btn
-            color="secondary"
+            color="primary"
             :to="{
               name: 'users/UserExternalNewPage',
             }"
