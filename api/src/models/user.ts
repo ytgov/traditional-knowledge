@@ -140,8 +140,7 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   declare emailNotificationsEnabled: CreationOptional<boolean>
 
   @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare createdById: number
+  declare creatorId: number | null
 
   @Attribute(DataTypes.DATE(0))
   @NotNull
@@ -273,20 +272,20 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
 
   // NOTE: order of definition seem to matter for parent-child relationships?
   @HasMany(() => User, {
-    foreignKey: "createdById",
-    inverse: "createdBy",
+    foreignKey: "creatorId",
+    inverse: "creator",
   })
   declare createdUsers?: NonAttribute<User[]>
 
   // NOTE: order of definition seem to matter for parent-child relationships?
   @BelongsTo(() => User, {
-    foreignKey: "createdById",
+    foreignKey: "creatorId",
     inverse: {
       as: "createdUsers",
       type: "hasMany",
     },
   })
-  declare createdBy?: NonAttribute<User>
+  declare creator?: NonAttribute<User>
 
   @HasMany(() => UserGroup, {
     foreignKey: {

@@ -28,7 +28,7 @@ export type UserAsShow = Pick<
   | "deactivationReason"
   | "lastActiveAt"
   | "emailNotificationsEnabled"
-  | "createdById"
+  | "creatorId"
   | "createdAt"
   | "updatedAt"
 > & {
@@ -84,7 +84,7 @@ export class ShowSerializer extends BaseSerializer<User> {
         "deactivationReason",
         "lastActiveAt",
         "emailNotificationsEnabled",
-        "createdById",
+        "creatorId",
         "createdAt",
         "updatedAt",
       ]),

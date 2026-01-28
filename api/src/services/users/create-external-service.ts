@@ -55,7 +55,7 @@ export class CreateExternalService extends BaseService {
         displayName: displayNameOrFallback,
         roles: [User.Roles.USER],
         isExternal: true,
-        createdById: this.currentUser.id,
+        creatorId: this.currentUser.id,
       })
 
       return user.reload({

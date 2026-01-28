@@ -48,7 +48,7 @@ export class CreateInternalService extends BaseService {
         displayName: displayNameOrFallback,
         roles: [User.Roles.USER],
         isExternal: false,
-        createdById: this.currentUser.id,
+        creatorId: this.currentUser.id,
       })
 
       if (this.options?.syncWithDirectory) {

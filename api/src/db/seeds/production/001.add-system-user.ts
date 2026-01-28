@@ -24,10 +24,7 @@ export async function seed(_knex: Knex): Promise<void> {
       },
     })
     if (isNil(user)) {
-      user = await User.create({
-        ...attributes,
-        createdById: 1, // self, or first user in database
-      })
+      user = await User.create(attributes)
       logger.info("System user created:", user.dataValues)
     } else {
       await user.update(attributes)

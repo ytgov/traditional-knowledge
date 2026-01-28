@@ -18,7 +18,7 @@ export enum UserRoles {
 /** Keep in sync with api/src/models/user.ts */
 export type User = {
   id: number
-  createdById: number
+  creatorId: number | null
   email: string
   auth0Subject: string
   activeDirectoryIdentifier: string | null
@@ -69,7 +69,7 @@ export type UserAsIndex = Pick<
   | "deactivationReason"
   | "lastActiveAt"
   | "emailNotificationsEnabled"
-  | "createdById"
+  | "creatorId"
   | "createdAt"
   | "updatedAt"
 > & {
@@ -101,7 +101,7 @@ export type UserAsShow = Pick<
   | "deactivationReason"
   | "lastActiveAt"
   | "emailNotificationsEnabled"
-  | "createdById"
+  | "creatorId"
   | "createdAt"
   | "updatedAt"
 > & {
