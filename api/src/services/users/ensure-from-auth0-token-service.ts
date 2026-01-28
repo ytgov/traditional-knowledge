@@ -55,7 +55,8 @@ export class EnsureFromAuth0TokenService extends BaseService {
         firstName,
         lastName,
       },
-      systemUser
+      systemUser,
+      { syncWithDirectory: true }
     )
     return newUser.reload({
       include: this.include,

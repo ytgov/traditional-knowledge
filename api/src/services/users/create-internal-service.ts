@@ -11,7 +11,10 @@ export type UserInternalCreationAttributes = Partial<CreationAttributes<User>>
 export class CreateInternalService extends BaseService {
   constructor(
     private attributes: UserInternalCreationAttributes,
-    private currentUser: User
+    private currentUser: User,
+    private options?: {
+      syncWithDirectory?: boolean
+    }
   ) {
     super()
   }
@@ -48,7 +51,9 @@ export class CreateInternalService extends BaseService {
         createdById: this.currentUser.id,
       })
 
-      await this.safeAttemptDirectorySync(user, this.currentUser)
+      if (this.options?.syncWithDirectory) {
+        await this.safeAttemptDirectorySync(user, this.currentUser)
+      }
 
       return user.reload({
         include: ["adminGroups", "adminInformationSharingAgreementAccessGrants"],

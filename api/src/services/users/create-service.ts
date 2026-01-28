@@ -9,7 +9,10 @@ export type UserCreationAttributes = Partial<CreationAttributes<User>>
 export class CreateService extends BaseService {
   constructor(
     private attributes: UserCreationAttributes,
-    private currentUser: User
+    private currentUser: User,
+    private options?: {
+      syncWithDirectory?: boolean
+    }
   ) {
     super()
   }
@@ -21,7 +24,7 @@ export class CreateService extends BaseService {
       return Users.CreateExternalService.perform(this.attributes, this.currentUser)
     }
 
-    return Users.CreateInternalService.perform(this.attributes, this.currentUser)
+    return Users.CreateInternalService.perform(this.attributes, this.currentUser, this.options)
   }
 }
 
