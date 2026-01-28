@@ -27,6 +27,7 @@ import {
   ArchiveItemsController,
   CategoriesController,
   CurrentUserController,
+  ExternalOrganizationsController,
   GroupsController,
   InformationSharingAgreementAccessGrantsController,
   InformationSharingAgreementArchiveItemsController,
@@ -37,6 +38,7 @@ import {
   UserGroupsController,
   Users,
   UsersController,
+  YukonGovernmentDirectory,
 } from "@/controllers"
 
 export const router = Router()
@@ -77,6 +79,10 @@ router
   .post(Users.DeactivationController.create)
   .delete(Users.DeactivationController.destroy)
 
+router
+  .route("/api/yukon-government-directory/employees")
+  .get(YukonGovernmentDirectory.EmployeesController.index)
+
 router.route("/api/retentions").get(RetentionsController.index).post(RetentionsController.create)
 router
   .route("/api/retentions/:id")
@@ -104,6 +110,16 @@ router
 
 router.route("/api/archive-items/:archiveItemId/files/:fileId").get(ArchiveItemFilesController.show)
 router.route("/api/archive-items/:archiveItemId/audits").get(ArchiveItemAuditsController.index)
+
+router
+  .route("/api/external-organizations")
+  .get(ExternalOrganizationsController.index)
+  .post(ExternalOrganizationsController.create)
+router
+  .route("/api/external-organizations/:externalOrganizationId")
+  .get(ExternalOrganizationsController.show)
+  .patch(ExternalOrganizationsController.update)
+  .delete(ExternalOrganizationsController.destroy)
 
 router.route("/api/groups").get(GroupsController.index).post(GroupsController.create)
 router

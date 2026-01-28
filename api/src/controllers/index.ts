@@ -6,6 +6,7 @@ export { ArchiveItemFilesController } from "./archive-item-files-controller"
 export { ArchiveItemsController } from "./archive-items-controller"
 export { CategoriesController } from "./categories-controller"
 export { CurrentUserController } from "./current-user-controller"
+export { ExternalOrganizationsController } from "./external-organizations-controller"
 export { GroupsController } from "./groups-controller"
 export { InformationSharingAgreementAccessGrantsController } from "./information-sharing-agreement-access-grants-controller"
 export { InformationSharingAgreementArchiveItemsController } from "./information-sharing-agreement-archive-items-controller"
@@ -17,3 +18,4 @@ export { UsersController } from "./users-controller"
 
 // Bundled exports
 export * as Users from "./users"
+export * as YukonGovernmentDirectory from "./yukon-government-directory"

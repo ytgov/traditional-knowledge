@@ -46,6 +46,28 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 - **Mail:** MailDev (dev) / Outlook365 (prod)
 - **Knowledge Management:** Cultural protocol enforcement, Indigenous language support
 
+## Modern Architecture Patterns
+
+**For implementation templates, see `agents/templates/`** - copy-paste-ready code for all patterns below.
+
+### Vue 3 Composable Patterns
+- **State Management**: Use `reactive()` + `toRefs()` for composables instead of individual refs
+- **Form References**: Use `ref<InstanceType<VForm> | null>(null)` for newer patterns
+- **Server-Side Tables**: Use `v-data-table-server` with `useRouteQuery` for URL state
+- **Component Naming**: `{Model}{Purpose}{VuetifyComponent}.vue` pattern
+
+### Backend Service Architecture
+- **Constructor Injection**: Use constructor pattern instead of static methods
+- **Database Transactions**: All write operations wrapped in transactions
+- **One Service Per File**: Separate CreateService, UpdateService, DestroyService with barrel exports
+- **Error Handling**: Structured logging with context and proper HTTP status codes
+
+### Model Scopes and Validation
+- **Search Scopes**: Implement `addSearchScope()` for searchable fields
+- **Exclusion Logic**: Use `arrayWrap()` utility with `Op.notIn` for current record exclusion
+- **Unique Validation**: Combine excludeById with unique text field components
+- **Security Scopes**: Default to restrictive, explicit permissions only
+
 ## Development Environment
 
 ### Common Commands
@@ -153,11 +175,21 @@ This file follows the format from https://agents.md/ for AI agent documentation.
     msg: "User group combination must be unique",
   })
   ```
+- **Enum patterns:**
+  - Place enums directly in relevant model files (not separate utilities)
+  - Include model name in enum description: `UserYukonFirstNations` not generic `YukonFirstNations`
+  - Add validation decorators with `@ValidateAttribute` and `isIn` for enum fields
 
 **Database:**
 
 - Knex for migrations, Sequelize for ORM
 - Database: snake_case, Models: camelCase (Sequelize maps automatically)
+- **Migration patterns:**
+  - Keep migrations clean without extraneous comments
+  - When adding foreign key fields that need to be non-null to existing tables, add them as nullable initially, backfill existing records, then make non-nullable
+  - Use self-referencing foreign keys with proper constraint naming
+  - Find system user by email (`system.user@yukon.ca`) not auth0Subject
+  - Use proper TypeScript generics: `.returning<{ id: number }[]>(["id"])`
 
 ### Testing
 
@@ -312,545 +344,81 @@ Navigation/verification steps:
 
 For complex scenarios, use `## Test Case N: Description` subheadings.
 
-### Agent Workflow Patterns
+### Agent Templates and Workflows
 
-**Available Workflows:**
+The `agents/` folder contains reusable templates and workflows. **Use these instead of writing from scratch.**
 
-See `/agents/workflows/README.md` for the complete list of available workflows.
+#### Templates (`agents/templates/`)
 
-**Key Workflows:**
-- `create-admin-ui.md` - Creating full CRUD admin interfaces
-- `pull-request-management.md` - Creating and editing well-structured PRs
-- `github-issue-creation.md` - Creating GitHub issues
+Copy-paste-ready code for specific file types. Use when you know exactly what you need.
+
+**Backend:**
+- `backend/model.md` - Sequelize model with scopes
+- `backend/controller.md` - CRUD controller with error handling
+- `backend/policy.md` - Authorization with PolicyFactory
+- `backend/services.md` - Create, Update, Destroy services
+- `backend/serializers.md` - Index, Show, Reference serializers
+
+**Frontend:**
+- `frontend/api-client.md` - Type-safe HTTP client
+- `frontend/composables.md` - Reactive data fetching (list/single)
+- `frontend/components.md` - DataTable, Forms, UniqueTextField
+- `frontend/pages.md` - List, New, Edit pages
+- `frontend/searchable-autocomplete.md` - Debounced search component
+
+#### Workflows (`agents/workflows/`)
+
+Multi-step guides that orchestrate templates. Use for complete features.
+
+- `create-admin-ui.md` - Full CRUD admin interface (references templates)
+- `pull-request-management.md` - Creating and editing PRs
 - `jira-issue-creation.md` - Creating Jira issues in TK project
 
-**Workflow Usage:**
+#### Usage Examples
 
-**Example:**
 ```
-Follow the workflow in agents/workflows/create-admin-ui.md
-to create a comprehensive admin interface for Knowledge Entries.
+# Complete feature (workflow)
+Follow agents/workflows/create-admin-ui.md to create admin UI for Categories.
+
+# Specific component (template)
+Follow agents/templates/frontend/searchable-autocomplete.md for CategorySearchableAutocomplete.
+
+# Backend only (templates)
+Follow agents/templates/backend/ to create the API for Categories.
 ```
 
-Workflows are designed to be used with AI coding assistants and provide step-by-step guidance for complex, multi-step processes.
+See `agents/README.md` for full documentation.
 
-**Plan File Naming Convention:**
+#### Plan File Naming Convention
 
 When creating new plan files in `/agents/plans/`, use the format:
 - File name: `Plan, <Ticket-ID> - <Descriptive Title>, <YYYY-MM-DD>.md`
 - Example: `Plan, TK-26 - Add Internal User from the Active Directory, 2026-01-22.md`
 
-This ensures consistent naming and easy chronological sorting of plan documents.
-
 ---
 
-## Code Patterns (Found in 3+ Places)
+## Quick Reference
 
-These patterns are consistently used throughout the codebase. Follow them when adding new features.
+### HTTP Status Codes
 
-### Controller Patterns
+| Code | Meaning | Used When |
+|------|---------|-----------|
+| 200 | OK | Successful GET, PATCH |
+| 201 | Created | Successful POST |
+| 204 | No Content | Successful DELETE |
+| 400 | Bad Request | General error |
+| 403 | Forbidden | Policy check fails |
+| 404 | Not Found | Record not found |
+| 422 | Unprocessable | Create/Update fails |
 
-**1. Error Handling with Try-Catch (All Controllers)**
-```typescript
-async index() {
-  try {
-    // business logic
-    return this.response.json({ resources, totalCount })
-  } catch (error) {
-    logger.error("Error fetching resources" + error)
-    return this.response.status(400).json({
-      message: `Error fetching resources: ${error}`,
-    })
-  }
-}
-```
+### Lodash Utilities
 
-**Status codes:**
-- 200: Success
-- 201: Created
-- 204: Deleted/No content
-- 400: General error
-- 403: Forbidden/unauthorized
-- 404: Not found
-- 422: Validation/creation/update error
-
-**2. Policy Authorization Pattern (All Controllers)**
-```typescript
-async update() {
-  // Load record
-  const record = await this.loadRecord()
-  if (isNil(record)) {
-    return this.response.status(404).json({ message: "Record not found" })
-  }
-
-  // Check policy
-  const policy = this.buildPolicy(record)
-  if (!policy.update()) {
-    return this.response.status(403).json({
-      message: "You are not authorized to update this resource",
-    })
-  }
-
-  // Permit attributes
-  const permittedAttributes = policy.permitAttributes(this.request.body)
-
-  // Perform update via service or direct
-  // ...
-}
-```
-
-**3. Private Helper Methods (All Controllers)**
-```typescript
-private async loadRecord() {
-  return Model.findByPk(this.params.id, {
-    include: ["association1", "association2"],
-  })
-}
-
-private buildPolicy(record: Model = Model.build()) {
-  return new ResourcePolicy(this.currentUser, record)
-}
-```
-
-**4. Index Method with Scoping (All Controllers)**
-```typescript
-async index() {
-  const where = this.buildWhere()
-  const scopes = this.buildFilterScopes()
-  const scopedModel = ResourcePolicy.applyScope(scopes, this.currentUser)
-
-  const totalCount = await scopedModel.count({ where })
-  const records = await scopedModel.findAll({
-    where,
-    limit: this.pagination.limit,
-    offset: this.pagination.offset,
-  })
-
-  return this.response.json({ resources: records, totalCount })
-}
-```
-
-**5. Service Delegation Pattern (Most Controllers)**
-```typescript
-// Create
-const resource = await CreateService.perform(permittedAttributes, this.currentUser)
-
-// Update
-const resource = await UpdateService.perform(record, permittedAttributes, this.currentUser)
-```
-
----
-
-### Service Patterns
-
-**1. Constructor Parameter Order (All Services)**
-```typescript
-// Create services
-constructor(
-  private attributes: ModelCreationAttributes,
-  private currentUser: User
-)
-
-// Update services
-constructor(
-  private entity: Model,
-  private attributes: UpdateAttributes,
-  private currentUser: User
-)
-
-// Destroy services
-constructor(
-  private entity: Model,
-  private currentUser: User
-)
-```
-
-**Rule: Current user is always the last parameter**
-
-**2. Static perform() Entry Point (All Services)**
-```typescript
-export class CreateService extends BaseService {
-  async perform(): Promise<Model> {
-    // implementation
-  }
-}
-
-// Usage
-const model = await CreateService.perform(attributes, currentUser)
-```
-
-**3. Early Validation with Lodash (All Services)**
-```typescript
-async perform(): Promise<Model> {
-  if (isNil(this.attributes.title)) {
-    throw new Error("Title is required")
-  }
-  if (isEmpty(this.attributes.email)) {
-    throw new Error("Email is required")
-  }
-
-  // business logic
-}
-```
-
-**4. Transaction Wrapping (Many Services)**
-```typescript
-async perform(): Promise<Model> {
-  return db.transaction(async () => {
-    const record = await Model.create(this.attributes)
-    await RelatedModel.create({ recordId: record.id })
-    return record
-  })
-}
-```
-
----
-
-### Model Patterns
-
-**1. Establish Scopes Method (All Models)**
-```typescript
-export class User extends BaseModel<...> {
-  // ... attributes ...
-
-  static establishScopes(): void {
-    this.addSearchScope(["firstName", "lastName", "email"])
-
-    this.addScope("notInGroup", (groupId: number) => ({
-      where: {
-        id: {
-          [Op.notIn]: sql`(SELECT user_id FROM user_groups WHERE group_id = :groupId)`,
-        },
-      },
-      replacements: { groupId },
-    }))
-  }
-}
-```
-
-**2. Soft Delete Pattern (All Models)**
-```typescript
-@Attribute(DataTypes.DATE(0))
-declare deletedAt: CreationOptional<Date | null>
-```
-
-Records are never physically deleted, only soft-deleted by setting `deletedAt`.
-
-**3. Standard Timestamps (All Models)**
-```typescript
-@Attribute(DataTypes.DATE(0))
-@NotNull
-@Default(sql.fn("getutcdate"))
-declare createdAt: CreationOptional<Date>
-
-@Attribute(DataTypes.DATE(0))
-@NotNull
-@Default(sql.fn("getutcdate"))
-declare updatedAt: CreationOptional<Date>
-```
-
-**4. Association Pattern (All Models)**
-```typescript
-// HasMany
-@HasMany(() => RelatedModel, {
-  foreignKey: "userId",
-  inverse: "user",
-})
-declare relatedModels?: NonAttribute<RelatedModel[]>
-
-// BelongsTo
-@BelongsTo(() => User, {
-  foreignKey: "userId",
-  inverse: {
-    as: "createdItems",
-    type: "hasMany",
-  },
-})
-declare user?: NonAttribute<User>
-
-// BelongsToMany
-@BelongsToMany(() => Group, {
-  through: () => UserGroup,
-  foreignKey: "userId",
-  otherKey: "groupId",
-  inverse: "users",
-})
-declare groups?: NonAttribute<Group[]>
-```
-
-**5. Enum as Static Readonly (Many Models)**
-```typescript
-export enum UserRoles {
-  SYSTEM_ADMIN = "system_admin",
-  USER = "user",
-}
-
-export class User extends BaseModel<...> {
-  static readonly Roles = UserRoles
-
-  @ValidateAttribute({
-    isIn: {
-      args: [Object.values(UserRoles)],
-      msg: `Role must be one of ${Object.values(UserRoles).join(", ")}`,
-    },
-  })
-  declare roles: string[]
-}
-```
-
----
-
-### Policy Patterns
-
-**1. System Admin Bypass (9 Policies)**
-```typescript
-show(): boolean {
-  if (this.user.isSystemAdmin) return true
-  // ... other checks
-}
-
-create(): boolean {
-  if (this.user.isSystemAdmin) return true
-  // ... other checks
-}
-```
-
-**2. CRUD Method Structure (All Policies)**
-```typescript
-export class ResourcePolicy extends BasePolicy<Model> {
-  show(): boolean {
-    // Check if user can view
-  }
-
-  create(): boolean {
-    // Check if user can create
-  }
-
-  update(): boolean {
-    // Check if user can modify
-  }
-
-  destroy(): boolean {
-    // Check if user can delete
-  }
-}
-```
-
-**3. Permitted Attributes (All Policies)**
-```typescript
-permittedAttributes(): Path[] {
-  const attributes = ["field1", "field2", "field3"]
-
-  if (this.user.isSystemAdmin) {
-    attributes.push("adminOnlyField")
-  }
-
-  return attributes
-}
-
-permittedAttributesForCreate(): Path[] {
-  return ["foreignKeyId", ...this.permittedAttributes()]
-}
-```
-
-**4. Policy Scope Pattern (All Policies)**
-```typescript
-// All records (admin)
-static policyScope(_user: User): FindOptions<Attributes<Model>> {
-  return {}  // or ALL_RECORDS_SCOPE
-}
-
-// User-owned records
-static policyScope(user: User): FindOptions<Attributes<Model>> {
-  return {
-    where: {
-      userId: user.id,
-    },
-  }
-}
-
-// Complex filtering with associations
-static policyScope(user: User): FindOptions<Attributes<Model>> {
-  return {
-    include: [
-      {
-        association: "accessGrants",
-        where: { userId: user.id },
-      },
-    ],
-  }
-}
-```
-
-**5. User Ownership Check (4 Policies)**
-```typescript
-update(): boolean {
-  if (this.user.isSystemAdmin) return true
-  if (this.user.id === this.record.userId) return true
-  return false
-}
-```
-
----
-
-### Vue Component Patterns
-
-**1. Form Wrapper (All Forms)**
-```vue
-<template>
-  <v-form ref="formRef" @submit.prevent="saveWrapper">
-    <v-card>
-      <v-card-title>{{ title }}</v-card-title>
-      <v-card-text>
-        <!-- form fields -->
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn :loading="isLoading" type="submit">Save</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-form>
-</template>
-```
-
-**2. Form Validation (All Forms)**
-```typescript
-async function saveWrapper() {
-  if (isNil(formRef.value)) return
-
-  const { valid } = await formRef.value.validate()
-  if (!valid) return
-
-  isLoading.value = true
-  try {
-    await save()
-    snack.success("Saved successfully")
-    router.push({ name: "list-page" })
-  } catch (error) {
-    console.error("Save failed:", error)
-    snack.error(`Save failed: ${error}`)
-  } finally {
-    isLoading.value = false
-  }
-}
-```
-
-**3. Composables for API Calls (All Components)**
-```typescript
-// Single item composable
-const { item, isLoading, isErrored, save, refresh } = useItem(itemId)
-
-// List composable
-const { items, totalCount, isLoading, refresh } = useItems(queryOptions)
-```
-
-**Composable auto-fetches on ID/query change via `watch()`**
-
-**4. Loading State Management (All Async Operations)**
-```typescript
-const isLoading = ref(false)
-
-async function performAction() {
-  isLoading.value = true
-  try {
-    await api.doSomething()
-  } finally {
-    isLoading.value = false
-  }
-}
-```
-
-```vue
-<v-btn :loading="isLoading" @click="performAction">Action</v-btn>
-<v-data-table-server :loading="isLoading" ... />
-<v-skeleton-loader v-if="isLoading" type="card" />
-```
-
-**5. Error Notifications (All Error Handling)**
-```typescript
-import { useSnack } from "@/composables/use-snack"
-
-const snack = useSnack()
-
-try {
-  await save()
-  snack.success("Item saved")
-} catch (error) {
-  console.error("Failed:", error)
-  snack.error(`Failed: ${error}`)
-}
-```
-
-**6. Debounced Search (All Autocomplete Components)**
-```typescript
-import { debounce } from "lodash"
-
-const searchToken = ref("")
-const debouncedSearch = debounce((value: string) => {
-  searchToken.value = value
-}, 500)
-```
-
-**7. Route Query Persistence (All Data Tables)**
-```typescript
-import { useRouteQuery } from "@vueuse/router"
-
-const page = useRouteQuery("page", "1", { transform: Number })
-const perPage = useRouteQuery("perPage", "10", { transform: Number })
-const sortBy = useVuetifySortByToSafeRouteQuery("sortBy", [...])
-```
-
-Pagination, sorting, and filtering persist to URL for shareable links.
-
-**8. Skeleton Loaders (All Edit Forms)**
-```vue
-<template>
-  <v-skeleton-loader v-if="isNil(item)" type="card" />
-  <v-form v-else ref="formRef">
-    <!-- form content -->
-  </v-form>
-</template>
-```
-
----
-
-### Cross-Cutting Patterns
-
-**1. Lodash Utilities (Backend)**
 - `isNil()` - Check null or undefined
 - `isEmpty()` - Check empty strings, arrays, objects
-- `isUndefined()` - Strict undefined check
-- `omit()` - Remove properties from objects
-- `pick()` - Select specific properties
-- `uniqBy()` - Unique array by property
-- `debounce()` - Debounce functions (also frontend)
+- `pick()` / `omit()` - Select/remove object properties
+- `debounce()` - Debounce functions (500ms for search)
 
-**2. Logger Usage (Backend)**
-```typescript
-import logger from "@/utils/logger"
-
-logger.error("Error message", { error, context })
-logger.warn("Warning message")
-logger.info("Info message")
-logger.debug("Debug message")
-```
-
-**3. Conditional Where Clauses (Backend)**
-```typescript
-const where: WhereOptions<Model> = {}
-
-if (!isNil(filters.status)) {
-  where.status = filters.status
-}
-
-if (!isEmpty(filters.search)) {
-  // apply search
-}
-```
-
----
-
-## File Naming Conventions
+### File Naming Conventions
 
 - Database: snake_case (tables, columns)
 - JavaScript/TypeScript: camelCase (variables, properties)
@@ -911,6 +479,6 @@ await auditLogService.create({
 
 ---
 
-**Workflow Version:** 1.0
-**Last Updated:** 2026-01-22
+**Version:** 1.1
+**Last Updated:** 2026-01-27
 **Project:** Traditional Knowledge (TK)

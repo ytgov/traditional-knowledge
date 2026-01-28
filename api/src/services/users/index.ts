@@ -9,3 +9,5 @@ export { DeactivateService } from "./deactivate-service"
 // Special Services
 export { DirectorySyncService } from "./directory-sync-service"
 export { EnsureFromAuth0TokenService } from "./ensure-from-auth0-token-service"
+export { CreateExternalService } from "./create-external-service"
+export { CreateInternalService } from "./create-internal-service"

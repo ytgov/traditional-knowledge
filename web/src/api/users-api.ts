@@ -14,12 +14,15 @@ export enum UserRoles {
   USER = "user",
 }
 
+
 /** Keep in sync with api/src/models/user.ts */
 export type User = {
   id: number
-  externalDirectoryIdentifier: string | null
+  creatorId: number | null
   email: string
   auth0Subject: string
+  activeDirectoryIdentifier: string | null
+  isExternal: boolean
   firstName: string
   lastName: string
   displayName: string
@@ -29,12 +32,14 @@ export type User = {
   division: string | null
   branch: string | null
   unit: string | null
-  deactivatedAt: string | null
-  deactivationReason: string | null
-  emailNotificationsEnabled: boolean
+  phoneNumber: string | null
+  externalOrganizationId: number | null
   lastSyncSuccessAt: string | null
   lastSyncFailureAt: string | null
+  deactivatedAt: string | null
+  deactivationReason: string | null
   lastActiveAt: string | null
+  emailNotificationsEnabled: boolean
   createdAt: string
   updatedAt: string
 }
@@ -44,6 +49,10 @@ export type UserAsIndex = Pick<
   User,
   | "id"
   | "email"
+  | "auth0Subject"
+  | "activeDirectoryIdentifier"
+  | "isExternal"
+  | "externalOrganizationId"
   | "firstName"
   | "lastName"
   | "displayName"
@@ -53,10 +62,14 @@ export type UserAsIndex = Pick<
   | "division"
   | "branch"
   | "unit"
+  | "phoneNumber"
+  | "lastSyncSuccessAt"
+  | "lastSyncFailureAt"
   | "deactivatedAt"
   | "deactivationReason"
-  | "emailNotificationsEnabled"
   | "lastActiveAt"
+  | "emailNotificationsEnabled"
+  | "creatorId"
   | "createdAt"
   | "updatedAt"
 > & {
@@ -67,8 +80,11 @@ export type UserAsIndex = Pick<
 export type UserAsShow = Pick<
   User,
   | "id"
-  | "externalDirectoryIdentifier"
   | "email"
+  | "auth0Subject"
+  | "activeDirectoryIdentifier"
+  | "isExternal"
+  | "externalOrganizationId"
   | "firstName"
   | "lastName"
   | "displayName"
@@ -78,12 +94,14 @@ export type UserAsShow = Pick<
   | "division"
   | "branch"
   | "unit"
-  | "deactivatedAt"
-  | "deactivationReason"
-  | "emailNotificationsEnabled"
+  | "phoneNumber"
   | "lastSyncSuccessAt"
   | "lastSyncFailureAt"
+  | "deactivatedAt"
+  | "deactivationReason"
   | "lastActiveAt"
+  | "emailNotificationsEnabled"
+  | "creatorId"
   | "createdAt"
   | "updatedAt"
 > & {

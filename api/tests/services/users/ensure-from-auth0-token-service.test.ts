@@ -12,6 +12,12 @@ vi.mock("@/integrations", () => ({
     fetchEmployee: vi.fn(),
   },
 }))
+vi.mock("@/services/users/directory-sync-service", () => ({
+  DirectorySyncService: {
+    perform: vi.fn(),
+  },
+}))
+
 const mockedAuth0Integration = vi.mocked(auth0Integration)
 const mockedYukonGovernmentIntegration = vi.mocked(yukonGovernmentIntegration)
 
@@ -29,7 +35,7 @@ describe("api/src/services/users/ensure-from-auth0-token-service.ts", () => {
           email: "jane.doe@example.com",
           firstName: "Jane",
           lastName: "Doe",
-          externalDirectoryIdentifier: "123456",
+          activeDirectoryIdentifier: null,
         })
 
         // Act
@@ -54,7 +60,7 @@ describe("api/src/services/users/ensure-from-auth0-token-service.ts", () => {
           email: "jane.doe@example.com",
           firstName: "Jane",
           lastName: "Doe",
-          externalDirectoryIdentifier: "123456",
+          activeDirectoryIdentifier: null,
         })
 
         // Act & Assert
@@ -79,7 +85,7 @@ describe("api/src/services/users/ensure-from-auth0-token-service.ts", () => {
           email,
           firstName: "Jane",
           lastName: "Doe",
-          externalDirectoryIdentifier: "123456",
+          activeDirectoryIdentifier: null,
         })
 
         // Act
@@ -110,7 +116,7 @@ describe("api/src/services/users/ensure-from-auth0-token-service.ts", () => {
           email,
           firstName: "Jane",
           lastName: "Doe",
-          externalDirectoryIdentifier: "123456",
+          activeDirectoryIdentifier: null,
         })
 
         // Act & Assert
@@ -131,7 +137,7 @@ describe("api/src/services/users/ensure-from-auth0-token-service.ts", () => {
           email: "jane.doe@example.com",
           firstName: "Jane",
           lastName: "Doe",
-          externalDirectoryIdentifier: "123456",
+          activeDirectoryIdentifier: null,
         })
         mockedYukonGovernmentIntegration.fetchEmployee.mockResolvedValue(null)
 

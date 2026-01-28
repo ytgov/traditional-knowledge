@@ -190,9 +190,30 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@/pages/users/UsersPage.vue"),
           },
           {
-            path: "users/new",
-            name: "users/UserNewPage",
-            component: () => import("@/pages/users/UserNewPage.vue"),
+            path: "users/internal-new",
+            name: "users/UserInternalNewPage",
+            component: () => import("@/pages/users/UserInternalNewPage.vue"),
+          },
+          {
+            path: "users/external-new",
+            name: "users/UserExternalNewPage",
+            component: () => import("@/pages/users/UserExternalNewPage.vue"),
+          },
+          {
+            path: "external-organizations",
+            name: "admin/ExternalOrganizationsPage",
+            component: () => import("@/pages/admin/external-organizations/ExternalOrganizationsPage.vue"),
+          },
+          {
+            path: "external-organizations/new",
+            name: "admin/ExternalOrganizationsNewPage",
+            component: () => import("@/pages/admin/external-organizations/ExternalOrganizationsNewPage.vue"),
+          },
+          {
+            path: "external-organizations/:externalOrganizationId/edit",
+            name: "admin/ExternalOrganizationsEditPage",
+            component: () => import("@/pages/admin/external-organizations/ExternalOrganizationsEditPage.vue"),
+            props: true,
           },
           {
             path: "users/:userId/edit",

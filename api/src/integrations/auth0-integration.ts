@@ -11,7 +11,7 @@ export interface Auth0UserInfo {
   firstName: string
   lastName: string
   auth0Subject: string
-  externalDirectoryIdentifier: string
+  activeDirectoryIdentifier: string | null
 }
 
 export interface Auth0Response {
@@ -46,16 +46,16 @@ export const auth0Integration = {
     const email = data.email || fallbackEmail
 
     // for external (non AzureAD) users, the oid is not in the userinfo response
-    // this ensures that something makes it into that field to stop the app from constantly checking
-    // alternatively, if they aren't in the directory, maybe this should fail...
-    const externalDirectoryIdentifier = data.oid || `NOT_IN_DIRECTORY-${email}`
+    // internal users not found in directory will have activeDirectoryIdentifier = NULL
+    // and sync failure will be set during directory sync process
+    const activeDirectoryIdentifier = data.oid || null
 
     return {
       auth0Subject: data.sub,
       email,
       firstName,
       lastName,
-      externalDirectoryIdentifier,
+      activeDirectoryIdentifier,
     }
   },
 }

@@ -7,8 +7,11 @@ import { Groups, InformationSharingAgreementAccessGrants } from "@/serializers"
 export type UserAsShow = Pick<
   User,
   | "id"
-  | "externalDirectoryIdentifier"
   | "email"
+  | "auth0Subject"
+  | "activeDirectoryIdentifier"
+  | "isExternal"
+  | "externalOrganizationId"
   | "firstName"
   | "lastName"
   | "displayName"
@@ -18,12 +21,14 @@ export type UserAsShow = Pick<
   | "division"
   | "branch"
   | "unit"
-  | "deactivatedAt"
-  | "deactivationReason"
-  | "emailNotificationsEnabled"
+  | "phoneNumber"
   | "lastSyncSuccessAt"
   | "lastSyncFailureAt"
+  | "deactivatedAt"
+  | "deactivationReason"
   | "lastActiveAt"
+  | "emailNotificationsEnabled"
+  | "creatorId"
   | "createdAt"
   | "updatedAt"
 > & {
@@ -58,8 +63,11 @@ export class ShowSerializer extends BaseSerializer<User> {
     return {
       ...pick(this.record, [
         "id",
-        "externalDirectoryIdentifier",
         "email",
+        "auth0Subject",
+        "activeDirectoryIdentifier",
+        "isExternal",
+        "externalOrganizationId",
         "firstName",
         "lastName",
         "displayName",
@@ -69,12 +77,14 @@ export class ShowSerializer extends BaseSerializer<User> {
         "division",
         "branch",
         "unit",
-        "deactivatedAt",
-        "deactivationReason",
-        "emailNotificationsEnabled",
+        "phoneNumber",
         "lastSyncSuccessAt",
         "lastSyncFailureAt",
+        "deactivatedAt",
+        "deactivationReason",
         "lastActiveAt",
+        "emailNotificationsEnabled",
+        "creatorId",
         "createdAt",
         "updatedAt",
       ]),

@@ -9,6 +9,30 @@
     :loading="isLoading"
     @click:row="(_event: unknown, { item }: UserTableRow) => goToUserEditPage(item.id)"
   >
+    <template #item.displayName="{ item }">
+      <UserAttributesAvatarCard
+        :user="item"
+        color="transparent"
+      />
+    </template>
+    <template #item.isExternal="{ value }">
+      <v-chip
+        v-if="value"
+        color="primary"
+        variant="tonal"
+        size="small"
+      >
+        External
+      </v-chip>
+      <v-chip
+        v-else
+        color="secondary"
+        variant="tonal"
+        size="small"
+      >
+        Internal
+      </v-chip>
+    </template>
     <template #item.lastActiveAt="{ item }">
       <span v-if="item.lastActiveAt">
         {{ formatRelative(item.lastActiveAt) }}
@@ -71,6 +95,8 @@ import useUsers, {
   type UserWhereOptions,
 } from "@/use/use-users"
 
+import UserAttributesAvatarCard from "@/components/users/UserAttributesAvatarCard.vue"
+
 type UserTableRow = {
   item: UserAsIndex
 }
@@ -94,22 +120,11 @@ const headers = ref([
   {
     title: "Display Name",
     key: "displayName",
+    minWidth: "300",
   },
   {
     title: "Email",
     key: "email",
-  },
-  {
-    title: "Title",
-    key: "title",
-  },
-  {
-    title: "Department",
-    key: "department",
-    value: (item: unknown) => {
-      const { department, division, branch, unit } = item as UserAsIndex
-      return [department, division, branch, unit].filter(Boolean).join(" - ")
-    },
   },
   {
     title: "Role",
@@ -120,6 +135,10 @@ const headers = ref([
       return formatedRoleTypes.join(", ")
     },
     sortable: false,
+  },
+  {
+    title: "User Type",
+    key: "isExternal",
   },
   {
     title: "Status",

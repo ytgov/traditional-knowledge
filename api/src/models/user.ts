@@ -10,6 +10,7 @@ import {
 import {
   Attribute,
   AutoIncrement,
+  BelongsTo,
   BelongsToMany,
   Default,
   HasMany,
@@ -17,17 +18,19 @@ import {
   ModelValidator,
   NotNull,
   PrimaryKey,
+  Table,
   ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
 import { isEmpty, isNil, isUndefined } from "lodash"
 
-import { UserExternalDirectoryIdentifierUniqueIndex } from "@/models/indexes"
+import { UserActiveDirectoryIdentifierUniqueIndex } from "@/models/indexes"
 
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
 import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
 import UserGroup from "@/models/user-group"
+import ExternalOrganization from "@/models/external-organization"
 
 /** Keep in sync with web/src/api/users-api.ts */
 export enum UserRoles {
@@ -35,6 +38,9 @@ export enum UserRoles {
   USER = "user",
 }
 
+@Table({
+  tableName: "users",
+})
 export class User extends BaseModel<InferAttributes<User>, InferCreationAttributes<User>> {
   static readonly Roles = UserRoles
 
@@ -53,9 +59,17 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @Index({ unique: true })
   declare auth0Subject: string
 
-  @Attribute(DataTypes.STRING(255))
-  @UserExternalDirectoryIdentifierUniqueIndex
-  declare externalDirectoryIdentifier: string | null
+  @Attribute(DataTypes.UUID)
+  @UserActiveDirectoryIdentifierUniqueIndex
+  declare activeDirectoryIdentifier: string | null
+
+  @Attribute(DataTypes.BOOLEAN)
+  @NotNull
+  @Default(false)
+  declare isExternal: CreationOptional<boolean>
+
+  @Attribute(DataTypes.INTEGER)
+  declare externalOrganizationId: number | null
 
   @Attribute(DataTypes.STRING(100))
   @NotNull
@@ -106,6 +120,9 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @Attribute(DataTypes.STRING(100))
   declare unit: string | null
 
+  @Attribute(DataTypes.STRING(50))
+  declare phoneNumber: string | null
+
   @Attribute(DataTypes.DATE(0))
   declare lastSyncSuccessAt: Date | null
 
@@ -125,6 +142,9 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @NotNull
   @Default(false)
   declare emailNotificationsEnabled: CreationOptional<boolean>
+
+  @Attribute(DataTypes.INTEGER)
+  declare creatorId: number | null
 
   @Attribute(DataTypes.DATE(0))
   @NotNull
@@ -185,7 +205,27 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     }
   }
 
+  @ModelValidator
+  ensureIsExternalUserHasExternalOrganization() {
+    if (this.isExternal && isNil(this.externalOrganizationId)) {
+      throw new Error("External user must have an external organization")
+    }
+
+    if (!this.isExternal && !isNil(this.externalOrganizationId)) {
+      throw new Error("Non-external user must not reference an external organization")
+    }
+  }
+
   // Associations
+  @BelongsTo(() => ExternalOrganization, {
+    foreignKey: "externalOrganizationId",
+    inverse: {
+      as: "users",
+      type: "hasMany",
+    },
+  })
+  declare externalOrganization?: NonAttribute<ExternalOrganization>
+
   @HasMany(() => InformationSharingAgreement, {
     foreignKey: "creatorId",
     inverse: "creator",
@@ -233,6 +273,23 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   declare createdInformationSharingAgreementAccessGrants?: NonAttribute<
     InformationSharingAgreementAccessGrant[]
   >
+
+  // NOTE: order of definition seem to matter for parent-child relationships?
+  @HasMany(() => User, {
+    foreignKey: "creatorId",
+    inverse: "creator",
+  })
+  declare createdUsers?: NonAttribute<User[]>
+
+  // NOTE: order of definition seem to matter for parent-child relationships?
+  @BelongsTo(() => User, {
+    foreignKey: "creatorId",
+    inverse: {
+      as: "createdUsers",
+      type: "hasMany",
+    },
+  })
+  declare creator?: NonAttribute<User>
 
   @HasMany(() => UserGroup, {
     foreignKey: {
