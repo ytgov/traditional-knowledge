@@ -271,11 +271,22 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     InformationSharingAgreementAccessGrant[]
   >
 
+  // NOTE: order of definition seem to matter for parent-child relationships?
   @HasMany(() => User, {
     foreignKey: "createdById",
     inverse: "createdBy",
   })
   declare createdUsers?: NonAttribute<User[]>
+
+  // NOTE: order of definition seem to matter for parent-child relationships?
+  @BelongsTo(() => User, {
+    foreignKey: "createdById",
+    inverse: {
+      as: "createdUsers",
+      type: "hasMany",
+    },
+  })
+  declare createdBy?: NonAttribute<User>
 
   @HasMany(() => UserGroup, {
     foreignKey: {
