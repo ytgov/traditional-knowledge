@@ -14,7 +14,6 @@ export enum UserRoles {
   USER = "user",
 }
 
-
 /** Keep in sync with api/src/models/user.ts */
 export type User = {
   id: number
@@ -131,7 +130,14 @@ export type UserPolicy = Policy
 
 export type UserWhereOptions = WhereOptions<
   User,
-  "email" | "title" | "department" | "division" | "branch" | "unit" | "emailNotificationsEnabled"
+  | "email"
+  | "isExternal"
+  | "title"
+  | "department"
+  | "division"
+  | "branch"
+  | "unit"
+  | "emailNotificationsEnabled"
 >
 
 /** must match model scopes */
