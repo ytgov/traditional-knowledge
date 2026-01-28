@@ -18,6 +18,7 @@ import {
   ModelValidator,
   NotNull,
   PrimaryKey,
+  Table,
   ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
 import { isEmpty, isNil, isUndefined } from "lodash"
@@ -37,6 +38,9 @@ export enum UserRoles {
   USER = "user",
 }
 
+@Table({
+  tableName: "users",
+})
 export class User extends BaseModel<InferAttributes<User>, InferCreationAttributes<User>> {
   static readonly Roles = UserRoles
 
