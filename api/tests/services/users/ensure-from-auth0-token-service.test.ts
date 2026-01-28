@@ -12,6 +12,12 @@ vi.mock("@/integrations", () => ({
     fetchEmployee: vi.fn(),
   },
 }))
+vi.mock("@/services/users/directory-sync-service", () => ({
+  DirectorySyncService: {
+    perform: vi.fn(),
+  },
+}))
+
 const mockedAuth0Integration = vi.mocked(auth0Integration)
 const mockedYukonGovernmentIntegration = vi.mocked(yukonGovernmentIntegration)
 
