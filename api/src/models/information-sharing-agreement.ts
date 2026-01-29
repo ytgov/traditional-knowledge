@@ -15,6 +15,7 @@ import {
   HasMany,
   NotNull,
   PrimaryKey,
+  ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
 import { isUndefined } from "lodash"
 
@@ -23,6 +24,12 @@ import Group from "@/models/group"
 import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
 import InformationSharingAgreementArchiveItem from "@/models/information-sharing-agreement-archive-item"
 import User from "@/models/user"
+
+export enum InformationSharingAgreementAccessLevels {
+  INTERNAL = "internal",
+  PROTECTED_AND_LIMITED = "protected_and_limited",
+  CONFIDENTIAL_AND_RESTRICTED = "confidential_and_restricted",
+}
 
 export class InformationSharingAgreement extends BaseModel<
   InferAttributes<InformationSharingAgreement>,
@@ -102,10 +109,28 @@ export class InformationSharingAgreement extends BaseModel<
   declare formats: string | null
 
   @Attribute(DataTypes.STRING(500))
-  declare accessLevels: string | null
+  @ValidateAttribute({
+    isIn: {
+      args: [[...Object.values(InformationSharingAgreementAccessLevels), null]],
+      msg: `Access level must be one of ${[...Object.values(InformationSharingAgreementAccessLevels), null].join(", ")}`,
+    },
+  })
+  declare accessLevel: InformationSharingAgreementAccessLevels | null
+
+  @Attribute(DataTypes.STRING)
+  declare accessLevelDepartmentRestriction: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare accessLevelBranchRestriction: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare accessLevelUnitRestriction: string | null
+
+  @Attribute(DataTypes.BOOLEAN)
+  declare hasAdditionalAccessRestrictions: boolean | null
 
   @Attribute(DataTypes.TEXT)
-  declare accessNotes: string | null
+  declare additionalAccessRestrictions: string | null
 
   @Attribute(DataTypes.STRING(500))
   declare confidentiality: string | null
