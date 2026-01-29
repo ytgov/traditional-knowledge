@@ -56,6 +56,13 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 - **Server-Side Tables**: Use `v-data-table-server` with `useRouteQuery` for URL state
 - **Component Naming**: `{Model}{Purpose}{VuetifyComponent}.vue` pattern
 
+### Function Naming Patterns
+- **Effect-Based Naming**: Name functions by their complete effect, not trigger conditions
+- **Pattern**: `[primaryEffect](Optionally[SecondaryEffect])` for conditional side effects
+- **Avoid**: `handle*`, `update*With*`, business logic in names
+- **Focus**: WHAT happens, not WHEN or WHY
+- **Example**: `emitExpirationConditionAndOptionallyUpdateEndDate`
+
 ### Backend Service Architecture
 - **Constructor Injection**: Use constructor pattern instead of static methods
 - **Database Transactions**: All write operations wrapped in transactions
