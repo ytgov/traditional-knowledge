@@ -197,6 +197,17 @@ This file follows the format from https://agents.md/ for AI agent documentation.
   - Use self-referencing foreign keys with proper constraint naming
   - Find system user by email (`system.user@yukon.ca`) not auth0Subject
   - Use proper TypeScript generics: `.returning<{ id: number }[]>(["id"])`
+  - **Foreign key constraints**: Create column first, then add foreign key separately:
+    ```ts
+    table.integer("field_name").nullable()
+
+    table
+      .foreign("field_name")
+      .references("users.id")
+      // optionally depending on the use case
+      // .onDelete("SET NULL")
+    ```
+  - **Down migration cleanup**: Always drop foreign key before dropping column
 
 ### Testing
 
