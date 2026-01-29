@@ -67,6 +67,9 @@ export class InformationSharingAgreement extends BaseModel<
   @Attribute(DataTypes.INTEGER)
   declare receivingGroupContactId: number | null
 
+  @Attribute(DataTypes.INTEGER)
+  declare receivingGroupSecondaryContactId: number | null
+
   @Attribute(DataTypes.STRING(100))
   declare identifier: string | null
 

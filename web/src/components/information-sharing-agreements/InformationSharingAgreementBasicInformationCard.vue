@@ -35,7 +35,7 @@
         >
           <UserSearchableAutocomplete
             :model-value="sharingGroupContactId"
-            label="Sharing Group Contact Name"
+            label="Yukon First Nation and Transboundary Contact Name"
             :where="sharingGroupContactWhere"
             :rules="[required]"
             required
@@ -50,7 +50,7 @@
         >
           <v-text-field
             :model-value="sharingGroupContactTitle"
-            label="Sharing Group Contact Title"
+            label="Yukon First Nation and Transboundary Contact Title"
             :rules="[required]"
             required
             @update:model-value="emit('update:sharingGroupContactTitle', $event)"
@@ -65,7 +65,7 @@
         >
           <UserSearchableAutocomplete
             :model-value="receivingGroupContactId"
-            label="Receiving Group Contact Name"
+            label="Yukon Government (YG) Contact Name"
             :where="receivingGroupContactWhere"
             :rules="[required]"
             required
@@ -80,10 +80,24 @@
         >
           <v-text-field
             :model-value="receivingGroupContactTitle"
-            label="Receiving Group Contact Title"
+            label="Yukon Government (YG) Contact Title"
             :rules="[required]"
             required
             @update:model-value="emit('update:receivingGroupContactTitle', $event)"
+          />
+        </v-col>
+        <v-col
+          cols="12"
+          md="6"
+        >
+          <UserSearchableAutocomplete
+            :model-value="receivingGroupSecondaryContactId"
+            label="Yukon Government (YG) Manager Contact Name *"
+            :where="receivingGroupSecondaryContactWhere"
+            hint="Typically the manager of the primary YG contact, but can be any appropriate internal contact."
+            :rules="[required]"
+            required
+            @update:model-value="emit('update:receivingGroupSecondaryContactId', $event)"
           />
         </v-col>
       </v-row>
@@ -107,6 +121,7 @@ defineProps<{
   sharingGroupContactTitle: string | null | undefined
   receivingGroupContactId: number | null | undefined
   receivingGroupContactTitle: string | null | undefined
+  receivingGroupSecondaryContactId: number | null | undefined
 }>()
 
 const emit = defineEmits<{
@@ -116,13 +131,17 @@ const emit = defineEmits<{
   "update:sharingGroupContactTitle": [value: string | null | undefined]
   "update:receivingGroupContactId": [value: number | null | undefined]
   "update:receivingGroupContactTitle": [value: string | null | undefined]
+  "update:receivingGroupSecondaryContactId": [value: number | null | undefined]
 }>()
 
 const sharingGroupContactWhere = computed(() => ({
-  isExternal: false,
+  isExternal: true,
 }))
 const receivingGroupContactWhere = computed(() => ({
-  isExternal: true,
+  isExternal: false,
+}))
+const receivingGroupSecondaryContactWhere = computed(() => ({
+  isExternal: false,
 }))
 
 function updateSharingGroupContactTitle(user: UserAsIndex | null) {

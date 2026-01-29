@@ -23,6 +23,9 @@
               v-model:receiving-group-contact-title="
                 informationSharingAgreementAttributes.receivingGroupContactTitle
               "
+              v-model:receiving-group-secondary-contact-id="
+                  informationSharingAgreementAttributes.receivingGroupSecondaryContactId
+                "
               class="border"
             />
           </v-col>
@@ -128,6 +131,7 @@ const informationSharingAgreementAttributes = ref<Partial<InformationSharingAgre
   endDate: undefined,
   sharingGroupContactId: undefined,
   receivingGroupContactId: undefined,
+  receivingGroupSecondaryContactId: undefined,
   accessLevel: undefined,
   accessLevelDepartmentRestriction: undefined,
   accessLevelBranchRestriction: undefined,

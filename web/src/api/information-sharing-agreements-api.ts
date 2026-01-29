@@ -30,6 +30,7 @@ export type InformationSharingAgreement = {
   sharingGroupContactId: number | null
   receivingGroupId: number | null
   receivingGroupContactId: number | null
+  receivingGroupSecondaryContactId: number | null
   identifier: string | null
   sharingGroupInfo: string | null
   receivingGroupInfo: string | null
@@ -80,6 +81,7 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "sharingGroupContactId"
   | "receivingGroupId"
   | "receivingGroupContactId"
+  | "receivingGroupSecondaryContactId"
   | "identifier"
   | "sharingGroupInfo"
   | "receivingGroupInfo"
