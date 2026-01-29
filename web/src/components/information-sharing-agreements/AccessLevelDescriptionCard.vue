@@ -1,8 +1,9 @@
 <template>
   <v-card>
     <v-card-title>
-      <h3 class="text-h6 mb-0">Access</h3>
+      Access
     </v-card-title>
+    <v-divider />
     <v-card-text>
       <p>
         Authorised access to this Traditional Knowledge (TK) is limited. Any Yukon Government (YG)

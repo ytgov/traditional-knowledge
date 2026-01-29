@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Confidentiality</v-card-title>
+    <v-divider />
     <v-card-text>
       <p class="mb-2">
         Yukon Government (YG) acknowledges the confidentiality and access identified above and will

@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Agreement Duration & Expiration</v-card-title>
+    <v-divider />
     <v-card-text>
       This agreement will come into effect upon the completion of mandatory fields and when both
       Parties indicate they accept the terms and conditions reflected wherein, and will remain in
@@ -81,10 +82,14 @@ const defaultEndDate = computed(() => {
   return DateTime.now().plus({ years: 2 }).toFormat("yyyy-MM-dd")
 })
 
-function emitExpirationConditionAndOptionallyUpdateEndDate(value: InformationSharingAgreementExpirationConditions | null | undefined) {
+function emitExpirationConditionAndOptionallyUpdateEndDate(
+  value: InformationSharingAgreementExpirationConditions | null | undefined
+) {
   emit("update:expirationCondition", value)
 
-  if (value === InformationSharingAgreementExpirationConditions.UNDETERMINED_WITH_DEFAULT_EXPIRATION) {
+  if (
+    value === InformationSharingAgreementExpirationConditions.UNDETERMINED_WITH_DEFAULT_EXPIRATION
+  ) {
     emit("update:endDate", defaultEndDate.value)
   }
 }

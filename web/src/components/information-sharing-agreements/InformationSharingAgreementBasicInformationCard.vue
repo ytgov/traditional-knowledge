@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Basic Information</v-card-title>
+    <v-divider />
     <v-card-text>
       <v-row class="mt-4">
         <v-col
