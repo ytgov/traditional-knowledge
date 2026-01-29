@@ -6,11 +6,10 @@
     <v-card class="border">
       <v-card-title>New Information Sharing Agreement</v-card-title>
       <v-card-text>
-        <!-- Basic Information -->
         <v-row class="mt-4">
           <v-col
             cols="12"
-            md="6"
+            md="8"
           >
             <v-text-field
               v-model="informationSharingAgreementAttributes.title"
@@ -20,13 +19,9 @@
             />
           </v-col>
           <v-col cols="12">
-            <p class="mb-2">
-              What is the purpose, work, program, decision, or project this Traditional Knowledge
-              (TK) will inform?
-            </p>
             <v-textarea
               v-model="informationSharingAgreementAttributes.purpose"
-              label="purpose"
+              label="What is the purpose, work, program, decision, or project this Traditional Knowledge (TK) will inform?"
               :rules="[required]"
               required
               auto-grow
@@ -61,12 +56,7 @@
           </v-col>
         </v-row>
 
-        <!-- Sharing Group -->
         <v-row class="mt-4">
-          <v-col cols="12">
-            <h3 class="text-h6 mb-0">Sharing Group</h3>
-          </v-col>
-
           <v-col
             cols="12"
             md="6"
@@ -92,42 +82,9 @@
               required
             />
           </v-col>
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-textarea
-              v-model="informationSharingAgreementAttributes.sharingGroupInfo"
-              label="Sharing Group Additional Information"
-              auto-grow
-              rows="4"
-              :rules="[required]"
-              required
-            />
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-text-field
-              v-model="informationSharingAgreementAttributes.sharingGroupSignedBy"
-              label="Signed By"
-              :hide-details="false"
-            />
-            <StringDateInput
-              v-model="informationSharingAgreementAttributes.sharingGroupSignedDate"
-              label="Signed Date"
-            />
-          </v-col>
         </v-row>
 
-        <!-- Receiving Group -->
         <v-row class="mt-4">
-          <v-col cols="12">
-            <h3 class="text-h6 mb-0">Receiving Group</h3>
-          </v-col>
-
           <v-col
             cols="12"
             md="6"
@@ -151,34 +108,6 @@
               label="Receiving Group Contact Title"
               :rules="[required]"
               required
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-textarea
-              v-model="informationSharingAgreementAttributes.receivingGroupInfo"
-              label="Receiving Group Additional Information"
-              auto-grow
-              rows="4"
-              :rules="[required]"
-              required
-            />
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-text-field
-              v-model="informationSharingAgreementAttributes.receivingGroupSignedBy"
-              label="Signed By"
-              :hide-details="false"
-            />
-            <StringDateInput
-              v-model="informationSharingAgreementAttributes.receivingGroupSignedDate"
-              label="Signed Date"
             />
           </v-col>
         </v-row>
