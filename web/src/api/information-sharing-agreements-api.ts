@@ -12,6 +12,12 @@ export enum InformationSharingAgreementAccessLevels {
   CONFIDENTIAL_AND_RESTRICTED = "confidential_and_restricted",
 }
 
+export enum InformationSharingAgreementExpirationConditions {
+  COMPLETION_OF_PURPOSE = "completion_of_purpose",
+  EXPIRATION_DATE = "expiration_date",
+  UNDETERMINED_WITH_DEFAULT_EXPIRATION = "undetermined_with_default_expiration",
+}
+
 export type InformationSharingAgreement = {
   id: number
   creatorId: number
@@ -42,6 +48,7 @@ export type InformationSharingAgreement = {
   accessLevelUnitRestriction: string | null
   hasAdditionalAccessRestrictions: boolean | null
   additionalAccessRestrictions: string | null
+  expirationCondition: InformationSharingAgreementExpirationConditions | null
   confidentiality: string | null
   authorizedApplication: string | null
   creditLines: string | null
@@ -91,6 +98,7 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "accessLevelUnitRestriction"
   | "hasAdditionalAccessRestrictions"
   | "additionalAccessRestrictions"
+  | "expirationCondition"
   | "confidentiality"
   | "authorizedApplication"
   | "creditLines"

@@ -31,6 +31,12 @@ export enum InformationSharingAgreementAccessLevels {
   CONFIDENTIAL_AND_RESTRICTED = "confidential_and_restricted",
 }
 
+export enum InformationSharingAgreementExpirationConditions {
+  COMPLETION_OF_PURPOSE = "completion_of_purpose",
+  EXPIRATION_DATE = "expiration_date",
+  UNDETERMINED_WITH_DEFAULT_EXPIRATION = "undetermined_with_default_expiration",
+}
+
 export class InformationSharingAgreement extends BaseModel<
   InferAttributes<InformationSharingAgreement>,
   InferCreationAttributes<InformationSharingAgreement>
@@ -208,6 +214,15 @@ export class InformationSharingAgreement extends BaseModel<
   @Attribute(DataTypes.DATE)
   @NotNull
   declare endDate: Date
+
+  @Attribute(DataTypes.STRING(50))
+  @ValidateAttribute({
+    isIn: {
+      args: [[...Object.values(InformationSharingAgreementExpirationConditions), null]],
+      msg: `Expiration condition must be one of ${[...Object.values(InformationSharingAgreementExpirationConditions), null].join(", ")}`,
+    },
+  })
+  declare expirationCondition: InformationSharingAgreementExpirationConditions | null
 
   @Attribute(DataTypes.DATE(0))
   @NotNull

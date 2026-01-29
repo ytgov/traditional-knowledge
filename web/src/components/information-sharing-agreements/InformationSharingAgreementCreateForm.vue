@@ -90,6 +90,9 @@
           <v-col>
             <AgreementDurationCard
               v-model:end-date="informationSharingAgreementAttributes.endDate"
+              v-model:expiration-condition="
+                informationSharingAgreementAttributes.expirationCondition
+              "
               class="border"
             />
           </v-col>

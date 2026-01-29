@@ -34,6 +34,7 @@ export type AgreementShowView = Pick<
   | "accessLevelUnitRestriction"
   | "hasAdditionalAccessRestrictions"
   | "additionalAccessRestrictions"
+  | "expirationCondition"
   | "confidentiality"
   | "authorizedApplication"
   | "creditLines"
@@ -96,6 +97,7 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "accessLevelUnitRestriction",
         "hasAdditionalAccessRestrictions",
         "additionalAccessRestrictions",
+        "expirationCondition",
         "confidentiality",
         "authorizedApplication",
         "creditLines",
