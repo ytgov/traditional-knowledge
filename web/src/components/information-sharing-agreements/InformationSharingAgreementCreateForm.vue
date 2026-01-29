@@ -6,82 +6,24 @@
     <v-card class="border">
       <v-card-title>New Information Sharing Agreement</v-card-title>
       <v-card-text>
-        <v-row class="mt-4">
-          <v-col
-            cols="12"
-            md="8"
-          >
-            <v-text-field
-              v-model="informationSharingAgreementAttributes.title"
-              label="Title *"
-              :rules="[required]"
-              required
-            />
-          </v-col>
-          <v-col cols="12">
-            <v-textarea
-              v-model="informationSharingAgreementAttributes.purpose"
-              label="What is the purpose, work, program, decision, or project this Traditional Knowledge (TK) will inform?"
-              :rules="[required]"
-              required
-              auto-grow
-              rows="8"
-            />
-          </v-col>
-        </v-row>
-
-        <v-row class="mt-4">
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <UserSearchableAutocomplete
-              v-model="informationSharingAgreementAttributes.sharingGroupContactId"
-              label="Sharing Group Contact Name"
-              :where="sharingGroupContactWhere"
-              :rules="[required]"
-              required
-              @click:clear="updateSharingGroupContactTitle(null)"
-              @selected="updateSharingGroupContactTitle"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-text-field
-              v-model="informationSharingAgreementAttributes.sharingGroupContactTitle"
-              label="Sharing Group Contact Title"
-              :rules="[required]"
-              required
-            />
-          </v-col>
-        </v-row>
-
-        <v-row class="mt-4">
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <UserSearchableAutocomplete
-              v-model="informationSharingAgreementAttributes.receivingGroupContactId"
-              label="Receiving Group Contact Name"
-              :where="receivingGroupContactWhere"
-              :rules="[required]"
-              required
-              @click:clear="updateReceivingGroupContactTitle(null)"
-              @selected="updateReceivingGroupContactTitle"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-text-field
-              v-model="informationSharingAgreementAttributes.receivingGroupContactTitle"
-              label="Receiving Group Contact Title"
-              :rules="[required]"
-              required
+        <v-row class="mt-2">
+          <v-col>
+            <InformationSharingAgreementBasicInformationCard
+              v-model:title="informationSharingAgreementAttributes.title"
+              v-model:purpose="informationSharingAgreementAttributes.purpose"
+              v-model:sharing-group-contact-id="
+                informationSharingAgreementAttributes.sharingGroupContactId
+              "
+              v-model:sharing-group-contact-title="
+                informationSharingAgreementAttributes.sharingGroupContactTitle
+              "
+              v-model:receiving-group-contact-id="
+                informationSharingAgreementAttributes.receivingGroupContactId
+              "
+              v-model:receiving-group-contact-title="
+                informationSharingAgreementAttributes.receivingGroupContactTitle
+              "
+              class="border"
             />
           </v-col>
         </v-row>
@@ -317,7 +259,7 @@
 
 <script setup lang="ts">
 import { isNil } from "lodash"
-import { computed, ref } from "vue"
+import { ref } from "vue"
 import { useRouter } from "vue-router"
 
 import { VForm } from "vuetify/components"
@@ -331,9 +273,7 @@ import useSnack from "@/use/use-snack"
 
 import AccessLevelDescriptionCard from "@/components/information-sharing-agreements/AccessLevelDescriptionCard.vue"
 import AgreementDurationCard from "@/components/information-sharing-agreements/AgreementDurationCard.vue"
-import UserSearchableAutocomplete, {
-  UserAsIndex,
-} from "@/components/users/UserSearchableAutocomplete.vue"
+import InformationSharingAgreementBasicInformationCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationCard.vue"
 
 const informationSharingAgreementAttributes = ref<Partial<InformationSharingAgreement>>({
   title: undefined,
@@ -348,29 +288,6 @@ const informationSharingAgreementAttributes = ref<Partial<InformationSharingAgre
   additionalAccessRestrictions: undefined,
   hasAdditionalAccessRestrictions: undefined,
 })
-
-const sharingGroupContactWhere = computed(() => ({
-  isExternal: false,
-}))
-const receivingGroupContactWhere = computed(() => ({
-  isExternal: true,
-}))
-
-function updateSharingGroupContactTitle(user: UserAsIndex | null) {
-  if (isNil(user)) {
-    informationSharingAgreementAttributes.value.sharingGroupContactTitle = null
-  } else {
-    informationSharingAgreementAttributes.value.sharingGroupContactTitle = user.title
-  }
-}
-
-function updateReceivingGroupContactTitle(user: UserAsIndex | null) {
-  if (isNil(user)) {
-    informationSharingAgreementAttributes.value.receivingGroupContactTitle = null
-  } else {
-    informationSharingAgreementAttributes.value.receivingGroupContactTitle = user.title
-  }
-}
 
 const form = ref<InstanceType<typeof VForm> | null>(null)
 const isLoading = ref(false)
