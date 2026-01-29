@@ -14,7 +14,7 @@
         >
           <InformationSharingAgreementConfidentialitySelect
             :model-value="confidentialityType"
-            label="Confidentiality"
+            label="Confidentiality *"
             :rules="[required]"
             required
             @update:model-value="emit('update:confidentialityType', $event)"
@@ -35,7 +35,7 @@
         <v-col>
           <v-textarea
             :model-value="authorizedApplication"
-            label="Authorised application of Traditional Knowledge (TK)"
+            label="Authorised application of Traditional Knowledge (TK) *"
             hint="Describe how Traditional Knowledge (TK) may be reflected in or considered for the described purpose. Include if Yukon Government (YG) intends to share any materials pertaining to the outcome of this agreement."
             persistent-hint
             rows="8"
