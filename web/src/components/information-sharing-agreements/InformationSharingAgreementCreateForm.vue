@@ -28,32 +28,6 @@
               rows="8"
             />
           </v-col>
-
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <!-- TODO: consider using a v-date-input range type? -->
-            <StringDateInput
-              v-model="informationSharingAgreementAttributes.startDate"
-              label="Start Date *"
-              :rules="[required]"
-              :max="informationSharingAgreementAttributes.endDate"
-              required
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <StringDateInput
-              v-model="informationSharingAgreementAttributes.endDate"
-              label="End Date *"
-              :rules="[required]"
-              :min="informationSharingAgreementAttributes.startDate"
-              required
-            />
-          </v-col>
         </v-row>
 
         <v-row class="mt-4">
@@ -108,6 +82,14 @@
               label="Receiving Group Contact Title"
               :rules="[required]"
               required
+            />
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col>
+            <AgreementDurationCard
+              v-model:end-date="informationSharingAgreementAttributes.endDate"
             />
           </v-col>
         </v-row>
@@ -342,8 +324,8 @@ import informationSharingAgreementsApi, {
 
 import useSnack from "@/use/use-snack"
 
-import StringDateInput from "@/components/common/StringDateInput.vue"
-import AccessLevelDescriptionCard from "./AccessLevelDescriptionCard.vue"
+import AccessLevelDescriptionCard from "@/components/information-sharing-agreements/AccessLevelDescriptionCard.vue"
+import AgreementDurationCard from "@/components/information-sharing-agreements/AgreementDurationCard.vue"
 import UserSearchableAutocomplete, {
   UserAsIndex,
 } from "@/components/users/UserSearchableAutocomplete.vue"
@@ -351,7 +333,6 @@ import UserSearchableAutocomplete, {
 const informationSharingAgreementAttributes = ref<Partial<InformationSharingAgreement>>({
   title: undefined,
   description: undefined,
-  startDate: undefined,
   endDate: undefined,
   sharingGroupContactId: undefined,
   receivingGroupContactId: undefined,
