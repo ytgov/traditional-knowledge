@@ -23,6 +23,12 @@ export enum InformationSharingAgreementConfidentialityType {
   ACCEPTED_IN_CONFIDENCE = "ACCEPTED_IN_CONFIDENCE",
 }
 
+export enum InformationSharingAgreementStatus {
+  DRAFT = "draft",
+  SIGNED = "signed",
+  CLOSED = "closed",
+}
+
 export type InformationSharingAgreement = {
   id: number
   creatorId: number
@@ -31,6 +37,7 @@ export type InformationSharingAgreement = {
   receivingGroupId: number | null
   receivingGroupContactId: number | null
   receivingGroupSecondaryContactId: number | null
+  status: InformationSharingAgreementStatus
   identifier: string | null
   sharingGroupInfo: string | null
   receivingGroupInfo: string | null
@@ -82,6 +89,7 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "receivingGroupId"
   | "receivingGroupContactId"
   | "receivingGroupSecondaryContactId"
+  | "status"
   | "identifier"
   | "sharingGroupInfo"
   | "receivingGroupInfo"

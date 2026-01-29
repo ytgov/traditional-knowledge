@@ -11,6 +11,7 @@ export type AgreementIndexView = Pick<
   | "sharingGroupContactId"
   | "receivingGroupId"
   | "receivingGroupContactId"
+  | "status"
   | "title"
   | "startDate"
   | "endDate"
@@ -28,6 +29,7 @@ export class IndexSerializer extends BaseSerializer<InformationSharingAgreement>
         "sharingGroupContactId",
         "receivingGroupId",
         "receivingGroupContactId",
+        "status",
         "title",
         "startDate",
         "endDate",

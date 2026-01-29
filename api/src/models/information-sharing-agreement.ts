@@ -42,6 +42,12 @@ export enum InformationSharingAgreementConfidentialityType {
   ACCEPTED_IN_CONFIDENCE = "ACCEPTED_IN_CONFIDENCE",
 }
 
+export enum InformationSharingAgreementStatus {
+  DRAFT = "draft",
+  SIGNED = "signed",
+  CLOSED = "closed",
+}
+
 export class InformationSharingAgreement extends BaseModel<
   InferAttributes<InformationSharingAgreement>,
   InferCreationAttributes<InformationSharingAgreement>
@@ -69,6 +75,11 @@ export class InformationSharingAgreement extends BaseModel<
 
   @Attribute(DataTypes.INTEGER)
   declare receivingGroupSecondaryContactId: number | null
+
+  @Attribute(DataTypes.STRING)
+  @NotNull
+  @Default("draft")
+  declare status: CreationOptional<InformationSharingAgreementStatus>
 
   @Attribute(DataTypes.STRING(100))
   declare identifier: string | null

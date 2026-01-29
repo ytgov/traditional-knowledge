@@ -13,6 +13,7 @@ export type AgreementShowView = Pick<
   | "sharingGroupContactId"
   | "receivingGroupId"
   | "receivingGroupContactId"
+  | "status"
   | "identifier"
   | "sharingGroupInfo"
   | "receivingGroupInfo"
@@ -76,6 +77,7 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "sharingGroupContactId",
         "receivingGroupId",
         "receivingGroupContactId",
+        "status",
         "identifier",
         "sharingGroupInfo",
         "receivingGroupInfo",
