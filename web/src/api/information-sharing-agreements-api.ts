@@ -6,6 +6,12 @@ import {
   type WhereOptions,
 } from "@/api/base-api"
 
+export enum InformationSharingAgreementAccessLevels {
+  INTERNAL = "internal",
+  PROTECTED_AND_LIMITED = "protected_and_limited",
+  CONFIDENTIAL_AND_RESTRICTED = "confidential_and_restricted",
+}
+
 export type InformationSharingAgreement = {
   id: number
   creatorId: number
@@ -30,7 +36,12 @@ export type InformationSharingAgreement = {
   detailLevel: string | null
   detailNotes: string | null
   formats: string | null
-  accessLevels: string | null
+  accessLevel: InformationSharingAgreementAccessLevels | null
+  accessLevelDepartmentRestriction: string | null
+  accessLevelBranchRestriction: string | null
+  accessLevelUnitRestriction: string | null
+  hasAdditionalAccessRestrictions: boolean | null
+  additionalAccessRestrictions: string | null
   accessNotes: string | null
   confidentiality: string | null
   authorizedApplication: string | null
@@ -75,7 +86,11 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "detailLevel"
   | "detailNotes"
   | "formats"
-  | "accessLevels"
+  | "accessLevel"
+  | "accessLevelDepartmentRestriction"
+  | "accessLevelBranchRestriction"
+  | "accessLevelUnitRestriction"
+  | "hasAdditionalAccessRestrictions"
   | "accessNotes"
   | "confidentiality"
   | "authorizedApplication"
