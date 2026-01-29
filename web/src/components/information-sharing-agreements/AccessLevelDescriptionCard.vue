@@ -1,5 +1,5 @@
 <template>
-  <v-card class="border">
+  <v-card>
     <v-card-title>
       <h3 class="text-h6 mb-0">Access</h3>
     </v-card-title>

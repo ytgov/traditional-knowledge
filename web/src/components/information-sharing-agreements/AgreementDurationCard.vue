@@ -1,5 +1,5 @@
 <template>
-  <v-card class="border">
+  <v-card>
     <v-card-title>Agreement Duration & Expiration</v-card-title>
     <v-card-text>
       This agreement will come into effect upon the completion of mandatory fields and when both

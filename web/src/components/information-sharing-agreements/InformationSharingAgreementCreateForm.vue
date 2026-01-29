@@ -90,6 +90,7 @@
           <v-col>
             <AgreementDurationCard
               v-model:end-date="informationSharingAgreementAttributes.endDate"
+              class="border"
             />
           </v-col>
         </v-row>
@@ -114,6 +115,7 @@
               v-model:additional-access-restrictions="
                 informationSharingAgreementAttributes.additionalAccessRestrictions
               "
+              class="border"
             />
           </v-col>
         </v-row>
