@@ -35,7 +35,7 @@
         >
           <UserSearchableAutocomplete
             :model-value="sharingGroupContactId"
-            label="Yukon First Nation and Transboundary Contact Name"
+            label="Yukon First Nation or Transboundary Contact Name"
             :where="sharingGroupContactWhere"
             :rules="[required]"
             required
@@ -50,7 +50,7 @@
         >
           <v-text-field
             :model-value="sharingGroupContactTitle"
-            label="Yukon First Nation and Transboundary Contact Title"
+            label="Yukon First Nation or Transboundary Contact Title"
             :rules="[required]"
             required
             @update:model-value="emit('update:sharingGroupContactTitle', $event)"
