@@ -28,8 +28,12 @@ export type AgreementShowView = Pick<
   | "detailLevel"
   | "detailNotes"
   | "formats"
-  | "accessLevels"
-  | "accessNotes"
+  | "accessLevel"
+  | "accessLevelDepartmentRestriction"
+  | "accessLevelBranchRestriction"
+  | "accessLevelUnitRestriction"
+  | "hasAdditionalAccessRestrictions"
+  | "additionalAccessRestrictions"
   | "confidentiality"
   | "authorizedApplication"
   | "creditLines"
@@ -86,8 +90,12 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "detailLevel",
         "detailNotes",
         "formats",
-        "accessLevels",
-        "accessNotes",
+        "accessLevel",
+        "accessLevelDepartmentRestriction",
+        "accessLevelBranchRestriction",
+        "accessLevelUnitRestriction",
+        "hasAdditionalAccessRestrictions",
+        "additionalAccessRestrictions",
         "confidentiality",
         "authorizedApplication",
         "creditLines",

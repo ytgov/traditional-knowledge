@@ -42,7 +42,6 @@ export type InformationSharingAgreement = {
   accessLevelUnitRestriction: string | null
   hasAdditionalAccessRestrictions: boolean | null
   additionalAccessRestrictions: string | null
-  accessNotes: string | null
   confidentiality: string | null
   authorizedApplication: string | null
   creditLines: string | null
@@ -91,7 +90,7 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "accessLevelBranchRestriction"
   | "accessLevelUnitRestriction"
   | "hasAdditionalAccessRestrictions"
-  | "accessNotes"
+  | "additionalAccessRestrictions"
   | "confidentiality"
   | "authorizedApplication"
   | "creditLines"

@@ -432,7 +432,6 @@ const informationSharingAgreementAttributes = ref<Partial<InformationSharingAgre
   accessLevelUnitRestriction: undefined,
   additionalAccessRestrictions: undefined,
   hasAdditionalAccessRestrictions: undefined,
-  accessNotes: undefined,
 })
 
 const sharingGroupContactWhere = computed(() => ({
