@@ -37,6 +37,11 @@ export enum InformationSharingAgreementExpirationConditions {
   UNDETERMINED_WITH_DEFAULT_EXPIRATION = "undetermined_with_default_expiration",
 }
 
+export enum InformationSharingAgreementConfidentialityType {
+  ACCORDANCE = "ACCORDANCE",
+  ACCEPTED_IN_CONFIDENCE = "ACCEPTED_IN_CONFIDENCE",
+}
+
 export class InformationSharingAgreement extends BaseModel<
   InferAttributes<InformationSharingAgreement>,
   InferCreationAttributes<InformationSharingAgreement>
@@ -139,7 +144,7 @@ export class InformationSharingAgreement extends BaseModel<
   declare additionalAccessRestrictions: string | null
 
   @Attribute(DataTypes.STRING(500))
-  declare confidentiality: string | null
+  declare confidentialityType: InformationSharingAgreementConfidentialityType | null
 
   @Attribute(DataTypes.TEXT)
   declare authorizedApplication: string | null

@@ -18,6 +18,11 @@ export enum InformationSharingAgreementExpirationConditions {
   UNDETERMINED_WITH_DEFAULT_EXPIRATION = "undetermined_with_default_expiration",
 }
 
+export enum InformationSharingAgreementConfidentialityType {
+  ACCORDANCE = "ACCORDANCE",
+  ACCEPTED_IN_CONFIDENCE = "ACCEPTED_IN_CONFIDENCE",
+}
+
 export type InformationSharingAgreement = {
   id: number
   creatorId: number
@@ -49,7 +54,7 @@ export type InformationSharingAgreement = {
   hasAdditionalAccessRestrictions: boolean | null
   additionalAccessRestrictions: string | null
   expirationCondition: InformationSharingAgreementExpirationConditions | null
-  confidentiality: string | null
+  confidentialityType: InformationSharingAgreementConfidentialityType | null
   authorizedApplication: string | null
   creditLines: string | null
   creditNotes: string | null
@@ -99,7 +104,7 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "hasAdditionalAccessRestrictions"
   | "additionalAccessRestrictions"
   | "expirationCondition"
-  | "confidentiality"
+  | "confidentialityType"
   | "authorizedApplication"
   | "creditLines"
   | "creditNotes"

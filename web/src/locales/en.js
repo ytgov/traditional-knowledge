@@ -15,6 +15,14 @@ export default {
       confidential_and_restricted_with_additional_restrictions:
         "CONFIDENTIAL and RESTRICTED to employees within {departmentBranchUnitHeirarchy}, with {additionalAccessRestrictions}. TK is highly sensitive or sacred and could significantly damage intergovernmental relations, reputation(s), result in legal action or risk harm if TK is made available to the public or unauthorised personnel.",
     },
+    confidentiality: {
+      ACCORDANCE: "ACCORDANCE",
+      ACCEPTED_IN_CONFIDENCE: "ACCEPTED IN CONFIDENCE",
+    },
+    confidentialityDescriptions: {
+      ACCORDANCE: "ACCORDANCE with the terms and conditions of this agreement.",
+      ACCEPTED_IN_CONFIDENCE: "ACCEPTED IN CONFIDENCE which includes formal protection measures.",
+    },
   },
   user: {
     roles: {
