@@ -42,6 +42,8 @@
             label="End Date *"
             :rules="[required]"
             required
+            clearable
+            validate-on-blur
             @update:model-value="emit('update:endDate', $event)"
           />
         </v-col>
