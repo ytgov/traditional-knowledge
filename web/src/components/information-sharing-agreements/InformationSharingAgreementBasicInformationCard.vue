@@ -19,7 +19,7 @@
         <v-col cols="12">
           <v-textarea
             :model-value="purpose"
-            label="What is the purpose, work, program, decision, or project this Traditional Knowledge (TK) will inform?"
+            label="What is the purpose, work, program, decision, or project this Traditional Knowledge (TK) will inform? *"
             :rules="[required]"
             required
             auto-grow
