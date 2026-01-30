@@ -227,12 +227,10 @@ export class InformationSharingAgreement extends BaseModel<
   declare fileSize: number | null
 
   @Attribute(DataTypes.DATE)
-  @NotNull
-  declare startDate: Date
+  declare startDate: Date | null
 
   @Attribute(DataTypes.DATE)
-  @NotNull
-  declare endDate: Date
+  declare endDate: Date | null
 
   @Attribute(DataTypes.STRING(50))
   @ValidateAttribute({
