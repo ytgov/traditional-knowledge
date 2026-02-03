@@ -23,6 +23,11 @@ export default {
       ACCORDANCE: "ACCORDANCE with the terms and conditions of this agreement.",
       ACCEPTED_IN_CONFIDENCE: "ACCEPTED IN CONFIDENCE which includes formal protection measures.",
     },
+    expirationConditions: {
+      completion_of_purpose: "Completion of Purpose",
+      expiration_date: "Expiration Date",
+      undetermined_with_default_expiration: "Undetermined with Default Expiration",
+    },
   },
   user: {
     roles: {

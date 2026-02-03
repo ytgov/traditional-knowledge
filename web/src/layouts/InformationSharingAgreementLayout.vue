@@ -1,19 +1,45 @@
 <template>
   <v-expansion-panels
     :model-value="activePanel"
+    variant="accordion"
+    flat
+    class="mx-auto"
+    style="max-width: 1024px"
+    rounded="lg"
     @update:model-value="navigateToPanel"
   >
     <v-expansion-panel
       v-for="panel in panels"
       :key="panel.to.name"
       :value="panel.to.name"
+      class="mb-3 border-sm"
+      :class="{
+        'border-md border-primary border-opacity-100': activePanel === panel.to.name,
+      }"
     >
       <v-expansion-panel-title>
-        <v-icon start>
-          {{ panel.icon }}
-        </v-icon>
-
-        {{ panel.title }}
+        <div class="d-flex align-center flex-grow-1 overflow-hidden">
+          <v-icon
+            :color="activePanel === panel.to.name ? 'primary' : 'secondary'"
+            class="mr-4"
+          >
+            {{ panel.icon }}
+          </v-icon>
+          <div class="overflow-hidden">
+            <div
+              class="font-weight-medium"
+              :class="activePanel === panel.to.name ? 'text-h6' : 'text-subtitle-1'"
+            >
+              {{ panel.title }}
+            </div>
+            <div
+              v-if="activePanel !== panel.to.name"
+              class="text-caption text-medium-emphasis text-truncate"
+            >
+              {{ panel.buildTitle(informationSharingAgreement) }}
+            </div>
+          </div>
+        </div>
       </v-expansion-panel-title>
 
       <v-expansion-panel-text v-if="activePanel === panel.to.name">
@@ -28,10 +54,14 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref } from "vue"
+import { computed, nextTick, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
+import { useI18n } from "vue-i18n"
 import { isNil } from "lodash"
 
+import useInformationSharingAgreement, {
+  type InformationSharingAgreement,
+} from "@/use/use-information-sharing-agreement"
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
 
 const router = useRouter()
@@ -39,6 +69,13 @@ const router = useRouter()
 const props = defineProps<{
   informationSharingAgreementId: string
 }>()
+
+const informationSharingAgreementIdAsNumber = computed(() =>
+  parseInt(props.informationSharingAgreementId)
+)
+const { informationSharingAgreement } = useInformationSharingAgreement(
+  informationSharingAgreementIdAsNumber
+)
 
 type PanelDefinition = {
   index: number
@@ -50,7 +87,10 @@ type PanelDefinition = {
       informationSharingAgreementId: string
     }
   }
+  buildTitle: (informationSharingAgreement: InformationSharingAgreement | null) => string
 }
+
+const { t } = useI18n()
 
 const panels: PanelDefinition[] = [
   {
@@ -63,6 +103,24 @@ const panels: PanelDefinition[] = [
         informationSharingAgreementId: props.informationSharingAgreementId,
       },
     },
+    buildTitle: (informationSharingAgreement) => {
+      if (isNil(informationSharingAgreement)) return "Loading..."
+
+      const parts = [informationSharingAgreement.title]
+      if (
+        informationSharingAgreement.sharingGroupContactName ||
+        informationSharingAgreement.receivingGroupContactName
+      ) {
+        const contacts = [
+          informationSharingAgreement.sharingGroupContactName,
+          informationSharingAgreement.receivingGroupContactName,
+        ]
+          .filter(Boolean)
+          .join(" & ")
+        parts.push(contacts)
+      }
+      return parts.join(" | ") || "Not configured"
+    },
   },
   {
     index: 1,
@@ -73,6 +131,15 @@ const panels: PanelDefinition[] = [
       params: {
         informationSharingAgreementId: props.informationSharingAgreementId,
       },
+    },
+    buildTitle: (informationSharingAgreement) => {
+      if (isNil(informationSharingAgreement)) return "Loading..."
+
+      if (isNil(informationSharingAgreement.expirationCondition)) return "Not configured"
+
+      return t(
+        `informationSharingAgreement.expirationConditions.${informationSharingAgreement.expirationCondition}`
+      )
     },
   },
   {
@@ -85,6 +152,15 @@ const panels: PanelDefinition[] = [
         informationSharingAgreementId: props.informationSharingAgreementId,
       },
     },
+    buildTitle: (informationSharingAgreement) => {
+      if (isNil(informationSharingAgreement)) return "Loading..."
+
+      if (isNil(informationSharingAgreement.accessLevel)) return "Not configured"
+
+      return t(
+        `informationSharingAgreement.accessLevels.${informationSharingAgreement.accessLevel}`
+      )
+    },
   },
   {
     index: 3,
@@ -95,6 +171,15 @@ const panels: PanelDefinition[] = [
       params: {
         informationSharingAgreementId: props.informationSharingAgreementId,
       },
+    },
+    buildTitle: (informationSharingAgreement) => {
+      if (isNil(informationSharingAgreement)) return "Loading..."
+
+      if (isNil(informationSharingAgreement.confidentialityType)) return "Not configured"
+
+      return t(
+        `informationSharingAgreement.confidentiality.${informationSharingAgreement.confidentialityType}`
+      )
     },
   },
 ]
