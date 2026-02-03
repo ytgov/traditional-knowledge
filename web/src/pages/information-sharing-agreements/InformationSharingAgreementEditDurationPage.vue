@@ -20,10 +20,10 @@
         md="6"
       >
         <v-radio-group
-          :model-value="informationSharingAgreement.expirationCondition"
+          v-model="informationSharingAgreement.expirationCondition"
           :rules="[required]"
           required
-          @update:model-value="updateExpirationConditionAndOptionallyUpdateEndDate"
+          @update:model-value="autoFillEndDateAsNeeded"
         >
           <v-radio
             label="Completion of the purpose, project or decision described in this agreement, estimated completion by: *"
@@ -120,12 +120,8 @@ const defaultEndDate = computed(() => {
   return DateTime.now().plus({ years: 2 }).toFormat("yyyy-MM-dd")
 })
 
-function updateExpirationConditionAndOptionallyUpdateEndDate(
-  value: InformationSharingAgreementExpirationConditions | null
-) {
+function autoFillEndDateAsNeeded(value: InformationSharingAgreementExpirationConditions | null) {
   if (isNil(informationSharingAgreement.value)) return
-
-  informationSharingAgreement.value.expirationCondition = value
 
   if (
     value === InformationSharingAgreementExpirationConditions.UNDETERMINED_WITH_DEFAULT_EXPIRATION

@@ -71,6 +71,7 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
       "fileSize",
       "startDate",
       "endDate",
+      "expirationCondition",
     ]
   }
 
