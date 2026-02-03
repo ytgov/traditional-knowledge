@@ -264,6 +264,12 @@ const routes: RouteRecordRaw[] = [
           },
         ],
       },
+      {
+        path: "information-sharing-agreements/new",
+        name: "information-sharing-agreements/InformationSharingAgreementNewPage",
+        component: () =>
+          import("@/pages/information-sharing-agreements/InformationSharingAgreementNewPage.vue"),
+      },
     ],
   },
   {

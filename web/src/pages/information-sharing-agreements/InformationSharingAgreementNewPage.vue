@@ -1,0 +1,130 @@
+<template>
+  <v-form
+    ref="form"
+    @submit.prevent="saveAndGoToEditPage"
+  >
+    <v-row class="mt-2">
+      <v-col>
+        <InformationSharingAgreementBasicInformationCard
+          v-model:title="informationSharingAgreementAttributes.title"
+          v-model:purpose="informationSharingAgreementAttributes.purpose"
+          v-model:sharing-group-contact-id="
+            informationSharingAgreementAttributes.sharingGroupContactId
+          "
+          v-model:sharing-group-contact-title="
+            informationSharingAgreementAttributes.sharingGroupContactTitle
+          "
+          v-model:receiving-group-contact-id="
+            informationSharingAgreementAttributes.receivingGroupContactId
+          "
+          v-model:receiving-group-contact-title="
+            informationSharingAgreementAttributes.receivingGroupContactTitle
+          "
+          v-model:receiving-group-secondary-contact-id="
+            informationSharingAgreementAttributes.receivingGroupSecondaryContactId
+          "
+          class="border"
+        />
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col class="d-flex flex-column flex-md-row">
+        <v-btn
+          color="primary"
+          type="submit"
+          :loading="isLoading"
+          :block="smAndDown"
+        >
+          Create
+        </v-btn>
+        <v-btn
+          :to="{
+            name: 'administration/InformationSharingAgreementsPage',
+          }"
+          class="mt-3 mt-md-0 ml-md-3"
+          color="secondary"
+          variant="outlined"
+          :loading="isLoading"
+          :block="smAndDown"
+        >
+          Cancel
+        </v-btn>
+      </v-col>
+    </v-row>
+  </v-form>
+</template>
+
+<script setup lang="ts">
+import { ref, useTemplateRef } from "vue"
+import { useRouter } from "vue-router"
+import { useDisplay } from "vuetify"
+import { isNil } from "lodash"
+
+import { VForm } from "vuetify/components"
+
+import informationSharingAgreementsApi, {
+  type InformationSharingAgreement,
+} from "@/api/information-sharing-agreements-api"
+
+import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
+import useSnack from "@/use/use-snack"
+
+import InformationSharingAgreementBasicInformationCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationCard.vue"
+
+const informationSharingAgreementAttributes = ref<Partial<InformationSharingAgreement>>({
+  title: undefined,
+  purpose: undefined,
+  sharingGroupContactId: undefined,
+  sharingGroupContactTitle: undefined,
+  receivingGroupContactId: undefined,
+  receivingGroupContactTitle: undefined,
+  receivingGroupSecondaryContactId: undefined,
+})
+
+const form = useTemplateRef("form")
+const isLoading = ref(false)
+const snack = useSnack()
+const router = useRouter()
+
+async function saveAndGoToEditPage() {
+  if (isNil(form.value)) return
+
+  const { valid } = await form.value.validate()
+  if (!valid) {
+    snack.error("Please fill out all required fields")
+    return
+  }
+
+  isLoading.value = true
+  try {
+    const { informationSharingAgreement } = await informationSharingAgreementsApi.create(
+      informationSharingAgreementAttributes.value
+    )
+    snack.success("Information Sharing Agreement created.")
+    await router.push({
+      name: "information-sharing-agreements/InformationSharingAgreementEditDurationPage",
+      params: {
+        informationSharingAgreementId: informationSharingAgreement.id,
+      },
+    })
+  } catch (error) {
+    console.error(`Failed to create information sharing agreement: ${error}`, { error })
+    snack.error(`Failed to create information sharing agreement: ${error}`)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const { smAndDown } = useDisplay()
+
+useBreadcrumbs("New Information Sharing Agreement", [
+  BASE_CRUMB,
+  {
+    title: "Information Sharing Agreements",
+    to: {
+      name: "administration/InformationSharingAgreementsPage",
+    },
+  },
+])
+</script>
