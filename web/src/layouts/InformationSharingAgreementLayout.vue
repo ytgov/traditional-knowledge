@@ -104,25 +104,25 @@ const panels: PanelDefinition[] = [
     buildTitle: (informationSharingAgreement) => {
       if (isNil(informationSharingAgreement)) return "Loading..."
 
-      const parts = [informationSharingAgreement.title]
-      if (
-        informationSharingAgreement.sharingGroupContactName ||
-        informationSharingAgreement.receivingGroupContactName
-      ) {
-        const contacts = [
-          informationSharingAgreement.sharingGroupContactName,
-          informationSharingAgreement.receivingGroupContactName,
-        ]
+      const { title } = informationSharingAgreement
+
+      if (isNil(title)) return "Not configured"
+
+      const parts = [title]
+
+      const { sharingGroupContactName, receivingGroupContactName } = informationSharingAgreement
+      if (sharingGroupContactName || receivingGroupContactName) {
+        const contacts = [sharingGroupContactName, receivingGroupContactName]
           .filter(Boolean)
           .join(" & ")
         parts.push(contacts)
       }
-      return parts.join(" | ") || "Not configured"
+      return parts.join(" | ")
     },
   },
   {
     index: 1,
-    title: "Duration",
+    title: "Agreement Duration & Expiration",
     icon: "mdi-clock-outline",
     to: {
       name: "information-sharing-agreements/InformationSharingAgreementEditDurationPage",
@@ -133,11 +133,17 @@ const panels: PanelDefinition[] = [
     buildTitle: (informationSharingAgreement) => {
       if (isNil(informationSharingAgreement)) return "Loading..."
 
-      if (isNil(informationSharingAgreement.expirationCondition)) return "Not configured"
+      const { expirationCondition } = informationSharingAgreement
+      if (isNil(expirationCondition)) return "Not configured"
 
-      return t(
-        `informationSharingAgreement.expirationConditions.${informationSharingAgreement.expirationCondition}`
-      )
+      const parts = [t(`informationSharingAgreement.expirationConditions.${expirationCondition}`)]
+
+      const { endDate } = informationSharingAgreement
+      if (!isNil(endDate)) {
+        parts.push(endDate)
+      }
+
+      return parts.join(" | ")
     },
   },
   {
@@ -153,11 +159,10 @@ const panels: PanelDefinition[] = [
     buildTitle: (informationSharingAgreement) => {
       if (isNil(informationSharingAgreement)) return "Loading..."
 
-      if (isNil(informationSharingAgreement.accessLevel)) return "Not configured"
+      const { accessLevel } = informationSharingAgreement
+      if (isNil(accessLevel)) return "Not configured"
 
-      return t(
-        `informationSharingAgreement.accessLevels.${informationSharingAgreement.accessLevel}`
-      )
+      return t(`informationSharingAgreement.accessLevels.${accessLevel}`)
     },
   },
   {
@@ -173,11 +178,10 @@ const panels: PanelDefinition[] = [
     buildTitle: (informationSharingAgreement) => {
       if (isNil(informationSharingAgreement)) return "Loading..."
 
-      if (isNil(informationSharingAgreement.confidentialityType)) return "Not configured"
+      const { confidentialityType } = informationSharingAgreement
+      if (isNil(confidentialityType)) return "Not configured"
 
-      return t(
-        `informationSharingAgreement.confidentiality.${informationSharingAgreement.confidentialityType}`
-      )
+      return t(`informationSharingAgreement.confidentiality.${confidentialityType}`)
     },
   },
 ]
