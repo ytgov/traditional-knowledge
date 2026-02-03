@@ -54,12 +54,17 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
       "detailLevel",
       "detailNotes",
       "formats",
-      "accessLevels",
-      "accessNotes",
-      "confidentiality",
+      "accessLevel",
+      "accessLevelDepartmentRestriction",
+      "accessLevelBranchRestriction",
+      "accessLevelUnitRestriction",
+      "hasAdditionalAccessRestrictions",
+      "additionalAccessRestrictions",
+      "confidentialityType",
       "authorizedApplication",
       "creditLines",
       "creditNotes",
+      "expirationCondition",
       "expirationActions",
       "expirationNotes",
       "breachActions",
@@ -71,7 +76,6 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
       "fileSize",
       "startDate",
       "endDate",
-      "expirationCondition",
     ]
   }
 
