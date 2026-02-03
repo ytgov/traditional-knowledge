@@ -36,6 +36,7 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
     return [
       "sharingGroupContactId",
       "receivingGroupContactId",
+      "receivingGroupSecondaryContactId",
       "identifier",
       "sharingGroupInfo",
       "receivingGroupInfo",
