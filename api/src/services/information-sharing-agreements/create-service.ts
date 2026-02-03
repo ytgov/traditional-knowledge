@@ -18,26 +18,16 @@ export class CreateService extends BaseService {
   }
 
   async perform(): Promise<InformationSharingAgreement> {
-    const { title, startDate, endDate, ...optionalAttributes } = this.attributes
+    const { title, ...optionalAttributes } = this.attributes
 
     if (isNil(title)) {
       throw new Error("Title is required")
-    }
-
-    if (isNil(startDate)) {
-      throw new Error("Start date is required")
-    }
-
-    if (isNil(endDate)) {
-      throw new Error("End date is required")
     }
 
     return db.transaction(async () => {
       const informationSharingAgreement = await InformationSharingAgreement.create({
         creatorId: this.currentUser.id,
         title,
-        startDate,
-        endDate,
         ...optionalAttributes,
       })
 
