@@ -6,14 +6,60 @@
   <v-form
     v-else
     ref="form"
-    @submit.prevent="saveWrapper"
+    @submit.prevent="saveAndGoToNextPage"
   >
-    <v-row class="mt-2">
+    <v-row>
       <v-col cols="12">
-        <ConfidentialityCard
-          v-model:confidentiality-type="informationSharingAgreement.confidentialityType"
-          v-model:authorized-application="informationSharingAgreement.authorizedApplication"
-          class="border"
+        <p>
+          Yukon Government (YG) acknowledges the confidentiality and access identified above and
+          will receive Traditional Knowledge (TK) as / in:
+        </p>
+      </v-col>
+    </v-row>
+
+    <v-row class="mt-4">
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <InformationSharingAgreementConfidentialitySelect
+          v-model="informationSharingAgreement.confidentialityType"
+          label="Confidentiality *"
+          :rules="[required]"
+          required
+        />
+      </v-col>
+      <v-col
+        v-if="!isNil(informationSharingAgreement.confidentialityType) && !isEmpty(description)"
+        cols="12"
+        md="6"
+      >
+        <v-card
+          class="rounded-lg bg-grey-lighten-3"
+          variant="outlined"
+        >
+          <v-card-title class="d-flex align-center">
+            <v-icon size="x-small"> mdi-file-document </v-icon>
+            <h4 class="ml-2">Confidentiality Guidelines</h4>
+          </v-card-title>
+          <v-card-text class="font-italic">
+            {{ description }}
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col>
+        <v-textarea
+          v-model="informationSharingAgreement.authorizedApplication"
+          label="Authorised application of Traditional Knowledge (TK) *"
+          hint="Describe how Traditional Knowledge (TK) may be reflected in or considered for the described purpose. Include if Yukon Government (YG) intends to share any materials pertaining to the outcome of this agreement."
+          persistent-hint
+          rows="8"
+          auto-grow
+          :rules="[required]"
+          required
         />
       </v-col>
     </v-row>
@@ -30,7 +76,10 @@
         </v-btn>
         <v-btn
           :to="{
-            name: 'administration/InformationSharingAgreementsPage',
+            name: 'information-sharing-agreements/InformationSharingAgreementEditAccessPage',
+            params: {
+              informationSharingAgreementId,
+            },
           }"
           class="mt-3 mt-md-0 ml-md-3"
           color="secondary"
@@ -47,13 +96,17 @@
 
 <script setup lang="ts">
 import { computed, useTemplateRef } from "vue"
+import { useI18n } from "vue-i18n"
+import { useRouter } from "vue-router"
 import { useDisplay } from "vuetify"
-import { isNil } from "lodash"
+import { isEmpty, isNil } from "lodash"
+
+import { required } from "@/utils/validators"
 
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import useSnack from "@/use/use-snack"
 
-import ConfidentialityCard from "@/components/information-sharing-agreements/ConfidentialityCard.vue"
+import InformationSharingAgreementConfidentialitySelect from "@/components/information-sharing-agreements/InformationSharingAgreementConfidentialitySelect.vue"
 
 const props = defineProps<{
   informationSharingAgreementId: string
@@ -66,10 +119,21 @@ const { informationSharingAgreement, isLoading, save } = useInformationSharingAg
   informationSharingAgreementIdAsNumber
 )
 
+const { t } = useI18n()
+
+const description = computed(() => {
+  if (isNil(informationSharingAgreement.value?.confidentialityType)) return ""
+
+  return t(
+    `informationSharingAgreement.confidentialityDescriptions.${informationSharingAgreement.value.confidentialityType}`
+  )
+})
+
 const form = useTemplateRef("form")
 const snack = useSnack()
+const router = useRouter()
 
-async function saveWrapper() {
+async function saveAndGoToNextPage() {
   if (isNil(form.value)) return
 
   const { valid } = await form.value.validate()
@@ -81,6 +145,10 @@ async function saveWrapper() {
   try {
     await save()
     snack.success("Confidentiality updated.")
+
+    await router.push({
+      name: "administration/InformationSharingAgreementsPage",
+    })
   } catch (error) {
     console.error(`Failed to update confidentiality: ${error}`, { error })
     snack.error(`Failed to update confidentiality: ${error}`)
