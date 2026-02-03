@@ -136,16 +136,12 @@ const routes: RouteRecordRaw[] = [
             path: "information-sharing-agreements/new",
             name: "administration/information-sharing-agreements/InformationSharingAgreementNewPage",
             component: () =>
-              import(
-                "@/pages/administration/information-sharing-agreements/InformationSharingAgreementNewPage.vue"
-              ),
+              import("@/pages/administration/information-sharing-agreements/InformationSharingAgreementNewPage.vue"),
           },
           {
             path: "information-sharing-agreements/:informationSharingAgreementId",
             component: () =>
-              import(
-                "@/pages/administration/information-sharing-agreements/InformationSharingAgreementPage.vue"
-              ),
+              import("@/pages/administration/information-sharing-agreements/InformationSharingAgreementPage.vue"),
             props: true,
             children: [
               {
@@ -159,18 +155,14 @@ const routes: RouteRecordRaw[] = [
                 path: "access-grants",
                 name: "administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage",
                 component: () =>
-                  import(
-                    "@/pages/administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage.vue"
-                  ),
+                  import("@/pages/administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage.vue"),
                 props: true,
               },
               {
                 path: "access-grants/new",
                 name: "administration/information-sharing-agreements/InformationSharingAgreementAccessGrantNewPage",
                 component: () =>
-                  import(
-                    "@/pages/administration/information-sharing-agreements/InformationSharingAgreementAccessGrantNewPage.vue"
-                  ),
+                  import("@/pages/administration/information-sharing-agreements/InformationSharingAgreementAccessGrantNewPage.vue"),
                 props: true,
               },
             ],
@@ -179,9 +171,7 @@ const routes: RouteRecordRaw[] = [
             path: "information-sharing-agreements/:informationSharingAgreementId/edit",
             name: "administration/information-sharing-agreements/InformationSharingAgreementEditPage",
             component: () =>
-              import(
-                "@/pages/administration/information-sharing-agreements/InformationSharingAgreementEditPage.vue"
-              ),
+              import("@/pages/administration/information-sharing-agreements/InformationSharingAgreementEditPage.vue"),
             props: true,
           },
           {
@@ -202,17 +192,20 @@ const routes: RouteRecordRaw[] = [
           {
             path: "external-organizations",
             name: "admin/ExternalOrganizationsPage",
-            component: () => import("@/pages/admin/external-organizations/ExternalOrganizationsPage.vue"),
+            component: () =>
+              import("@/pages/admin/external-organizations/ExternalOrganizationsPage.vue"),
           },
           {
             path: "external-organizations/new",
             name: "admin/ExternalOrganizationsNewPage",
-            component: () => import("@/pages/admin/external-organizations/ExternalOrganizationsNewPage.vue"),
+            component: () =>
+              import("@/pages/admin/external-organizations/ExternalOrganizationsNewPage.vue"),
           },
           {
             path: "external-organizations/:externalOrganizationId/edit",
             name: "admin/ExternalOrganizationsEditPage",
-            component: () => import("@/pages/admin/external-organizations/ExternalOrganizationsEditPage.vue"),
+            component: () =>
+              import("@/pages/admin/external-organizations/ExternalOrganizationsEditPage.vue"),
             props: true,
           },
           {
