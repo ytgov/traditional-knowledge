@@ -29,6 +29,17 @@
       />
 
       <v-list-item
+        title="ISAs"
+        :to="{
+          name: 'information-sharing-agreements/InformationSharingAgreementsPage',
+        }"
+        :exact="false"
+        prepend-icon="mdi-file-document-edit"
+      >
+        <v-tooltip activator="parent" text="Information Sharing Agreements" />
+      </v-list-item>
+
+      <v-list-item
         v-if="isAdmin"
         title="Administration"
         :to="{ name: 'administration/DashboardPage' }"
