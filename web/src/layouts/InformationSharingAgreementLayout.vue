@@ -94,7 +94,7 @@ const panels: PanelDefinition[] = [
   {
     index: 0,
     title: "Basic Information",
-    icon: "mdi-information",
+    icon: "mdi-information-outline",
     to: {
       name: "information-sharing-agreements/InformationSharingAgreementEditBasicInformationPage",
       params: {
