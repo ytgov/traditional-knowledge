@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { isNil } from "lodash"
@@ -187,26 +187,34 @@ const panels: PanelDefinition[] = [
 ]
 
 const route = useRoute()
-const activePanel = ref<string | null>(null)
+const activePanel = ref<string | null>(determineActivePanelFromRoute(route.name))
 
-onMounted(() => {
-  initializeActivePanel()
-})
-
-function initializeActivePanel() {
-  if (route.name === "information-sharing-agreements/InformationSharingAgreementPage") {
-    activePanel.value = null
-  } else if (!isNil(route.name)) {
-    activePanel.value = route.name.toString()
-  } else {
-    activePanel.value = null
+watch(
+  () => route.name,
+  (newRouteName) => {
+    activePanel.value = determineActivePanelFromRoute(newRouteName)
+  },
+  {
+    immediate: true,
   }
+)
+
+function determineActivePanelFromRoute(
+  routeName: string | symbol | null | undefined
+): string | null {
+  if (routeName === "information-sharing-agreements/InformationSharingAgreementPage") {
+    return null
+  }
+
+  if (!isNil(routeName)) {
+    return routeName.toString()
+  }
+
+  return null
 }
 
-async function navigateToPanel(panelName: string | null) {
+function navigateToPanel(panelName: string | null) {
   if (isNil(panelName)) {
-    activePanel.value = null
-    await nextTick()
     return router.push({
       name: "information-sharing-agreements/InformationSharingAgreementPage",
       params: {
@@ -217,8 +225,6 @@ async function navigateToPanel(panelName: string | null) {
 
   const panel = panels.find((panel) => panel.to.name === panelName)
   if (!isNil(panel) && panelName !== route.name) {
-    activePanel.value = panelName
-    await nextTick()
     return router.push(panel.to)
   }
 }
