@@ -263,6 +263,48 @@ const routes: RouteRecordRaw[] = [
         component: () =>
           import("@/pages/information-sharing-agreements/InformationSharingAgreementNewPage.vue"),
       },
+      {
+        path: "information-sharing-agreements/:informationSharingAgreementId",
+        component: () => import("@/layouts/InformationSharingAgreementLayout.vue"),
+        props: true,
+        children: [
+          {
+            path: "",
+            name: "information-sharing-agreements/InformationSharingAgreementRedirect",
+            redirect: {
+              name: "information-sharing-agreements/InformationSharingAgreementEditBasicInformationPage",
+            },
+          },
+          {
+            path: "edit-basic-information",
+            name: "information-sharing-agreements/InformationSharingAgreementEditBasicInformationPage",
+            component: () =>
+              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditBasicInformationPage.vue"),
+            props: true,
+          },
+          {
+            path: "edit-duration",
+            name: "information-sharing-agreements/InformationSharingAgreementEditDurationPage",
+            component: () =>
+              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditDurationPage.vue"),
+            props: true,
+          },
+          {
+            path: "edit-access",
+            name: "information-sharing-agreements/InformationSharingAgreementEditAccessPage",
+            component: () =>
+              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditAccessPage.vue"),
+            props: true,
+          },
+          {
+            path: "edit-confidentiality",
+            name: "information-sharing-agreements/InformationSharingAgreementEditConfidentialityPage",
+            component: () =>
+              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditConfidentialityPage.vue"),
+            props: true,
+          },
+        ],
+      },
     ],
   },
   {
