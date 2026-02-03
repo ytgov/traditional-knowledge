@@ -14,8 +14,9 @@ agents/
 │   ├── create-admin-ui.md
 │   ├── jira-issue-creation.md
 │   └── pull-request-management.md
-├── plans/                 (implementation plans)
-│   └── .gitkeep
+├── plans/                 (implementation plans for complex refactoring work)
+│   ├── README.md          (planning guidelines and structure)
+│   └── Plan, Vue Component Expansion Panels Refactor, 2026-02-03.md
 ├── claude/               (optional - Claude-specific hardlinks)
 │   └── workflows/
 ├── windsurf/             (optional - Windsurf-specific hardlinks)
@@ -26,11 +27,13 @@ agents/
 
 ---
 
-## Templates vs Workflows
+## Templates vs Workflows vs Plans
 
 **Templates** are copy-paste-ready code snippets for specific file types. Use when you know exactly what you need.
 
 **Workflows** are multi-step guides that orchestrate multiple templates. Use when building complete features.
+
+**Plans** are implementation planning documents for complex refactoring work, architectural decisions, and cross-team analysis. Use when implementation requires analysis, multiple options, or detailed planning.
 
 ### Templates (`agents/templates/`)
 
@@ -58,13 +61,27 @@ Multi-step task guides:
 - [jira-issue-creation.md](workflows/jira-issue-creation.md) - Create Jira issues in TK project
 - [pull-request-management.md](workflows/pull-request-management.md) - Create and manage PRs
 
+### Plans (`agents/plans/`)
+
+Implementation planning documents:
+
+- [README.md](plans/README.md) - Planning guidelines, structure, and TK-specific patterns
+- [Plan, Vue Component Expansion Panels Refactor, 2026-02-03.md](plans/Plan, Vue Component Expansion Panels Refactor, 2026-02-03.md) - Vue component refactoring from layout to named slots
+
+**When to use Plans:**
+- Complex architectural refactoring
+- Multiple implementation options to analyze
+- Cross-team coordination requirements
+- Cultural protocol considerations for Traditional Knowledge
+- Performance or security implications
+
 ---
 
-## Using Templates and Workflows with AI Assistants
+## Using Templates, Workflows, and Plans with AI Assistants
 
 ### Method 1: Direct Reference (Simplest)
 
-Reference templates or workflows directly:
+Reference templates, workflows, or plans directly:
 
 ```
 # For a complete feature (workflow)
@@ -75,6 +92,12 @@ Follow agents/templates/frontend/searchable-autocomplete.md to create CategorySe
 
 # For backend only (templates)
 Follow agents/templates/backend/ to create the API for Categories.
+
+# For complex refactoring (plan)
+Follow agents/plans/Plan, Vue Component Expansion Panels Refactor, 2026-02-03.md to refactor the expansion panels.
+
+# For planning guidelines (plan)
+Reference agents/plans/README.md for planning structure and TK-specific patterns.
 ```
 
 ### Method 2: Hardlinks (Recommended for Multiple Agents)
