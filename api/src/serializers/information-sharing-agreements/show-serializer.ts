@@ -51,8 +51,8 @@ export type AgreementShowView = Pick<
   | "createdAt"
   | "updatedAt"
 > & {
-  startDate: string
-  endDate: string
+  startDate: string | null
+  endDate: string | null
   sharingGroupSignedDate: string | null
   receivingGroupSignedDate: string | null
 }

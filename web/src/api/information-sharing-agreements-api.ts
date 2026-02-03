@@ -75,8 +75,8 @@ export type InformationSharingAgreement = {
   fileData: string | null
   fileMimeType: string | null
   fileSize: number | null
-  startDate: string
-  endDate: string
+  startDate: string | null
+  endDate: string | null
   createdAt: string
   updatedAt: string
 }
