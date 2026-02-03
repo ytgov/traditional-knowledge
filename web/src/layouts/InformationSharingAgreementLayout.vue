@@ -42,10 +42,12 @@
         </div>
       </v-expansion-panel-title>
 
+      <v-divider />
+
       <v-expansion-panel-text v-if="activePanel === panel.to.name">
         <router-view v-slot="{ Component }">
           <v-fade-transition mode="out-in">
-            <component :is="Component" />
+            <component :is="Component" class="mt-4" />
           </v-fade-transition>
         </router-view>
       </v-expansion-panel-text>
