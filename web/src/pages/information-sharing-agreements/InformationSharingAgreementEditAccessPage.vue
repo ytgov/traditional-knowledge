@@ -19,22 +19,87 @@
     <v-row class="mt-4">
       <v-col
         cols="12"
-        md="6"
+        md="7"
+        class="pa-0"
       >
-        <InformationSharingAgreementAccessLevelSelect
-          v-model="informationSharingAgreement.accessLevel"
-          label="Access level *"
-          :rules="[required]"
-          required
-        />
+        <v-col cols="12">
+          <InformationSharingAgreementAccessLevelSelect
+            v-model="informationSharingAgreement.accessLevel"
+            label="Access level *"
+            :rules="[required]"
+            required
+          />
+        </v-col>
+        <v-col
+          v-if="
+            informationSharingAgreement.accessLevel ===
+            InformationSharingAgreementAccessLevels.PROTECTED_AND_LIMITED
+          "
+          cols="12"
+        >
+          <v-text-field
+            v-model="informationSharingAgreement.accessLevelDepartmentRestriction"
+            label="Specify department *"
+            :rules="[required]"
+            required
+          />
+        </v-col>
+        <template
+          v-else-if="
+            informationSharingAgreement.accessLevel ===
+            InformationSharingAgreementAccessLevels.CONFIDENTIAL_AND_RESTRICTED
+          "
+        >
+          <v-col cols="12">
+            <v-text-field
+              v-model="informationSharingAgreement.accessLevelDepartmentRestriction"
+              label="Specify department *"
+              :rules="[required]"
+              required
+            />
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              v-model="informationSharingAgreement.accessLevelBranchRestriction"
+              label="Specify branch *"
+              :rules="[required]"
+              required
+            />
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              v-model="informationSharingAgreement.accessLevelUnitRestriction"
+              label="Specify unit"
+            />
+          </v-col>
+          <v-col cols="12">
+            <v-switch
+              v-model="informationSharingAgreement.hasAdditionalAccessRestrictions"
+              label="Has ADDITIONAL MEASURES?"
+              hide-details
+            />
+          </v-col>
+          <v-col
+            v-if="informationSharingAgreement.hasAdditionalAccessRestrictions"
+            cols="12"
+          >
+            <v-textarea
+              v-model="informationSharingAgreement.additionalAccessRestrictions"
+              label="ADDITIONAL MEASURES *"
+              :rules="[required]"
+              required
+              auto-grow
+              rows="8"
+            />
+          </v-col>
+        </template>
       </v-col>
       <v-col
-        v-if="!isNil(informationSharingAgreement.accessLevel) && !isEmpty(description)"
         cols="12"
-        md="6"
+        md="5"
       >
         <v-card
-          class="rounded-lg"
+          class="rounded-lg bg-grey-lighten-3"
           variant="outlined"
         >
           <v-card-title class="d-flex align-center">
@@ -42,86 +107,9 @@
             <h4 class="ml-2">Access Guidelines</h4>
           </v-card-title>
           <v-card-text class="font-italic">
-            {{ description }}
+            {{ description || "Complete the form to see guidelines." }}
           </v-card-text>
         </v-card>
-      </v-col>
-    </v-row>
-
-    <v-row
-      v-if="
-        informationSharingAgreement.accessLevel ===
-        InformationSharingAgreementAccessLevels.PROTECTED_AND_LIMITED
-      "
-    >
-      <v-col
-        cols="12"
-        md="6"
-      >
-        <v-text-field
-          v-model="informationSharingAgreement.accessLevelDepartmentRestriction"
-          label="Specify department *"
-          :rules="[required]"
-          required
-        />
-      </v-col>
-    </v-row>
-    <v-row
-      v-else-if="
-        informationSharingAgreement.accessLevel ===
-        InformationSharingAgreementAccessLevels.CONFIDENTIAL_AND_RESTRICTED
-      "
-    >
-      <v-col
-        cols="12"
-        md="4"
-      >
-        <v-text-field
-          v-model="informationSharingAgreement.accessLevelDepartmentRestriction"
-          label="Specify department *"
-          :rules="[required]"
-          required
-        />
-      </v-col>
-      <v-col
-        cols="12"
-        md="4"
-      >
-        <v-text-field
-          v-model="informationSharingAgreement.accessLevelBranchRestriction"
-          label="Specify branch *"
-          :rules="[required]"
-          required
-        />
-      </v-col>
-      <v-col
-        cols="12"
-        md="4"
-      >
-        <v-text-field
-          v-model="informationSharingAgreement.accessLevelUnitRestriction"
-          label="Specify unit"
-        />
-      </v-col>
-      <v-col cols="12">
-        <v-switch
-          v-model="informationSharingAgreement.hasAdditionalAccessRestrictions"
-          label="Has ADDITIONAL MEASURES?"
-          hide-details
-        />
-      </v-col>
-      <v-col
-        v-if="informationSharingAgreement.hasAdditionalAccessRestrictions"
-        cols="12"
-      >
-        <v-textarea
-          v-model="informationSharingAgreement.additionalAccessRestrictions"
-          label="ADDITIONAL MEASURES *"
-          :rules="[required]"
-          required
-          auto-grow
-          rows="8"
-        />
       </v-col>
     </v-row>
 
