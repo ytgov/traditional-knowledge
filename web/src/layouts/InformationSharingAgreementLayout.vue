@@ -1,11 +1,14 @@
 <template>
-  <v-expansion-panels v-model="activePanel">
+  <v-expansion-panels
+    :model-value="activePanel"
+    @update:model-value="navigateToPanel"
+  >
     <v-expansion-panel
       v-for="panel in panels"
       :key="panel.to.name"
       :value="panel.to.name"
     >
-      <v-expansion-panel-title @click="goToRoute(panel.to)">
+      <v-expansion-panel-title>
         <v-icon start>
           {{ panel.icon }}
         </v-icon>
@@ -25,8 +28,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { nextTick, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
+import { isNil } from "lodash"
 
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
 
@@ -96,10 +100,22 @@ const panels: PanelDefinition[] = [
 ]
 
 const route = useRoute()
-const activePanel = ref(route.name ?? panels[0].to.name)
+const activePanel = ref<string | null>(route.name?.toString() ?? panels[0].to.name)
 
-function goToRoute(to: PanelDefinition["to"]) {
-  return router.push(to)
+async function navigateToPanel(value: string | null) {
+  if (isNil(value)) {
+    activePanel.value = panels[0].to.name
+    await nextTick()
+    return router.push(panels[0].to)
+  }
+
+  const panelName = String(value)
+  const panel = panels.find((panel) => panel.to.name === panelName)
+  if (!isNil(panel) && panelName !== route.name) {
+    activePanel.value = panelName
+    await nextTick()
+    return router.push(panel.to)
+  }
 }
 
 useBreadcrumbs("Information Sharing Agreement", [
