@@ -270,10 +270,10 @@ const routes: RouteRecordRaw[] = [
         children: [
           {
             path: "",
-            name: "information-sharing-agreements/InformationSharingAgreementRedirect",
-            redirect: {
-              name: "information-sharing-agreements/InformationSharingAgreementEditBasicInformationPage",
-            },
+            name: "information-sharing-agreements/InformationSharingAgreementPage",
+            component: () =>
+              import("@/pages/information-sharing-agreements/InformationSharingAgreementPage.vue"),
+            props: true,
           },
           {
             path: "edit-basic-information",

@@ -45,18 +45,14 @@
       <v-divider />
 
       <v-expansion-panel-text v-if="activePanel === panel.to.name">
-        <router-view v-slot="{ Component }">
-          <v-fade-transition mode="out-in">
-            <component :is="Component" class="mt-4" />
-          </v-fade-transition>
-        </router-view>
+        <router-view class="mt-4" />
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref } from "vue"
+import { computed, nextTick, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { useI18n } from "vue-i18n"
 import { isNil } from "lodash"
@@ -187,16 +183,34 @@ const panels: PanelDefinition[] = [
 ]
 
 const route = useRoute()
-const activePanel = ref<string | null>(route.name?.toString() ?? panels[0].to.name)
+const activePanel = ref<string | null>(null)
 
-async function navigateToPanel(value: string | null) {
-  if (isNil(value)) {
-    activePanel.value = panels[0].to.name
+onMounted(() => {
+  initializeActivePanel()
+})
+
+function initializeActivePanel() {
+  if (route.name === "information-sharing-agreements/InformationSharingAgreementPage") {
+    activePanel.value = null
+  } else if (!isNil(route.name)) {
+    activePanel.value = route.name.toString()
+  } else {
+    activePanel.value = null
+  }
+}
+
+async function navigateToPanel(panelName: string | null) {
+  if (isNil(panelName)) {
+    activePanel.value = null
     await nextTick()
-    return router.push(panels[0].to)
+    return router.push({
+      name: "information-sharing-agreements/InformationSharingAgreementPage",
+      params: {
+        informationSharingAgreementId: props.informationSharingAgreementId,
+      },
+    })
   }
 
-  const panelName = String(value)
   const panel = panels.find((panel) => panel.to.name === panelName)
   if (!isNil(panel) && panelName !== route.name) {
     activePanel.value = panelName
