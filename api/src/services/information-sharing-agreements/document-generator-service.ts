@@ -78,9 +78,9 @@ export class DocumentGeneratorService extends BaseService {
       formats: isa.formats || "",
 
       // Access & Confidentiality
-      accessLevels: isa.accessLevels || "",
-      accessNotes: isa.accessNotes || "",
-      confidentiality: isa.confidentiality || "",
+      accessLevels: isa.accessLevel || "",
+      accessNotes: isa.additionalAccessRestrictions || "",
+      confidentiality: isa.confidentialityType || "",
       authorizedApplication: isa.authorizedApplication || "",
 
       // Credit & Attribution
