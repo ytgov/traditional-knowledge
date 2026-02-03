@@ -28,6 +28,7 @@
             label="Access level *"
             :rules="[required]"
             required
+            @update:model-value="resetRelevantFieldsOnChange"
           />
         </v-col>
         <v-col
@@ -169,6 +170,25 @@ const informationSharingAgreementIdAsNumber = computed(() =>
 const { informationSharingAgreement, isLoading, save } = useInformationSharingAgreement(
   informationSharingAgreementIdAsNumber
 )
+
+function resetRelevantFieldsOnChange(accessLevel: string | null | undefined) {
+  if (isNil(informationSharingAgreement.value)) return
+
+  if (accessLevel === InformationSharingAgreementAccessLevels.INTERNAL) {
+    informationSharingAgreement.value.accessLevelDepartmentRestriction = null
+    informationSharingAgreement.value.accessLevelBranchRestriction = null
+    informationSharingAgreement.value.accessLevelUnitRestriction = null
+    informationSharingAgreement.value.hasAdditionalAccessRestrictions = false
+    informationSharingAgreement.value.additionalAccessRestrictions = null
+  } else if (accessLevel === InformationSharingAgreementAccessLevels.PROTECTED_AND_LIMITED) {
+    informationSharingAgreement.value.accessLevelBranchRestriction = null
+    informationSharingAgreement.value.accessLevelUnitRestriction = null
+    informationSharingAgreement.value.hasAdditionalAccessRestrictions = false
+    informationSharingAgreement.value.additionalAccessRestrictions = null
+  } else if (accessLevel === InformationSharingAgreementAccessLevels.CONFIDENTIAL_AND_RESTRICTED) {
+    // do nothing
+  }
+}
 
 const { t } = useI18n()
 
