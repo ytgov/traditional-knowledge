@@ -52,6 +52,11 @@ export class InformationSharingAgreement extends BaseModel<
   InferAttributes<InformationSharingAgreement>,
   InferCreationAttributes<InformationSharingAgreement>
 > {
+  static readonly AccessLevels = InformationSharingAgreementAccessLevels
+  static readonly ExpirationConditions = InformationSharingAgreementExpirationConditions
+  static readonly ConfidentialityTypes = InformationSharingAgreementConfidentialityType
+  static readonly Status = InformationSharingAgreementStatus
+
   @Attribute(DataTypes.INTEGER)
   @PrimaryKey
   @AutoIncrement

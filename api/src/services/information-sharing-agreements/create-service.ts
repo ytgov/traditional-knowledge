@@ -26,9 +26,10 @@ export class CreateService extends BaseService {
 
     return db.transaction(async () => {
       const informationSharingAgreement = await InformationSharingAgreement.create({
+        ...optionalAttributes,
         creatorId: this.currentUser.id,
         title,
-        ...optionalAttributes,
+        status: InformationSharingAgreement.Status.DRAFT,
       })
 
       if (
