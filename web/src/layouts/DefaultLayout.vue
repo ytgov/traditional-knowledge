@@ -93,7 +93,6 @@ const { title } = useBreadcrumbs()
 watch(
   () => unref(mdAndUp),
   (newVal) => {
-    console.log("NM", newVal)
     //!mobile || (mobile && showDrawer)
     if (!newVal) {
       showDrawer.value = true
