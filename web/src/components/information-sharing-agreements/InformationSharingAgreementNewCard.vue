@@ -1,9 +1,10 @@
 <template>
   <v-card
-    class="toggle fill-height"
     :to="{
       name: 'information-sharing-agreements/InformationSharingAgreementNewPage',
     }"
+    class="bg-primary"
+    variant="outlined"
   >
     <v-card-text class="d-flex">
       <span class="d-sm-flex align-center me-3 d-none">
@@ -13,13 +14,13 @@
       <div>
         <div class="text-h6">New Information Sharing Agreement</div>
         <span class="text-subtitle-2"
-          >Create an Information Sharing Agreement for sharing traditional knowledge with the Yukon Government.</span
+          >Create an Information Sharing Agreement for sharing traditional knowledge with the Yukon
+          Government.</span
         >
       </div>
     </v-card-text>
   </v-card>
 </template>
 
-<script setup lang="ts">
-// Component for creating new Information Sharing Agreement
-</script>
+<!-- TODO: make this a generic component, and pass in params from parent? -->
+<script setup lang="ts"></script>
