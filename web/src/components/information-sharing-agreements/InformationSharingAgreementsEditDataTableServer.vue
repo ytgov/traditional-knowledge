@@ -38,7 +38,7 @@
         <!-- TODO: only show edit button to users who can edit the agreement -->
         <v-btn
           :to="{
-            name: 'information-sharing-agreements/InformationSharingAgreementEditPage',
+            name: 'information-sharing-agreements/InformationSharingAgreementEditBasicInformationPage',
             params: {
               informationSharingAgreementId: item.id,
             },
