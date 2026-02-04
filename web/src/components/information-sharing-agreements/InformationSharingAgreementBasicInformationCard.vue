@@ -38,7 +38,15 @@
           </div>
           <div class="mb-3">
             <div class="text-body-2 text-grey-darken-1 mb-1">Contact Name</div>
-            <div class="font-weight-medium">{{ sharingGroupContactName || "Not specified" }}</div>
+            <span
+              v-if="isNil(sharingGroupContactId)"
+              class="font-weight-medium"
+              >Not specified</span
+            >
+            <UserChip
+              v-else
+              :user-id="sharingGroupContactId"
+            />
           </div>
           <div>
             <div class="text-body-2 text-grey-darken-1 mb-1">Title</div>
@@ -61,15 +69,33 @@
           </div>
           <div class="mb-3">
             <div class="text-body-2 text-grey-darken-1 mb-1">Contact Name</div>
-            <div class="font-weight-medium">
-              {{ receivingGroupContactName || "Not specified" }}
-            </div>
+            <span
+              v-if="isNil(receivingGroupContactId)"
+              class="font-weight-medium"
+              >Not specified</span
+            >
+            <UserChip
+              v-else
+              :user-id="receivingGroupContactId"
+            />
           </div>
-          <div>
+          <div class="mb-3">
             <div class="text-body-2 text-grey-darken-1 mb-1">Title</div>
             <div class="font-weight-medium">
               {{ receivingGroupContactTitle || "Not specified" }}
             </div>
+          </div>
+          <div>
+            <div class="text-body-2 text-grey-darken-1 mb-1">Manager Contact Name</div>
+            <span
+              v-if="isNil(receivingGroupSecondaryContactId)"
+              class="font-weight-medium"
+              >Not specified</span
+            >
+            <UserChip
+              v-else
+              :user-id="receivingGroupSecondaryContactId"
+            />
           </div>
         </v-col>
       </v-row>
@@ -78,12 +104,17 @@
 </template>
 
 <script setup lang="ts">
+import { isNil } from "lodash"
+
+import UserChip from "@/components/users/UserChip.vue"
+
 defineProps<{
   title: string | null | undefined
   purpose: string | null | undefined
-  sharingGroupContactName: string | null | undefined
+  sharingGroupContactId: number | null | undefined
   sharingGroupContactTitle: string | null | undefined
-  receivingGroupContactName: string | null | undefined
+  receivingGroupContactId: number | null | undefined
   receivingGroupContactTitle: string | null | undefined
+  receivingGroupSecondaryContactId: number | null | undefined
 }>()
 </script>

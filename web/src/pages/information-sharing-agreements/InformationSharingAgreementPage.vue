@@ -13,10 +13,11 @@
           class="rounded-lg"
           :title="informationSharingAgreement.title"
           :purpose="informationSharingAgreement.purpose"
-          :sharing-group-contact-name="informationSharingAgreement.sharingGroupContactName"
+          :sharing-group-contact-id="informationSharingAgreement.sharingGroupContactId"
           :sharing-group-contact-title="informationSharingAgreement.sharingGroupContactTitle"
-          :receiving-group-contact-name="informationSharingAgreement.receivingGroupContactName"
+          :receiving-group-contact-id="informationSharingAgreement.receivingGroupContactId"
           :receiving-group-contact-title="informationSharingAgreement.receivingGroupContactTitle"
+          :receiving-group-secondary-contact-id="informationSharingAgreement.receivingGroupSecondaryContactId"
         />
 
         <InformationSharingAgreementDurationCard
