@@ -1,33 +1,40 @@
-import { type Attributes, type FindOptions } from "@sequelize/core"
+import { type Attributes, type FindOptions, Op, sql } from "@sequelize/core"
 
 import { type Path } from "@/utils/deep-pick"
 import { InformationSharingAgreement, User } from "@/models"
-import { ALL_RECORDS_SCOPE, PolicyFactory } from "@/policies/base-policy"
+import { PolicyFactory } from "@/policies/base-policy"
 
 export class InformationSharingAgreementPolicy extends PolicyFactory(InformationSharingAgreement) {
   show(): boolean {
-    if (this.user.isSystemAdmin) return true
-    if (this.record.hasAccessGrantFor(this.user.id)) return true
+    if (this.record.isDraft() && this.user.id === this.record.creatorId) return true
+    if (!this.record.isDraft() && this.user.isSystemAdmin) return true
+    if (!this.record.isDraft() && this.record.hasAccessGrantFor(this.user.id)) {
+      return true
+    }
 
     return false
   }
 
   create(): boolean {
-    if (this.user.isSystemAdmin) return true
-    //if (this.user.isGroupAdminOf(this.record.sharingGroupId)) return true
-
-    return false
+    return true
   }
 
   update(): boolean {
-    if (this.user.isAdminForInformationSharingAgreement(this.record.id)) return true
-    if (this.user.isSystemAdmin) return true
+    if (this.record.isDraft() && this.user.id === this.record.creatorId) return true
+    if (!this.record.isDraft() && this.user.isSystemAdmin) return true
+    if (!this.record.isDraft() && this.user.isAdminForInformationSharingAgreement(this.record.id)) {
+      return true
+    }
 
     return false
   }
 
   destroy(): boolean {
-    if (this.user.isAdminForInformationSharingAgreement(this.record.id)) return true
+    if (this.record.isDraft() && this.user.id === this.record.creatorId) return true
+    if (!this.record.isDraft() && this.user.isSystemAdmin) return true
+    if (!this.record.isDraft() && this.user.isAdminForInformationSharingAgreement(this.record.id)) {
+      return true
+    }
 
     return false
   }
@@ -85,18 +92,43 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
 
   static policyScope(user: User): FindOptions<Attributes<InformationSharingAgreement>> {
     if (user.isSystemAdmin) {
-      return ALL_RECORDS_SCOPE
-    }
-
-    return {
-      include: [
-        {
-          association: "accessGrants",
-          where: {
-            userId: user.id,
+      return {
+        where: {
+          status: {
+            [Op.ne]: InformationSharingAgreement.Status.DRAFT,
           },
         },
-      ],
+      }
+    }
+
+    const agreementsWithAccessGrantsQuery = sql`
+      SELECT
+        information_sharing_agreement_id
+      FROM
+        information_sharing_agreement_access_grants
+      WHERE
+        user_id = :userId
+    `
+    return {
+      where: {
+        [Op.or]: [
+          {
+            creatorId: user.id,
+            status: InformationSharingAgreement.Status.DRAFT,
+          },
+          {
+            status: {
+              [Op.ne]: InformationSharingAgreement.Status.DRAFT,
+            },
+            id: {
+              [Op.in]: agreementsWithAccessGrantsQuery,
+            },
+          },
+        ],
+      },
+      replacements: {
+        userId: user.id,
+      },
     }
   }
 }

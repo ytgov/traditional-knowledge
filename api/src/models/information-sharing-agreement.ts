@@ -44,6 +44,7 @@ export enum InformationSharingAgreementConfidentialityType {
 
 export enum InformationSharingAgreementStatus {
   DRAFT = "draft",
+  PUBLISHED = "published",
   SIGNED = "signed",
   CLOSED = "closed",
 }
@@ -266,6 +267,10 @@ export class InformationSharingAgreement extends BaseModel<
     }
 
     return this.accessGrants.some((accessGrant) => accessGrant.userId === userId)
+  }
+
+  isDraft(): boolean {
+    return this.status === InformationSharingAgreement.Status.DRAFT
   }
 
   // Associations
