@@ -2,7 +2,7 @@
   <RoutableExpansionPanels
     :panels="panels"
     :to="{
-      name: 'information-sharing-agreements/InformationSharingAgreementPage',
+      name: 'information-sharing-agreements/InformationSharingAgreementEditPage',
       params: {
         informationSharingAgreementId: props.informationSharingAgreementId,
       },
@@ -34,7 +34,7 @@ import { useI18n } from "vue-i18n"
 import { isNil } from "lodash"
 
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
-import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
+import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 
 import RoutableExpansionPanels, {
   type PanelDefinition,
@@ -150,11 +150,11 @@ const confidentialitySubtitle = computed(() => {
 
 // Breadcrumbs
 useBreadcrumbs("Information Sharing Agreement", [
-  ADMIN_CRUMB,
+  BASE_CRUMB,
   {
     title: "Information Sharing Agreements",
     to: {
-      name: "administration/InformationSharingAgreementsPage",
+      name: "InformationSharingAgreementsPage",
     },
   },
 ])
