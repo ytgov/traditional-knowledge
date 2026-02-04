@@ -42,6 +42,66 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: "information-sharing-agreements",
+        name: "InformationSharingAgreementsPage",
+        component: () => import("@/pages/InformationSharingAgreementsPage.vue"),
+      },
+      {
+        path: "information-sharing-agreements/new",
+        name: "information-sharing-agreements/InformationSharingAgreementNewPage",
+        component: () =>
+          import("@/pages/information-sharing-agreements/InformationSharingAgreementNewPage.vue"),
+      },
+      {
+        path: "information-sharing-agreements/:informationSharingAgreementId",
+        name: "information-sharing-agreements/InformationSharingAgreementPage",
+        component: () =>
+          import("@/pages/information-sharing-agreements/InformationSharingAgreementPage.vue"),
+        props: true,
+      },
+      {
+        path: "information-sharing-agreements/:informationSharingAgreementId/edit",
+        component: () => import("@/layouts/InformationSharingAgreementEditLayout.vue"),
+        props: true,
+        children: [
+          {
+            path: "",
+            name: "information-sharing-agreements/InformationSharingAgreementEditPage",
+            component: () =>
+              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditPage.vue"),
+            props: true,
+          },
+          {
+            path: "edit-basic-information",
+            name: "information-sharing-agreements/InformationSharingAgreementEditBasicInformationPage",
+            component: () =>
+              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditBasicInformationPage.vue"),
+            props: true,
+          },
+          {
+            path: "edit-duration",
+            name: "information-sharing-agreements/InformationSharingAgreementEditDurationPage",
+            component: () =>
+              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditDurationPage.vue"),
+            props: true,
+          },
+          {
+            path: "edit-access",
+            name: "information-sharing-agreements/InformationSharingAgreementEditAccessPage",
+            component: () =>
+              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditAccessPage.vue"),
+            props: true,
+          },
+          {
+            path: "edit-confidentiality",
+            name: "information-sharing-agreements/InformationSharingAgreementEditConfidentialityPage",
+            component: () =>
+              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditConfidentialityPage.vue"),
+            props: true,
+          },
+        ],
+      },
+      {
         path: "administration",
         children: [
           {
@@ -253,67 +313,6 @@ const routes: RouteRecordRaw[] = [
             path: "users-with-access",
             name: "archive-items/ArchiveItemUsersWithAccessPage",
             component: () => import("@/pages/archive-items/ArchiveItemUsersWithAccessPage.vue"),
-            props: true,
-          },
-        ],
-      },
-
-      {
-        path: "information-sharing-agreements",
-        name: "InformationSharingAgreementsPage",
-        component: () => import("@/pages/InformationSharingAgreementsPage.vue"),
-      },
-      {
-        path: "information-sharing-agreements/new",
-        name: "information-sharing-agreements/InformationSharingAgreementNewPage",
-        component: () =>
-          import("@/pages/information-sharing-agreements/InformationSharingAgreementNewPage.vue"),
-      },
-      {
-        path: "information-sharing-agreements/:informationSharingAgreementId",
-        name: "information-sharing-agreements/InformationSharingAgreementPage",
-        component: () =>
-          import("@/pages/information-sharing-agreements/InformationSharingAgreementPage.vue"),
-        props: true,
-      },
-      {
-        path: "information-sharing-agreements/:informationSharingAgreementId/edit",
-        component: () => import("@/layouts/InformationSharingAgreementEditLayout.vue"),
-        props: true,
-        children: [
-          {
-            path: "",
-            name: "information-sharing-agreements/InformationSharingAgreementEditPage",
-            component: () =>
-              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditPage.vue"),
-            props: true,
-          },
-          {
-            path: "edit-basic-information",
-            name: "information-sharing-agreements/InformationSharingAgreementEditBasicInformationPage",
-            component: () =>
-              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditBasicInformationPage.vue"),
-            props: true,
-          },
-          {
-            path: "edit-duration",
-            name: "information-sharing-agreements/InformationSharingAgreementEditDurationPage",
-            component: () =>
-              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditDurationPage.vue"),
-            props: true,
-          },
-          {
-            path: "edit-access",
-            name: "information-sharing-agreements/InformationSharingAgreementEditAccessPage",
-            component: () =>
-              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditAccessPage.vue"),
-            props: true,
-          },
-          {
-            path: "edit-confidentiality",
-            name: "information-sharing-agreements/InformationSharingAgreementEditConfidentialityPage",
-            component: () =>
-              import("@/pages/information-sharing-agreements/InformationSharingAgreementEditConfidentialityPage.vue"),
             props: true,
           },
         ],
