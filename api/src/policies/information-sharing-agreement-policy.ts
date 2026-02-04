@@ -110,12 +110,14 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
     }
 
     const agreementsWithAccessGrantsQuery = sql`
-      SELECT
-        information_sharing_agreement_id
-      FROM
-        information_sharing_agreement_access_grants
-      WHERE
-        user_id = :userId
+      (
+        SELECT
+          information_sharing_agreement_id
+        FROM
+          information_sharing_agreement_access_grants
+        WHERE
+          user_id = :userId
+      )
     `
     return {
       where: {
