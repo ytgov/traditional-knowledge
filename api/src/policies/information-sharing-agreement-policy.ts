@@ -94,9 +94,17 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
     if (user.isSystemAdmin) {
       return {
         where: {
-          status: {
-            [Op.ne]: InformationSharingAgreement.Status.DRAFT,
-          },
+          [Op.or]: [
+            {
+              creatorId: user.id,
+              status: InformationSharingAgreement.Status.DRAFT,
+            },
+            {
+              status: {
+                [Op.ne]: InformationSharingAgreement.Status.DRAFT,
+              },
+            },
+          ],
         },
       }
     }
