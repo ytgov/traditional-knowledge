@@ -17,7 +17,9 @@
           :sharing-group-contact-title="informationSharingAgreement.sharingGroupContactTitle"
           :receiving-group-contact-id="informationSharingAgreement.receivingGroupContactId"
           :receiving-group-contact-title="informationSharingAgreement.receivingGroupContactTitle"
-          :receiving-group-secondary-contact-id="informationSharingAgreement.receivingGroupSecondaryContactId"
+          :receiving-group-secondary-contact-id="
+            informationSharingAgreement.receivingGroupSecondaryContactId
+          "
         />
 
         <InformationSharingAgreementDurationCard
@@ -48,7 +50,7 @@
           :authorized-application="informationSharingAgreement.authorizedApplication"
         />
 
-        <div class="mt-4 d-flex justify-space-between ga-3 px-6 py-4">
+        <div class="mt-4 d-flex flex-column flex-md-row justify-space-between ga-3 px-6 py-4">
           <v-btn
             color="primary"
             size="large"
@@ -61,7 +63,7 @@
           >
             Publish Agreement
           </v-btn>
-          <div class="d-flex justify-end ga-3">
+          <div class="d-flex flex-column flex-md-row justify-end ga-3">
             <v-btn
               color="secondary"
               size="large"

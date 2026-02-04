@@ -69,6 +69,17 @@
                 <div class="text-body-2 text-grey-darken-1 mb-1">Unit</div>
                 <div class="font-weight-medium">{{ accessLevelUnitRestriction }}</div>
               </v-col>
+              <v-col cols="12">
+                <div class="text-body-2 text-grey-darken-1 mb-1">Has Additional Measures</div>
+                <v-chip
+                  :color="hasAdditionalAccessRestrictions ? 'success' : 'grey'"
+                  variant="tonal"
+                  size="small"
+                  class="font-weight-medium"
+                >
+                  {{ hasAdditionalAccessRestrictions ? "Yes" : "No" }}
+                </v-chip>
+              </v-col>
             </v-row>
 
             <div
