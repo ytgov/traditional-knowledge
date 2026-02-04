@@ -12,14 +12,25 @@
           md="6"
         >
           <div class="text-overline text-grey-darken-1 mb-2">Confidentiality Type</div>
-          <div class="text-subtitle-1 font-weight-bold">{{ confidentialityTypeLabel }}</div>
+          <div class="text-subtitle-1 font-weight-bold">
+            <span v-if="isNil(confidentialityType)">Not configured</span>
+            <span v-else-if="confidentialityType === InformationSharingAgreementConfidentialityType.ACCORDANCE">
+              ACCORDANCE
+            </span>
+            <span v-else-if="confidentialityType === InformationSharingAgreementConfidentialityType.ACCEPTED_IN_CONFIDENCE">
+              ACCEPTED IN CONFIDENCE
+            </span>
+            <span v-else>Unknown type</span>
+          </div>
         </v-col>
         <v-col
           cols="12"
           md="6"
         >
-          <div class="text-overline text-grey-darken-1 mb-2">Last Reviewed</div>
-          <div class="text-subtitle-1 font-weight-bold">Not configured</div>
+          <div class="text-overline text-grey-darken-1 mb-2">Description</div>
+          <div class="text-subtitle-1 font-weight-medium text-grey-darken-3">
+            {{ confidentialityDescription || "Not specified" }}
+          </div>
         </v-col>
       </v-row>
 
@@ -49,6 +60,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import { isNil } from "lodash"
+import { useI18n } from "vue-i18n"
 
 import { InformationSharingAgreementConfidentialityType } from "@/api/information-sharing-agreements-api"
 
@@ -57,17 +69,13 @@ const props = defineProps<{
   authorizedApplication: string | null | undefined
 }>()
 
-const confidentialityTypeLabel = computed(() => {
+const { t } = useI18n()
+
+const confidentialityDescription = computed(() => {
   if (isNil(props.confidentialityType)) {
-    return "Not configured"
+    return ""
   }
 
-  const labelMap: Record<InformationSharingAgreementConfidentialityType, string> = {
-    [InformationSharingAgreementConfidentialityType.ACCORDANCE]: "In Accordance",
-    [InformationSharingAgreementConfidentialityType.ACCEPTED_IN_CONFIDENCE]:
-      "Government-to-Government Confidential",
-  }
-
-  return labelMap[props.confidentialityType]
+  return t(`informationSharingAgreement.confidentialityDescriptions.${props.confidentialityType}`)
 })
 </script>

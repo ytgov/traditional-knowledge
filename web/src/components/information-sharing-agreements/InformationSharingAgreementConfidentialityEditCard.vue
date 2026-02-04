@@ -5,7 +5,7 @@
     <v-card-text>
       <p class="mb-2">
         Yukon Government (YG) acknowledges the confidentiality and access identified above and will
-        receive Traditional Knowledge (TK) as / in:
+        receive Traditional Knowledge (TK) as/in:
       </p>
 
       <v-row class="mt-4">
