@@ -274,19 +274,20 @@ When you need to update an existing PR (add context, fix title, update testing i
 
 ```bash
 # View current PR details
-gh pr view NUMBER
+gh api repos/{owner}/{repo}/pulls/NUMBER
 
 # Edit PR title
-gh pr edit NUMBER --title "New Title"
+cat <<'EOF' | gh api repos/{owner}/{repo}/pulls/NUMBER -X PATCH -F title=@-
+New Title
+EOF
 
 # Edit PR body
-gh pr edit NUMBER --body "$(cat <<'EOF'
+cat <<'EOF' | gh api repos/{owner}/{repo}/pulls/NUMBER -X PATCH -F body=@-
 Updated PR body content
 EOF
-)"
 
-# Or edit interactively
-gh pr edit NUMBER
+# Or edit interactively (use gh api for consistency)
+gh api repos/{owner}/{repo}/pulls/NUMBER
 ```
 
 **Common Scenarios for Editing:**
@@ -310,7 +311,7 @@ gh pr edit NUMBER
 **Example Edit:**
 ```bash
 # Add missing testing instructions to PR #123
-gh pr edit 123 --body "$(cat <<'EOF'
+cat <<'EOF' | gh api repos/icefoganalytics/traditional-knowledge/pulls/123 -X PATCH -F body=@-
 Fixes https://github.com/icefoganalytics/traditional-knowledge/issues/123
 
 # Context
@@ -339,7 +340,6 @@ Investigation revealed that the search indexing was not considering Indigenous l
 5. Search for a traditional knowledge entry using Indigenous language terms.
 6. Verify the search results display correctly with proper metadata.
 EOF
-)"
 ```
 
 ### 7. Quality Checklist
