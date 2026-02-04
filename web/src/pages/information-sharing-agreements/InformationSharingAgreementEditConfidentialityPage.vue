@@ -147,7 +147,10 @@ async function saveAndGoToNextPage() {
     snack.success("Confidentiality updated.")
 
     await router.push({
-      name: "administration/InformationSharingAgreementsPage",
+      name: 'information-sharing-agreements/InformationSharingAgreementPage',
+      params: {
+        informationSharingAgreementId: props.informationSharingAgreementId,
+      },
     })
   } catch (error) {
     console.error(`Failed to update confidentiality: ${error}`, { error })

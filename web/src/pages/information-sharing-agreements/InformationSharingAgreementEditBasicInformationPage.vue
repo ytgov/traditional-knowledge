@@ -113,7 +113,10 @@
         </v-btn>
         <v-btn
           :to="{
-            name: 'administration/InformationSharingAgreementsPage',
+            name: 'information-sharing-agreements/InformationSharingAgreementPage',
+            params: {
+              informationSharingAgreementId,
+            },
           }"
           class="mt-3 mt-md-0 ml-md-3"
           color="secondary"
