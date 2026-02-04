@@ -44,7 +44,7 @@
           Yukon Government (YG) acknowledges the confidentiality and access identified above and
           will receive Traditional Knowledge (TK) as/in:
         </div>
-        <div class="text-grey-darken-3">
+        <div class="text-grey-darken-3 whitespace-pre-wrap">
           {{ authorizedApplication || "Not specified" }}
         </div>
         <p class="text-body-2 font-italic text-grey-darken-1 mt-6">
@@ -79,3 +79,9 @@ const confidentialityDescription = computed(() => {
   return t(`informationSharingAgreement.confidentialityDescriptions.${props.confidentialityType}`)
 })
 </script>
+
+<style scoped>
+.whitespace-pre-wrap {
+  white-space: pre-wrap; /* preserves line breaks and wraps text if it's too long */
+}
+</style>

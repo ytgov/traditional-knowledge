@@ -87,7 +87,9 @@
               class="mt-4"
             >
               <div class="text-body-2 text-grey-darken-1 mb-1">Additional Measures</div>
-              <div class="font-weight-medium">{{ additionalAccessRestrictions }}</div>
+              <div class="font-weight-medium whitespace-pre-wrap">
+                {{ additionalAccessRestrictions }}
+              </div>
             </div>
           </template>
         </v-col>
@@ -171,10 +173,9 @@ const accessGuidelines = computed(() => {
       .join(" / ")
 
     if (!props.hasAdditionalAccessRestrictions) {
-      return t(
-        "informationSharingAgreement.accessLevelDescriptions.confidential_and_restricted",
-        { departmentBranchUnitHeirarchy }
-      )
+      return t("informationSharingAgreement.accessLevelDescriptions.confidential_and_restricted", {
+        departmentBranchUnitHeirarchy,
+      })
     }
 
     if (props.hasAdditionalAccessRestrictions && !isEmpty(props.additionalAccessRestrictions)) {
@@ -191,3 +192,9 @@ const accessGuidelines = computed(() => {
   return ""
 })
 </script>
+
+<style scoped>
+.whitespace-pre-wrap {
+  white-space: pre-wrap; /* preserves line breaks and wraps text if it's too long */
+}
+</style>

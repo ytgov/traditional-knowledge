@@ -15,7 +15,9 @@
         <div class="text-overline text-grey-darken-1 mb-2">
           Purpose of Traditional Knowledge (TK) Information
         </div>
-        <div class="text-body-1 text-grey-darken-3">{{ purpose || "Not specified" }}</div>
+        <div class="text-body-1 text-grey-darken-3 whitespace-pre-wrap">
+          {{ purpose || "Not specified" }}
+        </div>
       </div>
 
       <v-divider class="my-6" />
@@ -118,3 +120,9 @@ defineProps<{
   receivingGroupSecondaryContactId: number | null | undefined
 }>()
 </script>
+
+<style scoped>
+.whitespace-pre-wrap {
+  white-space: pre-wrap; /* preserves line breaks and wraps text if it's too long */
+}
+</style>
