@@ -31,7 +31,7 @@
       <v-list-item
         title="ISAs"
         :to="{
-          name: 'information-sharing-agreements/InformationSharingAgreementsPage',
+          name: 'InformationSharingAgreementsPage',
         }"
         :exact="false"
         prepend-icon="mdi-file-document-edit"

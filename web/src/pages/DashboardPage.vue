@@ -39,7 +39,7 @@
               <p>
                 <router-link
                   :to="{
-                    name: 'information-sharing-agreements/InformationSharingAgreementsPage',
+                    name: 'InformationSharingAgreementsPage',
                   }"
                   >View the Information Sharing Agreements</router-link
                 >
