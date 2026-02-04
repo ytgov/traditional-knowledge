@@ -3,8 +3,6 @@
     v-model="showDrawer"
     :disable-resize-watcher="false"
     :rail="showRail"
-    :permanent="mdAndUp"
-    :location="!mdAndUp ? 'bottom' : undefined"
     color="#a3a48d"
   >
     <v-list
@@ -36,7 +34,10 @@
         :exact="false"
         prepend-icon="mdi-file-document-edit"
       >
-        <v-tooltip activator="parent" text="Information Sharing Agreements" />
+        <v-tooltip
+          activator="parent"
+          text="Information Sharing Agreements"
+        />
       </v-list-item>
 
       <v-list-item
@@ -52,15 +53,13 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
-import { useDisplay } from "vuetify"
 
 import useCurrentUser from "@/use/use-current-user"
 
-const { mdAndUp } = useDisplay()
-
-defineProps<{ showRail: boolean }>()
-
 const showDrawer = defineModel<boolean>({
+  default: false,
+})
+const showRail = defineModel<boolean>("showRail", {
   default: false,
 })
 
