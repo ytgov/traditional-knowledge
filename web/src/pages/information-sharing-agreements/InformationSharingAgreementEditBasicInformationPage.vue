@@ -102,7 +102,7 @@
     </v-row>
 
     <v-row>
-      <v-col class="d-flex flex-column flex-md-row">
+      <v-col class="d-flex flex-column flex-md-row ga-3">
         <v-btn
           color="primary"
           type="submit"
@@ -118,7 +118,6 @@
               informationSharingAgreementId,
             },
           }"
-          class="mt-3 mt-md-0 ml-md-3"
           color="secondary"
           variant="outlined"
           :loading="isLoading"
