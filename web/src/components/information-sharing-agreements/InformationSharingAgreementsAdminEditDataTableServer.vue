@@ -35,10 +35,9 @@
     </template>
     <template #item.actions="{ item }">
       <div class="d-flex justify-end align-center">
-        <!-- TODO: only show edit button to users who can edit the agreement -->
         <v-btn
           :to="{
-            name: 'information-sharing-agreements/InformationSharingAgreementPage',
+            name: 'administration/information-sharing-agreements/InformationSharingAgreementEditPage',
             params: {
               informationSharingAgreementId: item.id,
             },
@@ -51,7 +50,6 @@
           variant="outlined"
           @click.stop
         />
-        <!-- TODO: only show edit button to users who can edit the agreement -->
         <v-btn
           class="ml-2"
           :loading="isDeleting"
@@ -171,7 +169,7 @@ const router = useRouter()
 
 function goToInformationSharingAgreementPage(informationSharingAgreementId: number) {
   router.push({
-    name: "information-sharing-agreements/InformationSharingAgreementPage",
+    name: "administration/information-sharing-agreements/InformationSharingAgreementPage",
     params: {
       informationSharingAgreementId,
     },
