@@ -11,7 +11,7 @@
     clearable
     no-filter
     persistent-hint
-    @update:model-value="emit('update:modelValue', $event)"
+    @update:model-value="emitModelValueAndSelection"
     @update:search="debouncedUpdateSearchToken"
     @click:clear="reset"
   >
@@ -80,7 +80,19 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "update:modelValue": [userId: number | null | undefined]
+  selected: [user: UserAsIndex]
 }>()
+
+function emitModelValueAndSelection(userId: number | null | undefined) {
+  emit("update:modelValue", userId)
+
+  if (isNil(userId)) return
+
+  const selectedUser = allUsers.value.find((user) => user.id === userId)
+  if (isNil(selectedUser)) return
+
+  emit("selected", selectedUser)
+}
 
 const userId = computed(() => props.modelValue)
 const { user } = useUser(userId)

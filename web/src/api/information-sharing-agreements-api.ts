@@ -6,6 +6,29 @@ import {
   type WhereOptions,
 } from "@/api/base-api"
 
+export enum InformationSharingAgreementAccessLevels {
+  INTERNAL = "internal",
+  PROTECTED_AND_LIMITED = "protected_and_limited",
+  CONFIDENTIAL_AND_RESTRICTED = "confidential_and_restricted",
+}
+
+export enum InformationSharingAgreementExpirationConditions {
+  COMPLETION_OF_PURPOSE = "completion_of_purpose",
+  EXPIRATION_DATE = "expiration_date",
+  UNDETERMINED_WITH_DEFAULT_EXPIRATION = "undetermined_with_default_expiration",
+}
+
+export enum InformationSharingAgreementConfidentialityType {
+  ACCORDANCE = "ACCORDANCE",
+  ACCEPTED_IN_CONFIDENCE = "ACCEPTED_IN_CONFIDENCE",
+}
+
+export enum InformationSharingAgreementStatus {
+  DRAFT = "draft",
+  SIGNED = "signed",
+  CLOSED = "closed",
+}
+
 export type InformationSharingAgreement = {
   id: number
   creatorId: number
@@ -13,6 +36,8 @@ export type InformationSharingAgreement = {
   sharingGroupContactId: number | null
   receivingGroupId: number | null
   receivingGroupContactId: number | null
+  receivingGroupSecondaryContactId: number | null
+  status: InformationSharingAgreementStatus
   identifier: string | null
   sharingGroupInfo: string | null
   receivingGroupInfo: string | null
@@ -30,9 +55,14 @@ export type InformationSharingAgreement = {
   detailLevel: string | null
   detailNotes: string | null
   formats: string | null
-  accessLevels: string | null
-  accessNotes: string | null
-  confidentiality: string | null
+  accessLevel: InformationSharingAgreementAccessLevels | null
+  accessLevelDepartmentRestriction: string | null
+  accessLevelBranchRestriction: string | null
+  accessLevelUnitRestriction: string | null
+  hasAdditionalAccessRestrictions: boolean | null
+  additionalAccessRestrictions: string | null
+  expirationCondition: InformationSharingAgreementExpirationConditions | null
+  confidentialityType: InformationSharingAgreementConfidentialityType | null
   authorizedApplication: string | null
   creditLines: string | null
   creditNotes: string | null
@@ -45,8 +75,8 @@ export type InformationSharingAgreement = {
   fileData: string | null
   fileMimeType: string | null
   fileSize: number | null
-  startDate: string
-  endDate: string
+  startDate: string | null
+  endDate: string | null
   createdAt: string
   updatedAt: string
 }
@@ -58,6 +88,8 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "sharingGroupContactId"
   | "receivingGroupId"
   | "receivingGroupContactId"
+  | "receivingGroupSecondaryContactId"
+  | "status"
   | "identifier"
   | "sharingGroupInfo"
   | "receivingGroupInfo"
@@ -75,9 +107,14 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "detailLevel"
   | "detailNotes"
   | "formats"
-  | "accessLevels"
-  | "accessNotes"
-  | "confidentiality"
+  | "accessLevel"
+  | "accessLevelDepartmentRestriction"
+  | "accessLevelBranchRestriction"
+  | "accessLevelUnitRestriction"
+  | "hasAdditionalAccessRestrictions"
+  | "additionalAccessRestrictions"
+  | "expirationCondition"
+  | "confidentialityType"
   | "authorizedApplication"
   | "creditLines"
   | "creditNotes"

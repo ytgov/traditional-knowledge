@@ -56,6 +56,13 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 - **Server-Side Tables**: Use `v-data-table-server` with `useRouteQuery` for URL state
 - **Component Naming**: `{Model}{Purpose}{VuetifyComponent}.vue` pattern
 
+### Function Naming Patterns
+- **Effect-Based Naming**: Name functions by their complete effect, not trigger conditions
+- **Pattern**: `[primaryEffect](Optionally[SecondaryEffect])` for conditional side effects
+- **Avoid**: `handle*`, `update*With*`, business logic in names
+- **Focus**: WHAT happens, not WHEN or WHY
+- **Example**: `emitExpirationConditionAndOptionallyUpdateEndDate`
+
 ### Backend Service Architecture
 - **Constructor Injection**: Use constructor pattern instead of static methods
 - **Database Transactions**: All write operations wrapped in transactions
@@ -82,7 +89,7 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 - `dev test_web` - Run all web tests (legacy)
 - `dev migrate up` or `dev migrate latest` - Run migrations
 - `dev migrate down` - Rollback last migration
-- `dev migrate make create-table-name` - Create new migration
+- `dev migrate make create-table-name` - **ALWAYS use this command to create migrations** - generates correct local timestamp automatically
 - `dev seed make seed-name` - Create seed file
 - `dev seed run` - Run seeds
 
@@ -190,6 +197,18 @@ This file follows the format from https://agents.md/ for AI agent documentation.
   - Use self-referencing foreign keys with proper constraint naming
   - Find system user by email (`system.user@yukon.ca`) not auth0Subject
   - Use proper TypeScript generics: `.returning<{ id: number }[]>(["id"])`
+  - **CRITICAL: Never manually generate migration timestamps** - Always use `dev migrate make <description>` which generates correct local timestamps automatically
+  - **Foreign key constraints**: Create column first, then add foreign key separately:
+    ```ts
+    table.integer("field_name").nullable()
+
+    table
+      .foreign("field_name")
+      .references("users.id")
+      // optionally depending on the use case
+      // .onDelete("SET NULL")
+    ```
+  - **Down migration cleanup**: Always drop foreign key before dropping column
 
 ### Testing
 

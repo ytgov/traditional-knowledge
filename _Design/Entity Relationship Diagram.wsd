@@ -9,18 +9,46 @@ end note
 entity "archive_items" {
   * id : int [PK]
   --
-  source_id : int [FK]
   user_id : int [FK]
   --
   * is_decision : bit
-  * title : nvarchar(255)
+  * title : nvarchar(2000)
   * status : nvarchar(100)
   * security_level : int
   decision_text : nvarchar(255)
-  description : nvarchar(2000)
+  description : nvarchar(MAX)
   summary : nvarchar(MAX)
   tags : nvarchar(255)
+  sharing_purpose : nvarchar(MAX)
+  * confidentiality_receipt : bit
+  yukon_first_nations : nvarchar(255)
   * submitted_at : datetime2(0)
+  * created_at : datetime2(0)
+  * updated_at : datetime2(0)
+  deleted_at : datetime2(0)
+}
+
+entity "archive_item_audits" {
+  * id : int [PK]
+  --
+  user_id : int [FK]
+  * archive_item_id : int [FK]
+  archive_item_file_id : int [FK]
+  --
+  * action : nvarchar(200)
+  description : nvarchar(2000)
+  * created_at : datetime2(0)
+  * updated_at : datetime2(0)
+  deleted_at : datetime2(0)
+}
+
+entity "archive_item_categories" {
+  * id : int [PK]
+  --
+  * archive_item_id : int [FK]
+  * category_id : int [FK]
+  set_by_user_id : int [FK]
+  --
   * created_at : datetime2(0)
   * updated_at : datetime2(0)
   deleted_at : datetime2(0)
@@ -30,16 +58,17 @@ entity "archive_item_files" {
   * id : int [PK]
   --
   * archive_item_id : int [FK]
-  * bucket : nvarchar(1000)
+  --
+  bucket : nvarchar(1000)
   * original_key : nvarchar(2000)
   * original_file_name : nvarchar(1000)
   * original_mime_type : nvarchar(1000)
   * original_file_size : bigint
-  * pdf_key : nvarchar(2000)
-  * pdf_file_name : nvarchar(1000)
-  * pdf_mime_type : nvarchar(1000)
-  * pdf_file_size : bigint
-  * comment : nvarchar(MAX)
+  pdf_key : nvarchar(2000)
+  pdf_file_name : nvarchar(1000)
+  pdf_mime_type : nvarchar(1000)
+  pdf_file_size : bigint
+  comment : nvarchar(MAX)
   * created_at : datetime2(0)
   * updated_at : datetime2(0)
   deleted_at : datetime2(0)
@@ -52,6 +81,27 @@ entity "archive_item_information_sharing_agreement_access_grants" {
   Database view to make it easier to check what access grants are in effect on an archive item.
 }
 
+entity "categories" {
+  * id : int [PK]
+  --
+  retention_id : int [FK]
+  --
+  * name : nvarchar(255)
+  description : nvarchar(MAX)
+  * created_at : datetime2(0)
+  * updated_at : datetime2(0)
+  deleted_at : datetime2(0)
+}
+
+entity "external_organizations" {
+  * id : int [PK]
+  --
+  * name : nvarchar(200)
+  * created_at : datetime2(0)
+  * updated_at : datetime2(0)
+  deleted_at : datetime2(0)
+}
+
 enum ArchiveItemAccessGrantAccessLevel {
   read
   read_download
@@ -59,18 +109,63 @@ enum ArchiveItemAccessGrantAccessLevel {
   admin
 }
 
+entity "groups" {
+  * id : int [PK]
+  --
+  * creator_id : int [FK]
+  --
+  * name : nvarchar(255)
+  acronym : nvarchar(255)
+  description : nvarchar(MAX)
+  * is_host : bit
+  * created_at : datetime2(0)
+  * updated_at : datetime2(0)
+  deleted_at : datetime2(0)
+}
+
 entity "information_sharing_agreements" {
   * id : int [PK]
   --
   * creator_id : int [FK]
-  * sharing_group_id : int [FK]
-  * sharing_group_contact_id : int [FK]
-  * receiving_group_id : int [FK]  -- host group only
-  * receiving_group_contact_id : int [FK]
+  sharing_group_id : int [FK]
+  sharing_group_contact_id : int [FK]
+  receiving_group_id : int [FK]
+  receiving_group_contact_id : int [FK]
+  --
+  identifier : nvarchar(100)
   * title : nvarchar(255)
   description : nvarchar(MAX)
   * start_date : date
   * end_date : date
+  sharing_group_info : nvarchar(MAX)
+  receiving_group_info : nvarchar(MAX)
+  sharing_group_contact_name : nvarchar(255)
+  receiving_group_contact_name : nvarchar(255)
+  sharing_group_contact_title : nvarchar(255)
+  receiving_group_contact_title : nvarchar(255)
+  sharing_group_signed_by : nvarchar(100)
+  receiving_group_signed_by : nvarchar(100)
+  sharing_group_signed_date : date
+  receiving_group_signed_date : date
+  purpose : nvarchar(MAX)
+  detail_level : nvarchar(250)
+  detail_notes : nvarchar(MAX)
+  formats : nvarchar(500)
+  access_levels : nvarchar(500)
+  access_notes : nvarchar(MAX)
+  confidentiality : nvarchar(500)
+  authorized_application : nvarchar(MAX)
+  credit_lines : nvarchar(500)
+  credit_notes : nvarchar(MAX)
+  expiration_actions : nvarchar(500)
+  expiration_notes : nvarchar(MAX)
+  breach_actions : nvarchar(500)
+  breach_notes : nvarchar(MAX)
+  disclosure_notes : nvarchar(MAX)
+  file_name : nvarchar(255)
+  file_data : varbinary(MAX)
+  file_mime_type : nvarchar(255)
+  file_size : int
   * created_at : datetime2(0)
   * updated_at : datetime2(0)
   deleted_at : datetime2(0)
@@ -81,11 +176,13 @@ entity "information_sharing_agreement_access_grants" {
   --
   * information_sharing_agreement_id : int [FK]
   * group_id : int [FK]
-  user_id : int [FK] -- most access will be to individual users
+  user_id : int [FK]
   * creator_id : int [FK]
-  * access_level : nvarchar(20) -- ArchiveItemAccessGrantAccessLevel
+  --
+  * access_level : nvarchar(255) -- ArchiveItemAccessGrantAccessLevel, default 'read'
   * created_at : datetime2(0)
   * updated_at : datetime2(0)
+  deleted_at : datetime2(0)
   --
   Grants access to archive items attached to an information sharing agreement to an entire group, or just a user in the group.
 }
@@ -97,26 +194,43 @@ entity "information_sharing_agreement_access_grant_siblings" {
   Database view to make policy checks simpler
 }
 
-
 entity "information_sharing_agreement_archive_items" {
   * id : int [PK]
   --
   * information_sharing_agreement_id : int [FK]
   * archive_item_id : int [FK]
   * creator_id : int [FK]
+  --
   * created_at : datetime2(0)
   * updated_at : datetime2(0)
   deleted_at : datetime2(0)
 }
 
-entity "groups" {
+entity "notifications" {
   * id : int [PK]
   --
-  * creator_id : int [FK]
-  * name : nvarchar(250)
-  [acronym] : nvarchar(250)
-  description : nvarchar(500)
-  * is_host : bit
+  * user_id : int [FK]
+  --
+  read_at : datetime2(0)
+  * title : nvarchar(250)
+  subtitle : nvarchar(250)
+  href : nvarchar(1000)
+  * source_type : nvarchar(50)
+  * created_at : datetime2(0)
+  * updated_at : datetime2(0)
+  deleted_at : datetime2(0)
+}
+
+entity "retentions" {
+  * id : int [PK]
+  --
+  * name : nvarchar(255)
+  description : nvarchar(2000)
+  * is_default : bit
+  * expire_schedule : nvarchar(50)
+  * expire_action : nvarchar(255)
+  retention_days : int
+  retention_date : datetime2(0)
   * created_at : datetime2(0)
   * updated_at : datetime2(0)
   deleted_at : datetime2(0)
@@ -125,18 +239,29 @@ entity "groups" {
 entity "users" {
   * id : int [PK]
   --
+  external_organization_id : int [FK]
+  creator_id : int [FK]
+  --
   * email : nvarchar(100)
   * auth0_subject : nvarchar(100)
   * first_name : nvarchar(100)
   * last_name : nvarchar(100)
   * display_name : nvarchar(200)
   * roles : nvarchar(255) -- comma separated list of UserRoles
-  [title] : nvarchar(100)
+  title : nvarchar(100)
   department : nvarchar(100)
   division : nvarchar(100)
   branch : nvarchar(100)
   unit : nvarchar(100)
+  phone_number : nvarchar(50)
+  active_directory_identifier : uniqueidentifier
+  * is_external : bit
+  email_notifications_enabled : bit
+  last_sync_success_at : datetime2(0)
+  last_sync_failure_at : datetime2(0)
+  last_active_at : datetime2(0)
   deactivated_at : datetime2(0)
+  deactivation_reason : nvarchar(MAX)
   * created_at : datetime2(0)
   * updated_at : datetime2(0)
   deleted_at : datetime2(0)
@@ -153,7 +278,8 @@ entity "user_groups" {
   * user_id : int [FK]
   * group_id : int [FK]
   * creator_id : int [FK]
-  * is_admin : bit [default false]
+  --
+  * is_admin : bit
   * created_at : datetime2(0)
   * updated_at : datetime2(0)
   deleted_at : datetime2(0)
@@ -162,22 +288,38 @@ entity "user_groups" {
 }
 
 ' Relationships
-archive_items::id }o--|| archive_item_files::archive_item_id
-archive_items::id }o--|| information_sharing_agreement_archive_items::archive_item_id
-archive_items::id }o--|| archive_item_information_sharing_agreement_access_grants::archive_item_id
-groups::id }o--|| information_sharing_agreements::receiving_group_id
-groups::id }o--|| information_sharing_agreements::sharing_group_id
-groups::id }o--|| user_groups::group_id
-information_sharing_agreement_access_grants::group_id ||--o{ groups::id
-information_sharing_agreement_access_grants::user_id |o--o{ users::id
-information_sharing_agreement_access_grants::creator_id ||--o{ users::id
-information_sharing_agreement_access_grants::access_level ||--o| ArchiveItemAccessGrantAccessLevel
-information_sharing_agreement_access_grants::id }o--|| archive_item_information_sharing_agreement_access_grants::information_sharing_agreement_access_grant_id
-information_sharing_agreements::id }o--|| information_sharing_agreement_archive_items::information_sharing_agreement_id
-information_sharing_agreements::receiving_group_contact_id ||--o{ users::id
-information_sharing_agreements::sharing_group_contact_id ||--o{ users::id
+archive_item_audits::archive_item_id ||--o{ archive_items::id
+archive_item_audits::archive_item_file_id |o--o{ archive_item_files::id
+archive_item_audits::user_id |o--o{ users::id
+archive_item_categories::archive_item_id ||--o{ archive_items::id
+archive_item_categories::category_id ||--o{ categories::id
+archive_item_categories::set_by_user_id |o--o{ users::id
+archive_item_files::archive_item_id ||--o{ archive_items::id
+archive_item_information_sharing_agreement_access_grants::archive_item_id ||--o{ archive_items::id
+archive_item_information_sharing_agreement_access_grants::information_sharing_agreement_access_grant_id ||--o{ information_sharing_agreement_access_grants::id
+archive_items::user_id |o--o{ users::id
+categories::retention_id |o--o{ retentions::id
+groups::creator_id ||--o{ users::id
 information_sharing_agreement_access_grant_siblings::information_sharing_agreement_access_grant_id ||--o{ information_sharing_agreement_access_grants::id
 information_sharing_agreement_access_grant_siblings::information_sharing_agreement_access_grant_sibling_id ||--o{ information_sharing_agreement_access_grants::id
-users::id }o--|| user_groups::user_id
+information_sharing_agreement_access_grants::access_level ||--o| ArchiveItemAccessGrantAccessLevel
+information_sharing_agreement_access_grants::creator_id ||--o{ users::id
+information_sharing_agreement_access_grants::group_id ||--o{ groups::id
+information_sharing_agreement_access_grants::information_sharing_agreement_id ||--o{ information_sharing_agreements::id
+information_sharing_agreement_access_grants::user_id |o--o{ users::id
+information_sharing_agreement_archive_items::archive_item_id ||--o{ archive_items::id
+information_sharing_agreement_archive_items::creator_id ||--o{ users::id
+information_sharing_agreement_archive_items::information_sharing_agreement_id ||--o{ information_sharing_agreements::id
+information_sharing_agreements::creator_id ||--o{ users::id
+information_sharing_agreements::receiving_group_contact_id |o--o{ users::id
+information_sharing_agreements::receiving_group_id |o--o{ groups::id
+information_sharing_agreements::sharing_group_contact_id |o--o{ users::id
+information_sharing_agreements::sharing_group_id |o--o{ groups::id
+notifications::user_id ||--o{ users::id
+user_groups::creator_id ||--o{ users::id
+user_groups::group_id ||--o{ groups::id
+user_groups::user_id ||--o{ users::id
+users::creator_id |o--o{ users::id
+users::external_organization_id |o--o{ external_organizations::id
 users::roles ||--o{ UserRoles
 @enduml

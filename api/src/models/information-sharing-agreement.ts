@@ -15,6 +15,7 @@ import {
   HasMany,
   NotNull,
   PrimaryKey,
+  ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
 import { isUndefined } from "lodash"
 
@@ -24,10 +25,38 @@ import InformationSharingAgreementAccessGrant from "@/models/information-sharing
 import InformationSharingAgreementArchiveItem from "@/models/information-sharing-agreement-archive-item"
 import User from "@/models/user"
 
+export enum InformationSharingAgreementAccessLevels {
+  INTERNAL = "internal",
+  PROTECTED_AND_LIMITED = "protected_and_limited",
+  CONFIDENTIAL_AND_RESTRICTED = "confidential_and_restricted",
+}
+
+export enum InformationSharingAgreementExpirationConditions {
+  COMPLETION_OF_PURPOSE = "completion_of_purpose",
+  EXPIRATION_DATE = "expiration_date",
+  UNDETERMINED_WITH_DEFAULT_EXPIRATION = "undetermined_with_default_expiration",
+}
+
+export enum InformationSharingAgreementConfidentialityType {
+  ACCORDANCE = "ACCORDANCE",
+  ACCEPTED_IN_CONFIDENCE = "ACCEPTED_IN_CONFIDENCE",
+}
+
+export enum InformationSharingAgreementStatus {
+  DRAFT = "draft",
+  SIGNED = "signed",
+  CLOSED = "closed",
+}
+
 export class InformationSharingAgreement extends BaseModel<
   InferAttributes<InformationSharingAgreement>,
   InferCreationAttributes<InformationSharingAgreement>
 > {
+  static readonly AccessLevels = InformationSharingAgreementAccessLevels
+  static readonly ExpirationConditions = InformationSharingAgreementExpirationConditions
+  static readonly ConfidentialityTypes = InformationSharingAgreementConfidentialityType
+  static readonly Status = InformationSharingAgreementStatus
+
   @Attribute(DataTypes.INTEGER)
   @PrimaryKey
   @AutoIncrement
@@ -48,6 +77,14 @@ export class InformationSharingAgreement extends BaseModel<
 
   @Attribute(DataTypes.INTEGER)
   declare receivingGroupContactId: number | null
+
+  @Attribute(DataTypes.INTEGER)
+  declare receivingGroupSecondaryContactId: number | null
+
+  @Attribute(DataTypes.STRING)
+  @NotNull
+  @Default("draft")
+  declare status: CreationOptional<InformationSharingAgreementStatus>
 
   @Attribute(DataTypes.STRING(100))
   declare identifier: string | null
@@ -102,13 +139,31 @@ export class InformationSharingAgreement extends BaseModel<
   declare formats: string | null
 
   @Attribute(DataTypes.STRING(500))
-  declare accessLevels: string | null
+  @ValidateAttribute({
+    isIn: {
+      args: [[...Object.values(InformationSharingAgreementAccessLevels), null]],
+      msg: `Access level must be one of ${[...Object.values(InformationSharingAgreementAccessLevels), null].join(", ")}`,
+    },
+  })
+  declare accessLevel: InformationSharingAgreementAccessLevels | null
+
+  @Attribute(DataTypes.STRING)
+  declare accessLevelDepartmentRestriction: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare accessLevelBranchRestriction: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare accessLevelUnitRestriction: string | null
+
+  @Attribute(DataTypes.BOOLEAN)
+  declare hasAdditionalAccessRestrictions: boolean | null
 
   @Attribute(DataTypes.TEXT)
-  declare accessNotes: string | null
+  declare additionalAccessRestrictions: string | null
 
   @Attribute(DataTypes.STRING(500))
-  declare confidentiality: string | null
+  declare confidentialityType: InformationSharingAgreementConfidentialityType | null
 
   @Attribute(DataTypes.TEXT)
   declare authorizedApplication: string | null
@@ -177,12 +232,19 @@ export class InformationSharingAgreement extends BaseModel<
   declare fileSize: number | null
 
   @Attribute(DataTypes.DATE)
-  @NotNull
-  declare startDate: Date
+  declare startDate: Date | null
 
   @Attribute(DataTypes.DATE)
-  @NotNull
-  declare endDate: Date
+  declare endDate: Date | null
+
+  @Attribute(DataTypes.STRING(50))
+  @ValidateAttribute({
+    isIn: {
+      args: [[...Object.values(InformationSharingAgreementExpirationConditions), null]],
+      msg: `Expiration condition must be one of ${[...Object.values(InformationSharingAgreementExpirationConditions), null].join(", ")}`,
+    },
+  })
+  declare expirationCondition: InformationSharingAgreementExpirationConditions | null
 
   @Attribute(DataTypes.DATE(0))
   @NotNull
@@ -204,6 +266,10 @@ export class InformationSharingAgreement extends BaseModel<
     }
 
     return this.accessGrants.some((accessGrant) => accessGrant.userId === userId)
+  }
+
+  isDraft(): boolean {
+    return this.status === InformationSharingAgreement.Status.DRAFT
   }
 
   // Associations

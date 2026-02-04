@@ -13,6 +13,8 @@ export type AgreementShowView = Pick<
   | "sharingGroupContactId"
   | "receivingGroupId"
   | "receivingGroupContactId"
+  | "receivingGroupSecondaryContactId"
+  | "status"
   | "identifier"
   | "sharingGroupInfo"
   | "receivingGroupInfo"
@@ -28,9 +30,14 @@ export type AgreementShowView = Pick<
   | "detailLevel"
   | "detailNotes"
   | "formats"
-  | "accessLevels"
-  | "accessNotes"
-  | "confidentiality"
+  | "accessLevel"
+  | "accessLevelDepartmentRestriction"
+  | "accessLevelBranchRestriction"
+  | "accessLevelUnitRestriction"
+  | "hasAdditionalAccessRestrictions"
+  | "additionalAccessRestrictions"
+  | "expirationCondition"
+  | "confidentialityType"
   | "authorizedApplication"
   | "creditLines"
   | "creditNotes"
@@ -45,8 +52,8 @@ export type AgreementShowView = Pick<
   | "createdAt"
   | "updatedAt"
 > & {
-  startDate: string
-  endDate: string
+  startDate: string | null
+  endDate: string | null
   sharingGroupSignedDate: string | null
   receivingGroupSignedDate: string | null
 }
@@ -71,6 +78,8 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "sharingGroupContactId",
         "receivingGroupId",
         "receivingGroupContactId",
+        "receivingGroupSecondaryContactId",
+        "status",
         "identifier",
         "sharingGroupInfo",
         "receivingGroupInfo",
@@ -86,9 +95,14 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "detailLevel",
         "detailNotes",
         "formats",
-        "accessLevels",
-        "accessNotes",
-        "confidentiality",
+        "accessLevel",
+        "accessLevelDepartmentRestriction",
+        "accessLevelBranchRestriction",
+        "accessLevelUnitRestriction",
+        "hasAdditionalAccessRestrictions",
+        "additionalAccessRestrictions",
+        "expirationCondition",
+        "confidentialityType",
         "authorizedApplication",
         "creditLines",
         "creditNotes",
