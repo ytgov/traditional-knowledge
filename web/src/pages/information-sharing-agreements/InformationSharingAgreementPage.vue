@@ -47,7 +47,7 @@
           :authorized-application="informationSharingAgreement.authorizedApplication"
         />
 
-        <div class="d-flex justify-space-between mt-4 ga-3 px-6 py-4">
+        <div class="mt-4 d-flex justify-space-between ga-3 px-6 py-4">
           <v-btn
             color="primary"
             size="large"
