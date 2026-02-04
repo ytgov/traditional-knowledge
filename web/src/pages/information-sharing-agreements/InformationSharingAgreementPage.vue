@@ -54,14 +54,9 @@
           <v-btn
             color="primary"
             size="large"
-            :to="{
-              name: 'information-sharing-agreements/InformationSharingAgreementEditPage',
-              params: {
-                informationSharingAgreementId,
-              },
-            }"
+            @click="printAgreement"
           >
-            Publish Agreement
+            Print Agreement
           </v-btn>
           <div class="d-flex flex-column flex-md-row justify-end ga-3">
             <v-btn
@@ -114,6 +109,10 @@ const informationSharingAgreementIdAsNumber = computed(() =>
 const { informationSharingAgreement } = useInformationSharingAgreement(
   informationSharingAgreementIdAsNumber
 )
+
+const printAgreement = () => {
+  window.alert("TODO: Implement printing of agreement for signature")
+}
 
 const pageTitle = computed(() => {
   if (isNil(informationSharingAgreement.value)) {

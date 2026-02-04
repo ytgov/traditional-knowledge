@@ -44,7 +44,6 @@ export enum InformationSharingAgreementConfidentialityType {
 
 export enum InformationSharingAgreementStatus {
   DRAFT = "draft",
-  PUBLISHED = "published",
   SIGNED = "signed",
   CLOSED = "closed",
 }
