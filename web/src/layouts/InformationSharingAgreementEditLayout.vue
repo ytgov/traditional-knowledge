@@ -1,37 +1,83 @@
 <template>
-  <RoutableExpansionPanels
-    :panels="panels"
-    :to="{
-      name: 'information-sharing-agreements/InformationSharingAgreementEditPage',
-      params: {
-        informationSharingAgreementId: props.informationSharingAgreementId,
-      },
-    }"
-  >
-    <template #basic-information.subtitle>
-      {{ basicInformationSubtitle }}
-    </template>
+  <v-container class="pa-0">
+    <div>
+      <h1 class="text-h4 font-weight-bold mt-0 mb-2">Information Sharing Agreement</h1>
+      <v-skeleton-loader
+        v-if="isNil(informationSharingAgreement)"
+        type="text"
+      />
+      <div
+        v-else
+        class="d-flex align-center ga-6 text-body-2 text-medium-emphasis"
+      >
+        <div class="d-flex align-center ga-1">
+          <v-icon
+            size="small"
+            class="opacity-70"
+          >
+            mdi-identifier
+          </v-icon>
+          <span>
+            Agreement ID:
+            <span class="text-high-emphasis font-weight-medium">
+              #ISA-{{ informationSharingAgreement.id }}
+            </span>
+          </span>
+        </div>
+        <div class="d-flex align-center ga-1">
+          <v-icon
+            size="small"
+            class="opacity-70"
+          >
+            mdi-update
+          </v-icon>
+          <span>
+            Last Updated:
+            <span class="text-high-emphasis font-weight-medium">
+              {{ formatDateTime(informationSharingAgreement.updatedAt) }}
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
 
-    <template #duration.subtitle>
-      {{ durationSubtitle }}
-    </template>
+    <RoutableExpansionPanels
+      class="mt-6"
+      :panels="panels"
+      :to="{
+        name: 'information-sharing-agreements/InformationSharingAgreementEditPage',
+        params: {
+          informationSharingAgreementId,
+        },
+      }"
+    >
+      <template #basic-information.subtitle>
+        {{ basicInformationSubtitle }}
+      </template>
 
-    <template #access.subtitle>
-      {{ accessSubtitle }}
-    </template>
+      <template #duration.subtitle>
+        {{ durationSubtitle }}
+      </template>
 
-    <template #confidentiality.subtitle>
-      {{ confidentialitySubtitle }}
-    </template>
+      <template #access.subtitle>
+        {{ accessSubtitle }}
+      </template>
 
-    <router-view class="mt-4" />
-  </RoutableExpansionPanels>
+      <template #confidentiality.subtitle>
+        {{ confidentialitySubtitle }}
+      </template>
+
+      <router-view class="mt-4" />
+    </RoutableExpansionPanels>
+  </v-container>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue"
 import { useI18n } from "vue-i18n"
 import { isNil } from "lodash"
+
+import { formatDateTime } from "@/utils/formatters"
 
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
