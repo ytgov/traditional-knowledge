@@ -25,7 +25,7 @@ const { t } = useI18n()
 
 const confidentialityTypes = computed(() =>
   Object.values(InformationSharingAgreementConfidentialityType).map((confidentialityType) => ({
-    title: t(`informationSharingAgreement.confidentiality.${confidentialityType}`),
+    title: t(`informationSharingAgreement.confidentialityTypes.${confidentialityType}`),
     value: confidentialityType,
   }))
 )
