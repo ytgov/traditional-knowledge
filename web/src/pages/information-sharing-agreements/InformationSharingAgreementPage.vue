@@ -10,6 +10,7 @@
     <v-row>
       <v-col>
         <InformationSharingAgreementBasicInformationCard
+          class="rounded-lg"
           :title="informationSharingAgreement.title"
           :purpose="informationSharingAgreement.purpose"
           :sharing-group-contact-name="informationSharingAgreement.sharingGroupContactName"
@@ -19,13 +20,13 @@
         />
 
         <InformationSharingAgreementDurationCard
-          class="mt-6"
+          class="mt-6 rounded-lg"
           :expiration-condition="informationSharingAgreement.expirationCondition"
           :end-date="informationSharingAgreement.endDate"
         />
 
         <InformationSharingAgreementAccessCard
-          class="mt-6"
+          class="mt-6 rounded-lg"
           :access-level="informationSharingAgreement.accessLevel"
           :access-level-department-restriction="
             informationSharingAgreement.accessLevelDepartmentRestriction
@@ -41,7 +42,7 @@
         />
 
         <InformationSharingAgreementConfidentialityCard
-          class="mt-6"
+          class="mt-6 rounded-lg"
           :confidentiality-type="informationSharingAgreement.confidentialityType"
           :authorized-application="informationSharingAgreement.authorizedApplication"
         />

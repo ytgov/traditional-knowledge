@@ -1,5 +1,5 @@
 <template>
-  <v-card class="rounded-lg">
+  <v-card>
     <v-card-title class="bg-grey-lighten-4 d-flex align-center ga-3 px-6 py-4">
       <v-icon color="accent">mdi-key-outline</v-icon>
       <span>Access</span>
