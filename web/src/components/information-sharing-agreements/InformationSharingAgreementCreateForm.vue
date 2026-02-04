@@ -149,13 +149,6 @@ async function saveWrapper() {
     return
   }
 
-  console.log("About to create - frontend debug:", {
-    hasFileData: !!informationSharingAgreementAttributes.value.fileData,
-    fileDataLength: informationSharingAgreementAttributes.value.fileData?.length,
-    fileName: informationSharingAgreementAttributes.value.fileName,
-    allKeys: Object.keys(informationSharingAgreementAttributes.value),
-  })
-
   isLoading.value = true
   try {
     await informationSharingAgreementsApi.create(informationSharingAgreementAttributes.value)
