@@ -5,7 +5,7 @@
   >
     <v-row class="mt-2">
       <v-col>
-        <InformationSharingAgreementBasicInformationCard
+        <InformationSharingAgreementBasicInformationEditCard
           v-model:title="informationSharingAgreementAttributes.title"
           v-model:purpose="informationSharingAgreementAttributes.purpose"
           v-model:sharing-group-contact-id="
@@ -30,7 +30,7 @@
 
     <v-row>
       <v-col>
-        <AgreementDurationCard
+        <InformationSharingAgreementDurationEditCard
           v-model:end-date="informationSharingAgreementAttributes.endDate"
           v-model:expiration-condition="informationSharingAgreementAttributes.expirationCondition"
           class="border"
@@ -40,7 +40,7 @@
 
     <v-row>
       <v-col cols="12">
-        <AccessLevelDescriptionCard
+        <InformationSharingAgreementAccessEditCard
           v-model:access-level="informationSharingAgreementAttributes.accessLevel"
           v-model:access-level-department-restriction="
             informationSharingAgreementAttributes.accessLevelDepartmentRestriction
@@ -64,7 +64,7 @@
 
     <v-row>
       <v-col cols="12">
-        <ConfidentialityCard
+        <InformationSharingAgreementConfidentialityEditCard
           v-model:confidentiality-type="informationSharingAgreementAttributes.confidentialityType"
           v-model:authorized-application="
             informationSharingAgreementAttributes.authorizedApplication
@@ -113,10 +113,10 @@ import informationSharingAgreementsApi, {
 
 import useSnack from "@/use/use-snack"
 
-import AccessLevelDescriptionCard from "@/components/information-sharing-agreements/AccessLevelDescriptionCard.vue"
-import AgreementDurationCard from "@/components/information-sharing-agreements/AgreementDurationCard.vue"
-import ConfidentialityCard from "@/components/information-sharing-agreements/ConfidentialityCard.vue"
-import InformationSharingAgreementBasicInformationCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationCard.vue"
+import InformationSharingAgreementAccessEditCard from "@/components/information-sharing-agreements/InformationSharingAgreementAccessEditCard.vue"
+import InformationSharingAgreementBasicInformationEditCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationEditCard.vue"
+import InformationSharingAgreementConfidentialityEditCard from "@/components/information-sharing-agreements/InformationSharingAgreementConfidentialityEditCard.vue"
+import InformationSharingAgreementDurationEditCard from "@/components/information-sharing-agreements/InformationSharingAgreementDurationEditCard.vue"
 
 const informationSharingAgreementAttributes = ref<Partial<InformationSharingAgreement>>({
   title: undefined,

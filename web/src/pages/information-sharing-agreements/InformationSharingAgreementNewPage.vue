@@ -5,7 +5,7 @@
   >
     <v-row class="mt-2">
       <v-col>
-        <InformationSharingAgreementBasicInformationCard
+        <InformationSharingAgreementBasicInformationEditCard
           v-model:title="informationSharingAgreementAttributes.title"
           v-model:purpose="informationSharingAgreementAttributes.purpose"
           v-model:sharing-group-contact-id="
@@ -70,7 +70,7 @@ import informationSharingAgreementsApi, {
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 import useSnack from "@/use/use-snack"
 
-import InformationSharingAgreementBasicInformationCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationCard.vue"
+import InformationSharingAgreementBasicInformationEditCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationEditCard.vue"
 
 const informationSharingAgreementAttributes = ref<Partial<InformationSharingAgreement>>({
   title: undefined,
