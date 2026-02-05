@@ -130,7 +130,7 @@ const pageTitle = computed(() => {
   return title
 })
 
-useBreadcrumbs(pageTitle.value, [
+useBreadcrumbs(pageTitle, [
   BASE_CRUMB,
   {
     title: "Information Sharing Agreements",
