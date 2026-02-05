@@ -65,16 +65,20 @@
         <v-btn v-if="policy?.update" color="primary" v-bind="editButtonProps">
           Edit
         </v-btn>
-        <v-btn color="secondary" @click="generateDocument">
-          Generate Document
-        </v-btn>
+        <AuthenticatedPostForm
+          :action-url="generateAcknowledgementUrl"
+          text="enerate Document"
+          :activator-props="{
+            color: 'secondary',
+          }"
+        />
       </div>
     </template>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { toRefs } from "vue"
+import { computed, toRefs } from "vue"
 import { isNil } from "lodash"
 
 import { type VBtn } from "vuetify/components"
@@ -83,6 +87,7 @@ import { formatDate } from "@/utils/formatters"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import informationSharingAgreementsApi from "@/api/information-sharing-agreements-api"
 
+import AuthenticatedPostForm from "@/components/common/AuthenticatedPostForm.vue"
 import GroupChip from "@/components/groups/GroupChip.vue"
 import UserChip from "@/components/users/UserChip.vue"
 
@@ -116,6 +121,10 @@ const { informationSharingAgreement, policy, isLoading } = useInformationSharing
   informationSharingAgreementId
 )
 
+const generateAcknowledgementUrl = computed(() =>
+  informationSharingAgreementsApi.generateAcknowledgementPath(informationSharingAgreementId.value)
+)
+
 async function downloadFile() {
   if (!informationSharingAgreement.value) return
 
@@ -138,28 +147,6 @@ async function downloadFile() {
   }
 }
 
-async function generateDocument() {
-  if (!informationSharingAgreement.value) return
-
-  try {
-    const blob = await informationSharingAgreementsApi.generateDocument(
-      informationSharingAgreement.value.id
-    )
-
-    // Create a temporary URL for the blob and trigger download
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement("a")
-    link.href = url
-    const filename = `ISA_${informationSharingAgreement.value.identifier || informationSharingAgreement.value.id}.docx`
-    link.download = filename
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
-  } catch (error) {
-    console.error("Error generating document:", error)
-  }
-}
 </script>
 
 <style scoped>
