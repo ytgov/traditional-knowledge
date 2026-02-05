@@ -6,11 +6,11 @@ import quickStartBufferStream from "@/utils/quick-start-buffer-stream"
 
 import { InformationSharingAgreement } from "@/models"
 import { InformationSharingAgreementPolicy } from "@/policies"
-import { CreateService } from "@/services/information-sharing-agreements/acknowledgement-template"
+import { CreateService } from "@/services/information-sharing-agreements/generate-acknowledgement"
 
 import BaseController from "@/controllers/base-controller"
 
-export class AcknowledgementTemplateController extends BaseController<InformationSharingAgreement> {
+export class GenerateAcknowledgementController extends BaseController<InformationSharingAgreement> {
   async create() {
     try {
       const informationSharingAgreement = await this.loadInformationSharingAgreement()
@@ -76,4 +76,4 @@ export class AcknowledgementTemplateController extends BaseController<Informatio
   }
 }
 
-export default AcknowledgementTemplateController
+export default GenerateAcknowledgementController

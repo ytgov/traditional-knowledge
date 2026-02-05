@@ -152,9 +152,9 @@ router
 
 router
   .route(
-    "/api/information-sharing-agreements/:informationSharingAgreementId/acknowledgement-template"
+    "/api/information-sharing-agreements/:informationSharingAgreementId/generate-acknowledgement"
   )
-  .post(InformationSharingAgreements.AcknowledgementTemplateController.create)
+  .post(InformationSharingAgreements.GenerateAcknowledgementController.create)
 
 router
   .route("/api/information-sharing-agreement-access-grants")

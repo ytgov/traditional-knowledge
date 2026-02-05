@@ -6,4 +6,4 @@ export { DocumentGeneratorService } from "./document-generator-service"
 export { EnsureAdminAccessService } from "./admin-access-grants-service"
 
 // Bundled exports
-export * as AcknowledgementTemplate from "./acknowledgement-template"
+export * as GenerateAcknowledgement from "./generate-acknowledgement"

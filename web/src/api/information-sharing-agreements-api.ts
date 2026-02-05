@@ -142,8 +142,8 @@ export type InformationSharingAgreementQueryOptions = QueryOptions<
 >
 
 export const informationSharingAgreementsApi = {
-  acknowledgementTemplatePath(informationSharingAgreementId: number) {
-    return `${API_BASE_URL}/api/information-sharing-agreements/${informationSharingAgreementId}/acknowledgement-template?format=docx`
+  generateAcknowledgementPath(informationSharingAgreementId: number) {
+    return `${API_BASE_URL}/api/information-sharing-agreements/${informationSharingAgreementId}/generate-acknowledgement?format=docx`
   },
 
   async list(params: InformationSharingAgreementQueryOptions = {}): Promise<{

@@ -52,7 +52,7 @@
 
         <div class="mt-4 d-flex flex-column flex-md-row justify-space-between ga-3 px-6 py-4">
           <AuthenticatedPostForm
-            :action-url="acknowledgementTemplateUrl"
+            :action-url="generateAcknowledgementUrl"
             text="Print for Signature"
             :activator-props="{
               color: 'primary',
@@ -115,11 +115,11 @@ const { informationSharingAgreement } = useInformationSharingAgreement(
   informationSharingAgreementIdAsNumber
 )
 
-const acknowledgementTemplateUrl = computed(() => {
-  return informationSharingAgreementsApi.acknowledgementTemplatePath(
+const generateAcknowledgementUrl = computed(() =>
+  informationSharingAgreementsApi.generateAcknowledgementPath(
     informationSharingAgreementIdAsNumber.value
   )
-})
+)
 
 const pageTitle = computed(() => {
   if (isNil(informationSharingAgreement.value)) {

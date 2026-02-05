@@ -1,1 +1,1 @@
-export { AcknowledgementTemplateController } from "./acknowledgement-template-controller"
+export { GenerateAcknowledgementController } from "./generate-acknowledgement-controller"
