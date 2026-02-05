@@ -16,6 +16,7 @@ import { logger } from "@/utils/logger"
 import migrator from "@/db/migrator"
 
 import {
+  bodyAuthorizationHoistMiddleware,
   jwtMiddleware,
   ensureAndAuthorizeCurrentUser,
   trackLastActiveMiddleware,
@@ -54,7 +55,13 @@ router.route("/_status").get((_req: Request, res: Response) => {
 router.use("/migrate", migrator.migrationRouter)
 
 // api routes
-router.use("/api", jwtMiddleware, ensureAndAuthorizeCurrentUser, trackLastActiveMiddleware)
+router.use(
+  "/api",
+  bodyAuthorizationHoistMiddleware,
+  jwtMiddleware,
+  ensureAndAuthorizeCurrentUser,
+  trackLastActiveMiddleware
+)
 
 router.route("/api/current-user").get(CurrentUserController.show)
 

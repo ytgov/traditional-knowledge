@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/config"
 import http from "@/api/http-client"
 import {
   type FiltersOptions,
@@ -141,6 +142,10 @@ export type InformationSharingAgreementQueryOptions = QueryOptions<
 >
 
 export const informationSharingAgreementsApi = {
+  acknowledgementTemplatePath(informationSharingAgreementId: number) {
+    return `${API_BASE_URL}/api/information-sharing-agreements/${informationSharingAgreementId}/acknowledgement-template.docx`
+  },
+
   async list(params: InformationSharingAgreementQueryOptions = {}): Promise<{
     informationSharingAgreements: InformationSharingAgreement[]
     totalCount: number
@@ -186,15 +191,6 @@ export const informationSharingAgreementsApi = {
   async downloadFile(informationSharingAgreementId: number): Promise<Blob> {
     const { data } = await http.get(
       `/api/information-sharing-agreements/${informationSharingAgreementId}/file`,
-      {
-        responseType: "blob",
-      }
-    )
-    return data
-  },
-  async generateDocument(informationSharingAgreementId: number): Promise<Blob> {
-    const { data } = await http.get(
-      `/api/information-sharing-agreements/${informationSharingAgreementId}/generate-document`,
       {
         responseType: "blob",
       }
