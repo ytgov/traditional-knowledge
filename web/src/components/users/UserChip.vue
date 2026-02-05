@@ -114,7 +114,7 @@ import useSnack from "@/use/use-snack"
 
 const props = withDefaults(
   defineProps<{
-    userId: number
+    userId: number | null
     classes?: Record<string, boolean> | string[] | string
     size?: VChip["size"]
   }>(),

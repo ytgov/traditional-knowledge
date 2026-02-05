@@ -20,12 +20,19 @@ export async function ensureAndAuthorizeCurrentUser(
   res: Response,
   next: NextFunction
 ) {
+  const auth0Subject = req.auth?.sub || "BLANK_SUBJECT_NOT_VALID"
   const user = await User.findOne({
-    where: { auth0Subject: req.auth?.sub || "" },
+    where: {
+      auth0Subject,
+    },
     include: ["adminGroups", "adminInformationSharingAgreementAccessGrants"],
   })
 
-  if (!isNil(user)) {
+  if (!isNil(user) && !isNil(user.deactivatedAt)) {
+    return res.status(401).json({
+      message: "User authentication failed.",
+    })
+  } else if (!isNil(user)) {
     req.currentUser = user
     return next()
   }
@@ -39,11 +46,15 @@ export async function ensureAndAuthorizeCurrentUser(
     req.currentUser = user
     return next()
   } catch (error) {
+    logger.warn(`Failed to ensure and authorize user: ${error}`, { error })
     if (error instanceof Auth0PayloadError) {
-      logger.error(error)
-      return res.status(502).json({ message: "External authorization api failed." })
+      return res.status(502).json({
+        message: "External authorization api failed.",
+      })
     } else {
-      return res.status(401).json({ message: "User authentication failed." })
+      return res.status(401).json({
+        message: "User authentication failed.",
+      })
     }
   }
 }

@@ -7,8 +7,8 @@ import { User } from "@/models"
 export async function seed(_knex: Knex): Promise<void> {
   const usersAttributes = [
     {
-      email: "system.user@tk.com",
-      auth0Subject: "system.user@tk.com",
+      email: "system.user@yukon.ca",
+      auth0Subject: "NO_LOGIN_system.user@yukon.ca",
       firstName: "System",
       lastName: "User",
       displayName: "System User",

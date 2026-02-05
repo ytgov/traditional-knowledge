@@ -15,7 +15,11 @@ import { APPLICATION_NAME, GIT_COMMIT_HASH, NODE_ENV, RELEASE_TAG } from "@/conf
 import { logger } from "@/utils/logger"
 import migrator from "@/db/migrator"
 
-import { jwtMiddleware, ensureAndAuthorizeCurrentUser } from "@/middlewares"
+import {
+  jwtMiddleware,
+  ensureAndAuthorizeCurrentUser,
+  trackLastActiveMiddleware,
+} from "@/middlewares"
 
 import {
   ArchiveItemAuditsController,
@@ -23,15 +27,18 @@ import {
   ArchiveItemsController,
   CategoriesController,
   CurrentUserController,
+  ExternalOrganizationsController,
   GroupsController,
   InformationSharingAgreementAccessGrantsController,
   InformationSharingAgreementArchiveItemsController,
   InformationSharingAgreementsController,
-  NotificationsController,
   Notifications,
+  NotificationsController,
   RetentionsController,
   UserGroupsController,
+  Users,
   UsersController,
+  YukonGovernmentDirectory,
 } from "@/controllers"
 
 export const router = Router()
@@ -47,7 +54,7 @@ router.route("/_status").get((_req: Request, res: Response) => {
 router.use("/migrate", migrator.migrationRouter)
 
 // api routes
-router.use("/api", jwtMiddleware, ensureAndAuthorizeCurrentUser)
+router.use("/api", jwtMiddleware, ensureAndAuthorizeCurrentUser, trackLastActiveMiddleware)
 
 router.route("/api/current-user").get(CurrentUserController.show)
 
@@ -65,6 +72,16 @@ router
   .get(UsersController.show)
   .patch(UsersController.update)
   .delete(UsersController.destroy)
+
+router.route("/api/users/:userId/directory-sync").post(Users.DirectorySyncController.create)
+router
+  .route("/api/users/:userId/deactivate")
+  .post(Users.DeactivationController.create)
+  .delete(Users.DeactivationController.destroy)
+
+router
+  .route("/api/yukon-government-directory/employees")
+  .get(YukonGovernmentDirectory.EmployeesController.index)
 
 router.route("/api/retentions").get(RetentionsController.index).post(RetentionsController.create)
 router
@@ -94,6 +111,16 @@ router
 router.route("/api/archive-items/:archiveItemId/files/:fileId").get(ArchiveItemFilesController.show)
 router.route("/api/archive-items/:archiveItemId/audits").get(ArchiveItemAuditsController.index)
 
+router
+  .route("/api/external-organizations")
+  .get(ExternalOrganizationsController.index)
+  .post(ExternalOrganizationsController.create)
+router
+  .route("/api/external-organizations/:externalOrganizationId")
+  .get(ExternalOrganizationsController.show)
+  .patch(ExternalOrganizationsController.update)
+  .delete(ExternalOrganizationsController.destroy)
+
 router.route("/api/groups").get(GroupsController.index).post(GroupsController.create)
 router
   .route("/api/groups/:groupId")
@@ -110,6 +137,14 @@ router
   .get(InformationSharingAgreementsController.show)
   .patch(InformationSharingAgreementsController.update)
   .delete(InformationSharingAgreementsController.destroy)
+
+router
+  .route("/api/information-sharing-agreements/:informationSharingAgreementId/file")
+  .get(InformationSharingAgreementsController.downloadFile)
+
+router
+  .route("/api/information-sharing-agreements/:informationSharingAgreementId/generate-document")
+  .get(InformationSharingAgreementsController.generateDocument)
 
 router
   .route("/api/information-sharing-agreement-access-grants")

@@ -11,10 +11,10 @@ import enhancedQsDecoder from "@/utils/enhanced-qs-decoder"
 
 export const app = express()
 app.set("query parser", enhancedQsDecoder)
-app.use(express.json()) // for parsing application/json
+app.use(express.json({ limit: "50mb" })) // for parsing application/json - increased limit for file uploads
 app.use(formData.parse({ autoClean: true }))
 app.use(formData.union())
-app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true, limit: "50mb" })) // for parsing application/x-www-form-urlencoded
 
 app.use(
   helmet.contentSecurityPolicy({

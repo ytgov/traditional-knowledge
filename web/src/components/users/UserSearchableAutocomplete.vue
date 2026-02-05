@@ -11,7 +11,7 @@
     clearable
     no-filter
     persistent-hint
-    @update:model-value="emit('update:modelValue', $event)"
+    @update:model-value="emitModelValueAndSelection"
     @update:search="debouncedUpdateSearchToken"
     @click:clear="reset"
   >
@@ -55,7 +55,7 @@
 
 <!-- Special module scope (non-setup) required for exports -->
 <script lang="ts">
-export { type User, type UserWhereOptions, type UserFiltersOptions } from "@/use/use-users"
+export { type UserAsIndex, type UserWhereOptions, type UserFiltersOptions } from "@/use/use-users"
 </script>
 
 <script lang="ts" setup>
@@ -64,7 +64,7 @@ import { debounce, isEmpty, isNil, omit, uniqBy } from "lodash"
 
 import useUser from "@/use/use-user"
 import useUsers, {
-  type User,
+  type UserAsIndex,
   type UserWhereOptions,
   type UserFiltersOptions,
 } from "@/use/use-users"
@@ -80,7 +80,19 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "update:modelValue": [userId: number | null | undefined]
+  selected: [user: UserAsIndex]
 }>()
+
+function emitModelValueAndSelection(userId: number | null | undefined) {
+  emit("update:modelValue", userId)
+
+  if (isNil(userId)) return
+
+  const selectedUser = allUsers.value.find((user) => user.id === userId)
+  if (isNil(selectedUser)) return
+
+  emit("selected", selectedUser)
+}
 
 const userId = computed(() => props.modelValue)
 const { user } = useUser(userId)
@@ -127,7 +139,7 @@ const usersQuery = computed<{
 })
 const { users, totalCount, isLoading, refresh } = useUsers(usersQuery)
 
-const allUsers = computed<User[]>(() => {
+const allUsers = computed<UserAsIndex[]>(() => {
   if (isNil(user.value)) {
     return users.value
   }

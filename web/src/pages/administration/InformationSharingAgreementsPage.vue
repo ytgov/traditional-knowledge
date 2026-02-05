@@ -19,7 +19,7 @@
         </v-btn>
       </div>
 
-      <InformationSharingAgreementsEditDataTableServer :filters="filters" />
+      <InformationSharingAgreementsAdminEditDataTableServer :filters="filters" />
     </v-card-text>
   </v-card>
 </template>
@@ -32,7 +32,7 @@ import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
 import useCurrentUser from "@/use/use-current-user"
 
 import FilterSearchDebouncedTextField from "@/components/common/tables/FilterSearchDebouncedTextField.vue"
-import InformationSharingAgreementsEditDataTableServer from "@/components/information-sharing-agreements/InformationSharingAgreementsEditDataTableServer.vue"
+import InformationSharingAgreementsAdminEditDataTableServer from "@/components/information-sharing-agreements/InformationSharingAgreementsAdminEditDataTableServer.vue"
 
 const { isSystemAdmin, isCreatorGroupAdmin } = useCurrentUser()
 

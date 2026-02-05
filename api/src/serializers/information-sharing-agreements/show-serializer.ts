@@ -13,20 +13,62 @@ export type AgreementShowView = Pick<
   | "sharingGroupContactId"
   | "receivingGroupId"
   | "receivingGroupContactId"
+  | "receivingGroupSecondaryContactId"
+  | "status"
+  | "identifier"
+  | "sharingGroupInfo"
+  | "receivingGroupInfo"
+  | "sharingGroupContactName"
+  | "receivingGroupContactName"
+  | "sharingGroupContactTitle"
+  | "receivingGroupContactTitle"
+  | "sharingGroupSignedBy"
+  | "receivingGroupSignedBy"
   | "title"
   | "description"
+  | "purpose"
+  | "detailLevel"
+  | "detailNotes"
+  | "formats"
+  | "accessLevel"
+  | "accessLevelDepartmentRestriction"
+  | "accessLevelBranchRestriction"
+  | "accessLevelUnitRestriction"
+  | "hasAdditionalAccessRestrictions"
+  | "additionalAccessRestrictions"
+  | "expirationCondition"
+  | "confidentialityType"
+  | "authorizedApplication"
+  | "creditLines"
+  | "creditNotes"
+  | "expirationActions"
+  | "expirationNotes"
+  | "breachActions"
+  | "breachNotes"
+  | "disclosureNotes"
+  | "fileName"
+  | "fileMimeType"
+  | "fileSize"
   | "createdAt"
   | "updatedAt"
 > & {
-  startDate: string
-  endDate: string
+  startDate: string | null
+  endDate: string | null
+  sharingGroupSignedDate: string | null
+  receivingGroupSignedDate: string | null
 }
 
 export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> {
   perform(): AgreementShowView {
-    const { startDate, endDate } = this.record
+    const { startDate, endDate, sharingGroupSignedDate, receivingGroupSignedDate } = this.record
     const formattedStartDate = formatDate(startDate)
     const formattedEndDate = formatDate(endDate)
+    const formattedSharingGroupSignedDate = sharingGroupSignedDate
+      ? formatDate(sharingGroupSignedDate)
+      : null
+    const formattedReceivingGroupSignedDate = receivingGroupSignedDate
+      ? formatDate(receivingGroupSignedDate)
+      : null
 
     return {
       ...pick(this.record, [
@@ -36,13 +78,49 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "sharingGroupContactId",
         "receivingGroupId",
         "receivingGroupContactId",
+        "receivingGroupSecondaryContactId",
+        "status",
+        "identifier",
+        "sharingGroupInfo",
+        "receivingGroupInfo",
+        "sharingGroupContactName",
+        "receivingGroupContactName",
+        "sharingGroupContactTitle",
+        "receivingGroupContactTitle",
+        "sharingGroupSignedBy",
+        "receivingGroupSignedBy",
         "title",
         "description",
+        "purpose",
+        "detailLevel",
+        "detailNotes",
+        "formats",
+        "accessLevel",
+        "accessLevelDepartmentRestriction",
+        "accessLevelBranchRestriction",
+        "accessLevelUnitRestriction",
+        "hasAdditionalAccessRestrictions",
+        "additionalAccessRestrictions",
+        "expirationCondition",
+        "confidentialityType",
+        "authorizedApplication",
+        "creditLines",
+        "creditNotes",
+        "expirationActions",
+        "expirationNotes",
+        "breachActions",
+        "breachNotes",
+        "disclosureNotes",
+        "fileName",
+        "fileMimeType",
+        "fileSize",
         "createdAt",
         "updatedAt",
       ]),
       startDate: formattedStartDate,
       endDate: formattedEndDate,
+      sharingGroupSignedDate: formattedSharingGroupSignedDate,
+      receivingGroupSignedDate: formattedReceivingGroupSignedDate,
     }
   }
 }

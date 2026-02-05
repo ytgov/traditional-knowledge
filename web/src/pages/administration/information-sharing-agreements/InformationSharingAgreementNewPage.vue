@@ -1,10 +1,10 @@
 <template>
-  <InformationSharingAgreementCreateForm />
+  <InformationSharingAgreementAdminCreateForm />
 </template>
 
 <script setup lang="ts">
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
-import InformationSharingAgreementCreateForm from "@/components/information-sharing-agreements/InformationSharingAgreementCreateForm.vue"
+import InformationSharingAgreementAdminCreateForm from "@/components/information-sharing-agreements/InformationSharingAgreementAdminCreateForm.vue"
 
 useBreadcrumbs("New Information Sharing Agreement", [
   ADMIN_CRUMB,

@@ -5,8 +5,8 @@ import {
   type QueryOptions,
   type WhereOptions,
 } from "@/api/base-api"
-import { type Group } from "@/api/groups-api"
-import { type UserReferenceView } from "@/api/users-api"
+import { type GroupAsReference } from "@/api/groups-api"
+import { type UserAsReference } from "@/api/users-api"
 
 export enum InformationSharingAgreementAccessGrantAccessLevels {
   READ = "read",
@@ -28,9 +28,20 @@ export type InformationSharingAgreementAccessGrant = {
 
 export type InformationSharingAgreementAccessGrantIndexView =
   InformationSharingAgreementAccessGrant & {
-    user: UserReferenceView | null
-    group: Group
+    user: UserAsReference | null
+    group: GroupAsReference
   }
+
+/** Keep in sync with api/src/serializers/information-sharing-agreement-access-grants/reference-serializer.ts */
+export type InformationSharingAgreementAccessGrantAsReference = Pick<
+  InformationSharingAgreementAccessGrant,
+  | "id"
+  | "informationSharingAgreementId"
+  | "groupId"
+  | "userId"
+  | "accessLevel"
+  | "creatorId"
+>
 
 export type InformationSharingAgreementAccessGrantWhereOptions = WhereOptions<
   InformationSharingAgreementAccessGrant,

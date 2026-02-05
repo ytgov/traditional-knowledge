@@ -54,13 +54,33 @@
               </v-col>
               <v-col cols="12">
                 <h4>Sharing Group</h4>
-                <p><GroupChip :group-id="informationSharingAgreement.sharingGroupId" /></p>
-                <p><UserChip :user-id="informationSharingAgreement.sharingGroupContactId" /></p>
+                <p
+                  v-if="
+                    isNil(informationSharingAgreement.sharingGroupId) ||
+                    isNil(informationSharingAgreement.sharingGroupContactId)
+                  "
+                >
+                  <em>No sharing group specified</em>
+                </p>
+                <template v-else>
+                  <p><GroupChip :group-id="informationSharingAgreement.sharingGroupId" /></p>
+                  <p><UserChip :user-id="informationSharingAgreement.sharingGroupContactId" /></p>
+                </template>
               </v-col>
               <v-col cols="12">
                 <h4>Receiving Group</h4>
-                <p><GroupChip :group-id="informationSharingAgreement.receivingGroupId" /></p>
-                <p><UserChip :user-id="informationSharingAgreement.receivingGroupContactId" /></p>
+                <p
+                  v-if="
+                    isNil(informationSharingAgreement.receivingGroupId) ||
+                    isNil(informationSharingAgreement.receivingGroupContactId)
+                  "
+                >
+                  <em>No receiving group specified</em>
+                </p>
+                <template v-else>
+                  <p><GroupChip :group-id="informationSharingAgreement.receivingGroupId" /></p>
+                  <p><UserChip :user-id="informationSharingAgreement.receivingGroupContactId" /></p>
+                </template>
               </v-col>
             </v-row>
           </v-card-text>

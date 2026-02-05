@@ -27,6 +27,25 @@
               </p>
             </v-col>
           </v-row>
+
+          <v-row>
+            <v-col cols="12">
+              <InformationSharingAgreementNewCard />
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col>
+              <p>
+                <router-link
+                  :to="{
+                    name: 'InformationSharingAgreementsPage',
+                  }"
+                  >View the Information Sharing Agreements</router-link
+                >
+              </p>
+            </v-col>
+          </v-row>
         </v-card-text>
       </v-card>
     </v-col>
@@ -39,6 +58,7 @@
 
 <script lang="ts" setup>
 import ArchiveItemNewButton from "@/components/archive-items/ArchiveItemNewButton.vue"
+import InformationSharingAgreementNewCard from "@/components/information-sharing-agreements/InformationSharingAgreementNewCard.vue"
 import VaultInfoCard from "@/components/common/VaultInfoCard.vue"
 import VaultStatisticsCard from "@/components/common/VaultStatisticsCard.vue"
 import useBreadcrumbs from "@/use/use-breadcrumbs"

@@ -8,3 +8,4 @@ export * as InformationSharingAgreementAccessGrants from "./information-sharing-
 export * as InformationSharingAgreementArchiveItems from "./information-sharing-agreement-archive-items"
 export * as InformationSharingAgreements from "./information-sharing-agreements"
 export * as Users from "./users"
+export * as YukonGovernmentDirectory from "./yukon-government-directory"

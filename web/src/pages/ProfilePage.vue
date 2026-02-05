@@ -7,18 +7,11 @@
         <v-btn
           color="primary"
           variant="outlined"
-          :to="{ name: 'users/UsersPage' }"
+          :to="{
+            name: 'users/UsersPage',
+          }"
         >
           Back
-        </v-btn>
-        <v-btn
-          class="ml-md-3"
-          title="Refresh"
-          color="primary"
-          append-icon="mdi-sync"
-          @click="refresh"
-        >
-          Sync
         </v-btn>
       </div>
     </div>
@@ -26,7 +19,11 @@
     <UserEditForm
       class="mt-10"
       :user-id="currentUser.id"
-      :cancel-button-options="{ to: { name: 'users/UsersPage' } }"
+      :cancel-button-options="{
+        to: {
+          name: 'users/UsersPage',
+        },
+      }"
       @saved="refresh"
     />
   </v-container>

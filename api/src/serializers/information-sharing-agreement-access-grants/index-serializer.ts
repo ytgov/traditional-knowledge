@@ -8,7 +8,7 @@ import {
 } from "@/serializers/groups/show-serializer"
 import {
   ReferenceSerializer as UserReferenceSerializer,
-  type UserReferenceView,
+  type UserAsReference,
 } from "@/serializers/users/reference-serializer"
 
 export type AccessGrantIndexView = Pick<
@@ -23,7 +23,7 @@ export type AccessGrantIndexView = Pick<
   | "updatedAt"
 > & {
   group: GroupShowView
-  user: UserReferenceView | null
+  user: UserAsReference | null
 }
 
 export class IndexSerializer extends BaseSerializer<InformationSharingAgreementAccessGrant> {

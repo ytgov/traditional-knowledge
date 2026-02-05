@@ -7,6 +7,10 @@ export type UserIndexView = Pick<
   User,
   | "id"
   | "email"
+  | "auth0Subject"
+  | "activeDirectoryIdentifier"
+  | "isExternal"
+  | "externalOrganizationId"
   | "firstName"
   | "lastName"
   | "displayName"
@@ -16,8 +20,16 @@ export type UserIndexView = Pick<
   | "division"
   | "branch"
   | "unit"
+  | "phoneNumber"
+  | "lastSyncSuccessAt"
+  | "lastSyncFailureAt"
   | "deactivatedAt"
+  | "deactivationReason"
+  | "lastActiveAt"
   | "emailNotificationsEnabled"
+  | "creatorId"
+  | "createdAt"
+  | "updatedAt"
 > & {
   isActive: boolean
 }
@@ -28,6 +40,10 @@ export class IndexSerializer extends BaseSerializer<User> {
       ...pick(this.record, [
         "id",
         "email",
+        "auth0Subject",
+        "activeDirectoryIdentifier",
+        "isExternal",
+        "externalOrganizationId",
         "firstName",
         "lastName",
         "displayName",
@@ -37,8 +53,16 @@ export class IndexSerializer extends BaseSerializer<User> {
         "division",
         "branch",
         "unit",
+        "phoneNumber",
+        "lastSyncSuccessAt",
+        "lastSyncFailureAt",
         "deactivatedAt",
+        "deactivationReason",
+        "lastActiveAt",
         "emailNotificationsEnabled",
+        "creatorId",
+        "createdAt",
+        "updatedAt",
       ]),
       isActive: isNil(this.record.deactivatedAt),
     }

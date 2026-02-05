@@ -3,16 +3,16 @@ import { isEmpty, isNil, isUndefined } from "lodash"
 import { DateTime } from "luxon"
 
 import currentUserApi from "@/api/current-user-api"
-import usersApi, { type User, UserRoles } from "@/api/users-api"
+import usersApi, { type UserAsShow, UserRoles } from "@/api/users-api"
 
-export { type User, UserRoles }
+export { type UserAsShow, UserRoles }
 
 // TODO: consider sending this with every api request?
 export const CURRENT_USERS_TIMEZONE = DateTime.local().zoneName
 
 // Global state
 const state = reactive<{
-  currentUser: User | null
+  currentUser: UserAsShow | null
   isLoading: boolean
   isErrored: boolean
   isCached: boolean
@@ -37,11 +37,11 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
   })
   const isGroupAdmin = computed(() => !isEmpty(state.currentUser?.adminGroups))
   const isCreatorGroupAdmin = computed(() => {
-    return state.currentUser?.adminGroups?.some((group) => !group.isHost)
+    return state.currentUser?.adminGroups.some((group) => !group.isHost)
   })
   const isAdmin = computed(() => isSystemAdmin.value || isGroupAdmin.value)
 
-  async function fetch(): Promise<User> {
+  async function fetch(): Promise<UserAsShow> {
     state.isLoading = true
     try {
       const { user } = await currentUserApi.get()
@@ -58,7 +58,7 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
     }
   }
 
-  async function save(): Promise<User> {
+  async function save(): Promise<UserAsShow> {
     if (isNil(state.currentUser)) {
       throw new Error("No user to save")
     }

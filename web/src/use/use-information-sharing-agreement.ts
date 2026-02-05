@@ -6,12 +6,20 @@ import informationSharingAgreementsApi, {
   type InformationSharingAgreement,
   type InformationSharingAgreementWhereOptions,
   type InformationSharingAgreementFiltersOptions,
+  InformationSharingAgreementAccessLevels,
+  InformationSharingAgreementExpirationConditions,
+  InformationSharingAgreementConfidentialityType,
+  InformationSharingAgreementStatus,
 } from "@/api/information-sharing-agreements-api"
 
 export {
   type InformationSharingAgreement,
   type InformationSharingAgreementWhereOptions,
   type InformationSharingAgreementFiltersOptions,
+  InformationSharingAgreementAccessLevels,
+  InformationSharingAgreementExpirationConditions,
+  InformationSharingAgreementConfidentialityType,
+  InformationSharingAgreementStatus,
 }
 
 export function useInformationSharingAgreement(id: Ref<number | null | undefined>) {

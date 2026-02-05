@@ -1,20 +1,20 @@
 import { type Ref, reactive, toRefs, ref, unref, watch } from "vue"
 
 import usersApi, {
-  type User,
+  type UserAsIndex,
   type UserWhereOptions,
   type UserFiltersOptions,
   type UserQueryOptions,
 } from "@/api/users-api"
 
-export { type User, type UserWhereOptions, type UserFiltersOptions, type UserQueryOptions }
+export { type UserAsIndex, type UserWhereOptions, type UserFiltersOptions, type UserQueryOptions }
 
 export function useUsers(
   queryOptions: Ref<UserQueryOptions> = ref({}),
   { skipWatchIf = () => false }: { skipWatchIf?: () => boolean } = {}
 ) {
   const state = reactive<{
-    users: User[]
+    users: UserAsIndex[]
     totalCount: number
     isLoading: boolean
     isErrored: boolean
@@ -25,7 +25,7 @@ export function useUsers(
     isErrored: false,
   })
 
-  async function fetch(): Promise<User[]> {
+  async function fetch(): Promise<UserAsIndex[]> {
     state.isLoading = true
     try {
       const { users, totalCount } = await usersApi.list(unref(queryOptions))

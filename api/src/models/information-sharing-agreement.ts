@@ -15,6 +15,7 @@ import {
   HasMany,
   NotNull,
   PrimaryKey,
+  ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
 import { isUndefined } from "lodash"
 
@@ -24,10 +25,38 @@ import InformationSharingAgreementAccessGrant from "@/models/information-sharing
 import InformationSharingAgreementArchiveItem from "@/models/information-sharing-agreement-archive-item"
 import User from "@/models/user"
 
+export enum InformationSharingAgreementAccessLevels {
+  INTERNAL = "internal",
+  PROTECTED_AND_LIMITED = "protected_and_limited",
+  CONFIDENTIAL_AND_RESTRICTED = "confidential_and_restricted",
+}
+
+export enum InformationSharingAgreementExpirationConditions {
+  COMPLETION_OF_PURPOSE = "completion_of_purpose",
+  EXPIRATION_DATE = "expiration_date",
+  UNDETERMINED_WITH_DEFAULT_EXPIRATION = "undetermined_with_default_expiration",
+}
+
+export enum InformationSharingAgreementConfidentialityType {
+  ACCORDANCE = "ACCORDANCE",
+  ACCEPTED_IN_CONFIDENCE = "ACCEPTED_IN_CONFIDENCE",
+}
+
+export enum InformationSharingAgreementStatus {
+  DRAFT = "draft",
+  SIGNED = "signed",
+  CLOSED = "closed",
+}
+
 export class InformationSharingAgreement extends BaseModel<
   InferAttributes<InformationSharingAgreement>,
   InferCreationAttributes<InformationSharingAgreement>
 > {
+  static readonly AccessLevels = InformationSharingAgreementAccessLevels
+  static readonly ExpirationConditions = InformationSharingAgreementExpirationConditions
+  static readonly ConfidentialityTypes = InformationSharingAgreementConfidentialityType
+  static readonly Status = InformationSharingAgreementStatus
+
   @Attribute(DataTypes.INTEGER)
   @PrimaryKey
   @AutoIncrement
@@ -38,20 +67,57 @@ export class InformationSharingAgreement extends BaseModel<
   declare creatorId: number
 
   @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare sharingGroupId: number
+  declare sharingGroupId: number | null
 
   @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare sharingGroupContactId: number
+  declare sharingGroupContactId: number | null
 
   @Attribute(DataTypes.INTEGER)
-  @NotNull
-  declare receivingGroupId: number
+  declare receivingGroupId: number | null
 
   @Attribute(DataTypes.INTEGER)
+  declare receivingGroupContactId: number | null
+
+  @Attribute(DataTypes.INTEGER)
+  declare receivingGroupSecondaryContactId: number | null
+
+  @Attribute(DataTypes.STRING)
   @NotNull
-  declare receivingGroupContactId: number
+  @Default("draft")
+  declare status: CreationOptional<InformationSharingAgreementStatus>
+
+  @Attribute(DataTypes.STRING(100))
+  declare identifier: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare sharingGroupInfo: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare receivingGroupInfo: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare sharingGroupContactName: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare receivingGroupContactName: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare sharingGroupContactTitle: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare receivingGroupContactTitle: string | null
+
+  @Attribute(DataTypes.STRING(100))
+  declare sharingGroupSignedBy: string | null
+
+  @Attribute(DataTypes.STRING(100))
+  declare receivingGroupSignedBy: string | null
+
+  @Attribute(DataTypes.DATE)
+  declare sharingGroupSignedDate: Date | null
+
+  @Attribute(DataTypes.DATE)
+  declare receivingGroupSignedDate: Date | null
 
   @Attribute(DataTypes.STRING)
   @NotNull
@@ -60,13 +126,125 @@ export class InformationSharingAgreement extends BaseModel<
   @Attribute(DataTypes.TEXT)
   declare description: string | null
 
-  @Attribute(DataTypes.DATE)
-  @NotNull
-  declare startDate: Date
+  @Attribute(DataTypes.TEXT)
+  declare purpose: string | null
+
+  @Attribute(DataTypes.STRING(250))
+  declare detailLevel: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare detailNotes: string | null
+
+  @Attribute(DataTypes.STRING(500))
+  declare formats: string | null
+
+  @Attribute(DataTypes.STRING(500))
+  @ValidateAttribute({
+    isIn: {
+      args: [[...Object.values(InformationSharingAgreementAccessLevels), null]],
+      msg: `Access level must be one of ${[...Object.values(InformationSharingAgreementAccessLevels), null].join(", ")}`,
+    },
+  })
+  declare accessLevel: InformationSharingAgreementAccessLevels | null
+
+  @Attribute(DataTypes.STRING)
+  declare accessLevelDepartmentRestriction: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare accessLevelBranchRestriction: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare accessLevelUnitRestriction: string | null
+
+  @Attribute(DataTypes.BOOLEAN)
+  declare hasAdditionalAccessRestrictions: boolean | null
+
+  @Attribute(DataTypes.TEXT)
+  declare additionalAccessRestrictions: string | null
+
+  @Attribute(DataTypes.STRING(500))
+  declare confidentialityType: InformationSharingAgreementConfidentialityType | null
+
+  @Attribute(DataTypes.TEXT)
+  declare authorizedApplication: string | null
+
+  @Attribute(DataTypes.STRING(500))
+  declare creditLines: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare creditNotes: string | null
+
+  @Attribute(DataTypes.STRING(500))
+  declare expirationActions: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare expirationNotes: string | null
+
+  @Attribute(DataTypes.STRING(500))
+  declare breachActions: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare breachNotes: string | null
+
+  @Attribute(DataTypes.TEXT)
+  declare disclosureNotes: string | null
+
+  @Attribute(DataTypes.STRING)
+  declare fileName: string | null
+
+  @Attribute({
+    type: DataTypes.BLOB,
+    set(value: Buffer | string | null | undefined) {
+      console.log("fileData setter called with:", {
+        type: typeof value,
+        isNull: value === null,
+        isUndefined: value === undefined,
+        isString: typeof value === "string",
+        stringValue: typeof value === "string" ? value : "N/A",
+        length: typeof value === "string" ? value.length : "N/A",
+      })
+
+      if (value === null || value === undefined) {
+        console.log("Setting fileData to NULL")
+        this.setDataValue("fileData", null)
+      } else if (typeof value === "string") {
+        // Don't convert empty strings
+        if (value === "" || value === "null" || value === "undefined") {
+          console.log("Setting fileData to NULL (empty/invalid string)")
+          this.setDataValue("fileData", null)
+        } else {
+          // Convert base64 string to Buffer
+          const buffer = Buffer.from(value, "base64")
+          console.log("Converted base64 to buffer, buffer length:", buffer.length)
+          this.setDataValue("fileData", buffer)
+        }
+      } else {
+        this.setDataValue("fileData", value)
+      }
+    },
+  })
+  declare fileData: Buffer | null
+
+  @Attribute(DataTypes.STRING)
+  declare fileMimeType: string | null
+
+  @Attribute(DataTypes.INTEGER)
+  declare fileSize: number | null
 
   @Attribute(DataTypes.DATE)
-  @NotNull
-  declare endDate: Date
+  declare startDate: Date | null
+
+  @Attribute(DataTypes.DATE)
+  declare endDate: Date | null
+
+  @Attribute(DataTypes.STRING(50))
+  @ValidateAttribute({
+    isIn: {
+      args: [[...Object.values(InformationSharingAgreementExpirationConditions), null]],
+      msg: `Expiration condition must be one of ${[...Object.values(InformationSharingAgreementExpirationConditions), null].join(", ")}`,
+    },
+  })
+  declare expirationCondition: InformationSharingAgreementExpirationConditions | null
 
   @Attribute(DataTypes.DATE(0))
   @NotNull
@@ -88,6 +266,10 @@ export class InformationSharingAgreement extends BaseModel<
     }
 
     return this.accessGrants.some((accessGrant) => accessGrant.userId === userId)
+  }
+
+  isDraft(): boolean {
+    return this.status === InformationSharingAgreement.Status.DRAFT
   }
 
   // Associations

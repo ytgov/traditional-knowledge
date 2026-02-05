@@ -10,21 +10,27 @@ import {
 import {
   Attribute,
   AutoIncrement,
+  BelongsTo,
   BelongsToMany,
   Default,
   HasMany,
   Index,
+  ModelValidator,
   NotNull,
   PrimaryKey,
+  Table,
   ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
 import { isEmpty, isNil, isUndefined } from "lodash"
+
+import { UserActiveDirectoryIdentifierUniqueIndex } from "@/models/indexes"
 
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
 import InformationSharingAgreement from "@/models/information-sharing-agreement"
 import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
 import UserGroup from "@/models/user-group"
+import ExternalOrganization from "@/models/external-organization"
 
 /** Keep in sync with web/src/api/users-api.ts */
 export enum UserRoles {
@@ -32,6 +38,9 @@ export enum UserRoles {
   USER = "user",
 }
 
+@Table({
+  tableName: "users",
+})
 export class User extends BaseModel<InferAttributes<User>, InferCreationAttributes<User>> {
   static readonly Roles = UserRoles
 
@@ -49,6 +58,18 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @NotNull
   @Index({ unique: true })
   declare auth0Subject: string
+
+  @Attribute(DataTypes.UUID)
+  @UserActiveDirectoryIdentifierUniqueIndex
+  declare activeDirectoryIdentifier: string | null
+
+  @Attribute(DataTypes.BOOLEAN)
+  @NotNull
+  @Default(false)
+  declare isExternal: CreationOptional<boolean>
+
+  @Attribute(DataTypes.INTEGER)
+  declare externalOrganizationId: number | null
 
   @Attribute(DataTypes.STRING(100))
   @NotNull
@@ -99,13 +120,31 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   @Attribute(DataTypes.STRING(100))
   declare unit: string | null
 
+  @Attribute(DataTypes.STRING(50))
+  declare phoneNumber: string | null
+
+  @Attribute(DataTypes.DATE(0))
+  declare lastSyncSuccessAt: Date | null
+
+  @Attribute(DataTypes.DATE(0))
+  declare lastSyncFailureAt: Date | null
+
   @Attribute(DataTypes.DATE(0))
   declare deactivatedAt: Date | null
+
+  @Attribute(DataTypes.TEXT)
+  declare deactivationReason: string | null
+
+  @Attribute(DataTypes.DATE(0))
+  declare lastActiveAt: Date | null
 
   @Attribute(DataTypes.BOOLEAN)
   @NotNull
   @Default(false)
   declare emailNotificationsEnabled: CreationOptional<boolean>
+
+  @Attribute(DataTypes.INTEGER)
+  declare creatorId: number | null
 
   @Attribute(DataTypes.DATE(0))
   @NotNull
@@ -121,11 +160,11 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   declare deletedAt: Date | null
 
   // Magic Attributes
-  get isSystemAdmin(): NonAttribute<boolean | undefined> {
-    return this.roles?.some((role) => role === UserRoles.SYSTEM_ADMIN)
+  get isSystemAdmin(): NonAttribute<boolean> {
+    return this.roles.some((role) => role === UserRoles.SYSTEM_ADMIN)
   }
 
-  get isGroupAdmin(): NonAttribute<boolean | undefined> {
+  get isGroupAdmin(): NonAttribute<boolean> {
     if (isUndefined(this.adminGroups)) {
       throw new Error("Expected adminGroups association to be pre-loaded.")
     }
@@ -154,7 +193,39 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     )
   }
 
+  // Model Validators
+  @ModelValidator
+  ensureUserDeactivatedAtDeactivationReasonConsistency() {
+    if (!isNil(this.deactivatedAt) && isNil(this.deactivationReason)) {
+      throw new Error("Deactivation reason is required when deactivating a user")
+    }
+
+    if (isNil(this.deactivatedAt) && !isNil(this.deactivationReason)) {
+      throw new Error("Deactivation reason should not be present for active users")
+    }
+  }
+
+  @ModelValidator
+  ensureIsExternalUserHasExternalOrganization() {
+    if (this.isExternal && isNil(this.externalOrganizationId)) {
+      throw new Error("External user must have an external organization")
+    }
+
+    if (!this.isExternal && !isNil(this.externalOrganizationId)) {
+      throw new Error("Non-external user must not reference an external organization")
+    }
+  }
+
   // Associations
+  @BelongsTo(() => ExternalOrganization, {
+    foreignKey: "externalOrganizationId",
+    inverse: {
+      as: "users",
+      type: "hasMany",
+    },
+  })
+  declare externalOrganization?: NonAttribute<ExternalOrganization>
+
   @HasMany(() => InformationSharingAgreement, {
     foreignKey: "creatorId",
     inverse: "creator",
@@ -202,6 +273,23 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   declare createdInformationSharingAgreementAccessGrants?: NonAttribute<
     InformationSharingAgreementAccessGrant[]
   >
+
+  // NOTE: order of definition seem to matter for parent-child relationships?
+  @HasMany(() => User, {
+    foreignKey: "creatorId",
+    inverse: "creator",
+  })
+  declare createdUsers?: NonAttribute<User[]>
+
+  // NOTE: order of definition seem to matter for parent-child relationships?
+  @BelongsTo(() => User, {
+    foreignKey: "creatorId",
+    inverse: {
+      as: "createdUsers",
+      type: "hasMany",
+    },
+  })
+  declare creator?: NonAttribute<User>
 
   @HasMany(() => UserGroup, {
     foreignKey: {

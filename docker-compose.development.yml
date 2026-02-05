@@ -2,8 +2,8 @@ x-default-environment: &default-environment
   TZ: "UTC"
   NODE_ENV: development
   DB_HOST: db
-  DB_USERNAME: sa
-  DB_DATABASE: traditional_knowledge_development
+  DB_USERNAME: &default-db-username sa
+  DB_DATABASE: &default-db-name traditional_knowledge_development
   DB_PASSWORD: &default-db-password DevPwd99!
   DB_PORT: &default-db-port 1433
   DB_TRUST_SERVER_CERTIFICATE: "true"
@@ -30,19 +30,6 @@ x-default-environment: &default-environment
   SSL_CERT_KEY_PATH: "/etc/ssl/private/icefog.pem"
   BLOB_CONTAINER: "the-vault"
 
-x-shared-watch:
-  - &gitignore-sync
-    path: ./.gitignore
-    target: /usr/src/.gitignore
-    action: sync
-  - &prettierrc-sync
-    path: ./.prettierrc.yaml
-    target: /usr/src/.prettierrc.yaml
-    action: sync
-  - &docker-compose-rebuild
-    path: ./docker-compose.development.yml
-    action: rebuild
-
 services:
   api:
     build:
@@ -52,33 +39,22 @@ services:
       - ./api/.env.development
     environment:
       <<: *default-environment
+      TS_NODE_HISTORY: /usr/src/api/.ts_node_repl_history
     tty: true # allows attaching debugger, equivalent of docker exec -t
+    init: true
     # stdin_open: true # equivalent of docker exec -i
+    user: "${HOST_USER_ID:-0}:${HOST_GROUP_ID:-0}"
     ports:
       - "3000:3000"
+      - "9229:9229" # Debug port
+    volumes:
+      - ./api:/usr/src/api
+      - ./.gitignore:/usr/src/.gitignore
+      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
     depends_on:
       - db
       - mail
       - cache
-    develop:
-      watch:
-        - *gitignore-sync
-        - *prettierrc-sync
-        - *docker-compose-rebuild
-        - path: ./api/package.json
-          target: /usr/src/api/package.json
-          action: sync+restart
-        - path: ./api/package-lock.json
-          action: rebuild
-        - path: ./api
-          target: /usr/src/api
-          action: sync
-          ignore:
-            - node_modules/
-            - src/initializers
-        - path: ./api/src/initializers
-          target: /usr/src/api/src/initializers
-          action: sync+restart
 
   web:
     build:
@@ -86,26 +62,16 @@ services:
       dockerfile: development.Dockerfile
     environment:
       <<: *default-environment
+    user: "${HOST_USER_ID:-0}:${HOST_GROUP_ID:-0}"
     ports:
       - "8080:8080"
+    volumes:
+      - ./web:/usr/src/web
+      - ./.gitignore:/usr/src/.gitignore
+      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
     depends_on:
-      - api
-    develop:
-      watch:
-        - *gitignore-sync
-        - *prettierrc-sync
-        - *docker-compose-rebuild
-        - path: ./web/package.json
-          target: /usr/src/web/package.json
-          action: sync+restart
-        - path: ./web/package-lock.json
-          target: /usr/src/web/package-lock.json
-          action: rebuild
-        - path: ./web
-          target: /usr/src/web
-          action: sync
-          ignore:
-            - node_modules/
+      api:
+        condition: service_started
 
   test_api:
     build:
@@ -120,32 +86,33 @@ services:
       DB_DATABASE: traditional_knowledge_test
       DEFAULT_LOG_LEVEL: "info"
       DB_HEALTH_CHECK_START_PERIOD_SECONDS: 0
+      TS_NODE_HISTORY: /usr/src/api/.ts_node_repl_history
     tty: true
+    user: "${HOST_USER_ID:-0}:${HOST_GROUP_ID:-0}"
     volumes:
       - ./api:/usr/src/api
+      - ./api/.env.development:/usr/src/api/.env.test
+      - ./.gitignore:/usr/src/.gitignore
+      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
     depends_on:
       - db
       - mail
       - cache
-    develop:
-      watch:
-        - *gitignore-sync
-        - *prettierrc-sync
-        - *docker-compose-rebuild
-        - path: ./api/package-lock.json
-          action: rebuild
 
-  # test_web:
-  #   build:
-  #     context: ./web
-  #     dockerfile: development.Dockerfile
-  #   command: /bin/true
-  #   environment:
-  #     <<: *default-environment
-  #     NODE_ENV: test
-  #   tty: true
-  #   volumes:
-  #     - ./web:/usr/src/web
+  test_web:
+    build:
+      context: ./web
+      dockerfile: development.Dockerfile
+    command: /bin/true
+    environment:
+      <<: *default-environment
+      NODE_ENV: test
+    tty: true
+    user: "${HOST_USER_ID:-0}:${HOST_GROUP_ID:-0}"
+    volumes:
+      - ./web:/usr/src/web
+      - ./.gitignore:/usr/src/.gitignore
+      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
 
   cache:
     image: bitnamilegacy/redis:8.0.2
@@ -177,12 +144,15 @@ services:
   # For easily generating large PlantUML diagrams
   # Not relevant to production environment.
   # Accessible at http://localhost:9999
-  # plantuml:
-  #   image: plantuml/plantuml-server:jetty
-  #   ports:
-  #     - 9999:8080
-  #   environment:
-  #     PLANTUML_LIMIT_SIZE: 8192
+  # Use with: dev up --profile design (and dev down --profile design)
+  plantuml:
+    image: plantuml/plantuml-server:jetty
+    ports:
+      - "9999:8080"
+    environment:
+      PLANTUML_LIMIT_SIZE: 8192
+    profiles:
+      - design
 
   archiver:
     build:
@@ -194,33 +164,18 @@ services:
       <<: *default-environment
     tty: true # allows attaching debugger, equivalent of docker exec -t
     # stdin_open: true # equivalent of docker exec -i
+    user: "${HOST_USER_ID:-0}:${HOST_GROUP_ID:-0}"
     ports:
       - "5000:5000"
     volumes:
       - ./archiver/certs/icefog.pem:/etc/ssl/private/icefog.pem:ro
       - ./archiver/certs/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
+      - ./archiver:/usr/src/archiver
+      - ./.gitignore:/usr/src/.gitignore
+      - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
     depends_on:
       - db
       - cache
-    develop:
-      watch:
-        - *gitignore-sync
-        - *prettierrc-sync
-        - *docker-compose-rebuild
-        - path: ./archiver/package.json
-          target: /usr/src/archiver/package.json
-          action: sync+restart
-        - path: ./archiver/package-lock.json
-          action: rebuild
-        - path: ./archiver
-          target: /usr/src/archiver
-          action: sync
-          ignore:
-            - node_modules/
-            - src/initializers/
-        - path: ./api/src/initializers
-          target: /usr/src/api/src/initializers
-          action: sync+restart
 
 volumes:
   db_data:

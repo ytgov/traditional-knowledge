@@ -118,6 +118,29 @@
             </v-card-text>
           </v-card>
         </v-col>
+
+        <v-col
+          cols="12"
+          md="3"
+        >
+          <v-card
+            class="toggle fill-height"
+            :to="{
+              name: 'admin/ExternalOrganizationsPage',
+            }"
+          >
+            <v-card-text class="d-flex">
+              <span class="d-sm-flex align-center me-3 d-none">
+                <v-icon size="50px">mdi-earth</v-icon>
+              </span>
+
+              <div>
+                <div class="text-h6">Yukon First Nations</div>
+                <span class="text-subtitle-2">Manage Yukon First Nations</span>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
       </v-row>
     </v-card-text>
   </v-card>
