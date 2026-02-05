@@ -2,7 +2,6 @@ import Docxtemplater from "docxtemplater"
 import PizZip from "pizzip"
 
 import fs from "fs"
-import path from "path"
 
 import { TEMPLATE_ROOT_PATH } from "@/config"
 
@@ -28,10 +27,7 @@ export class CreateService extends BaseService {
   }
 
   private generateTemplate(templateData: Record<string, string>) {
-    const templatePath = path.resolve(
-      __dirname,
-      `${TEMPLATE_ROOT_PATH}/templates/information-sharing-agreements/acknowledgement-template.docx`
-    )
+    const templatePath = `${TEMPLATE_ROOT_PATH}/information-sharing-agreements/acknowledgement-template.docx`
     const templateContent = fs.readFileSync(templatePath, "binary")
 
     const templateZip = new PizZip(templateContent)
