@@ -1,4 +1,3 @@
-import { isUndefined } from "lodash"
 import Docxtemplater from "docxtemplater"
 import PizZip from "pizzip"
 
@@ -9,6 +8,10 @@ import { TEMPLATE_ROOT_PATH } from "@/config"
 
 import { InformationSharingAgreement, User } from "@/models"
 import BaseService from "@/services/base-service"
+import {
+  CreateSerializer,
+  type AsAcknowledgement,
+} from "@/serializers/information-sharing-agreements/generate-acknowledgement"
 
 export class CreateService extends BaseService {
   constructor(
@@ -19,23 +22,8 @@ export class CreateService extends BaseService {
   }
 
   async perform(): Promise<Buffer> {
-    const { sharingGroupContact, receivingGroupContact } = this.informationSharingAgreement
-
-    if (isUndefined(sharingGroupContact)) {
-      throw new Error(
-        "Expected information sharing agreement to have pre-loaded sharingGroupContact association"
-      )
-    }
-
-    if (isUndefined(receivingGroupContact)) {
-      throw new Error(
-        "Expected information sharing agreement to have pre-loaded receivingGroupContact association"
-      )
-    }
-
-    const templateData = this.buildTemplateData()
+    const templateData = this.buildTemplateData(this.informationSharingAgreement)
     const content = this.generateTemplate(templateData)
-
     return content
   }
 
@@ -61,15 +49,10 @@ export class CreateService extends BaseService {
     })
   }
 
-  // TODO: move to serializer
-  private buildTemplateData(): Record<string, string> {
-    const { title } = this.informationSharingAgreement
-    const templateData: Record<string, string> = {}
-
-    // Basic Information
-    templateData["title"] = title
-
-    return templateData
+  private buildTemplateData(
+    informationSharingAgreement: InformationSharingAgreement
+  ): AsAcknowledgement {
+    return CreateSerializer.perform(informationSharingAgreement)
   }
 }
 
