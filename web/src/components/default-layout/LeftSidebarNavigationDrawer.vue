@@ -3,6 +3,7 @@
     v-model="showDrawer"
     :disable-resize-watcher="false"
     :rail="showRail"
+    mobile-breakpoint="md"
     color="#a3a48d"
   >
     <v-list
