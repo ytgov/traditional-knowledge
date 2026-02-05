@@ -32,6 +32,7 @@ import {
   GroupsController,
   InformationSharingAgreementAccessGrantsController,
   InformationSharingAgreementArchiveItemsController,
+  InformationSharingAgreements,
   InformationSharingAgreementsController,
   Notifications,
   NotificationsController,
@@ -150,8 +151,10 @@ router
   .get(InformationSharingAgreementsController.downloadFile)
 
 router
-  .route("/api/information-sharing-agreements/:informationSharingAgreementId/generate-document")
-  .get(InformationSharingAgreementsController.generateDocument)
+  .route(
+    "/api/information-sharing-agreements/:informationSharingAgreementId/acknowledgement-template"
+  )
+  .post(InformationSharingAgreements.AcknowledgementTemplateController.create)
 
 router
   .route("/api/information-sharing-agreement-access-grants")

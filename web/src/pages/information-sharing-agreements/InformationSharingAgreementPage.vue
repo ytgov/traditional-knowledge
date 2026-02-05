@@ -51,13 +51,14 @@
         />
 
         <div class="mt-4 d-flex flex-column flex-md-row justify-space-between ga-3 px-6 py-4">
-          <v-btn
-            color="primary"
-            size="large"
-            @click="printAgreement"
-          >
-            Print Agreement
-          </v-btn>
+          <AuthenticatedPostForm
+            :action-url="acknowledgementTemplateUrl"
+            text="Print for Signature"
+            :activator-props="{
+              color: 'primary',
+              size: 'large',
+            }"
+          />
           <div class="d-flex flex-column flex-md-row justify-end ga-3">
             <v-btn
               color="secondary"
@@ -91,8 +92,12 @@
 import { computed } from "vue"
 import { isNil } from "lodash"
 
+import informationSharingAgreementsApi from "@/api/information-sharing-agreements-api"
+
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
+
+import AuthenticatedPostForm from "@/components/common/AuthenticatedPostForm.vue"
 
 import InformationSharingAgreementBasicInformationCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationCard.vue"
 import InformationSharingAgreementDurationCard from "@/components/information-sharing-agreements/InformationSharingAgreementDurationCard.vue"
@@ -110,9 +115,11 @@ const { informationSharingAgreement } = useInformationSharingAgreement(
   informationSharingAgreementIdAsNumber
 )
 
-const printAgreement = () => {
-  window.alert("TODO: Implement printing of agreement for signature")
-}
+const acknowledgementTemplateUrl = computed(() => {
+  return informationSharingAgreementsApi.acknowledgementTemplatePath(
+    informationSharingAgreementIdAsNumber.value
+  )
+})
 
 const pageTitle = computed(() => {
   if (isNil(informationSharingAgreement.value)) {
