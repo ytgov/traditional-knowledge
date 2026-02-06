@@ -35,8 +35,14 @@ export async function quickStartBufferStream(
   passthrough.pipe(response)
   passthrough.write(Buffer.from(fileMagicNumber))
 
-  const content = await contentFunction()
-  passthrough.end(content.subarray(fileMagicNumber.length))
+  try {
+    const content = await contentFunction()
+    passthrough.end(content.subarray(fileMagicNumber.length))
+  } catch (error) {
+    logger.error(`Failed to generate content for stream: ${error}`, { error })
+    passthrough.end()
+    throw error
+  }
 }
 
 export default quickStartBufferStream

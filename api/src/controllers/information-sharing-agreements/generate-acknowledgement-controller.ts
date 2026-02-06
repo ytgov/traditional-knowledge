@@ -47,6 +47,11 @@ export class GenerateAcknowledgementController extends BaseController<Informatio
         `Failed to download information sharing agreement acknowledgement template: ${error}`,
         { error }
       )
+
+      if (this.response.headersSent) {
+        return this.response.end()
+      }
+
       return this.response.status(400).json({
         message: `Failed to download information sharing agreement acknowledgement template: ${error}`,
       })
