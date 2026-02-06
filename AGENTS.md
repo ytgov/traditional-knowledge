@@ -106,7 +106,7 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 
 ### Code Style
 
-- TypeScript only - no `any`, `@ts-expect-error`, `@ts-ignore`, or `!` (non-null assertion)
+- TypeScript only - no `any`, `as` type assertions, `@ts-expect-error`, `@ts-ignore`, or `!` (non-null assertion). Use `instanceof` narrowing with fallbacks instead of `as` casts.
 - Use optional chaining (`?.`) and nullish coalescing (`??`) for null handling
 - 2 spaces, no semicolons, double quotes, 100 char line limit
 - **No abbreviations:** Full descriptive names (`knowledgeEntry` not `ke`)
