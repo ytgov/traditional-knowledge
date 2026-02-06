@@ -26,7 +26,7 @@ export class CreateService extends BaseService {
     return content
   }
 
-  private generateTemplate(templateData: Record<string, string>) {
+  private generateTemplate(templateData: Record<string, string | boolean>) {
     const templatePath = `${TEMPLATE_ROOT_PATH}/information-sharing-agreements/acknowledgement-template.docx`
     const templateContent = fs.readFileSync(templatePath, "binary")
 

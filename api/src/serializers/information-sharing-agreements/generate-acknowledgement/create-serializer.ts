@@ -1,6 +1,8 @@
-import { isUndefined, truncate } from "lodash"
+import { isNil, isUndefined, truncate } from "lodash"
+import { DateTime } from "luxon"
 
 import { InformationSharingAgreement } from "@/models"
+import { InformationSharingAgreementExpirationConditions } from "@/models/information-sharing-agreement"
 import BaseSerializer from "@/serializers/base-serializer"
 
 const IDENTIFIER_MAX_LENGTH = 80
@@ -17,11 +19,15 @@ export type InformationSharingAgreementAsAcknowledgement = {
   "receiving_group_contact.branch": string
   "receiving_group_contact.phone": string
   "receiving_group_contact.email": string
+  "expiration_condition.is_completion_of_purpose": boolean
+  "expiration_condition.is_expiration_date": boolean
+  "expiration_condition.is_undetermined_with_default_expiration": boolean
+  end_date: string
 }
 
 export class CreateSerializer extends BaseSerializer<InformationSharingAgreement> {
   perform(): InformationSharingAgreementAsAcknowledgement {
-    const { id, title, sharingGroupContact, receivingGroupContact } = this.record
+    const { sharingGroupContact, receivingGroupContact } = this.record
     if (isUndefined(sharingGroupContact)) {
       throw new Error("Expected sharingGroupContact association to be preloaded")
     }
@@ -30,7 +36,15 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       throw new Error("Expected receivingGroupContact association to be preloaded")
     }
 
+    const { id, title, expirationCondition, endDate } = this.record
     const identifier = this.buildIdentifier(id, title)
+
+    const isCompletionOfPurpose = this.isCompletionOfPurpose(expirationCondition)
+    const isExpirationDate = this.isExpirationDate(expirationCondition)
+    const isUndeterminedWithDefaultExpiration =
+      this.isUndeterminedWithDefaultExpiration(expirationCondition)
+    const formattedEndDate = this.formatEndDate(endDate)
+
     return {
       identifier,
       "sharing_group_contact.display_name": sharingGroupContact.displayName,
@@ -43,6 +57,11 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       "receiving_group_contact.branch": receivingGroupContact.branch ?? "",
       "receiving_group_contact.phone": receivingGroupContact.phoneNumber ?? "",
       "receiving_group_contact.email": receivingGroupContact.email,
+      "expiration_condition.is_completion_of_purpose": isCompletionOfPurpose,
+      "expiration_condition.is_expiration_date": isExpirationDate,
+      "expiration_condition.is_undetermined_with_default_expiration":
+        isUndeterminedWithDefaultExpiration,
+      end_date: formattedEndDate,
     }
   }
 
@@ -53,6 +72,42 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       length: titleMaxLength,
     })
     return `${truncatedTitle}${suffix}`
+  }
+
+  private isCompletionOfPurpose(
+    expirationCondition: InformationSharingAgreementExpirationConditions | null
+  ): boolean {
+    return (
+      expirationCondition === InformationSharingAgreement.ExpirationConditions.COMPLETION_OF_PURPOSE
+    )
+  }
+
+  private isExpirationDate(
+    expirationCondition: InformationSharingAgreementExpirationConditions | null
+  ): boolean {
+    return expirationCondition === InformationSharingAgreement.ExpirationConditions.EXPIRATION_DATE
+  }
+
+  private isUndeterminedWithDefaultExpiration(
+    expirationCondition: InformationSharingAgreementExpirationConditions | null
+  ): boolean {
+    return (
+      expirationCondition ===
+      InformationSharingAgreement.ExpirationConditions.UNDETERMINED_WITH_DEFAULT_EXPIRATION
+    )
+  }
+
+  private formatEndDate(endDate: Date | null | undefined): string {
+    if (isNil(endDate)) {
+      return "Not specified"
+    }
+
+    const date = DateTime.fromJSDate(endDate)
+    if (!date.isValid) {
+      return "Not specified"
+    }
+
+    return date.toFormat("MM/dd/yyyy")
   }
 }
 
