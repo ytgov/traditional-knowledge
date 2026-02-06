@@ -1,21 +1,51 @@
 <template>
-  <v-skeleton-loader v-if="isNil(informationSharingAgreement)" type="card" />
-  <v-card v-else class="border" title="Information Sharing Agreement Details">
+  <v-skeleton-loader
+    v-if="isNil(informationSharingAgreement)"
+    type="card"
+  />
+  <v-card
+    v-else
+    class="border"
+    title="Information Sharing Agreement Details"
+  >
     <template #text>
       <v-row>
         <v-col cols="6">
-          <v-text-field :model-value="informationSharingAgreement.title" label="Title" readonly />
+          <v-text-field
+            :model-value="informationSharingAgreement.title"
+            label="Title"
+            readonly
+          />
         </v-col>
         <v-col cols="6">
-          <v-text-field :model-value="informationSharingAgreement.identifier" label="Identifier" readonly />
+          <v-text-field
+            :model-value="informationSharingAgreement.identifier"
+            label="Identifier"
+            readonly
+          />
         </v-col>
         <v-col cols="12">
-          <v-textarea :model-value="informationSharingAgreement.description || 'No description provided'"
-            label="Description" readonly rows="2" auto-grow />
+          <v-textarea
+            :model-value="informationSharingAgreement.description || 'No description provided'"
+            label="Description"
+            readonly
+            rows="2"
+            auto-grow
+          />
         </v-col>
-        <v-col v-if="informationSharingAgreement.sharingGroupId || informationSharingAgreement.receivingGroupId"
-          cols="12" md="6">
-          <v-card v-if="informationSharingAgreement.sharingGroupId" class="border" color="#ffffff66">
+        <v-col
+          v-if="
+            informationSharingAgreement.sharingGroupId ||
+            informationSharingAgreement.receivingGroupId
+          "
+          cols="12"
+          md="6"
+        >
+          <v-card
+            v-if="informationSharingAgreement.sharingGroupId"
+            class="border"
+            color="#ffffff66"
+          >
             <v-card-text>
               <h3 class="mt-n1 mb-3">Sharing Group</h3>
 
@@ -27,9 +57,19 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col v-if="informationSharingAgreement.sharingGroupId || informationSharingAgreement.receivingGroupId"
-          cols="12" md="6">
-          <v-card v-if="informationSharingAgreement.receivingGroupId" class="border" color="#ffffff66">
+        <v-col
+          v-if="
+            informationSharingAgreement.sharingGroupId ||
+            informationSharingAgreement.receivingGroupId
+          "
+          cols="12"
+          md="6"
+        >
+          <v-card
+            v-if="informationSharingAgreement.receivingGroupId"
+            class="border"
+            color="#ffffff66"
+          >
             <v-card-text>
               <h3 class="mt-n1 mb-3">Receiving Group</h3>
 
@@ -44,15 +84,27 @@
         <v-col cols="12">
           <v-text-field
             :model-value="`${formatDate(informationSharingAgreement.startDate)} to ${formatDate(informationSharingAgreement.endDate)}`"
-            label="Duration" readonly />
+            label="Duration"
+            readonly
+          />
         </v-col>
-        <v-col v-if="informationSharingAgreement.fileName" cols="12">
-          <v-card class="border" color="#ffffff66">
+        <v-col
+          v-if="informationSharingAgreement.fileName"
+          cols="12"
+        >
+          <v-card
+            class="border"
+            color="#ffffff66"
+          >
             <v-card-text>
               <h3 class="mt-n1 mb-3">Attachment</h3>
               <div class="d-flex align-center ga-2">
                 <span>{{ informationSharingAgreement.fileName }}</span>
-                <v-btn color="primary" size="small" @click="downloadFile">
+                <v-btn
+                  color="primary"
+                  size="small"
+                  @click="downloadFile"
+                >
                   Download
                 </v-btn>
               </div>
@@ -62,7 +114,11 @@
       </v-row>
 
       <div class="d-flex mt-5 ga-2">
-        <v-btn v-if="policy?.update" color="primary" v-bind="editButtonProps">
+        <v-btn
+          v-if="policy?.update"
+          color="primary"
+          v-bind="editButtonProps"
+        >
           Edit
         </v-btn>
         <AuthenticatedPostForm
@@ -146,7 +202,6 @@ async function downloadFile() {
     console.error("Error downloading file:", error)
   }
 }
-
 </script>
 
 <style scoped>
