@@ -4,6 +4,7 @@ import { DateTime } from "luxon"
 import { InformationSharingAgreement } from "@/models"
 import {
   InformationSharingAgreementAccessLevels,
+  InformationSharingAgreementConfidentialityType,
   InformationSharingAgreementExpirationConditions,
 } from "@/models/information-sharing-agreement"
 import BaseSerializer from "@/serializers/base-serializer"
@@ -34,6 +35,9 @@ export type InformationSharingAgreementAsAcknowledgement = {
   department_branch_unit_hierarchy: string
   has_additional_access_restrictions: boolean
   additional_access_restrictions: string
+  "confidentiality_type.is_accordance": boolean
+  "confidentiality_type.is_accepted_in_confidence": boolean
+  authorized_application: string
 }
 
 export class CreateSerializer extends BaseSerializer<InformationSharingAgreement> {
@@ -73,6 +77,11 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       this.record.accessLevelUnitRestriction
     )
 
+    const { confidentialityType, authorizedApplication } = this.record
+    const isAccordance = this.isAccordance(confidentialityType)
+    const isAcceptedInConfidence = this.isAcceptedInConfidence(confidentialityType)
+    const authorizedApplicationOrFallback = authorizedApplication ?? "Not specified"
+
     return {
       identifier,
       purpose: purposeOrFallback,
@@ -98,6 +107,9 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       department_branch_unit_hierarchy: departmentBranchUnitHierarchy,
       has_additional_access_restrictions: this.record.hasAdditionalAccessRestrictions ?? false,
       additional_access_restrictions: this.record.additionalAccessRestrictions ?? "",
+      "confidentiality_type.is_accordance": isAccordance,
+      "confidentiality_type.is_accepted_in_confidence": isAcceptedInConfidence,
+      authorized_application: authorizedApplicationOrFallback,
     }
   }
 
@@ -160,6 +172,21 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
     accessLevel: InformationSharingAgreementAccessLevels | null
   ): boolean {
     return accessLevel === InformationSharingAgreement.AccessLevels.CONFIDENTIAL_AND_RESTRICTED
+  }
+
+  private isAccordance(
+    confidentialityType: InformationSharingAgreementConfidentialityType | null
+  ): boolean {
+    return confidentialityType === InformationSharingAgreement.ConfidentialityTypes.ACCORDANCE
+  }
+
+  private isAcceptedInConfidence(
+    confidentialityType: InformationSharingAgreementConfidentialityType | null
+  ): boolean {
+    return (
+      confidentialityType ===
+      InformationSharingAgreement.ConfidentialityTypes.ACCEPTED_IN_CONFIDENCE
+    )
   }
 
   private buildDepartmentBranchUnitHierarchy(
