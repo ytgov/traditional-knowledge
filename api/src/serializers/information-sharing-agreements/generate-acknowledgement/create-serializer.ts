@@ -2,13 +2,17 @@ import { isNil, isUndefined, truncate } from "lodash"
 import { DateTime } from "luxon"
 
 import { InformationSharingAgreement } from "@/models"
-import { InformationSharingAgreementExpirationConditions } from "@/models/information-sharing-agreement"
+import {
+  InformationSharingAgreementAccessLevels,
+  InformationSharingAgreementExpirationConditions,
+} from "@/models/information-sharing-agreement"
 import BaseSerializer from "@/serializers/base-serializer"
 
 const IDENTIFIER_MAX_LENGTH = 80
 
 export type InformationSharingAgreementAsAcknowledgement = {
   identifier: string
+  purpose: string
   "sharing_group_contact.external_organization.name": string
   "sharing_group_contact.display_name": string
   "sharing_group_contact.title": string
@@ -24,6 +28,12 @@ export type InformationSharingAgreementAsAcknowledgement = {
   "expiration_condition.is_expiration_date": boolean
   "expiration_condition.is_undetermined_with_default_expiration": boolean
   end_date: string
+  "access_level.is_internal": boolean
+  "access_level.is_protected_and_limited": boolean
+  "access_level.is_confidential_and_restricted": boolean
+  department_branch_unit_hierarchy: string
+  has_additional_access_restrictions: boolean
+  additional_access_restrictions: string
 }
 
 export class CreateSerializer extends BaseSerializer<InformationSharingAgreement> {
@@ -42,7 +52,7 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       throw new Error("Expected receivingGroupContact association to be preloaded")
     }
 
-    const { id, title, expirationCondition, endDate } = this.record
+    const { id, title, purpose, expirationCondition, endDate } = this.record
     const identifier = this.buildIdentifier(id, title)
 
     const isCompletionOfPurpose = this.isCompletionOfPurpose(expirationCondition)
@@ -51,8 +61,21 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       this.isUndeterminedWithDefaultExpiration(expirationCondition)
     const formattedEndDate = this.formatEndDate(endDate)
 
+    const purposeOrFallback = purpose ?? "Not specified"
+
+    const { accessLevel } = this.record
+    const isInternal = this.isInternal(accessLevel)
+    const isProtectedAndLimited = this.isProtectedAndLimited(accessLevel)
+    const isConfidentialAndRestricted = this.isConfidentialAndRestricted(accessLevel)
+    const departmentBranchUnitHierarchy = this.buildDepartmentBranchUnitHierarchy(
+      this.record.accessLevelDepartmentRestriction,
+      this.record.accessLevelBranchRestriction,
+      this.record.accessLevelUnitRestriction
+    )
+
     return {
       identifier,
+      purpose: purposeOrFallback,
       "sharing_group_contact.external_organization.name": externalOrganization.name,
       "sharing_group_contact.display_name": sharingGroupContact.displayName,
       "sharing_group_contact.title": sharingGroupContact.title ?? "",
@@ -69,6 +92,12 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       "expiration_condition.is_undetermined_with_default_expiration":
         isUndeterminedWithDefaultExpiration,
       end_date: formattedEndDate,
+      "access_level.is_internal": isInternal,
+      "access_level.is_protected_and_limited": isProtectedAndLimited,
+      "access_level.is_confidential_and_restricted": isConfidentialAndRestricted,
+      department_branch_unit_hierarchy: departmentBranchUnitHierarchy,
+      has_additional_access_restrictions: this.record.hasAdditionalAccessRestrictions ?? false,
+      additional_access_restrictions: this.record.additionalAccessRestrictions ?? "",
     }
   }
 
@@ -115,6 +144,36 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
     }
 
     return date.toFormat("MM/dd/yyyy")
+  }
+
+  private isInternal(accessLevel: InformationSharingAgreementAccessLevels | null): boolean {
+    return accessLevel === InformationSharingAgreement.AccessLevels.INTERNAL
+  }
+
+  private isProtectedAndLimited(
+    accessLevel: InformationSharingAgreementAccessLevels | null
+  ): boolean {
+    return accessLevel === InformationSharingAgreement.AccessLevels.PROTECTED_AND_LIMITED
+  }
+
+  private isConfidentialAndRestricted(
+    accessLevel: InformationSharingAgreementAccessLevels | null
+  ): boolean {
+    return accessLevel === InformationSharingAgreement.AccessLevels.CONFIDENTIAL_AND_RESTRICTED
+  }
+
+  private buildDepartmentBranchUnitHierarchy(
+    accessLevelDepartmentRestriction: string | null,
+    accessLevelBranchRestriction: string | null,
+    accessLevelUnitRestriction: string | null
+  ): string {
+    return [
+      accessLevelDepartmentRestriction,
+      accessLevelBranchRestriction,
+      accessLevelUnitRestriction,
+    ]
+      .filter(Boolean)
+      .join(" / ")
   }
 }
 
