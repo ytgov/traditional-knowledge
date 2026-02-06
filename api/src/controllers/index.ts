@@ -17,5 +17,6 @@ export { UserGroupsController } from "./user-groups-controller"
 export { UsersController } from "./users-controller"
 
 // Bundled exports
+export * as InformationSharingAgreements from "./information-sharing-agreements"
 export * as Users from "./users"
 export * as YukonGovernmentDirectory from "./yukon-government-directory"

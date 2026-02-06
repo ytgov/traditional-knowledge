@@ -1,9 +1,6 @@
 <template>
   <v-layout>
-    <LeftSidebarNavigationDrawer
-      v-model="showDrawer"
-      :show-rail="showRail"
-    />
+    <LeftSidebarNavigationDrawer ref="leftSidebarNavigationDrawerRef" />
 
     <v-app-bar
       flat
@@ -11,7 +8,7 @@
     >
       <v-app-bar-nav-icon
         color="#f7f9ef"
-        @click="toggleDrawer"
+        @click="toggleLeftSidebarNavigationDrawer"
       ></v-app-bar-nav-icon>
       <v-app-bar-title
         v-if="mdAndUp"
@@ -73,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from "vue"
+import { ref, useTemplateRef } from "vue"
 import { useDisplay } from "vuetify"
 
 import useBreadcrumbs from "@/use/use-breadcrumbs"
@@ -85,20 +82,10 @@ import NotificationMenu from "@/components/common/layouts/NotificationMenu.vue"
 
 const { mdAndUp } = useDisplay()
 
-const showDrawer = ref(mdAndUp.value)
-const showRail = ref(false)
+const leftSidebarNavigationDrawerRef = useTemplateRef("leftSidebarNavigationDrawerRef")
 
-watchEffect(() => {
-  showDrawer.value = mdAndUp.value
-  showRail.value = false
-})
-
-function toggleDrawer() {
-  if (!mdAndUp.value) {
-    showDrawer.value = !showDrawer.value
-  } else {
-    showRail.value = !showRail.value
-  }
+function toggleLeftSidebarNavigationDrawer() {
+  leftSidebarNavigationDrawerRef.value?.toggle()
 }
 
 const searchWidth = ref(120)

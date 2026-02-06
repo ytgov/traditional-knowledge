@@ -51,13 +51,9 @@
         />
 
         <div class="mt-4 d-flex flex-column flex-md-row justify-space-between ga-3 px-6 py-4">
-          <v-btn
-            color="primary"
-            size="large"
-            @click="printAgreement"
-          >
-            Print Agreement
-          </v-btn>
+          <InformationSharingAgreementDownloadDraftButton
+            :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
+          />
           <div class="d-flex flex-column flex-md-row justify-end ga-3">
             <v-btn
               color="secondary"
@@ -94,6 +90,8 @@ import { isNil } from "lodash"
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 
+import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
+
 import InformationSharingAgreementBasicInformationCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationCard.vue"
 import InformationSharingAgreementDurationCard from "@/components/information-sharing-agreements/InformationSharingAgreementDurationCard.vue"
 import InformationSharingAgreementAccessCard from "@/components/information-sharing-agreements/InformationSharingAgreementAccessCard.vue"
@@ -110,10 +108,6 @@ const { informationSharingAgreement } = useInformationSharingAgreement(
   informationSharingAgreementIdAsNumber
 )
 
-const printAgreement = () => {
-  window.alert("TODO: Implement printing of agreement for signature")
-}
-
 const pageTitle = computed(() => {
   if (isNil(informationSharingAgreement.value)) {
     return "loading..."
@@ -123,7 +117,7 @@ const pageTitle = computed(() => {
   return title
 })
 
-useBreadcrumbs(pageTitle.value, [
+useBreadcrumbs(pageTitle, [
   BASE_CRUMB,
   {
     title: "Information Sharing Agreements",

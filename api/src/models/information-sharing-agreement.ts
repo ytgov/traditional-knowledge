@@ -318,6 +318,15 @@ export class InformationSharingAgreement extends BaseModel<
   })
   declare receivingGroupContact?: NonAttribute<User>
 
+  @BelongsTo(() => User, {
+    foreignKey: "receivingGroupSecondaryContactId",
+    inverse: {
+      as: "receivedInformationAgreementAsSecondaryContact",
+      type: "hasMany",
+    },
+  })
+  declare receivingGroupSecondaryContact?: NonAttribute<User>
+
   @HasMany(() => InformationSharingAgreementAccessGrant, {
     foreignKey: "informationSharingAgreementId",
     inverse: "informationSharingAgreement",

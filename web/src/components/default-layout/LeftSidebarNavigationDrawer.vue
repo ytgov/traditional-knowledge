@@ -1,8 +1,8 @@
 <template>
   <v-navigation-drawer
     v-model="showDrawer"
-    :disable-resize-watcher="false"
     :rail="showRail"
+    mobile-breakpoint="md"
     color="#a3a48d"
   >
     <v-list
@@ -53,17 +53,28 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
+import { useDisplay } from "vuetify"
 
 import useCurrentUser from "@/use/use-current-user"
 
-const showDrawer = defineModel<boolean>({
-  default: false,
-})
-const showRail = defineModel<boolean>("showRail", {
-  default: false,
-})
+const { mdAndUp } = useDisplay()
+
+const showDrawer = ref(mdAndUp.value)
+const showRail = ref(false)
+
+function toggle() {
+  if (!mdAndUp.value) {
+    showDrawer.value = !showDrawer.value
+  } else {
+    showRail.value = !showRail.value
+  }
+}
 
 const open = ref([])
 
 const { isAdmin } = useCurrentUser<true>()
+
+defineExpose({
+  toggle,
+})
 </script>

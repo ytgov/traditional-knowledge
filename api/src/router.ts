@@ -16,6 +16,7 @@ import { logger } from "@/utils/logger"
 import migrator from "@/db/migrator"
 
 import {
+  bodyAuthorizationHoistMiddleware,
   jwtMiddleware,
   ensureAndAuthorizeCurrentUser,
   trackLastActiveMiddleware,
@@ -31,6 +32,7 @@ import {
   GroupsController,
   InformationSharingAgreementAccessGrantsController,
   InformationSharingAgreementArchiveItemsController,
+  InformationSharingAgreements,
   InformationSharingAgreementsController,
   Notifications,
   NotificationsController,
@@ -54,7 +56,13 @@ router.route("/_status").get((_req: Request, res: Response) => {
 router.use("/migrate", migrator.migrationRouter)
 
 // api routes
-router.use("/api", jwtMiddleware, ensureAndAuthorizeCurrentUser, trackLastActiveMiddleware)
+router.use(
+  "/api",
+  bodyAuthorizationHoistMiddleware,
+  jwtMiddleware,
+  ensureAndAuthorizeCurrentUser,
+  trackLastActiveMiddleware
+)
 
 router.route("/api/current-user").get(CurrentUserController.show)
 
@@ -143,8 +151,10 @@ router
   .get(InformationSharingAgreementsController.downloadFile)
 
 router
-  .route("/api/information-sharing-agreements/:informationSharingAgreementId/generate-document")
-  .get(InformationSharingAgreementsController.generateDocument)
+  .route(
+    "/api/information-sharing-agreements/:informationSharingAgreementId/generate-acknowledgement"
+  )
+  .post(InformationSharingAgreements.GenerateAcknowledgementController.create)
 
 router
   .route("/api/information-sharing-agreement-access-grants")

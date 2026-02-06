@@ -1,22 +1,22 @@
-import { isUndefined } from "lodash"
-import { reactive, toRefs } from "vue"
+import { reactive, toRefs, watch, MaybeRefOrGetter, toValue } from "vue"
 import { RouteLocationRaw } from "vue-router"
+import { cloneDeep, isUndefined } from "lodash"
 
 export type Breadcrumb = {
-  title: string
+  title?: string
   disabled?: boolean
   exact?: boolean
   to: RouteLocationRaw
 }
 
-export const BASE_CRUMB = {
+export const BASE_CRUMB: Breadcrumb = {
   title: "Traditional Knowledge",
   disabled: false,
   to: {
     name: "DashboardPage",
   },
 }
-export const ADMIN_CRUMB = {
+export const ADMIN_CRUMB: Breadcrumb = {
   title: "Administration Dashboard",
   disabled: false,
   to: {
@@ -34,15 +34,37 @@ const state = reactive<{
   title: null,
 })
 
-export function useBreadcrumbs(title?: string, breadcrumbs?: Breadcrumb[]) {
-  if (!isUndefined(title)) {
-    state.title = title
-  }
-  if (!isUndefined(breadcrumbs)) state.breadcrumbs = breadcrumbs
+export function useBreadcrumbs(
+  title?: MaybeRefOrGetter<string>,
+  breadcrumbs?: MaybeRefOrGetter<Breadcrumb[]>
+) {
+  watch(
+    () => toValue(title),
+    (newTitle) => {
+      if (isUndefined(newTitle)) return
+
+      state.title = newTitle
+    },
+    {
+      immediate: true,
+    }
+  )
+
+  watch(
+    () => cloneDeep(toValue(breadcrumbs)),
+    (newBreadcrumbs) => {
+      if (isUndefined(newBreadcrumbs)) return
+
+      state.breadcrumbs = newBreadcrumbs
+    },
+    {
+      immediate: true,
+      deep: true,
+    }
+  )
 
   return {
     ...toRefs(state),
-    update: useBreadcrumbs,
   }
 }
 
