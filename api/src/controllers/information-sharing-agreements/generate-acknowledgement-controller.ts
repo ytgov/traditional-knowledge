@@ -67,7 +67,14 @@ export class GenerateAcknowledgementController extends BaseController<Informatio
 
   private async loadInformationSharingAgreement(): Promise<InformationSharingAgreement | null> {
     return InformationSharingAgreement.findByPk(this.params.informationSharingAgreementId, {
-      include: ["accessGrants", "sharingGroupContact", "receivingGroupContact"],
+      include: [
+        "accessGrants",
+        {
+          association: "sharingGroupContact",
+          include: ["externalOrganization"],
+        },
+        "receivingGroupContact",
+      ],
     })
   }
 

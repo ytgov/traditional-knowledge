@@ -9,6 +9,7 @@ const IDENTIFIER_MAX_LENGTH = 80
 
 export type InformationSharingAgreementAsAcknowledgement = {
   identifier: string
+  "sharing_group_contact.external_organization.name": string
   "sharing_group_contact.display_name": string
   "sharing_group_contact.title": string
   "sharing_group_contact.email": string
@@ -32,6 +33,11 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       throw new Error("Expected sharingGroupContact association to be preloaded")
     }
 
+    const { externalOrganization } = sharingGroupContact
+    if (isUndefined(externalOrganization)) {
+      throw new Error("Expected externalOrganization association to be preloaded")
+    }
+
     if (isUndefined(receivingGroupContact)) {
       throw new Error("Expected receivingGroupContact association to be preloaded")
     }
@@ -47,6 +53,7 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
 
     return {
       identifier,
+      "sharing_group_contact.external_organization.name": externalOrganization.name,
       "sharing_group_contact.display_name": sharingGroupContact.displayName,
       "sharing_group_contact.title": sharingGroupContact.title ?? "",
       "sharing_group_contact.email": sharingGroupContact.email,
