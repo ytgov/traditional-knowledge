@@ -51,13 +51,8 @@
         />
 
         <div class="mt-4 d-flex flex-column flex-md-row justify-space-between ga-3 px-6 py-4">
-          <AuthenticatedPostForm
-            :action-url="generateAcknowledgementUrl"
-            text="Print for Signature"
-            :activator-props="{
-              color: 'primary',
-              size: 'large',
-            }"
+          <InformationSharingAgreementDownloadDraftButton
+            :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
           />
           <div class="d-flex flex-column flex-md-row justify-end ga-3">
             <v-btn
@@ -92,12 +87,10 @@
 import { computed } from "vue"
 import { isNil } from "lodash"
 
-import informationSharingAgreementsApi from "@/api/information-sharing-agreements-api"
-
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 
-import AuthenticatedPostForm from "@/components/common/AuthenticatedPostForm.vue"
+import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
 
 import InformationSharingAgreementBasicInformationCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationCard.vue"
 import InformationSharingAgreementDurationCard from "@/components/information-sharing-agreements/InformationSharingAgreementDurationCard.vue"
@@ -113,12 +106,6 @@ const informationSharingAgreementIdAsNumber = computed(() =>
 )
 const { informationSharingAgreement } = useInformationSharingAgreement(
   informationSharingAgreementIdAsNumber
-)
-
-const generateAcknowledgementUrl = computed(() =>
-  informationSharingAgreementsApi.generateAcknowledgementPath(
-    informationSharingAgreementIdAsNumber.value
-  )
 )
 
 const pageTitle = computed(() => {

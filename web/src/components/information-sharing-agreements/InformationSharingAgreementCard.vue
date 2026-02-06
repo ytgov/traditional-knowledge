@@ -121,12 +121,8 @@
         >
           Edit
         </v-btn>
-        <AuthenticatedPostForm
-          :action-url="generateAcknowledgementUrl"
-          text="enerate Document"
-          :activator-props="{
-            color: 'secondary',
-          }"
+        <InformationSharingAgreementDownloadDraftButton
+          :information-sharing-agreement-id="informationSharingAgreementId"
         />
       </div>
     </template>
@@ -134,7 +130,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from "vue"
+import { toRefs } from "vue"
 import { isNil } from "lodash"
 
 import { type VBtn } from "vuetify/components"
@@ -143,7 +139,8 @@ import { formatDate } from "@/utils/formatters"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import informationSharingAgreementsApi from "@/api/information-sharing-agreements-api"
 
-import AuthenticatedPostForm from "@/components/common/AuthenticatedPostForm.vue"
+import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
+
 import GroupChip from "@/components/groups/GroupChip.vue"
 import UserChip from "@/components/users/UserChip.vue"
 
@@ -173,12 +170,8 @@ const props = withDefaults(
 )
 
 const { informationSharingAgreementId } = toRefs(props)
-const { informationSharingAgreement, policy, isLoading } = useInformationSharingAgreement(
+const { informationSharingAgreement, policy } = useInformationSharingAgreement(
   informationSharingAgreementId
-)
-
-const generateAcknowledgementUrl = computed(() =>
-  informationSharingAgreementsApi.generateAcknowledgementPath(informationSharingAgreementId.value)
 )
 
 async function downloadFile() {

@@ -29,13 +29,14 @@ import { useAuth0 } from "@auth0/auth0-vue"
 import { useDisplay } from "vuetify"
 import { isNil } from "lodash"
 
+import { type ButtonHTMLAttributes } from "vue"
 import { type VBtn } from "vuetify/components"
 
 const props = withDefaults(
   defineProps<{
     actionUrl: string
     text?: string
-    activatorProps?: VBtn["$props"]
+    activatorProps?: VBtn["$props"] & ButtonHTMLAttributes
   }>(),
   {
     text: "Submit",
