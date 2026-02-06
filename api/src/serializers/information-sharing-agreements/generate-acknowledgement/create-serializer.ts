@@ -25,6 +25,10 @@ export type InformationSharingAgreementAsAcknowledgement = {
   "receiving_group_contact.branch": string
   "receiving_group_contact.phone": string
   "receiving_group_contact.email": string
+  "receiving_group_secondary_contact.name_and_title": string
+  "receiving_group_secondary_contact.department_branch_unit_hierarchy": string
+  "receiving_group_secondary_contact.email": string
+  "receiving_group_secondary_contact.phone": string
   "expiration_condition.is_completion_of_purpose": boolean
   "expiration_condition.is_expiration_date": boolean
   "expiration_condition.is_undetermined_with_default_expiration": boolean
@@ -42,7 +46,8 @@ export type InformationSharingAgreementAsAcknowledgement = {
 
 export class CreateSerializer extends BaseSerializer<InformationSharingAgreement> {
   perform(): InformationSharingAgreementAsAcknowledgement {
-    const { sharingGroupContact, receivingGroupContact } = this.record
+    const { sharingGroupContact, receivingGroupContact, receivingGroupSecondaryContact } =
+      this.record
     if (isUndefined(sharingGroupContact)) {
       throw new Error("Expected sharingGroupContact association to be preloaded")
     }
@@ -56,8 +61,22 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       throw new Error("Expected receivingGroupContact association to be preloaded")
     }
 
+    if (isUndefined(receivingGroupSecondaryContact)) {
+      throw new Error("Expected receivingGroupSecondaryContact association to be preloaded")
+    }
+
     const { id, title, purpose, expirationCondition, endDate } = this.record
     const identifier = this.buildIdentifier(id, title)
+
+    const secondaryContactNameAndTitle = this.buildNameAndTitle(
+      receivingGroupSecondaryContact.displayName,
+      receivingGroupSecondaryContact.title
+    )
+    const secondaryContactDepartmentBranchUnitHierarchy = this.buildDepartmentBranchUnitHierarchy(
+      receivingGroupSecondaryContact.department,
+      receivingGroupSecondaryContact.branch,
+      receivingGroupSecondaryContact.unit
+    )
 
     const isCompletionOfPurpose = this.isCompletionOfPurpose(expirationCondition)
     const isExpirationDate = this.isExpirationDate(expirationCondition)
@@ -96,6 +115,11 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       "receiving_group_contact.branch": receivingGroupContact.branch ?? "",
       "receiving_group_contact.phone": receivingGroupContact.phoneNumber ?? "",
       "receiving_group_contact.email": receivingGroupContact.email,
+      "receiving_group_secondary_contact.name_and_title": secondaryContactNameAndTitle,
+      "receiving_group_secondary_contact.department_branch_unit_hierarchy":
+        secondaryContactDepartmentBranchUnitHierarchy,
+      "receiving_group_secondary_contact.email": receivingGroupSecondaryContact?.email ?? "",
+      "receiving_group_secondary_contact.phone": receivingGroupSecondaryContact?.phoneNumber ?? "",
       "expiration_condition.is_completion_of_purpose": isCompletionOfPurpose,
       "expiration_condition.is_expiration_date": isExpirationDate,
       "expiration_condition.is_undetermined_with_default_expiration":
@@ -172,6 +196,13 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
     accessLevel: InformationSharingAgreementAccessLevels | null
   ): boolean {
     return accessLevel === InformationSharingAgreement.AccessLevels.CONFIDENTIAL_AND_RESTRICTED
+  }
+
+  private buildNameAndTitle(
+    displayName: string | undefined,
+    title: string | null | undefined
+  ): string {
+    return [displayName, title].filter(Boolean).join(", ")
   }
 
   private isAccordance(

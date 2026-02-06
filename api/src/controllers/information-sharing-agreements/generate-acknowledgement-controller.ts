@@ -79,6 +79,7 @@ export class GenerateAcknowledgementController extends BaseController<Informatio
           include: ["externalOrganization"],
         },
         "receivingGroupContact",
+        "receivingGroupSecondaryContact",
       ],
     })
   }
