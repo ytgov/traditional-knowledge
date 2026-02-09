@@ -145,11 +145,9 @@ router
   .get(InformationSharingAgreementsController.show)
   .patch(InformationSharingAgreementsController.update)
   .delete(InformationSharingAgreementsController.destroy)
-
 router
-  .route("/api/information-sharing-agreements/:informationSharingAgreementId/file")
-  .get(InformationSharingAgreementsController.downloadFile)
-
+  .route("/api/information-sharing-agreements/:informationSharingAgreementId/sign")
+  .post(InformationSharingAgreements.SignController.create)
 router
   .route(
     "/api/information-sharing-agreements/:informationSharingAgreementId/generate-acknowledgement"
