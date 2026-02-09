@@ -51,12 +51,28 @@
         />
 
         <div class="mt-4 d-flex flex-column flex-md-row justify-space-between ga-3 px-6 py-4">
-          <InformationSharingAgreementDownloadDraftButton
-            :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
-          />
-          <div class="d-flex flex-column flex-md-row justify-end ga-3">
+          <div class="d-flex flex-column flex-md-row ga-3">
+            <InformationSharingAgreementDownloadDraftButton
+              :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
+            />
             <v-btn
               color="secondary"
+              size="large"
+              :to="{
+                name: 'information-sharing-agreements/InformationSharingAgreementSignPage',
+                params: {
+                  informationSharingAgreementId,
+                },
+              }"
+            >
+              Mark as Signed
+            </v-btn>
+          </div>
+
+          <div class="d-flex flex-column flex-md-row justify-end ga-3">
+            <v-btn
+              v-if="policy?.update"
+              color="primary"
               size="large"
               :to="{
                 name: 'information-sharing-agreements/InformationSharingAgreementEditBasicInformationPage',
@@ -70,6 +86,7 @@
             <v-btn
               size="large"
               variant="outlined"
+              color="secondary"
               :to="{
                 name: 'InformationSharingAgreementsPage',
               }"
@@ -104,7 +121,7 @@ const props = defineProps<{
 const informationSharingAgreementIdAsNumber = computed(() =>
   parseInt(props.informationSharingAgreementId)
 )
-const { informationSharingAgreement } = useInformationSharingAgreement(
+const { informationSharingAgreement, policy } = useInformationSharingAgreement(
   informationSharingAgreementIdAsNumber
 )
 

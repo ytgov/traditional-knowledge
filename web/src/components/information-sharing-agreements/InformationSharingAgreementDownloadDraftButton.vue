@@ -3,7 +3,8 @@
     :action-url="generateAcknowledgementUrl"
     text="Download Draft"
     :activator-props="{
-      color: 'primary',
+      variant: 'outlined',
+      color: 'secondary',
       size: 'large',
       title: 'Download a draft of the agreement for printing and signature',
     }"
