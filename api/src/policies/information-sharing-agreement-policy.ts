@@ -77,10 +77,6 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
       "breachActions",
       "breachNotes",
       "disclosureNotes",
-      "fileName",
-      "fileData",
-      "fileMimeType",
-      "fileSize",
       "startDate",
       "endDate",
     ]
