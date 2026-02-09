@@ -48,10 +48,8 @@ export type InformationSharingAgreement = {
   receivingGroupContactName: string | null
   sharingGroupContactTitle: string | null
   receivingGroupContactTitle: string | null
-  sharingGroupSignedBy: string | null
-  receivingGroupSignedBy: string | null
-  sharingGroupSignedDate: string | null
-  receivingGroupSignedDate: string | null
+  signedById: number | null
+  signedAt: string | null
   title: string
   description: string | null
   purpose: string | null
@@ -116,8 +114,7 @@ export type InformationSharingAgreementAsShow = Pick<
   | "receivingGroupContactName"
   | "sharingGroupContactTitle"
   | "receivingGroupContactTitle"
-  | "sharingGroupSignedBy"
-  | "receivingGroupSignedBy"
+  | "signedById"
   | "title"
   | "description"
   | "purpose"
@@ -145,8 +142,7 @@ export type InformationSharingAgreementAsShow = Pick<
 > & {
   startDate: string | null
   endDate: string | null
-  sharingGroupSignedDate: string | null
-  receivingGroupSignedDate: string | null
+  signedAt: string | null
   // Associations
   signedAcknowledgement: AttachmentAsReference | null
 }
@@ -169,10 +165,8 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "receivingGroupContactName"
   | "sharingGroupContactTitle"
   | "receivingGroupContactTitle"
-  | "sharingGroupSignedBy"
-  | "receivingGroupSignedBy"
-  | "sharingGroupSignedDate"
-  | "receivingGroupSignedDate"
+  | "signedById"
+  | "signedAt"
   | "title"
   | "description"
   | "purpose"

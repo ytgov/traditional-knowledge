@@ -109,17 +109,11 @@ export class InformationSharingAgreement extends BaseModel<
   @Attribute(DataTypes.STRING)
   declare receivingGroupContactTitle: string | null
 
-  @Attribute(DataTypes.STRING(100))
-  declare sharingGroupSignedBy: string | null
+  @Attribute(DataTypes.INTEGER)
+  declare signedById: number | null
 
-  @Attribute(DataTypes.STRING(100))
-  declare receivingGroupSignedBy: string | null
-
-  @Attribute(DataTypes.DATE)
-  declare sharingGroupSignedDate: Date | null
-
-  @Attribute(DataTypes.DATE)
-  declare receivingGroupSignedDate: Date | null
+  @Attribute(DataTypes.DATE(0))
+  declare signedAt: Date | null
 
   @Attribute(DataTypes.STRING)
   @NotNull
@@ -290,6 +284,15 @@ export class InformationSharingAgreement extends BaseModel<
     },
   })
   declare receivingGroupSecondaryContact?: NonAttribute<User>
+
+  @BelongsTo(() => User, {
+    foreignKey: "signedById",
+    inverse: {
+      as: "signedInformationSharingAgreements",
+      type: "hasMany",
+    },
+  })
+  declare signedBy?: NonAttribute<User>
 
   @HasOne(() => Attachment, {
     foreignKey: {

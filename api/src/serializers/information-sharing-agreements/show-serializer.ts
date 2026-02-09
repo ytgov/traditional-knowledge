@@ -23,8 +23,7 @@ export type AgreementShowAsShow = Pick<
   | "receivingGroupContactName"
   | "sharingGroupContactTitle"
   | "receivingGroupContactTitle"
-  | "sharingGroupSignedBy"
-  | "receivingGroupSignedBy"
+  | "signedById"
   | "title"
   | "description"
   | "purpose"
@@ -52,8 +51,7 @@ export type AgreementShowAsShow = Pick<
 > & {
   startDate: string | null
   endDate: string | null
-  sharingGroupSignedDate: string | null
-  receivingGroupSignedDate: string | null
+  signedAt: string | null
   // Associations
   signedAcknowledgement: Attachments.AsReference | null
 }
@@ -65,11 +63,10 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
       throw new Error("Expected signed acknowledgement association to be preloaded.")
     }
 
-    const { startDate, endDate, sharingGroupSignedDate, receivingGroupSignedDate } = this.record
+    const { startDate, endDate, signedAt } = this.record
     const formattedStartDate = formatDate(startDate)
     const formattedEndDate = formatDate(endDate)
-    const formattedSharingGroupSignedDate = formatDate(sharingGroupSignedDate)
-    const formattedReceivingGroupSignedDate = formatDate(receivingGroupSignedDate)
+    const formattedSignedAt = formatDate(signedAt)
 
     const serializedSignedAcknowledgement =
       this.serializeSignedAcknowledgement(signedAcknowledgement)
@@ -91,8 +88,7 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "receivingGroupContactName",
         "sharingGroupContactTitle",
         "receivingGroupContactTitle",
-        "sharingGroupSignedBy",
-        "receivingGroupSignedBy",
+        "signedById",
         "title",
         "description",
         "purpose",
@@ -120,8 +116,7 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
       ]),
       startDate: formattedStartDate,
       endDate: formattedEndDate,
-      sharingGroupSignedDate: formattedSharingGroupSignedDate,
-      receivingGroupSignedDate: formattedReceivingGroupSignedDate,
+      signedAt: formattedSignedAt,
       signedAcknowledgement: serializedSignedAcknowledgement,
     }
   }

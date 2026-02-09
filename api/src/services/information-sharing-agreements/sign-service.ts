@@ -27,8 +27,11 @@ export class SignService extends BaseService {
         targetType: Attachment.TargetTypes.InformationSharingAgreement,
       })
 
-      this.informationSharingAgreement.status = InformationSharingAgreement.Status.SIGNED
-      await this.informationSharingAgreement.save()
+      await this.informationSharingAgreement.update({
+        status: InformationSharingAgreement.Status.SIGNED,
+        signedById: this.currentUser.id,
+        signedAt: new Date(),
+      })
 
       return this.informationSharingAgreement
     })
