@@ -52,26 +52,50 @@
 
         <div class="mt-4 d-flex flex-column flex-md-row justify-space-between ga-3 px-6 py-4">
           <div class="d-flex flex-column flex-md-row ga-3">
-            <InformationSharingAgreementDownloadDraftButton
-              :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
-            />
-            <v-btn
-              color="secondary"
-              size="large"
-              :to="{
-                name: 'information-sharing-agreements/InformationSharingAgreementSignPage',
-                params: {
-                  informationSharingAgreementId,
-                },
-              }"
+            <template
+              v-if="
+                informationSharingAgreement.status === InformationSharingAgreementStatuses.DRAFT
+              "
             >
-              Mark as Signed
+              <InformationSharingAgreementDownloadDraftButton
+                :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
+              />
+              <v-btn
+                color="secondary"
+                size="large"
+                :to="{
+                  name: 'information-sharing-agreements/InformationSharingAgreementSignPage',
+                  params: {
+                    informationSharingAgreementId,
+                  },
+                }"
+              >
+                Mark as Signed
+              </v-btn>
+            </template>
+            <v-btn
+              v-else-if="
+                informationSharingAgreement.status === InformationSharingAgreementStatuses.SIGNED
+              "
+              color="warning"
+              size="large"
+              variant="outlined"
+            >
+              Revert to Draft
+              <InformationSharingAgreementRevertToDraftDialog
+                :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
+                activator="parent"
+                @success="refresh"
+              />
             </v-btn>
           </div>
 
           <div class="d-flex flex-column flex-md-row justify-end ga-3">
             <v-btn
-              v-if="policy?.update"
+              v-if="
+                policy?.update &&
+                informationSharingAgreement.status === InformationSharingAgreementStatuses.DRAFT
+              "
               color="primary"
               size="large"
               :to="{
@@ -105,9 +129,12 @@ import { computed } from "vue"
 import { isNil } from "lodash"
 
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
-import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
+import useInformationSharingAgreement, {
+  InformationSharingAgreementStatuses,
+} from "@/use/use-information-sharing-agreement"
 
 import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
+import InformationSharingAgreementRevertToDraftDialog from "@/components/information-sharing-agreements/InformationSharingAgreementRevertToDraftDialog.vue"
 
 import InformationSharingAgreementBasicInformationCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationCard.vue"
 import InformationSharingAgreementDurationCard from "@/components/information-sharing-agreements/InformationSharingAgreementDurationCard.vue"
@@ -121,7 +148,7 @@ const props = defineProps<{
 const informationSharingAgreementIdAsNumber = computed(() =>
   parseInt(props.informationSharingAgreementId)
 )
-const { informationSharingAgreement, policy } = useInformationSharingAgreement(
+const { informationSharingAgreement, policy, refresh } = useInformationSharingAgreement(
   informationSharingAgreementIdAsNumber
 )
 

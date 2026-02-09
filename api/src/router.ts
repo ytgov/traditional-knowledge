@@ -149,6 +149,9 @@ router
   .route("/api/information-sharing-agreements/:informationSharingAgreementId/sign")
   .post(InformationSharingAgreements.SignController.create)
 router
+  .route("/api/information-sharing-agreements/:informationSharingAgreementId/revert-to-draft")
+  .post(InformationSharingAgreements.RevertToDraftController.create)
+router
   .route(
     "/api/information-sharing-agreements/:informationSharingAgreementId/generate-acknowledgement"
   )
