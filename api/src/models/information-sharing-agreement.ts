@@ -44,7 +44,7 @@ export enum InformationSharingAgreementConfidentialityType {
   ACCEPTED_IN_CONFIDENCE = "ACCEPTED_IN_CONFIDENCE",
 }
 
-export enum InformationSharingAgreementStatus {
+export enum InformationSharingAgreementStatuses {
   DRAFT = "draft",
   SIGNED = "signed",
   CLOSED = "closed",
@@ -57,7 +57,7 @@ export class InformationSharingAgreement extends BaseModel<
   static readonly AccessLevels = InformationSharingAgreementAccessLevels
   static readonly ExpirationConditions = InformationSharingAgreementExpirationConditions
   static readonly ConfidentialityTypes = InformationSharingAgreementConfidentialityType
-  static readonly Status = InformationSharingAgreementStatus
+  static readonly Status = InformationSharingAgreementStatuses
 
   @Attribute(DataTypes.INTEGER)
   @PrimaryKey
@@ -86,7 +86,7 @@ export class InformationSharingAgreement extends BaseModel<
   @Attribute(DataTypes.STRING)
   @NotNull
   @Default("draft")
-  declare status: CreationOptional<InformationSharingAgreementStatus>
+  declare status: CreationOptional<InformationSharingAgreementStatuses>
 
   @Attribute(DataTypes.STRING(100))
   declare identifier: string | null

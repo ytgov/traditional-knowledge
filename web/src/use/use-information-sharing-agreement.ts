@@ -9,7 +9,7 @@ import informationSharingAgreementsApi, {
   InformationSharingAgreementAccessLevels,
   InformationSharingAgreementExpirationConditions,
   InformationSharingAgreementConfidentialityType,
-  InformationSharingAgreementStatus,
+  InformationSharingAgreementStatuses,
 } from "@/api/information-sharing-agreements-api"
 
 export {
@@ -20,7 +20,7 @@ export {
   InformationSharingAgreementAccessLevels,
   InformationSharingAgreementExpirationConditions,
   InformationSharingAgreementConfidentialityType,
-  InformationSharingAgreementStatus,
+  InformationSharingAgreementStatuses,
 }
 
 export function useInformationSharingAgreement(id: Ref<number | null | undefined>) {

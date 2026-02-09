@@ -25,7 +25,7 @@ export enum InformationSharingAgreementConfidentialityType {
   ACCEPTED_IN_CONFIDENCE = "ACCEPTED_IN_CONFIDENCE",
 }
 
-export enum InformationSharingAgreementStatus {
+export enum InformationSharingAgreementStatuses {
   DRAFT = "draft",
   SIGNED = "signed",
   CLOSED = "closed",
@@ -40,7 +40,7 @@ export type InformationSharingAgreement = {
   receivingGroupId: number | null
   receivingGroupContactId: number | null
   receivingGroupSecondaryContactId: number | null
-  status: InformationSharingAgreementStatus
+  status: InformationSharingAgreementStatuses
   identifier: string | null
   sharingGroupInfo: string | null
   receivingGroupInfo: string | null
