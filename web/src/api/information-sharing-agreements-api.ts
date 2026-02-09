@@ -6,6 +6,7 @@ import {
   type QueryOptions,
   type WhereOptions,
 } from "@/api/base-api"
+import { type AttachmentAsReference } from "@/api/attachments-api"
 
 export enum InformationSharingAgreementAccessLevels {
   INTERNAL = "internal",
@@ -30,6 +31,7 @@ export enum InformationSharingAgreementStatus {
   CLOSED = "closed",
 }
 
+/** Keep in sync with api/src/models/information-sharing-agreement.ts */
 export type InformationSharingAgreement = {
   id: number
   creatorId: number
@@ -72,15 +74,84 @@ export type InformationSharingAgreement = {
   breachActions: string | null
   breachNotes: string | null
   disclosureNotes: string | null
-  fileName: string | null
-  fileData: string | null
-  fileMimeType: string | null
-  fileSize: number | null
   startDate: string | null
   endDate: string | null
   createdAt: string
   updatedAt: string
 }
+
+/** Keep in sync with api/src/serializers/information-sharing-agreements/index-serializer.ts */
+export type InformationSharingAgreementAsIndex = Pick<
+  InformationSharingAgreement,
+  | "id"
+  | "creatorId"
+  | "sharingGroupId"
+  | "sharingGroupContactId"
+  | "receivingGroupId"
+  | "receivingGroupContactId"
+  | "status"
+  | "title"
+  | "createdAt"
+  | "updatedAt"
+> & {
+  startDate: string | null
+  endDate: string | null
+}
+
+/** Keep in sync with api/src/serializers/information-sharing-agreements/show-serializer.ts */
+export type InformationSharingAgreementAsShow = Pick<
+  InformationSharingAgreement,
+  | "id"
+  | "creatorId"
+  | "sharingGroupId"
+  | "sharingGroupContactId"
+  | "receivingGroupId"
+  | "receivingGroupContactId"
+  | "receivingGroupSecondaryContactId"
+  | "status"
+  | "identifier"
+  | "sharingGroupInfo"
+  | "receivingGroupInfo"
+  | "sharingGroupContactName"
+  | "receivingGroupContactName"
+  | "sharingGroupContactTitle"
+  | "receivingGroupContactTitle"
+  | "sharingGroupSignedBy"
+  | "receivingGroupSignedBy"
+  | "title"
+  | "description"
+  | "purpose"
+  | "detailLevel"
+  | "detailNotes"
+  | "formats"
+  | "accessLevel"
+  | "accessLevelDepartmentRestriction"
+  | "accessLevelBranchRestriction"
+  | "accessLevelUnitRestriction"
+  | "hasAdditionalAccessRestrictions"
+  | "additionalAccessRestrictions"
+  | "expirationCondition"
+  | "confidentialityType"
+  | "authorizedApplication"
+  | "creditLines"
+  | "creditNotes"
+  | "expirationActions"
+  | "expirationNotes"
+  | "breachActions"
+  | "breachNotes"
+  | "disclosureNotes"
+  | "createdAt"
+  | "updatedAt"
+> & {
+  startDate: string | null
+  endDate: string | null
+  sharingGroupSignedDate: string | null
+  receivingGroupSignedDate: string | null
+  // Associations
+  signedAcknowledgement: AttachmentAsReference | null
+}
+
+export type InformationSharingAgreementPolicy = Policy
 
 export type InformationSharingAgreementWhereOptions = WhereOptions<
   InformationSharingAgreement,
@@ -124,9 +195,6 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "breachActions"
   | "breachNotes"
   | "disclosureNotes"
-  | "fileName"
-  | "fileMimeType"
-  | "fileSize"
   | "startDate"
   | "endDate"
 >
@@ -147,7 +215,7 @@ export const informationSharingAgreementsApi = {
   },
 
   async list(params: InformationSharingAgreementQueryOptions = {}): Promise<{
-    informationSharingAgreements: InformationSharingAgreement[]
+    informationSharingAgreements: InformationSharingAgreementAsIndex[]
     totalCount: number
   }> {
     const { data } = await http.get("/api/information-sharing-agreements", {
@@ -156,8 +224,8 @@ export const informationSharingAgreementsApi = {
     return data
   },
   async get(informationSharingAgreementId: number): Promise<{
-    informationSharingAgreement: InformationSharingAgreement
-    policy: Policy
+    informationSharingAgreement: InformationSharingAgreementAsShow
+    policy: InformationSharingAgreementPolicy
   }> {
     const { data } = await http.get(
       `/api/information-sharing-agreements/${informationSharingAgreementId}`
@@ -165,7 +233,7 @@ export const informationSharingAgreementsApi = {
     return data
   },
   async create(attributes: Partial<InformationSharingAgreement>): Promise<{
-    informationSharingAgreement: InformationSharingAgreement
+    informationSharingAgreement: InformationSharingAgreementAsShow
   }> {
     const { data } = await http.post("/api/information-sharing-agreements", attributes)
     return data
@@ -174,7 +242,7 @@ export const informationSharingAgreementsApi = {
     informationSharingAgreementId: number,
     attributes: Partial<InformationSharingAgreement>
   ): Promise<{
-    informationSharingAgreement: InformationSharingAgreement
+    informationSharingAgreement: InformationSharingAgreementAsShow
   }> {
     const { data } = await http.patch(
       `/api/information-sharing-agreements/${informationSharingAgreementId}`,
@@ -188,12 +256,32 @@ export const informationSharingAgreementsApi = {
     )
     return data
   },
-  async downloadFile(informationSharingAgreementId: number): Promise<Blob> {
-    const { data } = await http.get(
-      `/api/information-sharing-agreements/${informationSharingAgreementId}/file`,
+
+  // Stateful Actions
+  async sign(
+    informationSharingAgreementId: number,
+    signedAcknowledgement: File
+  ): Promise<{
+    informationSharingAgreement: InformationSharingAgreementAsShow
+  }> {
+    const formData = new FormData()
+    formData.append("signedAcknowledgement", signedAcknowledgement)
+    const { data } = await http.post(
+      `/api/information-sharing-agreements/${informationSharingAgreementId}/sign`,
+      formData,
       {
-        responseType: "blob",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }
+    )
+    return data
+  },
+  async revertToDraft(informationSharingAgreementId: number): Promise<{
+    informationSharingAgreement: InformationSharingAgreementAsShow
+  }> {
+    const { data } = await http.post(
+      `/api/information-sharing-agreements/${informationSharingAgreementId}/revert-to-draft`
     )
     return data
   },

@@ -44,7 +44,7 @@
 <!-- Special module scope (non-setup) required for exports -->
 <script lang="ts">
 export {
-  type InformationSharingAgreement,
+  type InformationSharingAgreementAsIndex,
   type InformationSharingAgreementWhereOptions,
   type InformationSharingAgreementFiltersOptions,
 } from "@/use/use-information-sharing-agreements"
@@ -56,7 +56,7 @@ import { debounce, isEmpty, isNil, omit, uniqBy } from "lodash"
 
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import useInformationSharingAgreements, {
-  type InformationSharingAgreement,
+  type InformationSharingAgreementAsIndex,
   type InformationSharingAgreementWhereOptions,
   type InformationSharingAgreementFiltersOptions,
 } from "@/use/use-information-sharing-agreements"
@@ -116,7 +116,7 @@ const agreementsQuery = computed(() => {
 const { informationSharingAgreements, totalCount, isLoading, refresh } =
   useInformationSharingAgreements(agreementsQuery)
 
-const allInformationSharingAgreements = computed<InformationSharingAgreement[]>(() => {
+const allInformationSharingAgreements = computed<InformationSharingAgreementAsIndex[]>(() => {
   if (isNil(informationSharingAgreement.value)) {
     return informationSharingAgreements.value
   }
