@@ -3,9 +3,8 @@
     :action-url="downloadSignedAcknowledgementUrl"
     text="Signed Acknowledgement"
     :activator-props="{
-      color: 'primary',
-      size: 'large',
       title: 'Download the signed acknowledgement document',
+      ...activatorProps,
     }"
   />
 </template>
@@ -15,11 +14,19 @@ import { computed } from "vue"
 
 import Api from "@/api"
 
-import AuthenticatedPostForm from "@/components/common/AuthenticatedPostForm.vue"
+import AuthenticatedPostForm, {
+  type ActivatorProps,
+} from "@/components/common/AuthenticatedPostForm.vue"
 
-const props = defineProps<{
-  informationSharingAgreementId: number
-}>()
+const props = withDefaults(
+  defineProps<{
+    informationSharingAgreementId: number
+    activatorProps?: ActivatorProps
+  }>(),
+  {
+    activatorProps: () => ({}),
+  }
+)
 
 const downloadSignedAcknowledgementUrl = computed(() =>
   Api.Downloads.InformationSharingAgreements.signedAcknowledgementApi.downloadPath(

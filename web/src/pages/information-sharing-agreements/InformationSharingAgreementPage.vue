@@ -92,6 +92,10 @@
               </v-btn>
               <InformationSharingAgreementDownloadSignedAcknowledgementButton
                 :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
+                :activator-props="{
+                  color: 'primary',
+                  size: 'large',
+                }"
               />
             </template>
           </div>

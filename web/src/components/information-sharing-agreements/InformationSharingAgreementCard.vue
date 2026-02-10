@@ -89,7 +89,10 @@
           />
         </v-col>
         <v-col
-          v-if="!isNil(signedAcknowledgement)"
+          v-if="
+            informationSharingAgreement.status === InformationSharingAgreementStatuses.SIGNED &&
+            !isNil(signedAcknowledgement)
+          "
           cols="12"
         >
           <v-card
@@ -132,7 +135,9 @@ import { isNil } from "lodash"
 import { type VBtn } from "vuetify/components"
 
 import { formatDate } from "@/utils/formatters"
-import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
+import useInformationSharingAgreement, {
+  InformationSharingAgreementStatuses,
+} from "@/use/use-information-sharing-agreement"
 
 import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
 import InformationSharingAgreementDownloadSignedAcknowledgementButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadSignedAcknowledgementButton.vue"

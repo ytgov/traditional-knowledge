@@ -23,20 +23,25 @@
   </v-form>
 </template>
 
+<script lang="ts">
+import { type ButtonHTMLAttributes } from "vue"
+import { type VBtn } from "vuetify/components"
+
+type ActivatorProps = VBtn["$props"] & ButtonHTMLAttributes
+export { type ActivatorProps } // two line type definition avoids breaking Vue syntax highlighting
+</script>
+
 <script setup lang="ts">
 import { computed, ref, nextTick, useTemplateRef } from "vue"
 import { useAuth0 } from "@auth0/auth0-vue"
 import { useDisplay } from "vuetify"
 import { isNil } from "lodash"
 
-import { type ButtonHTMLAttributes } from "vue"
-import { type VBtn } from "vuetify/components"
-
 const props = withDefaults(
   defineProps<{
     actionUrl: string
     text?: string
-    activatorProps?: VBtn["$props"] & ButtonHTMLAttributes
+    activatorProps?: ActivatorProps
   }>(),
   {
     text: "Submit",
