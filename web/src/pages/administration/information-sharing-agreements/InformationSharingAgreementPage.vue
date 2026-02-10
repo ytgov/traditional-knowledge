@@ -2,6 +2,7 @@
   <InformationSharingAgreementCard
     :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
     :edit-button-props="editButtonProps"
+    :sign-button-props="signButtonProps"
   />
 
   <v-card class="mt-5 border">
@@ -31,7 +32,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue"
-import { useRouter, type RouteLocation } from "vue-router"
+import { useRouter } from "vue-router"
 
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
 
@@ -46,28 +47,39 @@ const informationSharingAgreementIdAsNumber = computed(() =>
 )
 
 const router = useRouter()
-const editButtonProps = computed(() => {
-  const routeLocation: RouteLocation & {
-    href: string
-  } = router.resolve({
+const returnToHref = computed(() => {
+  const routeLocation = router.resolve({
     name: "administration/information-sharing-agreements/InformationSharingAgreementPage",
     params: {
       informationSharingAgreementId: props.informationSharingAgreementId,
     },
   })
-
-  return {
-    to: {
-      name: "administration/information-sharing-agreements/InformationSharingAgreementEditPage",
-      params: {
-        informationSharingAgreementId: props.informationSharingAgreementId,
-      },
-      query: {
-        returnTo: routeLocation.href,
-      },
-    },
-  }
+  return routeLocation.href
 })
+
+const editButtonProps = computed(() => ({
+  to: {
+    name: "administration/information-sharing-agreements/InformationSharingAgreementEditPage",
+    params: {
+      informationSharingAgreementId: props.informationSharingAgreementId,
+    },
+    query: {
+      returnTo: returnToHref.value,
+    },
+  },
+}))
+
+const signButtonProps = computed(() => ({
+  to: {
+    name: "information-sharing-agreements/InformationSharingAgreementSignPage",
+    params: {
+      informationSharingAgreementId: props.informationSharingAgreementId,
+    },
+    query: {
+      returnTo: returnToHref.value,
+    },
+  },
+}))
 
 useBreadcrumbs("Information Sharing Agreement", [
   ADMIN_CRUMB,

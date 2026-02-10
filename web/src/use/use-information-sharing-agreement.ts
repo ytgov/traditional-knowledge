@@ -1,31 +1,32 @@
 import { type Ref, reactive, toRefs, unref, watch } from "vue"
 import { isNil } from "lodash"
 
-import { Policy } from "@/api/base-api"
 import informationSharingAgreementsApi, {
-  type InformationSharingAgreement,
+  type InformationSharingAgreementAsShow,
+  type InformationSharingAgreementPolicy,
   type InformationSharingAgreementWhereOptions,
   type InformationSharingAgreementFiltersOptions,
   InformationSharingAgreementAccessLevels,
   InformationSharingAgreementExpirationConditions,
   InformationSharingAgreementConfidentialityType,
-  InformationSharingAgreementStatus,
+  InformationSharingAgreementStatuses,
 } from "@/api/information-sharing-agreements-api"
 
 export {
-  type InformationSharingAgreement,
+  type InformationSharingAgreementAsShow,
+  type InformationSharingAgreementPolicy,
   type InformationSharingAgreementWhereOptions,
   type InformationSharingAgreementFiltersOptions,
   InformationSharingAgreementAccessLevels,
   InformationSharingAgreementExpirationConditions,
   InformationSharingAgreementConfidentialityType,
-  InformationSharingAgreementStatus,
+  InformationSharingAgreementStatuses,
 }
 
 export function useInformationSharingAgreement(id: Ref<number | null | undefined>) {
   const state = reactive<{
-    informationSharingAgreement: InformationSharingAgreement | null
-    policy: Policy | null
+    informationSharingAgreement: InformationSharingAgreementAsShow | null
+    policy: InformationSharingAgreementPolicy | null
     isLoading: boolean
     isErrored: boolean
   }>({
@@ -35,7 +36,7 @@ export function useInformationSharingAgreement(id: Ref<number | null | undefined
     isErrored: false,
   })
 
-  async function fetch(): Promise<InformationSharingAgreement> {
+  async function fetch(): Promise<InformationSharingAgreementAsShow> {
     const staticId = unref(id)
     if (isNil(staticId)) {
       throw new Error("id is required")
@@ -58,7 +59,7 @@ export function useInformationSharingAgreement(id: Ref<number | null | undefined
     }
   }
 
-  async function save(): Promise<InformationSharingAgreement> {
+  async function save(): Promise<InformationSharingAgreementAsShow> {
     const staticId = unref(id)
     if (isNil(staticId)) {
       throw new Error("id is required")

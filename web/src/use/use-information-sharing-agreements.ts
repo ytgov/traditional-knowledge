@@ -1,14 +1,14 @@
 import { type Ref, reactive, toRefs, ref, unref, watch } from "vue"
 
 import informationSharingAgreementsApi, {
-  type InformationSharingAgreement,
+  type InformationSharingAgreementAsIndex,
   type InformationSharingAgreementWhereOptions,
   type InformationSharingAgreementFiltersOptions,
   type InformationSharingAgreementQueryOptions,
 } from "@/api/information-sharing-agreements-api"
 
 export {
-  type InformationSharingAgreement,
+  type InformationSharingAgreementAsIndex,
   type InformationSharingAgreementWhereOptions,
   type InformationSharingAgreementFiltersOptions,
   type InformationSharingAgreementQueryOptions,
@@ -19,7 +19,7 @@ export function useInformationSharingAgreements(
   { skipWatchIf = () => false }: { skipWatchIf?: () => boolean } = {}
 ) {
   const state = reactive<{
-    informationSharingAgreements: InformationSharingAgreement[]
+    informationSharingAgreements: InformationSharingAgreementAsIndex[]
     totalCount: number
     isLoading: boolean
     isErrored: boolean
@@ -30,7 +30,7 @@ export function useInformationSharingAgreements(
     isErrored: false,
   })
 
-  async function fetch(): Promise<InformationSharingAgreement[]> {
+  async function fetch(): Promise<InformationSharingAgreementAsIndex[]> {
     state.isLoading = true
     try {
       const { informationSharingAgreements, totalCount } =

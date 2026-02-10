@@ -1,3 +1,4 @@
+export * as Downloads from "./downloads"
 export * as Notifications from "./notifications"
 
 // Controllers

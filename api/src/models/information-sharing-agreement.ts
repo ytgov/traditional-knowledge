@@ -13,12 +13,14 @@ import {
   BelongsTo,
   Default,
   HasMany,
+  HasOne,
   NotNull,
   PrimaryKey,
   ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
 import { isUndefined } from "lodash"
 
+import Attachment, { AttachmentTargetTypes } from "@/models/attachment"
 import BaseModel from "@/models/base-model"
 import Group from "@/models/group"
 import InformationSharingAgreementAccessGrant from "@/models/information-sharing-agreement-access-grant"
@@ -42,7 +44,7 @@ export enum InformationSharingAgreementConfidentialityType {
   ACCEPTED_IN_CONFIDENCE = "ACCEPTED_IN_CONFIDENCE",
 }
 
-export enum InformationSharingAgreementStatus {
+export enum InformationSharingAgreementStatuses {
   DRAFT = "draft",
   SIGNED = "signed",
   CLOSED = "closed",
@@ -55,7 +57,7 @@ export class InformationSharingAgreement extends BaseModel<
   static readonly AccessLevels = InformationSharingAgreementAccessLevels
   static readonly ExpirationConditions = InformationSharingAgreementExpirationConditions
   static readonly ConfidentialityTypes = InformationSharingAgreementConfidentialityType
-  static readonly Status = InformationSharingAgreementStatus
+  static readonly Status = InformationSharingAgreementStatuses
 
   @Attribute(DataTypes.INTEGER)
   @PrimaryKey
@@ -84,7 +86,7 @@ export class InformationSharingAgreement extends BaseModel<
   @Attribute(DataTypes.STRING)
   @NotNull
   @Default("draft")
-  declare status: CreationOptional<InformationSharingAgreementStatus>
+  declare status: CreationOptional<InformationSharingAgreementStatuses>
 
   @Attribute(DataTypes.STRING(100))
   declare identifier: string | null
@@ -107,17 +109,11 @@ export class InformationSharingAgreement extends BaseModel<
   @Attribute(DataTypes.STRING)
   declare receivingGroupContactTitle: string | null
 
-  @Attribute(DataTypes.STRING(100))
-  declare sharingGroupSignedBy: string | null
+  @Attribute(DataTypes.INTEGER)
+  declare signedById: number | null
 
-  @Attribute(DataTypes.STRING(100))
-  declare receivingGroupSignedBy: string | null
-
-  @Attribute(DataTypes.DATE)
-  declare sharingGroupSignedDate: Date | null
-
-  @Attribute(DataTypes.DATE)
-  declare receivingGroupSignedDate: Date | null
+  @Attribute(DataTypes.DATE(0))
+  declare signedAt: Date | null
 
   @Attribute(DataTypes.STRING)
   @NotNull
@@ -189,48 +185,6 @@ export class InformationSharingAgreement extends BaseModel<
   @Attribute(DataTypes.TEXT)
   declare disclosureNotes: string | null
 
-  @Attribute(DataTypes.STRING)
-  declare fileName: string | null
-
-  @Attribute({
-    type: DataTypes.BLOB,
-    set(value: Buffer | string | null | undefined) {
-      console.log("fileData setter called with:", {
-        type: typeof value,
-        isNull: value === null,
-        isUndefined: value === undefined,
-        isString: typeof value === "string",
-        stringValue: typeof value === "string" ? value : "N/A",
-        length: typeof value === "string" ? value.length : "N/A",
-      })
-
-      if (value === null || value === undefined) {
-        console.log("Setting fileData to NULL")
-        this.setDataValue("fileData", null)
-      } else if (typeof value === "string") {
-        // Don't convert empty strings
-        if (value === "" || value === "null" || value === "undefined") {
-          console.log("Setting fileData to NULL (empty/invalid string)")
-          this.setDataValue("fileData", null)
-        } else {
-          // Convert base64 string to Buffer
-          const buffer = Buffer.from(value, "base64")
-          console.log("Converted base64 to buffer, buffer length:", buffer.length)
-          this.setDataValue("fileData", buffer)
-        }
-      } else {
-        this.setDataValue("fileData", value)
-      }
-    },
-  })
-  declare fileData: Buffer | null
-
-  @Attribute(DataTypes.STRING)
-  declare fileMimeType: string | null
-
-  @Attribute(DataTypes.INTEGER)
-  declare fileSize: number | null
-
   @Attribute(DataTypes.DATE)
   declare startDate: Date | null
 
@@ -270,6 +224,10 @@ export class InformationSharingAgreement extends BaseModel<
 
   isDraft(): boolean {
     return this.status === InformationSharingAgreement.Status.DRAFT
+  }
+
+  isSigned(): boolean {
+    return this.status === InformationSharingAgreement.Status.SIGNED
   }
 
   // Associations
@@ -326,6 +284,29 @@ export class InformationSharingAgreement extends BaseModel<
     },
   })
   declare receivingGroupSecondaryContact?: NonAttribute<User>
+
+  @BelongsTo(() => User, {
+    foreignKey: "signedById",
+    inverse: {
+      as: "signedInformationSharingAgreements",
+      type: "hasMany",
+    },
+  })
+  declare signedBy?: NonAttribute<User>
+
+  @HasOne(() => Attachment, {
+    foreignKey: {
+      name: "targetId",
+      allowNull: true,
+    },
+    foreignKeyConstraints: false,
+    inverse: "informationSharingAgreement",
+    scope: {
+      targetType: AttachmentTargetTypes.InformationSharingAgreement,
+      associationName: "signedAcknowledgement",
+    },
+  })
+  declare signedAcknowledgement?: NonAttribute<Attachment | null>
 
   @HasMany(() => InformationSharingAgreementAccessGrant, {
     foreignKey: "informationSharingAgreementId",

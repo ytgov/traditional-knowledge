@@ -25,6 +25,7 @@ import {
 import {
   ArchiveItemAuditsController,
   ArchiveItemFilesController,
+  Downloads,
   ArchiveItemsController,
   CategoriesController,
   CurrentUserController,
@@ -63,6 +64,12 @@ router.use(
   ensureAndAuthorizeCurrentUser,
   trackLastActiveMiddleware
 )
+
+router
+  .route(
+    "/api/downloads/information-sharing-agreements/:informationSharingAgreementId/signed-acknowledgement"
+  )
+  .post(Downloads.InformationSharingAgreements.SignedAcknowledgementController.create)
 
 router.route("/api/current-user").get(CurrentUserController.show)
 
@@ -145,11 +152,12 @@ router
   .get(InformationSharingAgreementsController.show)
   .patch(InformationSharingAgreementsController.update)
   .delete(InformationSharingAgreementsController.destroy)
-
 router
-  .route("/api/information-sharing-agreements/:informationSharingAgreementId/file")
-  .get(InformationSharingAgreementsController.downloadFile)
-
+  .route("/api/information-sharing-agreements/:informationSharingAgreementId/sign")
+  .post(InformationSharingAgreements.SignController.create)
+router
+  .route("/api/information-sharing-agreements/:informationSharingAgreementId/revert-to-draft")
+  .post(InformationSharingAgreements.RevertToDraftController.create)
 router
   .route(
     "/api/information-sharing-agreements/:informationSharingAgreementId/generate-acknowledgement"

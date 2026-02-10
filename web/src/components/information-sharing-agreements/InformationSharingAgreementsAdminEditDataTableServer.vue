@@ -78,7 +78,7 @@ import useVuetifySortByToSafeRouteQuery from "@/use/utils/use-vuetify-sort-by-to
 import useVuetifySortByToSequelizeSafeOrder from "@/use/utils/use-vuetify-sort-by-to-sequelize-safe-order"
 import useSnack from "@/use/use-snack"
 import useInformationSharingAgreements, {
-  type InformationSharingAgreement,
+  type InformationSharingAgreementAsIndex,
   type InformationSharingAgreementWhereOptions,
   type InformationSharingAgreementFiltersOptions,
 } from "@/use/use-information-sharing-agreements"
@@ -87,7 +87,7 @@ import GroupChip from "@/components/groups/GroupChip.vue"
 import UserChip from "@/components/users/UserChip.vue"
 
 type InformationSharingAgreementTableRow = {
-  item: InformationSharingAgreement
+  item: InformationSharingAgreementAsIndex
 }
 
 const props = withDefaults(
@@ -121,7 +121,7 @@ const headers = ref([
     title: "Start Date",
     key: "startDate",
     value: (item: unknown) => {
-      const { startDate } = item as InformationSharingAgreement
+      const { startDate } = item as InformationSharingAgreementAsIndex
       return formatDate(startDate)
     },
   },
@@ -129,7 +129,7 @@ const headers = ref([
     title: "End Date",
     key: "endDate",
     value: (item: unknown) => {
-      const { endDate } = item as InformationSharingAgreement
+      const { endDate } = item as InformationSharingAgreementAsIndex
       return formatDate(endDate)
     },
   },
@@ -179,7 +179,7 @@ function goToInformationSharingAgreementPage(informationSharingAgreementId: numb
 const snack = useSnack()
 const isDeleting = ref(false)
 
-async function confirmThenDelete(informationSharingAgreement: InformationSharingAgreement) {
+async function confirmThenDelete(informationSharingAgreement: InformationSharingAgreementAsIndex) {
   const { title } = informationSharingAgreement
 
   const result = confirm(`Are you sure you want to delete ${title}.`)
