@@ -89,7 +89,7 @@
           />
         </v-col>
         <v-col
-          v-if="informationSharingAgreement.fileName"
+          v-if="!isNil(signedAcknowledgement)"
           cols="12"
         >
           <v-card
@@ -97,16 +97,12 @@
             color="#ffffff66"
           >
             <v-card-text>
-              <h3 class="mt-n1 mb-3">Attachment</h3>
+              <h3 class="mt-n1 mb-3">Signed Acknowledgement</h3>
               <div class="d-flex align-center ga-2">
-                <span>{{ informationSharingAgreement.fileName }}</span>
-                <v-btn
-                  color="primary"
-                  size="small"
-                  @click="downloadFile"
-                >
-                  Download
-                </v-btn>
+                <span>{{ signedAcknowledgement.name }}</span>
+                <InformationSharingAgreementDownloadSignedAcknowledgementButton
+                  :information-sharing-agreement-id="informationSharingAgreementId"
+                />
               </div>
             </v-card-text>
           </v-card>
@@ -130,16 +126,16 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs } from "vue"
+import { computed, toRefs } from "vue"
 import { isNil } from "lodash"
 
 import { type VBtn } from "vuetify/components"
 
 import { formatDate } from "@/utils/formatters"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
-import informationSharingAgreementsApi from "@/api/information-sharing-agreements-api"
 
 import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
+import InformationSharingAgreementDownloadSignedAcknowledgementButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadSignedAcknowledgementButton.vue"
 
 import GroupChip from "@/components/groups/GroupChip.vue"
 import UserChip from "@/components/users/UserChip.vue"
@@ -173,28 +169,9 @@ const { informationSharingAgreementId } = toRefs(props)
 const { informationSharingAgreement, policy } = useInformationSharingAgreement(
   informationSharingAgreementId
 )
-
-async function downloadFile() {
-  if (!informationSharingAgreement.value) return
-
-  try {
-    const blob = await informationSharingAgreementsApi.downloadFile(
-      informationSharingAgreement.value.id
-    )
-
-    // Create a temporary URL for the blob and trigger download
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement("a")
-    link.href = url
-    link.download = informationSharingAgreement.value.fileName || "download"
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
-  } catch (error) {
-    console.error("Error downloading file:", error)
-  }
-}
+const signedAcknowledgement = computed(
+  () => informationSharingAgreement.value?.signedAcknowledgement
+)
 </script>
 
 <style scoped>
