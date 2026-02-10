@@ -6,7 +6,7 @@ import { Attachments } from "@/serializers"
 import { Attachment, InformationSharingAgreement } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
 
-export type AgreementShowAsShow = Pick<
+export type InformationSharingAgreementAsShow = Pick<
   InformationSharingAgreement,
   | "id"
   | "creatorId"
@@ -57,7 +57,7 @@ export type AgreementShowAsShow = Pick<
 }
 
 export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> {
-  perform(): AgreementShowAsShow {
+  perform(): InformationSharingAgreementAsShow {
     const { signedAcknowledgement } = this.record
     if (isUndefined(signedAcknowledgement)) {
       throw new Error("Expected signed acknowledgement association to be preloaded.")

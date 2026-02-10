@@ -5,7 +5,7 @@ import { formatDate } from "@/utils/formatters"
 import { InformationSharingAgreement } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
 
-export type AgreementIndexAsIndex = Pick<
+export type InformationSharingAgreementAsIndex = Pick<
   InformationSharingAgreement,
   | "id"
   | "creatorId"
@@ -23,7 +23,7 @@ export type AgreementIndexAsIndex = Pick<
 }
 
 export class IndexSerializer extends BaseSerializer<InformationSharingAgreement> {
-  perform(): AgreementIndexAsIndex {
+  perform(): InformationSharingAgreementAsIndex {
     const { startDate, endDate } = this.record
     const formattedStartDate = formatDate(startDate)
     const formattedEndDate = formatDate(endDate)
