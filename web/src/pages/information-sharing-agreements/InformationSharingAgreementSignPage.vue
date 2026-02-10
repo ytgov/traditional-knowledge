@@ -24,7 +24,7 @@
           accept=".pdf,.doc,.docx"
           show-size
           required
-          validate-on="blur"
+          validate-on="submit"
         />
       </v-col>
     </v-row>
