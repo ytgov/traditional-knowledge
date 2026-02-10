@@ -121,7 +121,12 @@
           Edit
         </v-btn>
         <InformationSharingAgreementDownloadDraftButton
+          v-if="informationSharingAgreement.status === InformationSharingAgreementStatuses.DRAFT"
           :information-sharing-agreement-id="informationSharingAgreementId"
+          :activator-props="{
+            variant: 'outlined',
+            color: 'secondary',
+          }"
         />
       </div>
     </template>

@@ -59,6 +59,11 @@
             >
               <InformationSharingAgreementDownloadDraftButton
                 :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
+                :activator-props="{
+                  variant: 'outlined',
+                  color: 'secondary',
+                  size: 'large',
+                }"
               />
               <v-btn
                 color="secondary"
