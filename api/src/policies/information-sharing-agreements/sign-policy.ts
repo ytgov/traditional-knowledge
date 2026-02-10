@@ -7,6 +7,7 @@ export class SignPolicy extends PolicyFactory(InformationSharingAgreement) {
 
     if (this.user.id === this.record.creatorId) return true
     if (this.user.isSystemAdmin) return true
+    if (this.record.hasAccessGrantFor(this.user.id)) return true
 
     return false
   }

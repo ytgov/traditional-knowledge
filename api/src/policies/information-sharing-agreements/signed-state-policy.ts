@@ -2,6 +2,7 @@ import GenericStatePolicy from "@/policies/information-sharing-agreements/generi
 
 export class SignedStatePolicy extends GenericStatePolicy {
   show(): boolean {
+    if (this.user.id === this.record.creatorId) return true
     if (this.user.isSystemAdmin) return true
     if (this.record.hasAccessGrantFor(this.user.id)) return true
 
@@ -9,6 +10,7 @@ export class SignedStatePolicy extends GenericStatePolicy {
   }
 
   update(): boolean {
+    if (this.user.id === this.record.creatorId) return true
     if (this.user.isSystemAdmin) return true
     if (this.user.isAdminForInformationSharingAgreement(this.record.id)) return true
 
@@ -16,6 +18,7 @@ export class SignedStatePolicy extends GenericStatePolicy {
   }
 
   destroy(): boolean {
+    if (this.user.id === this.record.creatorId) return true
     if (this.user.isSystemAdmin) return true
     if (this.user.isAdminForInformationSharingAgreement(this.record.id)) return true
 
