@@ -27,7 +27,7 @@
       />
 
       <v-list-item
-        title="ISAs"
+        title="Sharing Agreements"
         :to="{
           name: 'InformationSharingAgreementsPage',
         }"
@@ -36,7 +36,7 @@
       >
         <v-tooltip
           activator="parent"
-          text="Information Sharing Agreements"
+          text="Information Sharing Agreements (ISAs)"
         />
       </v-list-item>
 
