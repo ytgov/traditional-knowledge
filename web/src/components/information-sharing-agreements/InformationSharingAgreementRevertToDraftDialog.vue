@@ -16,21 +16,23 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-spacer />
         <v-btn
-          variant="text"
-          :disabled="isLoading"
-          @click="close"
-        >
-          Cancel
-        </v-btn>
-        <v-btn
+          variant="elevated"
           color="warning"
           :loading="isLoading"
           @click="revertToDraftAndClose"
         >
           Revert to Draft
         </v-btn>
+        <v-btn
+          variant="outlined"
+          color="secondary"
+          :disabled="isLoading"
+          @click="close"
+        >
+          Cancel
+        </v-btn>
+        <v-spacer />
       </v-card-actions>
     </v-card>
   </v-dialog>
