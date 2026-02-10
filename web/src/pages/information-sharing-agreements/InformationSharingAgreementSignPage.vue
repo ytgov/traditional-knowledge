@@ -40,12 +40,7 @@
           Mark as Signed
         </v-btn>
         <v-btn
-          :to="{
-            name: 'information-sharing-agreements/InformationSharingAgreementPage',
-            params: {
-              informationSharingAgreementId,
-            },
-          }"
+          :to="returnTo"
           color="secondary"
           variant="outlined"
           :loading="isLoading"
@@ -61,6 +56,7 @@
 <script setup lang="ts">
 import { computed, ref, useTemplateRef } from "vue"
 import { useRouter } from "vue-router"
+import { useRouteQuery } from "@vueuse/router"
 import { useDisplay } from "vuetify"
 import { isNil } from "lodash"
 
@@ -83,10 +79,21 @@ const { informationSharingAgreement, isLoading } = useInformationSharingAgreemen
   informationSharingAgreementIdAsNumber
 )
 
+const router = useRouter()
+const defaultReturnTo = computed(() => {
+  const routeLocation = router.resolve({
+    name: "information-sharing-agreements/InformationSharingAgreementPage",
+    params: {
+      informationSharingAgreementId: props.informationSharingAgreementId,
+    },
+  })
+  return routeLocation.href
+})
+const returnTo = useRouteQuery("returnTo", defaultReturnTo)
+
 const signedAcknowledgement = ref<File | null>(null)
 const form = useTemplateRef("form")
 const snack = useSnack()
-const router = useRouter()
 
 async function signAndRedirect() {
   if (isNil(form.value)) return
@@ -107,12 +114,7 @@ async function signAndRedirect() {
     )
     snack.success("Agreement marked as signed!")
 
-    await router.push({
-      name: "information-sharing-agreements/InformationSharingAgreementPage",
-      params: {
-        informationSharingAgreementId: props.informationSharingAgreementId,
-      },
-    })
+    await router.push(returnTo.value)
   } catch (error) {
     console.error(`Failed to sign agreement: ${error}`, { error })
     snack.error(`Failed to sign agreement: ${error}`)
