@@ -17,7 +17,7 @@
           Upload the signed acknowledgement document to mark this agreement as signed.
         </p>
 
-        <v-file-input
+        <EnhancedFileInput
           v-model="signedAcknowledgement"
           label="Signed Acknowledgement"
           :rules="[required]"
@@ -67,6 +67,8 @@ import informationSharingAgreementsApi from "@/api/information-sharing-agreement
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import useSnack from "@/use/use-snack"
+
+import EnhancedFileInput from "@/components/common/EnhancedFileInput.vue"
 
 const props = defineProps<{
   informationSharingAgreementId: string
