@@ -3,7 +3,7 @@ import { isNil } from "lodash"
 import logger from "@/utils/logger"
 
 import { InformationSharingAgreement } from "@/models"
-import { InformationSharingAgreementPolicy } from "@/policies"
+import { RevertToDraftPolicy } from "@/policies/information-sharing-agreements"
 import { RevertToDraftService } from "@/services/information-sharing-agreements"
 import { ShowSerializer } from "@/serializers/information-sharing-agreements"
 import BaseController from "@/controllers/base-controller"
@@ -19,7 +19,7 @@ export class RevertToDraftController extends BaseController<InformationSharingAg
       }
 
       const policy = this.buildPolicy(informationSharingAgreement)
-      if (!policy.update()) {
+      if (!policy.create()) {
         return this.response.status(403).json({
           message: "You are not authorized to revert this agreement to draft.",
         })
@@ -57,7 +57,7 @@ export class RevertToDraftController extends BaseController<InformationSharingAg
   }
 
   private buildPolicy(informationSharingAgreement: InformationSharingAgreement) {
-    return new InformationSharingAgreementPolicy(this.currentUser, informationSharingAgreement)
+    return new RevertToDraftPolicy(this.currentUser, informationSharingAgreement)
   }
 }
 

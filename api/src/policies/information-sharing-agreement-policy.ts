@@ -2,17 +2,16 @@ import { type Attributes, type FindOptions, Op, sql } from "@sequelize/core"
 
 import { type Path } from "@/utils/deep-pick"
 import { InformationSharingAgreement, User } from "@/models"
-import { PolicyFactory } from "@/policies/base-policy"
+import { BasePolicy, PolicyFactory } from "@/policies/base-policy"
+import {
+  DraftStatePolicy,
+  GenericStatePolicy,
+  SignedStatePolicy,
+} from "@/policies/information-sharing-agreements"
 
 export class InformationSharingAgreementPolicy extends PolicyFactory(InformationSharingAgreement) {
   show(): boolean {
-    if (this.record.isDraft() && this.user.id === this.record.creatorId) return true
-    if (!this.record.isDraft() && this.user.isSystemAdmin) return true
-    if (!this.record.isDraft() && this.record.hasAccessGrantFor(this.user.id)) {
-      return true
-    }
-
-    return false
+    return this.policyByState.show()
   }
 
   create(): boolean {
@@ -20,66 +19,19 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
   }
 
   update(): boolean {
-    if (this.record.isDraft() && this.user.id === this.record.creatorId) return true
-    if (!this.record.isDraft() && this.user.isSystemAdmin) return true
-    if (!this.record.isDraft() && this.user.isAdminForInformationSharingAgreement(this.record.id)) {
-      return true
-    }
-
-    return false
+    return this.policyByState.update()
   }
 
   destroy(): boolean {
-    if (this.record.isDraft() && this.user.id === this.record.creatorId) return true
-    if (!this.record.isDraft() && this.user.isSystemAdmin) return true
-    if (!this.record.isDraft() && this.user.isAdminForInformationSharingAgreement(this.record.id)) {
-      return true
-    }
-
-    return false
+    return this.policyByState.destroy()
   }
 
   permittedAttributes(): Path[] {
-    return [
-      "sharingGroupContactId",
-      "receivingGroupContactId",
-      "receivingGroupSecondaryContactId",
-      "identifier",
-      "sharingGroupInfo",
-      "receivingGroupInfo",
-      "sharingGroupContactName",
-      "receivingGroupContactName",
-      "sharingGroupContactTitle",
-      "receivingGroupContactTitle",
-      "title",
-      "description",
-      "purpose",
-      "detailLevel",
-      "detailNotes",
-      "formats",
-      "accessLevel",
-      "accessLevelDepartmentRestriction",
-      "accessLevelBranchRestriction",
-      "accessLevelUnitRestriction",
-      "hasAdditionalAccessRestrictions",
-      "additionalAccessRestrictions",
-      "confidentialityType",
-      "authorizedApplication",
-      "creditLines",
-      "creditNotes",
-      "expirationCondition",
-      "expirationActions",
-      "expirationNotes",
-      "breachActions",
-      "breachNotes",
-      "disclosureNotes",
-      "startDate",
-      "endDate",
-    ]
+    return this.policyByState.permittedAttributes()
   }
 
   permittedAttributesForCreate(): Path[] {
-    return ["sharingGroupId", "receivingGroupId", ...this.permittedAttributes()]
+    return this.policyByState.permittedAttributesForCreate()
   }
 
   static policyScope(user: User): FindOptions<Attributes<InformationSharingAgreement>> {
@@ -131,6 +83,17 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
       replacements: {
         userId: user.id,
       },
+    }
+  }
+
+  protected get policyByState(): BasePolicy<InformationSharingAgreement> {
+    switch (this.record.status) {
+      case InformationSharingAgreement.Status.DRAFT:
+        return new DraftStatePolicy(this.user, this.record)
+      case InformationSharingAgreement.Status.SIGNED:
+        return new SignedStatePolicy(this.user, this.record)
+      default:
+        return new GenericStatePolicy(this.user, this.record)
     }
   }
 }

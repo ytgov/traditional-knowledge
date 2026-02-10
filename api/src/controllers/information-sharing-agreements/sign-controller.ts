@@ -3,7 +3,7 @@ import { isArray, isNil } from "lodash"
 import logger from "@/utils/logger"
 
 import { InformationSharingAgreement } from "@/models"
-import { InformationSharingAgreementPolicy } from "@/policies"
+import { SignPolicy } from "@/policies/information-sharing-agreements"
 import { SignService } from "@/services/information-sharing-agreements"
 import { ShowSerializer } from "@/serializers/information-sharing-agreements"
 import BaseController from "@/controllers/base-controller"
@@ -72,7 +72,7 @@ export class SignController extends BaseController<InformationSharingAgreement> 
   }
 
   private buildPolicy(informationSharingAgreement: InformationSharingAgreement) {
-    return new InformationSharingAgreementPolicy(this.currentUser, informationSharingAgreement)
+    return new SignPolicy(this.currentUser, informationSharingAgreement)
   }
 }
 
