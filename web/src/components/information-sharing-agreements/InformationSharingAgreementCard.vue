@@ -101,33 +101,67 @@
           >
             <v-card-text>
               <h3 class="mt-n1 mb-3">Signed Acknowledgement</h3>
-              <div class="d-flex align-center ga-2">
-                <span>{{ signedAcknowledgement.name }}</span>
-                <InformationSharingAgreementDownloadSignedAcknowledgementButton
-                  :information-sharing-agreement-id="informationSharingAgreementId"
-                />
-              </div>
+              <span>{{ signedAcknowledgement.name }}</span>
             </v-card-text>
           </v-card>
         </v-col>
       </v-row>
 
-      <div class="d-flex mt-5 ga-2">
-        <v-btn
-          v-if="policy?.update"
-          color="primary"
-          v-bind="editButtonProps"
-        >
-          Edit
-        </v-btn>
-        <InformationSharingAgreementDownloadDraftButton
-          v-if="informationSharingAgreement.status === InformationSharingAgreementStatuses.DRAFT"
-          :information-sharing-agreement-id="informationSharingAgreementId"
-          :activator-props="{
-            variant: 'outlined',
-            color: 'secondary',
-          }"
-        />
+      <div class="d-flex mt-5 justify-space-between ga-2">
+        <div class="d-flex ga-2">
+          <template
+            v-if="
+              informationSharingAgreement.status === InformationSharingAgreementStatuses.DRAFT
+            "
+          >
+            <InformationSharingAgreementDownloadDraftButton
+              :information-sharing-agreement-id="informationSharingAgreementId"
+              :activator-props="{
+                variant: 'outlined',
+                color: 'secondary',
+              }"
+            />
+            <v-btn
+              color="secondary"
+              v-bind="signButtonProps"
+            >
+              Mark as Signed
+            </v-btn>
+          </template>
+          <template
+            v-else-if="
+              informationSharingAgreement.status === InformationSharingAgreementStatuses.SIGNED
+            "
+          >
+            <v-btn
+              color="warning"
+              variant="outlined"
+            >
+              Revert to Draft
+              <InformationSharingAgreementRevertToDraftDialog
+                :information-sharing-agreement-id="informationSharingAgreementId"
+                activator="parent"
+                @success="refresh"
+              />
+            </v-btn>
+            <InformationSharingAgreementDownloadSignedAcknowledgementButton
+              :information-sharing-agreement-id="informationSharingAgreementId"
+            />
+          </template>
+        </div>
+
+        <div class="d-flex justify-end ga-2">
+          <v-btn
+            v-if="
+              policy?.update &&
+              informationSharingAgreement.status === InformationSharingAgreementStatuses.DRAFT
+            "
+            color="primary"
+            v-bind="editButtonProps"
+          >
+            Edit
+          </v-btn>
+        </div>
       </div>
     </template>
   </v-card>
@@ -146,6 +180,7 @@ import useInformationSharingAgreement, {
 
 import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
 import InformationSharingAgreementDownloadSignedAcknowledgementButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadSignedAcknowledgementButton.vue"
+import InformationSharingAgreementRevertToDraftDialog from "@/components/information-sharing-agreements/InformationSharingAgreementRevertToDraftDialog.vue"
 
 import GroupChip from "@/components/groups/GroupChip.vue"
 import UserChip from "@/components/users/UserChip.vue"
@@ -157,6 +192,7 @@ const props = withDefaults(
     informationSharingAgreementId: number
     cancelButtonProps?: VBtnProps
     editButtonProps?: VBtnProps
+    signButtonProps?: VBtnProps
   }>(),
   {
     cancelButtonProps: () => ({
@@ -172,11 +208,19 @@ const props = withDefaults(
         },
       },
     }),
+    signButtonProps: ({ informationSharingAgreementId }) => ({
+      to: {
+        name: "information-sharing-agreements/InformationSharingAgreementSignPage",
+        params: {
+          informationSharingAgreementId,
+        },
+      },
+    }),
   }
 )
 
 const { informationSharingAgreementId } = toRefs(props)
-const { informationSharingAgreement, policy } = useInformationSharingAgreement(
+const { informationSharingAgreement, policy, refresh } = useInformationSharingAgreement(
   informationSharingAgreementId
 )
 const signedAcknowledgement = computed(
