@@ -25,6 +25,7 @@ import {
 import {
   ArchiveItemAuditsController,
   ArchiveItemFilesController,
+  Downloads,
   ArchiveItemsController,
   CategoriesController,
   CurrentUserController,
@@ -63,6 +64,12 @@ router.use(
   ensureAndAuthorizeCurrentUser,
   trackLastActiveMiddleware
 )
+
+router
+  .route(
+    "/api/downloads/information-sharing-agreements/:informationSharingAgreementId/signed-acknowledgement"
+  )
+  .post(Downloads.InformationSharingAgreements.SignedAcknowledgementController.create)
 
 router.route("/api/current-user").get(CurrentUserController.show)
 

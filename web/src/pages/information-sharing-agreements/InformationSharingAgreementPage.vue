@@ -73,21 +73,27 @@
                 Mark as Signed
               </v-btn>
             </template>
-            <v-btn
+            <template
               v-else-if="
                 informationSharingAgreement.status === InformationSharingAgreementStatuses.SIGNED
               "
-              color="warning"
-              size="large"
-              variant="outlined"
             >
-              Revert to Draft
-              <InformationSharingAgreementRevertToDraftDialog
+              <v-btn
+                color="warning"
+                size="large"
+                variant="outlined"
+              >
+                Revert to Draft
+                <InformationSharingAgreementRevertToDraftDialog
+                  :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
+                  activator="parent"
+                  @success="refresh"
+                />
+              </v-btn>
+              <InformationSharingAgreementDownloadSignedAcknowledgementButton
                 :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
-                activator="parent"
-                @success="refresh"
               />
-            </v-btn>
+            </template>
           </div>
 
           <div class="d-flex flex-column flex-md-row justify-end ga-3">
@@ -133,13 +139,13 @@ import useInformationSharingAgreement, {
   InformationSharingAgreementStatuses,
 } from "@/use/use-information-sharing-agreement"
 
-import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
-import InformationSharingAgreementRevertToDraftDialog from "@/components/information-sharing-agreements/InformationSharingAgreementRevertToDraftDialog.vue"
-
-import InformationSharingAgreementBasicInformationCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationCard.vue"
-import InformationSharingAgreementDurationCard from "@/components/information-sharing-agreements/InformationSharingAgreementDurationCard.vue"
 import InformationSharingAgreementAccessCard from "@/components/information-sharing-agreements/InformationSharingAgreementAccessCard.vue"
+import InformationSharingAgreementBasicInformationCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationCard.vue"
 import InformationSharingAgreementConfidentialityCard from "@/components/information-sharing-agreements/InformationSharingAgreementConfidentialityCard.vue"
+import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
+import InformationSharingAgreementDownloadSignedAcknowledgementButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadSignedAcknowledgementButton.vue"
+import InformationSharingAgreementDurationCard from "@/components/information-sharing-agreements/InformationSharingAgreementDurationCard.vue"
+import InformationSharingAgreementRevertToDraftDialog from "@/components/information-sharing-agreements/InformationSharingAgreementRevertToDraftDialog.vue"
 
 const props = defineProps<{
   informationSharingAgreementId: string
