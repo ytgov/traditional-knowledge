@@ -107,12 +107,10 @@
         </v-col>
       </v-row>
 
-      <div class="d-flex mt-5 justify-space-between ga-2">
-        <div class="d-flex ga-2">
+      <div class="d-flex flex-column flex-md-row mt-5 justify-space-between ga-2">
+        <div class="d-flex flex-column flex-md-row ga-2">
           <template
-            v-if="
-              informationSharingAgreement.status === InformationSharingAgreementStatuses.DRAFT
-            "
+            v-if="informationSharingAgreement.status === InformationSharingAgreementStatuses.DRAFT"
           >
             <InformationSharingAgreementDownloadDraftButton
               :information-sharing-agreement-id="informationSharingAgreementId"
@@ -150,7 +148,7 @@
           </template>
         </div>
 
-        <div class="d-flex justify-end ga-2">
+        <div class="d-flex flex-column flex-md-row justify-end ga-2">
           <v-btn
             v-if="
               policy?.update &&
