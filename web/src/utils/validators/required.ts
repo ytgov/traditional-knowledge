@@ -12,9 +12,9 @@ export function required(v: unknown): boolean | string {
   }
 
   if (v instanceof File) {
-    if (isNil(v.size) || v.size === 0) return "This field is required"
+    if (!isNil(v.size) && v.size > 0) return true
 
-    return true
+    return "This field is required"
   }
 
   if ((isArray(v) || isString(v) || isObject(v)) && isEmpty(v)) {
