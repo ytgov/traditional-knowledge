@@ -25,6 +25,7 @@ export class SignService extends BaseService {
       await Attachments.UpsertService.perform(this.signedAcknowledgementFilePath, fileName, {
         targetId: this.informationSharingAgreement.id,
         targetType: Attachment.TargetTypes.InformationSharingAgreement,
+        associationName: "signedAcknowledgement",
       })
 
       await this.informationSharingAgreement.update({

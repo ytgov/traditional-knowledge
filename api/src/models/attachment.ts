@@ -57,6 +57,10 @@ export class Attachment extends BaseModel<
 
   @Attribute(DataTypes.STRING(255))
   @NotNull
+  declare associationName: string
+
+  @Attribute(DataTypes.STRING(255))
+  @NotNull
   declare name: string
 
   @Attribute(DataTypes.INTEGER)

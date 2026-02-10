@@ -303,6 +303,7 @@ export class InformationSharingAgreement extends BaseModel<
     inverse: "informationSharingAgreement",
     scope: {
       targetType: AttachmentTargetTypes.InformationSharingAgreement,
+      associationName: "signedAcknowledgement",
     },
   })
   declare signedAcknowledgement?: NonAttribute<Attachment | null>

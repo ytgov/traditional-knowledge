@@ -35,6 +35,7 @@ export class RevertToDraftService extends BaseService {
         where: {
           targetId: this.informationSharingAgreement.id,
           targetType: AttachmentTargetTypes.InformationSharingAgreement,
+          associationName: "signedAcknowledgement",
         },
       })
       await this.informationSharingAgreement.update({

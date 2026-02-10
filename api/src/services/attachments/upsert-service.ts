@@ -20,7 +20,7 @@ export class UpsertService extends BaseService {
   }
 
   async perform(): Promise<Attachment> {
-    const { targetId, targetType, ...optionalAttributes } = this.attributes
+    const { targetId, targetType, associationName, ...optionalAttributes } = this.attributes
 
     if (isNil(targetId)) {
       throw new Error("Target ID is required")
@@ -28,6 +28,10 @@ export class UpsertService extends BaseService {
 
     if (isNil(targetType)) {
       throw new Error("Target type is required")
+    }
+
+    if (isNil(associationName)) {
+      throw new Error("Association name is required")
     }
 
     const { mimeType, extension } = await this.determineMimeTypeAndExtension(this.filePath)
@@ -40,6 +44,7 @@ export class UpsertService extends BaseService {
       where: {
         targetId,
         targetType,
+        associationName,
       },
     })
 
@@ -47,6 +52,7 @@ export class UpsertService extends BaseService {
       const attachment = await Attachment.create({
         targetId,
         targetType,
+        associationName,
         name,
         size,
         mimeType,
