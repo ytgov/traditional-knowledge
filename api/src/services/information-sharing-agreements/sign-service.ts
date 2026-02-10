@@ -34,7 +34,9 @@ export class SignService extends BaseService {
         signedAt: new Date(),
       })
 
-      return this.informationSharingAgreement
+      return this.informationSharingAgreement.reload({
+        include: ["accessGrants", "signedAcknowledgement"],
+      })
     })
   }
 

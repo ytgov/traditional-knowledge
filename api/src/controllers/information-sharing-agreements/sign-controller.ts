@@ -60,14 +60,7 @@ export class SignController extends BaseController<InformationSharingAgreement> 
 
   private async loadInformationSharingAgreement(): Promise<InformationSharingAgreement | null> {
     return InformationSharingAgreement.findByPk(this.params.informationSharingAgreementId, {
-      include: [
-        "accessGrants",
-        "creator",
-        "informationSharingAgreementArchiveItems",
-        "receivingGroup",
-        "sharingGroup",
-        "signedAcknowledgement",
-      ],
+      include: ["accessGrants"],
     })
   }
 
