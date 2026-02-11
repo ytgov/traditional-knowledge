@@ -16,6 +16,7 @@ import {
   HasOne,
   NotNull,
   PrimaryKey,
+  Table,
   ValidateAttribute,
 } from "@sequelize/core/decorators-legacy"
 import { isUndefined } from "lodash"
@@ -50,6 +51,9 @@ export enum InformationSharingAgreementStatuses {
   CLOSED = "closed",
 }
 
+@Table({
+  tableName: "information_sharing_agreements",
+})
 export class InformationSharingAgreement extends BaseModel<
   InferAttributes<InformationSharingAgreement>,
   InferCreationAttributes<InformationSharingAgreement>
