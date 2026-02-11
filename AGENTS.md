@@ -238,6 +238,7 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 - Assert database state via `findAll()` without where clauses (test isolation handles cleanup)
 - Negative spy assertions: `expect(spy).not.toHaveBeenCalled()` (never use `not.toHaveBeenCalledWith`)
 - Controller tests: `mockCurrentUser(user)` and `request().get("/api/path")` from `@/support`
+- **Error testing**: Use `.create()` with complete valid data, then destroy records to test "no longer exists" scenarios instead of using `.build()` with invalid IDs that cause foreign key violations
 
 ---
 
