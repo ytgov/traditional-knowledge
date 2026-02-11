@@ -1,1 +1,11 @@
-export * as Groups from "./groups"
+import * as Groups from "./groups"
+
+export {
+  // this comment ensures line wrap
+  Groups,
+}
+
+export default {
+  // this comment ensures line wrap
+  Groups,
+}
