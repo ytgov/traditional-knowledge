@@ -148,6 +148,8 @@ The GitHub PR template provides the basic structure. Fill in each section follow
 - Include user reports using blockquotes (`>`)
 - For bugs, describe root cause if known
 - Include "Steps to Reproduce" for bugs
+- **Use concise, direct language**: "Implements automatic group creation when agreements are signed" not "Implements automatic group creation when information sharing agreements is marked as signed"
+- **Focus on problem and solution**: Remove redundant words and unnecessary context
 
 **Example:**
 ```markdown
@@ -166,6 +168,8 @@ Investigation revealed that the search indexing was not considering Indigenous l
 - Extract meaning from commits - what was the goal of each change?
 - A reviewer can see file diffs - tell them WHY, not WHERE
 - Keep it concise: 5-10 items maximum
+- **Use direct, active voice**: "Add group creation service" not "Add proper group creation service for the entire system"
+- **Avoid redundant qualifiers**: Remove words like "entire", "proper", "fully", "completely"
 
 **Good Example (purpose-focused):**
 ```markdown

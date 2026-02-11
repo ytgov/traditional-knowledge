@@ -364,6 +364,13 @@ Navigation/verification steps:
 
 For complex scenarios, use `## Test Case N: Description` subheadings.
 
+**PR Description Guidelines:**
+
+- **Concise language**: Use direct, active voice. Avoid redundant words like "entire", "proper", "fully"
+- **Context section**: Focus on the problem and solution. Use present tense ("implements" not "will implement")
+- **Implementation section**: Short, focused bullet points. Combine related items. Avoid qualifiers and unnecessary detail
+- **Example**: "Add group creation service" instead of "Add proper group creation service for the entire system"
+
 ### Agent Templates and Workflows
 
 The `agents/` folder contains reusable templates and workflows. **Use these instead of writing from scratch.**
