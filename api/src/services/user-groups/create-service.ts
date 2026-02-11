@@ -1,5 +1,5 @@
 import { Attributes } from "@sequelize/core"
-import { isNil, isUndefined } from "lodash"
+import { isNil } from "lodash"
 
 import { NotifyUserOfMembershipMailer, NotifyAdminsOfAddedUserMailer } from "@/mailers/groups"
 import db, { Group, User, UserGroup } from "@/models"
@@ -11,8 +11,6 @@ export type UserGroupCreationAttributes = Partial<Attributes<UserGroup>>
 export class CreateService extends BaseService {
   constructor(
     private attributes: UserGroupCreationAttributes,
-    private user: User,
-    private group: Group,
     private currentUser: User
   ) {
     super()
@@ -29,27 +27,37 @@ export class CreateService extends BaseService {
       throw new Error("Group ID is required")
     }
 
-    if (isUndefined(this.user)) {
-      throw new Error("Expected user association to be preloaded")
-    }
-
-    if (isUndefined(this.group)) {
-      throw new Error("Expected group association to be preloaded")
-    }
-
     return db.transaction(async () => {
       const userGroup = await UserGroup.create({
         ...optionalAttributes,
-        creatorId: this.currentUser.id,
         userId,
         groupId,
+        creatorId: this.currentUser.id,
       })
 
-      await this.notifyUserOfMembership(this.user, this.group)
-      await this.notifyAdminsOfMembership(this.user, this.group)
+      const user = await this.loadUser(userId)
+      const group = await this.loadGroup(groupId)
+      await this.notifyUserOfMembership(user, group)
+      await this.notifyAdminsOfMembership(user, group)
 
       return userGroup
     })
+  }
+
+  private async loadUser(userId: number): Promise<User> {
+    const user = await User.findByPk(userId)
+    if (isNil(user)) {
+      throw new Error(`User with ID ${userId} not found`)
+    }
+    return user
+  }
+
+  private async loadGroup(groupId: number): Promise<Group> {
+    const group = await Group.findByPk(groupId)
+    if (isNil(group)) {
+      throw new Error(`Group with ID ${groupId} not found`)
+    }
+    return group
   }
 
   private async notifyUserOfMembership(user: User, group: Group) {

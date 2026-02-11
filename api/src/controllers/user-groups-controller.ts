@@ -1,7 +1,7 @@
-import { isNil, isUndefined } from "lodash"
+import { isNil } from "lodash"
 
 import logger from "@/utils/logger"
-import { Group, User, UserGroup } from "@/models"
+import { UserGroup } from "@/models"
 import { UserGroupPolicy } from "@/policies"
 import { CreateService, DestroyService } from "@/services/user-groups"
 import BaseController from "@/controllers/base-controller"
@@ -74,21 +74,7 @@ export class UserGroupsController extends BaseController<UserGroup> {
       }
 
       const permittedAttributes = policy.permitAttributesForCreate(this.request.body)
-
-      if (isUndefined(newUserGroup.user)) {
-        throw new Error("Expected user association to be preloaded")
-      }
-
-      if (isUndefined(newUserGroup.group)) {
-        throw new Error("Expected group association to be preloaded")
-      }
-
-      const userGroup = await CreateService.perform(
-        permittedAttributes,
-        newUserGroup.user,
-        newUserGroup.group,
-        this.currentUser
-      )
+      const userGroup = await CreateService.perform(permittedAttributes, this.currentUser)
       return this.response.status(201).json({
         userGroup,
       })
@@ -162,21 +148,7 @@ export class UserGroupsController extends BaseController<UserGroup> {
   }
 
   private async buildUserGroup() {
-    const userGroup = UserGroup.build(this.request.body)
-
-    const user = await User.findByPk(userGroup.userId, {
-      rejectOnEmpty: true,
-    })
-
-    userGroup.user = user
-
-    const group = await Group.findByPk(userGroup.groupId, {
-      rejectOnEmpty: true,
-    })
-
-    userGroup.group = group
-
-    return userGroup
+    return UserGroup.build(this.request.body)
   }
 
   private buildPolicy(group: UserGroup) {
