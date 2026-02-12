@@ -82,7 +82,16 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 - `dev up` - Start all services (includes watch mode by default)
 - `dev down` - Stop services
 - `dev down -v` - Stop and wipe database
-- `dev sqlcmd` - Access database CLI (MSSQL)
+- `dev sqlcmd` - Access interactive database console (MSSQL)
+  - For interactive database access: `dev sqlcmd`
+  - For direct queries: `dev sqlcmd-query "SELECT COUNT(*) FROM users"`
+  - For queries with special characters (single quotes, Unicode), use here documents:
+    ```bash
+    cat << 'SQL' | ./bin/dev sqlcmd
+    SELECT id, name FROM external_organizations WHERE name = 'Tr''ondëk Hwëch''in';
+    SQL
+    ```
+  - This handles single quotes (escape with `''`), Unicode characters (ë, ü), and complex queries
 - `dev test` or `dev test api` - Run all API tests
 - `dev test web` - Run all web tests
 - `dev test_api` - Run all API tests (legacy)
@@ -99,6 +108,35 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 - Database: snake_case, Models: camelCase (Sequelize handles mapping)
 - Test files mirror source structure: `api/src/services/example.ts` → `api/tests/services/example.test.ts`
 - Jira project: TK (https://yg-hpw.atlassian.net/jira/software/projects/TK/boards/27)
+
+### Database Queries
+
+**For interactive database access:**
+```bash
+dev sqlcmd
+```
+
+**For direct queries without special characters:**
+```bash
+dev sqlcmd-query "SELECT COUNT(*) FROM users"
+dev sqlcmd-query "SELECT id, name FROM external_organizations WHERE id = 12"
+```
+
+**For queries with special characters (single quotes, Unicode, Indigenous names):**
+```bash
+cat << 'SQL' | ./bin/dev sqlcmd
+SELECT id, name FROM external_organizations WHERE name = 'Tr''ondëk Hwëch''in';
+SQL
+```
+
+**Key points:**
+- Use `dev sqlcmd` for interactive database console access
+- Use `dev sqlcmd-query` for direct queries without special characters
+- Use here documents (`cat << 'SQL' | ./bin/dev sqlcmd`) for queries with special characters
+- Escape single quotes with double single quotes: `'` → `''`
+- Unicode characters (ë, ü, etc.) are preserved properly
+- Works for complex multi-line queries
+- Prefer here documents over `sqlcmd-query` for problematic queries
 
 ---
 
@@ -238,6 +276,7 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 - Assert database state via `findAll()` without where clauses (test isolation handles cleanup)
 - Negative spy assertions: `expect(spy).not.toHaveBeenCalled()` (never use `not.toHaveBeenCalledWith`)
 - Controller tests: `mockCurrentUser(user)` and `request().get("/api/path")` from `@/support`
+- **Error testing**: Use `.create()` with complete valid data, then destroy records to test "no longer exists" scenarios instead of using `.build()` with invalid IDs that cause foreign key violations
 
 ---
 
@@ -362,6 +401,13 @@ Navigation/verification steps:
 - Format: Bold for **UI elements**, inline code for `exact values/URLs/errors`
 
 For complex scenarios, use `## Test Case N: Description` subheadings.
+
+**PR Description Guidelines:**
+
+- **Concise language**: Use direct, active voice. Avoid redundant words like "entire", "proper", "fully"
+- **Context section**: Focus on the problem and solution. Use present tense ("implements" not "will implement")
+- **Implementation section**: Short, focused bullet points. Combine related items. Avoid qualifiers and unnecessary detail
+- **Example**: "Add group creation service" instead of "Add proper group creation service for the entire system"
 
 ### Agent Templates and Workflows
 

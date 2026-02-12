@@ -163,8 +163,13 @@ class DevHelper
   end
 
   ##
-  # Start the sqlcmd utility to interact with the database.
+  # Start the sqlcmd utility to interact with the database (interactive console).
   # -I enable quoted identifiers, e.g. "table"."column"
+  #
+  # For interactive database access:
+  #   dev sqlcmd
+  #
+  # For direct queries and queries with special characters, see sqlcmd_query method.
   def sqlcmd(*args, **kwargs) # rubocop:disable Metrics/MethodLength
     environment_hoist = ENV.slice(*%w[
       DB_DATABASE
@@ -175,9 +180,12 @@ class DevHelper
       "export #{key}=\"#{value}\""
     }.join("\n  ")
 
+    tty_argument = ""
+    tty_argument = "-T" if kwargs.fetch(:enable_tty, false)
+
     compose(
       <<~BASH,
-        exec db sh -c '
+        exec #{tty_argument} db sh -c '
           #{environment_hoist}
           /opt/mssql-tools18/bin/sqlcmd \
             -U "$DB_USERNAME" \
@@ -190,6 +198,36 @@ class DevHelper
       BASH
       **kwargs
     )
+  end
+
+  ##
+  # Execute SQL query directly using sqlcmd.
+  #
+  # For simple queries without special characters:
+  #   dev sqlcmd-query "SELECT COUNT(*) FROM users"
+  #   dev sqlcmd-query "SELECT id, name FROM external_organizations WHERE id = 12"
+  #
+  # For queries with special characters (single quotes, Unicode, Indigenous names), use here documents with sqlcmd:
+  #   cat << 'SQL' | ./bin/dev sqlcmd
+  #   SELECT id, name FROM external_organizations WHERE name = 'Tr''ondëk Hwëch''in';
+  #   SQL
+  #
+  # This approach handles:
+  # - Single quotes (escape with double single quotes: '')
+  # - Unicode characters (ë, ü, etc.)
+  # - Complex multi-line queries
+  # - Indigenous names with special characters
+  #
+  # Usage patterns:
+  # - Use sqlcmd_query for direct queries without special characters
+  # - Use here documents with sqlcmd for problematic queries
+  # - Use sqlcmd for interactive database console access
+  def sqlcmd_query(query, *args, **kwargs)
+    if query.nil? || query.strip.empty?
+      raise ArgumentError, "Query cannot be nil or empty"
+    end
+
+    sqlcmd(args, enable_tty: true, pipe_input: query, **kwargs)
   end
 
   def db(*args, **kwargs)
@@ -408,16 +446,6 @@ class DevHelper
 
     system(command)
     puts "Generated PNG: #{png_path}"
-  end
-
-  ##
-  # Execute SQL query directly using sqlcmd.
-  def sqlcmd_query(query, *args, **kwargs)
-    if query.nil? || query.strip.empty?
-      raise ArgumentError, "Query cannot be nil or empty"
-    end
-
-    sqlcmd(args, enable_tty: true, pipe_input: query, **kwargs)
   end
 
   def service_running?(container_name)

@@ -3,7 +3,7 @@ import { truncate } from "lodash"
 
 import db, { Attachment, InformationSharingAgreement, User } from "@/models"
 import BaseService from "@/services/base-service"
-import { Attachments } from "@/services"
+import { Attachments, InformationSharingAgreements } from "@/services"
 
 export class SignService extends BaseService {
   constructor(
@@ -34,10 +34,22 @@ export class SignService extends BaseService {
         signedAt: new Date(),
       })
 
+      await this.createGroups(this.informationSharingAgreement, this.currentUser)
+
       return this.informationSharingAgreement.reload({
         include: ["accessGrants", "signedAcknowledgement"],
       })
     })
+  }
+
+  private async createGroups(
+    informationSharingAgreement: InformationSharingAgreement,
+    currentUser: User
+  ): Promise<void> {
+    await InformationSharingAgreements.CreateGroupsService.perform(
+      informationSharingAgreement,
+      currentUser
+    )
   }
 
   private buildFileName(): string {

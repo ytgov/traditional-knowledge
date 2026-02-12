@@ -5,7 +5,7 @@ import { Retention } from "@/models"
 import logger from "@/utils/logger"
 
 export async function seed(_knex: Knex): Promise<void> {
-  const retentions = [
+  const retentionsAttributes = [
     {
       name: "Keep 10 days, then destroy",
       description: "",
@@ -23,18 +23,18 @@ export async function seed(_knex: Knex): Promise<void> {
       retentionDate: new Date(2025, 11, 31, 23, 59, 59),
     },
   ]
-  for (const attributes of retentions) {
-    let item = await Retention.findOne({
+  for (const retentionAttributes of retentionsAttributes) {
+    let retention = await Retention.findOne({
       where: {
-        name: attributes.name,
+        name: retentionAttributes.name,
       },
     })
-    if (isNil(item)) {
-      item = await Retention.create(attributes)
-      logger.debug("Retention created:", item.dataValues)
+    if (isNil(retention)) {
+      retention = await Retention.create(retentionAttributes)
+      logger.debug("Retention created:", { retention: retention.dataValues })
     } else {
-      await item.update(attributes)
-      logger.debug("Retention updated:", item.dataValues)
+      await retention.update(retentionAttributes)
+      logger.debug("Retention updated:", { retention: retention.dataValues })
     }
   }
 }

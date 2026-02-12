@@ -7,6 +7,8 @@ export { RevertToDraftService } from "./revert-to-draft-service"
 
 // Special services
 export { EnsureAdminAccessService } from "./admin-access-grants-service"
+export { CreateGroupsService } from "./create-groups-service"
+export { DestroyGroupsService } from "./destroy-groups-service"
 
 // Bundled exports
 export * as GenerateAcknowledgement from "./generate-acknowledgement"

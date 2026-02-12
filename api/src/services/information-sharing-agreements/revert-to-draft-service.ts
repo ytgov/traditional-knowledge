@@ -8,6 +8,7 @@ import db, {
 } from "@/models"
 import { AttachmentTargetTypes } from "@/models/attachment"
 import BaseService from "@/services/base-service"
+import { InformationSharingAgreements } from "@/services"
 
 export class RevertToDraftService extends BaseService {
   constructor(
@@ -31,6 +32,7 @@ export class RevertToDraftService extends BaseService {
     this.assertNoArchiveItemsLinked(informationSharingAgreementArchiveItems)
 
     return db.transaction(async () => {
+      await this.destroyGroups(this.informationSharingAgreement, this.currentUser)
       await Attachment.destroy({
         where: {
           targetId: this.informationSharingAgreement.id,
@@ -55,6 +57,16 @@ export class RevertToDraftService extends BaseService {
     if (informationSharingAgreementArchiveItems.length > 0) {
       throw new Error("Cannot revert to draft because archive items are linked to this agreement.")
     }
+  }
+
+  private async destroyGroups(
+    informationSharingAgreement: InformationSharingAgreement,
+    currentUser: User
+  ): Promise<void> {
+    await InformationSharingAgreements.DestroyGroupsService.perform(
+      informationSharingAgreement,
+      currentUser
+    )
   }
 }
 
