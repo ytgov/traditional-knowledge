@@ -13,11 +13,8 @@ export default defineConfig({
     root: ".",
     globalSetup: "./tests/global-setup.ts",
     setupFiles: ["./tests/setup.ts"],
-    poolOptions: {
-      threads: {
-        singleThread: true,
-      },
-    },
+    maxWorkers: 1,
+    isolate: false,
     forceRerunTriggers: [
       "**/*.(html|txt)", // Rerun tests when data files change
     ],
