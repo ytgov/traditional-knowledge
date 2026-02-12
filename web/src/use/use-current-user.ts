@@ -36,8 +36,8 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
     return state.currentUser?.roles.includes(UserRoles.SYSTEM_ADMIN)
   })
   const isGroupAdmin = computed(() => !isEmpty(state.currentUser?.adminGroups))
-  const isCreatorGroupAdmin = computed(() => {
-    return state.currentUser?.adminGroups.some((group) => !group.isHost)
+  const isExternalGroupAdmin = computed(() => {
+    return state.currentUser?.adminGroups.some((group) => group.isExternal)
   })
   const isAdmin = computed(() => isSystemAdmin.value || isGroupAdmin.value)
 
@@ -131,7 +131,7 @@ export function useCurrentUser<IsLoaded extends boolean = false>() {
     save,
     // Computed properties
     isAdmin,
-    isCreatorGroupAdmin,
+    isExternalGroupAdmin,
     isGroupAdmin,
     isSystemAdmin,
     // Helper functions

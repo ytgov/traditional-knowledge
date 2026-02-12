@@ -57,7 +57,7 @@ export class Group extends BaseModel<InferAttributes<Group>, InferCreationAttrib
   @Attribute(DataTypes.BOOLEAN)
   @NotNull
   @Default(false)
-  declare isHost: CreationOptional<boolean>
+  declare isExternal: CreationOptional<boolean>
 
   @Attribute(DataTypes.DATE(0))
   @NotNull
@@ -91,16 +91,16 @@ export class Group extends BaseModel<InferAttributes<Group>, InferCreationAttrib
   >
 
   @HasMany(() => InformationSharingAgreement, {
-    foreignKey: "sharingGroupId",
-    inverse: "sharingGroup",
+    foreignKey: "externalGroupId",
+    inverse: "externalGroup",
   })
-  declare sharedInformationAgreements?: NonAttribute<InformationSharingAgreement[]>
+  declare externalInformationAgreements?: NonAttribute<InformationSharingAgreement[]>
 
   @HasMany(() => InformationSharingAgreement, {
-    foreignKey: "receivingGroupId",
-    inverse: "receivingGroup",
+    foreignKey: "internalGroupId",
+    inverse: "internalGroup",
   })
-  declare receivedInformationAgreements?: NonAttribute<InformationSharingAgreement[]>
+  declare internalInformationAgreements?: NonAttribute<InformationSharingAgreement[]>
 
   @HasMany(() => UserGroup, {
     foreignKey: {

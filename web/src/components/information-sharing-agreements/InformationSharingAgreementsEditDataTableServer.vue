@@ -12,22 +12,22 @@
         goToInformationSharingAgreementPage(item.id)
     "
   >
-    <template #item.sharingGroupId="{ item }">
-      <em v-if="isNil(item.sharingGroupId) || isNil(item.sharingGroupContactId)"
-        >No sharing group</em
+    <template #item.externalGroupId="{ item }">
+      <em v-if="isNil(item.externalGroupId) || isNil(item.externalGroupContactId)"
+        >No external group</em
       >
       <template v-else>
-        <GroupChip :group-id="item.sharingGroupId" />
-        <UserChip :user-id="item.sharingGroupContactId" />
+        <GroupChip :group-id="item.externalGroupId" />
+        <UserChip :user-id="item.externalGroupContactId" />
       </template>
     </template>
-    <template #item.receivingGroupId="{ item }">
-      <em v-if="isNil(item.receivingGroupId) || isNil(item.receivingGroupContactId)"
-        >No receiving group</em
+    <template #item.internalGroupId="{ item }">
+      <em v-if="isNil(item.internalGroupId) || isNil(item.internalGroupContactId)"
+        >No internal group</em
       >
       <template v-else>
-        <GroupChip :group-id="item.receivingGroupId" />
-        <UserChip :user-id="item.receivingGroupContactId" />
+        <GroupChip :group-id="item.internalGroupId" />
+        <UserChip :user-id="item.internalGroupContactId" />
       </template>
     </template>
     <template #item.creatorId="{ item }">
@@ -112,12 +112,12 @@ const headers = ref([
     minWidth: "300px",
   },
   {
-    title: "Sharing Group",
-    key: "sharingGroupId",
+    title: "External Group",
+    key: "externalGroupId",
   },
   {
-    title: "Receiving Group",
-    key: "receivingGroupId",
+    title: "Internal Group",
+    key: "internalGroupId",
   },
   {
     title: "Start Date",

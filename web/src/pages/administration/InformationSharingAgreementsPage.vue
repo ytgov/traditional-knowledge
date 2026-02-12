@@ -8,7 +8,7 @@
           density="compact"
         />
         <v-btn
-          v-if="isSystemAdmin || isCreatorGroupAdmin"
+          v-if="isSystemAdmin || isExternalGroupAdmin"
           color="primary"
           :to="{
             name: 'administration/information-sharing-agreements/InformationSharingAgreementNewPage',
@@ -34,7 +34,7 @@ import useCurrentUser from "@/use/use-current-user"
 import FilterSearchDebouncedTextField from "@/components/common/tables/FilterSearchDebouncedTextField.vue"
 import InformationSharingAgreementsAdminEditDataTableServer from "@/components/information-sharing-agreements/InformationSharingAgreementsAdminEditDataTableServer.vue"
 
-const { isSystemAdmin, isCreatorGroupAdmin } = useCurrentUser()
+const { isSystemAdmin, isExternalGroupAdmin } = useCurrentUser()
 
 const search = ref("")
 

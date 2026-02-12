@@ -35,14 +35,14 @@
           md="6"
         >
           <UserSearchableAutocomplete
-            :model-value="sharingGroupContactId"
+            :model-value="externalGroupContactId"
             label="Yukon First Nation or Transboundary Contact Name *"
-            :where="sharingGroupContactWhere"
+            :where="externalGroupContactWhere"
             :rules="[required]"
             required
-            @click:clear="updateSharingGroupContactTitle(null)"
-            @selected="updateSharingGroupContactTitle"
-            @update:model-value="emit('update:sharingGroupContactId', $event)"
+            @click:clear="updateExternalGroupContactTitle(null)"
+            @selected="updateExternalGroupContactTitle"
+            @update:model-value="emit('update:externalGroupContactId', $event)"
           />
         </v-col>
         <v-col
@@ -50,11 +50,11 @@
           md="6"
         >
           <v-text-field
-            :model-value="sharingGroupContactTitle"
+            :model-value="externalGroupContactTitle"
             label="Yukon First Nation or Transboundary Contact Title *"
             :rules="[required]"
             required
-            @update:model-value="emit('update:sharingGroupContactTitle', $event)"
+            @update:model-value="emit('update:externalGroupContactTitle', $event)"
           />
         </v-col>
       </v-row>
@@ -65,14 +65,14 @@
           md="6"
         >
           <UserSearchableAutocomplete
-            :model-value="receivingGroupContactId"
+            :model-value="internalGroupContactId"
             label="Yukon Government (YG) Contact Name *"
-            :where="receivingGroupContactWhere"
+            :where="internalGroupContactWhere"
             :rules="[required]"
             required
-            @click:clear="updateReceivingGroupContactTitle(null)"
-            @selected="updateReceivingGroupContactTitle"
-            @update:model-value="emit('update:receivingGroupContactId', $event)"
+            @click:clear="updateInternalGroupContactTitle(null)"
+            @selected="updateInternalGroupContactTitle"
+            @update:model-value="emit('update:internalGroupContactId', $event)"
           />
         </v-col>
         <v-col
@@ -80,11 +80,11 @@
           md="6"
         >
           <v-text-field
-            :model-value="receivingGroupContactTitle"
+            :model-value="internalGroupContactTitle"
             label="Yukon Government (YG) Contact Title *"
             :rules="[required]"
             required
-            @update:model-value="emit('update:receivingGroupContactTitle', $event)"
+            @update:model-value="emit('update:internalGroupContactTitle', $event)"
           />
         </v-col>
         <v-col
@@ -92,13 +92,13 @@
           md="6"
         >
           <UserSearchableAutocomplete
-            :model-value="receivingGroupSecondaryContactId"
+            :model-value="internalGroupSecondaryContactId"
             label="Yukon Government (YG) Manager Contact Name *"
-            :where="receivingGroupSecondaryContactWhere"
+            :where="internalGroupSecondaryContactWhere"
             hint="Typically the manager of the primary YG contact, but can be any appropriate internal contact."
             :rules="[required]"
             required
-            @update:model-value="emit('update:receivingGroupSecondaryContactId', $event)"
+            @update:model-value="emit('update:internalGroupSecondaryContactId', $event)"
           />
         </v-col>
       </v-row>
@@ -118,46 +118,46 @@ import UserSearchableAutocomplete, {
 defineProps<{
   title: string | null | undefined
   purpose: string | null | undefined
-  sharingGroupContactId: number | null | undefined
-  sharingGroupContactTitle: string | null | undefined
-  receivingGroupContactId: number | null | undefined
-  receivingGroupContactTitle: string | null | undefined
-  receivingGroupSecondaryContactId: number | null | undefined
+  externalGroupContactId: number | null | undefined
+  externalGroupContactTitle: string | null | undefined
+  internalGroupContactId: number | null | undefined
+  internalGroupContactTitle: string | null | undefined
+  internalGroupSecondaryContactId: number | null | undefined
 }>()
 
 const emit = defineEmits<{
   "update:title": [value: string | null | undefined]
   "update:purpose": [value: string | null | undefined]
-  "update:sharingGroupContactId": [value: number | null | undefined]
-  "update:sharingGroupContactTitle": [value: string | null | undefined]
-  "update:receivingGroupContactId": [value: number | null | undefined]
-  "update:receivingGroupContactTitle": [value: string | null | undefined]
-  "update:receivingGroupSecondaryContactId": [value: number | null | undefined]
+  "update:externalGroupContactId": [value: number | null | undefined]
+  "update:externalGroupContactTitle": [value: string | null | undefined]
+  "update:internalGroupContactId": [value: number | null | undefined]
+  "update:internalGroupContactTitle": [value: string | null | undefined]
+  "update:internalGroupSecondaryContactId": [value: number | null | undefined]
 }>()
 
-const sharingGroupContactWhere = computed(() => ({
+const externalGroupContactWhere = computed(() => ({
   isExternal: true,
 }))
-const receivingGroupContactWhere = computed(() => ({
+const internalGroupContactWhere = computed(() => ({
   isExternal: false,
 }))
-const receivingGroupSecondaryContactWhere = computed(() => ({
+const internalGroupSecondaryContactWhere = computed(() => ({
   isExternal: false,
 }))
 
-function updateSharingGroupContactTitle(user: UserAsIndex | null) {
+function updateExternalGroupContactTitle(user: UserAsIndex | null) {
   if (isNil(user)) {
-    emit("update:sharingGroupContactTitle", null)
+    emit("update:externalGroupContactTitle", null)
   } else {
-    emit("update:sharingGroupContactTitle", user.title)
+    emit("update:externalGroupContactTitle", user.title)
   }
 }
 
-function updateReceivingGroupContactTitle(user: UserAsIndex | null) {
+function updateInternalGroupContactTitle(user: UserAsIndex | null) {
   if (isNil(user)) {
-    emit("update:receivingGroupContactTitle", null)
+    emit("update:internalGroupContactTitle", null)
   } else {
-    emit("update:receivingGroupContactTitle", user.title)
+    emit("update:internalGroupContactTitle", user.title)
   }
 }
 </script>
