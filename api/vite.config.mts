@@ -14,7 +14,7 @@ export default defineConfig({
     globalSetup: "./tests/global-setup.ts",
     setupFiles: ["./tests/setup.ts"],
     maxWorkers: 1,
-    isolate: false,
+    isolate: true,
     forceRerunTriggers: [
       "**/*.(html|txt)", // Rerun tests when data files change
     ],
