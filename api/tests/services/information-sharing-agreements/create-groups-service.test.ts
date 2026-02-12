@@ -77,6 +77,38 @@ describe("api/src/services/information-sharing-agreements/create-groups-service.
         ])
       })
 
+      test("when groups are created, assigns sharing group and receiving group IDs back to sharing agreement", async () => {
+        // Arrange
+        const currentUser = await userFactory.create()
+        const externalOrganization = await externalOrganizationFactory.create({
+          name: "Test External Organization",
+        })
+        const sharingGroupContact = await userFactory.create({
+          isExternal: true,
+          externalOrganizationId: externalOrganization.id,
+        })
+        const receivingGroupContact = await userFactory.create({
+          department: "Test Department",
+        })
+        const informationSharingAgreement = await informationSharingAgreementFactory.create({
+          sharingGroupContactId: sharingGroupContact.id,
+          receivingGroupContactId: receivingGroupContact.id,
+          signedAt: DateTime.now().toJSDate(),
+        })
+
+        // Act
+        await CreateGroupsService.perform(informationSharingAgreement, currentUser)
+
+        // Assert
+        const createdGroups = await Group.findAll()
+        expect(informationSharingAgreement).toEqual(
+          expect.objectContaining({
+            sharingGroupId: createdGroups[0].id,
+            receivingGroupId: createdGroups[1].id,
+          })
+        )
+      })
+
       test("when sharing group contact ID is nil, errors informatively", async () => {
         // Arrange
         const currentUser = await userFactory.create()

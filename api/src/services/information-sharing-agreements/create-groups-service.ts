@@ -33,17 +33,22 @@ export class CreateGroupsService extends BaseService {
     }
 
     return db.transaction(async () => {
-      await this.createSharingGroupAndAdmin(
+      const sharingGroup = await this.createSharingGroupAndAdmin(
         informationSharingAgreementId,
         sharingGroupContactId,
         signedAt
       )
-      await this.createReceivingGroupAndAdmins(
+      const receivingGroup = await this.createReceivingGroupAndAdmins(
         informationSharingAgreementId,
         receivingGroupContactId,
         receivingGroupSecondaryContactId,
         signedAt
       )
+
+      await this.informationSharingAgreement.update({
+        sharingGroupId: sharingGroup.id,
+        receivingGroupId: receivingGroup.id,
+      })
     })
   }
 
