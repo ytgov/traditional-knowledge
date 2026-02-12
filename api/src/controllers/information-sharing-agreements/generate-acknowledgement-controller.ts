@@ -75,11 +75,11 @@ export class GenerateAcknowledgementController extends BaseController<Informatio
       include: [
         "accessGrants",
         {
-          association: "sharingGroupContact",
+          association: "externalGroupContact",
           include: ["externalOrganization"],
         },
-        "receivingGroupContact",
-        "receivingGroupSecondaryContact",
+        "internalGroupContact",
+        "internalGroupSecondaryContact",
       ],
     })
   }

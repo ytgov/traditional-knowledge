@@ -233,22 +233,22 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   declare createdInformationSharingAgreements?: NonAttribute<InformationSharingAgreement[]>
 
   @HasMany(() => InformationSharingAgreement, {
-    foreignKey: "sharingGroupContactId",
-    inverse: "sharingGroupContact",
+    foreignKey: "externalGroupContactId",
+    inverse: "externalGroupContact",
   })
-  declare sharedInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
+  declare externalInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
 
   @HasMany(() => InformationSharingAgreement, {
-    foreignKey: "receivingGroupContactId",
-    inverse: "receivingGroupContact",
+    foreignKey: "internalGroupContactId",
+    inverse: "internalGroupContact",
   })
-  declare receivedInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
+  declare internalInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
 
   @HasMany(() => InformationSharingAgreement, {
-    foreignKey: "receivingGroupSecondaryContactId",
-    inverse: "receivingGroupSecondaryContact",
+    foreignKey: "internalGroupSecondaryContactId",
+    inverse: "internalGroupSecondaryContact",
   })
-  declare receivedInformationAgreementAsSecondaryContact?: NonAttribute<
+  declare internalInformationAgreementAsSecondaryContact?: NonAttribute<
     InformationSharingAgreement[]
   >
 

@@ -5,7 +5,7 @@ import BaseSerializer from "@/serializers/base-serializer"
 
 export type GroupShowView = Pick<
   Group,
-  "id" | "name" | "acronym" | "description" | "isHost" | "creatorId" | "createdAt" | "updatedAt"
+  "id" | "name" | "acronym" | "description" | "isExternal" | "creatorId" | "createdAt" | "updatedAt"
 >
 
 export class ShowSerializer extends BaseSerializer<Group> {
@@ -16,7 +16,7 @@ export class ShowSerializer extends BaseSerializer<Group> {
         "name",
         "acronym",
         "description",
-        "isHost",
+        "isExternal",
         "creatorId",
         "createdAt",
         "updatedAt",
