@@ -1,5 +1,6 @@
 export { FileStorageService } from "./file-storage-service"
 
+export * as Attachments from "./attachments"
 export * as Groups from "./groups"
 export * as InformationSharingAgreementAccessGrants from "./information-sharing-agreement-access-grants"
 export * as InformationSharingAgreementArchiveItems from "./information-sharing-agreement-archive-items"

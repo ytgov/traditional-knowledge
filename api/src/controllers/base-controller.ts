@@ -2,15 +2,20 @@ import { type NextFunction, type Request, type Response } from "express"
 import { type Attributes, type Model, type Order, type WhereOptions } from "@sequelize/core"
 import { dropRight, isEmpty, isNil, uniqBy } from "lodash"
 
+import { createHash } from "crypto"
+
+import { type ExpressFormDataFile } from "@/utils/express-form-data-types"
+
+import cache from "@/db/cache-client"
+
 import User from "@/models/user"
 import { type BaseScopeOptions } from "@/policies"
-import { createHash } from "crypto"
-import cache from "@/db/cache-client"
 
 export type Actions = "index" | "show" | "new" | "edit" | "create" | "update" | "destroy"
 
 type ControllerRequest = Request & {
   currentUser: User
+  files: Record<string, ExpressFormDataFile | ExpressFormDataFile[] | undefined>
 }
 
 /** Keep in sync with web/src/api/base-api.ts */
@@ -172,6 +177,10 @@ export class BaseController<TModel extends Model = never> {
       limit,
       offset,
     }
+  }
+
+  get files() {
+    return this.request.files
   }
 
   buildWhere<TModelOverride extends Model = TModel>(

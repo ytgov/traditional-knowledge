@@ -1,32 +1,13 @@
-import { type Request, type Response, type NextFunction } from "express"
 import { isNil } from "lodash"
 
 import logger from "@/utils/logger"
 import { InformationSharingAgreement } from "@/models"
 import { InformationSharingAgreementPolicy } from "@/policies"
-import {
-  CreateService,
-  UpdateService,
-  DocumentGeneratorService,
-} from "@/services/information-sharing-agreements"
+import { CreateService, UpdateService } from "@/services/information-sharing-agreements"
 import { IndexSerializer, ShowSerializer } from "@/serializers/information-sharing-agreements"
 import BaseController from "@/controllers/base-controller"
 
 export class InformationSharingAgreementsController extends BaseController<InformationSharingAgreement> {
-  static get downloadFile() {
-    return async (req: Request, res: Response, next: NextFunction) => {
-      const controllerInstance = new this(req, res, next)
-      return controllerInstance.downloadFile().catch(next)
-    }
-  }
-
-  static get generateDocument() {
-    return async (req: Request, res: Response, next: NextFunction) => {
-      const controllerInstance = new this(req, res, next)
-      return controllerInstance.generateDocument().catch(next)
-    }
-  }
-
   async index() {
     try {
       const where = this.buildWhere()
@@ -102,15 +83,6 @@ export class InformationSharingAgreementsController extends BaseController<Infor
       }
 
       const permittedAttributes = policy.permitAttributesForCreate(this.request.body)
-      // Debug logging
-      logger.info("File upload debug - request body keys:", Object.keys(this.request.body))
-      logger.info("File upload debug - fileName:", this.request.body.fileName)
-      logger.info("File upload debug - fileSize:", this.request.body.fileSize)
-      logger.info("File upload debug - fileData present:", !!this.request.body.fileData)
-      logger.info("File upload debug - fileData length:", this.request.body.fileData?.length)
-      logger.info("File upload debug - permitted keys:", Object.keys(permittedAttributes))
-      logger.info("File upload debug - permitted fileData present:", !!permittedAttributes.fileData)
-
       const informationSharingAgreement = await CreateService.perform(
         permittedAttributes,
         this.currentUser
@@ -147,15 +119,6 @@ export class InformationSharingAgreementsController extends BaseController<Infor
       }
 
       const permittedAttributes = policy.permitAttributes(this.request.body)
-      // Debug logging
-      logger.info("File upload debug (update) - request body keys:", Object.keys(this.request.body))
-      logger.info("File upload debug (update) - fileName:", this.request.body.fileName)
-      logger.info("File upload debug (update) - fileSize:", this.request.body.fileSize)
-      logger.info("File upload debug (update) - fileData present:", !!this.request.body.fileData)
-      logger.info("File upload debug (update) - fileData length:", this.request.body.fileData?.length)
-      logger.info("File upload debug (update) - permitted keys:", Object.keys(permittedAttributes))
-      logger.info("File upload debug (update) - permitted fileData present:", !!permittedAttributes.fileData)
-
       await UpdateService.perform(
         informationSharingAgreement,
         permittedAttributes,
@@ -203,84 +166,9 @@ export class InformationSharingAgreementsController extends BaseController<Infor
     }
   }
 
-  async downloadFile() {
-    try {
-      const informationSharingAgreement = await this.loadInformationSharingAgreement()
-      if (isNil(informationSharingAgreement)) {
-        return this.response.status(404).json({
-          message: "Information sharing agreement not found",
-        })
-      }
-
-      const policy = this.buildPolicy(informationSharingAgreement)
-      if (!policy.show()) {
-        return this.response.status(403).json({
-          message: "You are not authorized to view this information sharing agreement",
-        })
-      }
-
-      if (isNil(informationSharingAgreement.fileData) || isNil(informationSharingAgreement.fileName)) {
-        return this.response.status(404).json({
-          message: "No file attached to this information sharing agreement",
-        })
-      }
-
-      this.response.setHeader(
-        "Content-Disposition",
-        `attachment;filename="${informationSharingAgreement.fileName}"`
-      )
-      this.response.setHeader(
-        "Content-Type",
-        informationSharingAgreement.fileMimeType ?? "application/octet-stream"
-      )
-      return this.response.send(informationSharingAgreement.fileData)
-    } catch (error) {
-      logger.error(`Error downloading file: ${error}`, { error })
-      return this.response.status(422).json({
-        message: `Error downloading file: ${error}`,
-      })
-    }
-  }
-
-  async generateDocument() {
-    try {
-      const informationSharingAgreement = await this.loadInformationSharingAgreement()
-      if (isNil(informationSharingAgreement)) {
-        return this.response.status(404).json({
-          message: "Information sharing agreement not found",
-        })
-      }
-
-      const policy = this.buildPolicy(informationSharingAgreement)
-      if (!policy.show()) {
-        return this.response.status(403).json({
-          message: "You are not authorized to view this information sharing agreement",
-        })
-      }
-
-      // Generate the document
-      const documentBuffer = await DocumentGeneratorService.perform(informationSharingAgreement)
-
-      // Set response headers for download
-      const filename = `ISA_${informationSharingAgreement.identifier || informationSharingAgreement.id}.docx`
-      this.response.setHeader("Content-Disposition", `attachment;filename="${filename}"`)
-      this.response.setHeader(
-        "Content-Type",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      )
-
-      return this.response.send(documentBuffer)
-    } catch (error) {
-      logger.error(`Error generating document: ${error}`, { error })
-      return this.response.status(422).json({
-        message: `Error generating document: ${error}`,
-      })
-    }
-  }
-
   private async loadInformationSharingAgreement() {
     return InformationSharingAgreement.findByPk(this.params.informationSharingAgreementId, {
-      include: ["creator", "sharingGroup", "receivingGroup", "accessGrants"],
+      include: ["accessGrants", "signedAcknowledgement"],
     })
   }
 

@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts">
-export type PanelDefinition = {
+type PanelDefinition = {
   key: string
   title: string
   icon: string
@@ -65,6 +65,7 @@ export type PanelDefinition = {
     params?: Record<string, string | number>
   }
 }
+export { type PanelDefinition } // two line type definition avoids breaking Vue syntax highlighting
 </script>
 
 <script setup lang="ts">

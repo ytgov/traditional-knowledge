@@ -5,7 +5,7 @@ import helmet from "helmet"
 import formData from "express-form-data"
 
 import { AUTH0_DOMAIN, FRONTEND_URL } from "@/config"
-import { requestLoggerMiddleware } from "@/middlewares"
+import { betterFormDataBodyParserMiddleware, requestLoggerMiddleware } from "@/middlewares"
 import router from "@/router"
 import enhancedQsDecoder from "@/utils/enhanced-qs-decoder"
 
@@ -15,7 +15,7 @@ app.use(express.json({ limit: "50mb" })) // for parsing application/json - incre
 app.use(formData.parse({ autoClean: true }))
 app.use(formData.union())
 app.use(express.urlencoded({ extended: true, limit: "50mb" })) // for parsing application/x-www-form-urlencoded
-
+app.use(betterFormDataBodyParserMiddleware)
 app.use(
   helmet.contentSecurityPolicy({
     directives: {

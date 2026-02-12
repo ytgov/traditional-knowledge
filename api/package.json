@@ -30,6 +30,7 @@
     "express": "^4.21.2",
     "express-form-data": "^2.0.23",
     "express-jwt": "^8.5.1",
+    "file-type": "^21.3.0",
     "helmet": "^7.2.0",
     "jwks-rsa": "^3.2.0",
     "knex": "^3.1.0",
@@ -73,6 +74,6 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^1.6.1"
+    "vitest": "^4.0.18"
   }
 }

@@ -1,11 +1,12 @@
-import { pick } from "lodash"
+import { isNil, isUndefined, pick } from "lodash"
 
 import { formatDate } from "@/utils/formatters"
+import { Attachments } from "@/serializers"
 
-import { InformationSharingAgreement } from "@/models"
+import { Attachment, InformationSharingAgreement } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
 
-export type AgreementShowView = Pick<
+export type InformationSharingAgreementAsShow = Pick<
   InformationSharingAgreement,
   | "id"
   | "creatorId"
@@ -22,8 +23,7 @@ export type AgreementShowView = Pick<
   | "receivingGroupContactName"
   | "sharingGroupContactTitle"
   | "receivingGroupContactTitle"
-  | "sharingGroupSignedBy"
-  | "receivingGroupSignedBy"
+  | "signedById"
   | "title"
   | "description"
   | "purpose"
@@ -46,29 +46,30 @@ export type AgreementShowView = Pick<
   | "breachActions"
   | "breachNotes"
   | "disclosureNotes"
-  | "fileName"
-  | "fileMimeType"
-  | "fileSize"
   | "createdAt"
   | "updatedAt"
 > & {
   startDate: string | null
   endDate: string | null
-  sharingGroupSignedDate: string | null
-  receivingGroupSignedDate: string | null
+  signedAt: string | null
+  // Associations
+  signedAcknowledgement: Attachments.AsReference | null
 }
 
 export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> {
-  perform(): AgreementShowView {
-    const { startDate, endDate, sharingGroupSignedDate, receivingGroupSignedDate } = this.record
+  perform(): InformationSharingAgreementAsShow {
+    const { signedAcknowledgement } = this.record
+    if (isUndefined(signedAcknowledgement)) {
+      throw new Error("Expected signed acknowledgement association to be preloaded.")
+    }
+
+    const { startDate, endDate, signedAt } = this.record
     const formattedStartDate = formatDate(startDate)
     const formattedEndDate = formatDate(endDate)
-    const formattedSharingGroupSignedDate = sharingGroupSignedDate
-      ? formatDate(sharingGroupSignedDate)
-      : null
-    const formattedReceivingGroupSignedDate = receivingGroupSignedDate
-      ? formatDate(receivingGroupSignedDate)
-      : null
+    const formattedSignedAt = formatDate(signedAt)
+
+    const serializedSignedAcknowledgement =
+      this.serializeSignedAcknowledgement(signedAcknowledgement)
 
     return {
       ...pick(this.record, [
@@ -87,8 +88,7 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "receivingGroupContactName",
         "sharingGroupContactTitle",
         "receivingGroupContactTitle",
-        "sharingGroupSignedBy",
-        "receivingGroupSignedBy",
+        "signedById",
         "title",
         "description",
         "purpose",
@@ -111,17 +111,22 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "breachActions",
         "breachNotes",
         "disclosureNotes",
-        "fileName",
-        "fileMimeType",
-        "fileSize",
         "createdAt",
         "updatedAt",
       ]),
       startDate: formattedStartDate,
       endDate: formattedEndDate,
-      sharingGroupSignedDate: formattedSharingGroupSignedDate,
-      receivingGroupSignedDate: formattedReceivingGroupSignedDate,
+      signedAt: formattedSignedAt,
+      signedAcknowledgement: serializedSignedAcknowledgement,
     }
+  }
+
+  private serializeSignedAcknowledgement(
+    signedAcknowledgement: Attachment | null
+  ): Attachments.AsReference | null {
+    if (isNil(signedAcknowledgement)) return null
+
+    return Attachments.ReferenceSerializer.perform(signedAcknowledgement)
   }
 }
 

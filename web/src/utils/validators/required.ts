@@ -1,4 +1,4 @@
-import { isArray, isEmpty, isString, isNull, isObject, isUndefined } from "lodash"
+import { isArray, isEmpty, isString, isNull, isObject, isUndefined, isNil } from "lodash"
 
 export function required(v: unknown): boolean | string {
   if (isNull(v) || isUndefined(v)) {
@@ -7,6 +7,12 @@ export function required(v: unknown): boolean | string {
 
   if (v instanceof Date) {
     if (!isNaN(v.getTime())) return true
+
+    return "This field is required"
+  }
+
+  if (v instanceof File) {
+    if (!isNil(v.size) && v.size > 0) return true
 
     return "This field is required"
   }

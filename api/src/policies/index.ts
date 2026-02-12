@@ -14,4 +14,5 @@ export { UserGroupPolicy } from "./user-group-policy"
 export { UsersPolicy } from "./users-policy"
 
 // Bundled Exports
+export * as InformationSharingAgreements from "./information-sharing-agreements"
 export * as Users from "./users"
