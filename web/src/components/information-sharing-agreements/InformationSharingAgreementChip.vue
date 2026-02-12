@@ -53,33 +53,33 @@
                 <p>End: {{ formatDate(informationSharingAgreement.endDate) }}</p>
               </v-col>
               <v-col cols="12">
-                <h4>Sharing Group</h4>
+                <h4>External Group</h4>
                 <p
                   v-if="
-                    isNil(informationSharingAgreement.sharingGroupId) ||
-                    isNil(informationSharingAgreement.sharingGroupContactId)
+                    isNil(informationSharingAgreement.externalGroupId) ||
+                    isNil(informationSharingAgreement.externalGroupContactId)
                   "
                 >
-                  <em>No sharing group specified</em>
+                  <em>No external group specified</em>
                 </p>
                 <template v-else>
-                  <p><GroupChip :group-id="informationSharingAgreement.sharingGroupId" /></p>
-                  <p><UserChip :user-id="informationSharingAgreement.sharingGroupContactId" /></p>
+                  <p><GroupChip :group-id="informationSharingAgreement.externalGroupId" /></p>
+                  <p><UserChip :user-id="informationSharingAgreement.externalGroupContactId" /></p>
                 </template>
               </v-col>
               <v-col cols="12">
-                <h4>Receiving Group</h4>
+                <h4>Internal Group</h4>
                 <p
                   v-if="
-                    isNil(informationSharingAgreement.receivingGroupId) ||
-                    isNil(informationSharingAgreement.receivingGroupContactId)
+                    isNil(informationSharingAgreement.internalGroupId) ||
+                    isNil(informationSharingAgreement.internalGroupContactId)
                   "
                 >
-                  <em>No receiving group specified</em>
+                  <em>No internal group specified</em>
                 </p>
                 <template v-else>
-                  <p><GroupChip :group-id="informationSharingAgreement.receivingGroupId" /></p>
-                  <p><UserChip :user-id="informationSharingAgreement.receivingGroupContactId" /></p>
+                  <p><GroupChip :group-id="informationSharingAgreement.internalGroupId" /></p>
+                  <p><UserChip :user-id="informationSharingAgreement.internalGroupContactId" /></p>
                 </template>
               </v-col>
             </v-row>
