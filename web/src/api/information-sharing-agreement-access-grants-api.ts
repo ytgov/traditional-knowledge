@@ -83,18 +83,6 @@ export const informationSharingAgreementAccessGrantsApi = {
     const { data } = await http.post("/api/information-sharing-agreement-access-grants", attributes)
     return data
   },
-  async update(
-    informationSharingAgreementAccessGrantId: number,
-    attributes: Partial<InformationSharingAgreementAccessGrant>
-  ): Promise<{
-    informationSharingAgreementAccessGrant: InformationSharingAgreementAccessGrant
-  }> {
-    const { data } = await http.patch(
-      `/api/information-sharing-agreement-access-grants/${informationSharingAgreementAccessGrantId}`,
-      attributes
-    )
-    return data
-  },
   async delete(informationSharingAgreementAccessGrantId: number): Promise<void> {
     const { data } = await http.delete(
       `/api/information-sharing-agreement-access-grants/${informationSharingAgreementAccessGrantId}`
