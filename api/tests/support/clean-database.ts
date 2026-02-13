@@ -1,6 +1,7 @@
-import dbMigrationClient from "@/db/db-migration-client"
-import { logger } from "@/utils/logger"
 import { isNil } from "lodash"
+
+import logger from "@/utils/logger"
+import dbMigrationClient from "@/db/db-migration-client"
 
 async function getTableNames() {
   const query = /* sql */ `

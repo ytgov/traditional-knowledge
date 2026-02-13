@@ -1,10 +1,12 @@
 import { InformationSharingAgreementAccessGrant } from "@/models"
-import InformationSharingAgreementAccessGrantPolicy from "@/policies/information-sharing-agreement-access-grant-policy"
+
 import {
   informationSharingAgreementAccessGrantFactory,
   informationSharingAgreementFactory,
   userFactory,
-} from "@/factories"
+} from "@/tests/factories"
+
+import InformationSharingAgreementAccessGrantPolicy from "@/policies/information-sharing-agreement-access-grant-policy"
 
 describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts", () => {
   describe("InformationSharingAgreementAccessGrantPolicy", () => {

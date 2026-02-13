@@ -2,8 +2,8 @@ import { faker } from "@faker-js/faker"
 import { Factory } from "fishery"
 
 import { InformationSharingAgreement } from "@/models"
-import { nestedSaveAndAssociateIfNew } from "@/factories/helpers"
-import userFactory from "@/factories/user-factory"
+import { nestedSaveAndAssociateIfNew } from "@/tests/factories/helpers"
+import userFactory from "@/tests/factories/user-factory"
 
 export const informationSharingAgreementFactory = Factory.define<InformationSharingAgreement>(
   ({ sequence, params, associations, onCreate }) => {

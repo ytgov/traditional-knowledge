@@ -1,10 +1,10 @@
 import { Factory } from "fishery"
 
 import { InformationSharingAgreementAccessGrant } from "@/models"
-import { nestedSaveAndAssociateIfNew } from "@/factories/helpers"
-import userFactory from "@/factories/user-factory"
-import groupFactory from "@/factories/group-factory"
-import informationSharingAgreementFactory from "@/factories/information-sharing-agreement-factory"
+import { nestedSaveAndAssociateIfNew } from "@/tests/factories/helpers"
+import userFactory from "@/tests/factories/user-factory"
+import groupFactory from "@/tests/factories/group-factory"
+import informationSharingAgreementFactory from "@/tests/factories/information-sharing-agreement-factory"
 
 export const informationSharingAgreementAccessGrantFactory =
   Factory.define<InformationSharingAgreementAccessGrant>(({ associations, onCreate }) => {

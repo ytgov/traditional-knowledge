@@ -2,11 +2,14 @@ import { DateTime } from "luxon"
 import { vi } from "vitest"
 
 import { Group } from "@/models"
-import { CreateGroupsService } from "@/services/information-sharing-agreements/create-groups-service"
 
-import { externalOrganizationFactory } from "@/factories/external-organization-factory"
-import { informationSharingAgreementFactory } from "@/factories/information-sharing-agreement-factory"
-import userFactory from "@/factories/user-factory"
+import {
+  externalOrganizationFactory,
+  informationSharingAgreementFactory,
+  userFactory,
+} from "@/tests/factories"
+
+import CreateGroupsService from "@/services/information-sharing-agreements/create-groups-service"
 
 vi.mock("@/mailers/groups/notify-user-of-membership-mailer", () => {
   const NotifyUserOfMembershipMailerMock = { perform: vi.fn() }
