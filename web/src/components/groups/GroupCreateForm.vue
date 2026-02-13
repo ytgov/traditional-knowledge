@@ -42,8 +42,8 @@
           </v-col>
           <v-col cols="12">
             <v-switch
-              v-model="groupAttributes.isHost"
-              label="Is Host"
+              v-model="groupAttributes.isExternal"
+              label="Is External"
             />
           </v-col>
         </v-row>

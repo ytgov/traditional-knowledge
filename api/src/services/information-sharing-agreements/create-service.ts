@@ -33,17 +33,17 @@ export class CreateService extends BaseService {
       })
 
       if (
-        !isNil(informationSharingAgreement.sharingGroupId) &&
-        !isNil(informationSharingAgreement.sharingGroupContactId) &&
-        !isNil(informationSharingAgreement.receivingGroupId) &&
-        !isNil(informationSharingAgreement.receivingGroupContactId)
+        !isNil(informationSharingAgreement.externalGroupId) &&
+        !isNil(informationSharingAgreement.externalGroupContactId) &&
+        !isNil(informationSharingAgreement.internalGroupId) &&
+        !isNil(informationSharingAgreement.internalGroupContactId)
       ) {
         await this.ensureAdminAccessGrants(
           informationSharingAgreement.id,
-          informationSharingAgreement.sharingGroupId,
-          informationSharingAgreement.sharingGroupContactId,
-          informationSharingAgreement.receivingGroupId,
-          informationSharingAgreement.receivingGroupContactId,
+          informationSharingAgreement.externalGroupId,
+          informationSharingAgreement.externalGroupContactId,
+          informationSharingAgreement.internalGroupId,
+          informationSharingAgreement.internalGroupContactId,
           this.currentUser
         )
       }
@@ -56,18 +56,18 @@ export class CreateService extends BaseService {
 
   private async ensureAdminAccessGrants(
     informationSharingAgreementId: number,
-    sharingGroupId: number,
-    sharingGroupContactId: number,
-    receivingGroupId: number,
-    receivingGroupContactId: number,
+    externalGroupId: number,
+    externalGroupContactId: number,
+    internalGroupId: number,
+    internalGroupContactId: number,
     currentUser: User
   ) {
     await EnsureAdminAccessService.perform(
       informationSharingAgreementId,
-      sharingGroupId,
-      sharingGroupContactId,
-      receivingGroupId,
-      receivingGroupContactId,
+      externalGroupId,
+      externalGroupContactId,
+      internalGroupId,
+      internalGroupContactId,
       currentUser
     )
   }

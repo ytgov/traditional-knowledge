@@ -9,8 +9,8 @@
     :loading="isLoading"
     @click:row="(_event: unknown, { item }: GroupTableRow) => goToGroupPage(item.id)"
   >
-    <template #item.isHost="{ item }">
-      {{ item.isHost ? "Yes" : "No" }}
+    <template #item.isExternal="{ item }">
+      {{ item.isExternal ? "Yes" : "No" }}
     </template>
     <template #item.actions="{ item }">
       <div class="d-flex justify-end align-center">
@@ -95,8 +95,8 @@ const headers = ref([
     sortable: false,
   },
   {
-    title: "Host",
-    key: "isHost",
+    title: "External",
+    key: "isExternal",
   },
   {
     title: "Actions",

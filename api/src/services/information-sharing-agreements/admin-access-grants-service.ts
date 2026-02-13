@@ -4,10 +4,10 @@ import BaseService from "@/services/base-service"
 export class EnsureAdminAccessService extends BaseService {
   constructor(
     private informationSharingAgreementId: number,
-    private sharingGroupId: number,
-    private sharingGroupContactId: number,
-    private receivingGroupId: number,
-    private receivingGroupContactId: number,
+    private externalGroupId: number,
+    private externalGroupContactId: number,
+    private internalGroupId: number,
+    private internalGroupContactId: number,
     private currentUser: User
   ) {
     super()
@@ -16,18 +16,18 @@ export class EnsureAdminAccessService extends BaseService {
   async perform(): Promise<void> {
     await this.ensureAdminAccessGrantFor(
       this.informationSharingAgreementId,
-      this.sharingGroupId,
+      this.externalGroupId,
       this.currentUser.id
     )
     await this.ensureAdminAccessGrantFor(
       this.informationSharingAgreementId,
-      this.sharingGroupId,
-      this.sharingGroupContactId
+      this.externalGroupId,
+      this.externalGroupContactId
     )
     await this.ensureAdminAccessGrantFor(
       this.informationSharingAgreementId,
-      this.receivingGroupId,
-      this.receivingGroupContactId
+      this.internalGroupId,
+      this.internalGroupContactId
     )
   }
 

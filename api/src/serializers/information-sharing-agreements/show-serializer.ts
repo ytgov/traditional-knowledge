@@ -10,19 +10,19 @@ export type InformationSharingAgreementAsShow = Pick<
   InformationSharingAgreement,
   | "id"
   | "creatorId"
-  | "sharingGroupId"
-  | "sharingGroupContactId"
-  | "receivingGroupId"
-  | "receivingGroupContactId"
-  | "receivingGroupSecondaryContactId"
+  | "externalGroupId"
+  | "externalGroupContactId"
+  | "internalGroupId"
+  | "internalGroupContactId"
+  | "internalGroupSecondaryContactId"
   | "status"
   | "identifier"
-  | "sharingGroupInfo"
-  | "receivingGroupInfo"
-  | "sharingGroupContactName"
-  | "receivingGroupContactName"
-  | "sharingGroupContactTitle"
-  | "receivingGroupContactTitle"
+  | "externalGroupInfo"
+  | "internalGroupInfo"
+  | "externalGroupContactName"
+  | "internalGroupContactName"
+  | "externalGroupContactTitle"
+  | "internalGroupContactTitle"
   | "signedById"
   | "title"
   | "description"
@@ -75,19 +75,19 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
       ...pick(this.record, [
         "id",
         "creatorId",
-        "sharingGroupId",
-        "sharingGroupContactId",
-        "receivingGroupId",
-        "receivingGroupContactId",
-        "receivingGroupSecondaryContactId",
+        "externalGroupId",
+        "externalGroupContactId",
+        "internalGroupId",
+        "internalGroupContactId",
+        "internalGroupSecondaryContactId",
         "status",
         "identifier",
-        "sharingGroupInfo",
-        "receivingGroupInfo",
-        "sharingGroupContactName",
-        "receivingGroupContactName",
-        "sharingGroupContactTitle",
-        "receivingGroupContactTitle",
+        "externalGroupInfo",
+        "internalGroupInfo",
+        "externalGroupContactName",
+        "internalGroupContactName",
+        "externalGroupContactTitle",
+        "internalGroupContactTitle",
         "signedById",
         "title",
         "description",

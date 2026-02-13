@@ -37,21 +37,21 @@ export class CreateService extends BaseService {
     const informationSharingAgreement = await this.loadInformationSharingAgreement(
       informationSharingAgreementId
     )
-    const { sharingGroupId, receivingGroupId } = informationSharingAgreement
+    const { externalGroupId, internalGroupId } = informationSharingAgreement
 
-    if (!isNil(sharingGroupId) && !isNil(receivingGroupId)) {
+    if (!isNil(externalGroupId) && !isNil(internalGroupId)) {
       await this.assertGroupIdIsValidInformationSharingAgreementGroup(
         groupId,
-        sharingGroupId,
-        receivingGroupId
+        externalGroupId,
+        internalGroupId
       )
 
       const { userId } = this.attributes
       if (!isNil(userId)) {
         await this.assertUserIdIsValidInformationSharingAgreementGroupMember(
           userId,
-          sharingGroupId,
-          receivingGroupId
+          externalGroupId,
+          internalGroupId
         )
       }
     }
@@ -69,30 +69,30 @@ export class CreateService extends BaseService {
 
   private async assertGroupIdIsValidInformationSharingAgreementGroup(
     groupId: number,
-    sharingGroupId: number,
-    receivingGroupId: number
+    externalGroupId: number,
+    internalGroupId: number
   ): Promise<void> {
-    if (groupId !== sharingGroupId && groupId !== receivingGroupId) {
+    if (groupId !== externalGroupId && groupId !== internalGroupId) {
       throw new Error(
-        "Group id must match either the information sharing agreement's sharing group id or receiving group id"
+        "Group id must match either the information sharing agreement's external group id or internal group id"
       )
     }
   }
 
   private async assertUserIdIsValidInformationSharingAgreementGroupMember(
     userId: number,
-    sharingGroupId: number,
-    receivingGroupId: number
+    externalGroupId: number,
+    internalGroupId: number
   ): Promise<void> {
     const userGroupCount = await UserGroup.count({
       where: {
         userId,
-        groupId: [sharingGroupId, receivingGroupId],
+        groupId: [externalGroupId, internalGroupId],
       },
     })
     if (userGroupCount === 0) {
       throw new Error(
-        "User must be a member of either the information sharing agreement's sharing group or receiving group"
+        "User must be a member of either the information sharing agreement's external group or internal group"
       )
     }
   }

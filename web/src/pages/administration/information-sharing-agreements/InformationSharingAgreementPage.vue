@@ -6,7 +6,7 @@
   />
 
   <v-card class="mt-5 border">
-    <!-- TODO: consider if we should have separate tabs for sharing and receiving groups access grants? -->
+    <!-- TODO: consider if we should have separate tabs for external and internal groups access grants? -->
     <v-tabs
       slider-color="primary"
       bg-color="#ffffff77"

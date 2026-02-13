@@ -8,20 +8,20 @@
         <InformationSharingAgreementBasicInformationEditCard
           v-model:title="informationSharingAgreementAttributes.title"
           v-model:purpose="informationSharingAgreementAttributes.purpose"
-          v-model:sharing-group-contact-id="
-            informationSharingAgreementAttributes.sharingGroupContactId
+          v-model:external-group-contact-id="
+            informationSharingAgreementAttributes.externalGroupContactId
           "
-          v-model:sharing-group-contact-title="
-            informationSharingAgreementAttributes.sharingGroupContactTitle
+          v-model:external-group-contact-title="
+            informationSharingAgreementAttributes.externalGroupContactTitle
           "
-          v-model:receiving-group-contact-id="
-            informationSharingAgreementAttributes.receivingGroupContactId
+          v-model:internal-group-contact-id="
+            informationSharingAgreementAttributes.internalGroupContactId
           "
-          v-model:receiving-group-contact-title="
-            informationSharingAgreementAttributes.receivingGroupContactTitle
+          v-model:internal-group-contact-title="
+            informationSharingAgreementAttributes.internalGroupContactTitle
           "
-          v-model:receiving-group-secondary-contact-id="
-            informationSharingAgreementAttributes.receivingGroupSecondaryContactId
+          v-model:internal-group-secondary-contact-id="
+            informationSharingAgreementAttributes.internalGroupSecondaryContactId
           "
           class="border"
         />
@@ -74,11 +74,11 @@ import InformationSharingAgreementBasicInformationEditCard from "@/components/in
 const informationSharingAgreementAttributes = ref<Partial<InformationSharingAgreement>>({
   title: undefined,
   purpose: undefined,
-  sharingGroupContactId: undefined,
-  sharingGroupContactTitle: undefined,
-  receivingGroupContactId: undefined,
-  receivingGroupContactTitle: undefined,
-  receivingGroupSecondaryContactId: undefined,
+  externalGroupContactId: undefined,
+  externalGroupContactTitle: undefined,
+  internalGroupContactId: undefined,
+  internalGroupContactTitle: undefined,
+  internalGroupSecondaryContactId: undefined,
 })
 
 const form = useTemplateRef("form")

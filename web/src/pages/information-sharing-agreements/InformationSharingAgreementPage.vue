@@ -13,12 +13,12 @@
           class="rounded-lg"
           :title="informationSharingAgreement.title"
           :purpose="informationSharingAgreement.purpose"
-          :sharing-group-contact-id="informationSharingAgreement.sharingGroupContactId"
-          :sharing-group-contact-title="informationSharingAgreement.sharingGroupContactTitle"
-          :receiving-group-contact-id="informationSharingAgreement.receivingGroupContactId"
-          :receiving-group-contact-title="informationSharingAgreement.receivingGroupContactTitle"
-          :receiving-group-secondary-contact-id="
-            informationSharingAgreement.receivingGroupSecondaryContactId
+          :external-group-contact-id="informationSharingAgreement.externalGroupContactId"
+          :external-group-contact-title="informationSharingAgreement.externalGroupContactTitle"
+          :internal-group-contact-id="informationSharingAgreement.internalGroupContactId"
+          :internal-group-contact-title="informationSharingAgreement.internalGroupContactTitle"
+          :internal-group-secondary-contact-id="
+            informationSharingAgreement.internalGroupSecondaryContactId
           "
         />
 

@@ -35,49 +35,49 @@
         </v-col>
         <v-col
           v-if="
-            informationSharingAgreement.sharingGroupId ||
-            informationSharingAgreement.receivingGroupId
+            informationSharingAgreement.externalGroupId ||
+            informationSharingAgreement.internalGroupId
           "
           cols="12"
           md="6"
         >
           <v-card
-            v-if="informationSharingAgreement.sharingGroupId"
+            v-if="informationSharingAgreement.externalGroupId"
             class="border"
             color="#ffffff66"
           >
             <v-card-text>
-              <h3 class="mt-n1 mb-3">Sharing Group</h3>
+              <h3 class="mt-n1 mb-3">External Group</h3>
 
               <h4>Group:</h4>
-              <GroupChip :group-id="informationSharingAgreement.sharingGroupId" />
+              <GroupChip :group-id="informationSharingAgreement.externalGroupId" />
 
               <h4 class="mt-3">Contact:</h4>
-              <UserChip :user-id="informationSharingAgreement.sharingGroupContactId" />
+              <UserChip :user-id="informationSharingAgreement.externalGroupContactId" />
             </v-card-text>
           </v-card>
         </v-col>
         <v-col
           v-if="
-            informationSharingAgreement.sharingGroupId ||
-            informationSharingAgreement.receivingGroupId
+            informationSharingAgreement.externalGroupId ||
+            informationSharingAgreement.internalGroupId
           "
           cols="12"
           md="6"
         >
           <v-card
-            v-if="informationSharingAgreement.receivingGroupId"
+            v-if="informationSharingAgreement.internalGroupId"
             class="border"
             color="#ffffff66"
           >
             <v-card-text>
-              <h3 class="mt-n1 mb-3">Receiving Group</h3>
+              <h3 class="mt-n1 mb-3">Internal Group</h3>
 
               <h4>Group:</h4>
-              <GroupChip :group-id="informationSharingAgreement.receivingGroupId" />
+              <GroupChip :group-id="informationSharingAgreement.internalGroupId" />
 
               <h4 class="mt-3">Contact:</h4>
-              <UserChip :user-id="informationSharingAgreement.receivingGroupContactId" />
+              <UserChip :user-id="informationSharingAgreement.internalGroupContactId" />
             </v-card-text>
           </v-card>
         </v-col>

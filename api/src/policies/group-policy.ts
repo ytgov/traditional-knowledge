@@ -35,7 +35,7 @@ export class GroupPolicy extends PolicyFactory(Group) {
   }
 
   permittedAttributesForCreate(): Path[] {
-    return ["isHost", ...this.permittedAttributes()]
+    return ["isExternal", ...this.permittedAttributes()]
   }
 
   static policyScope(_user: User): FindOptions<Attributes<Group>> {

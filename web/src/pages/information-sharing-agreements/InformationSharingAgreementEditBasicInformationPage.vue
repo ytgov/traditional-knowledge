@@ -38,13 +38,13 @@
         md="6"
       >
         <UserSearchableAutocomplete
-          v-model="informationSharingAgreement.sharingGroupContactId"
+          v-model="informationSharingAgreement.externalGroupContactId"
           label="Yukon First Nation or Transboundary Contact Name *"
-          :where="sharingGroupContactWhere"
+          :where="externalGroupContactWhere"
           :rules="[required]"
           required
-          @click:clear="updateSharingGroupContactTitle(null)"
-          @selected="updateSharingGroupContactTitle"
+          @click:clear="updateExternalGroupContactTitle(null)"
+          @selected="updateExternalGroupContactTitle"
         />
       </v-col>
       <v-col
@@ -52,7 +52,7 @@
         md="6"
       >
         <v-text-field
-          v-model="informationSharingAgreement.sharingGroupContactTitle"
+          v-model="informationSharingAgreement.externalGroupContactTitle"
           label="Yukon First Nation or Transboundary Contact Title *"
           :rules="[required]"
           required
@@ -66,13 +66,13 @@
         md="6"
       >
         <UserSearchableAutocomplete
-          v-model="informationSharingAgreement.receivingGroupContactId"
+          v-model="informationSharingAgreement.internalGroupContactId"
           label="Yukon Government (YG) Contact Name *"
-          :where="receivingGroupContactWhere"
+          :where="internalGroupContactWhere"
           :rules="[required]"
           required
-          @click:clear="updateReceivingGroupContactTitle(null)"
-          @selected="updateReceivingGroupContactTitle"
+          @click:clear="updateInternalGroupContactTitle(null)"
+          @selected="updateInternalGroupContactTitle"
         />
       </v-col>
       <v-col
@@ -80,7 +80,7 @@
         md="6"
       >
         <v-text-field
-          v-model="informationSharingAgreement.receivingGroupContactTitle"
+          v-model="informationSharingAgreement.internalGroupContactTitle"
           label="Yukon Government (YG) Contact Title *"
           :rules="[required]"
           required
@@ -91,9 +91,9 @@
         md="6"
       >
         <UserSearchableAutocomplete
-          v-model="informationSharingAgreement.receivingGroupSecondaryContactId"
+          v-model="informationSharingAgreement.internalGroupSecondaryContactId"
           label="Yukon Government (YG) Manager Contact Name *"
-          :where="receivingGroupSecondaryContactWhere"
+          :where="internalGroupSecondaryContactWhere"
           hint="Typically the manager of the primary YG contact, but can be any appropriate internal contact."
           :rules="[required]"
           required
@@ -156,33 +156,33 @@ const { informationSharingAgreement, isLoading, save } = useInformationSharingAg
   informationSharingAgreementIdAsNumber
 )
 
-const sharingGroupContactWhere = computed(() => ({
+const externalGroupContactWhere = computed(() => ({
   isExternal: true,
 }))
-const receivingGroupContactWhere = computed(() => ({
+const internalGroupContactWhere = computed(() => ({
   isExternal: false,
 }))
-const receivingGroupSecondaryContactWhere = computed(() => ({
+const internalGroupSecondaryContactWhere = computed(() => ({
   isExternal: false,
 }))
 
-function updateSharingGroupContactTitle(user: UserAsIndex | null) {
+function updateExternalGroupContactTitle(user: UserAsIndex | null) {
   if (isNil(informationSharingAgreement.value)) return
 
   if (isNil(user)) {
-    informationSharingAgreement.value.sharingGroupContactTitle = null
+    informationSharingAgreement.value.externalGroupContactTitle = null
   } else {
-    informationSharingAgreement.value.sharingGroupContactTitle = user.title
+    informationSharingAgreement.value.externalGroupContactTitle = user.title
   }
 }
 
-function updateReceivingGroupContactTitle(user: UserAsIndex | null) {
+function updateInternalGroupContactTitle(user: UserAsIndex | null) {
   if (isNil(informationSharingAgreement.value)) return
 
   if (isNil(user)) {
-    informationSharingAgreement.value.receivingGroupContactTitle = null
+    informationSharingAgreement.value.internalGroupContactTitle = null
   } else {
-    informationSharingAgreement.value.receivingGroupContactTitle = user.title
+    informationSharingAgreement.value.internalGroupContactTitle = user.title
   }
 }
 

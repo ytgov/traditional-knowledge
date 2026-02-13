@@ -16,119 +16,121 @@ export class CreateGroupsService extends BaseService {
   async perform(): Promise<void> {
     const {
       id: informationSharingAgreementId,
-      sharingGroupContactId,
-      receivingGroupContactId,
-      receivingGroupSecondaryContactId,
+      externalGroupContactId,
+      internalGroupContactId,
+      internalGroupSecondaryContactId,
       signedAt,
     } = this.informationSharingAgreement
 
-    if (isNil(sharingGroupContactId)) {
-      throw new Error("Sharing group contact ID must be present to create sharing group")
+    if (isNil(externalGroupContactId)) {
+      throw new Error("External group contact ID must be present to create external group")
     }
-    if (isNil(receivingGroupContactId)) {
-      throw new Error("Receiving group contact ID must be present to create receiving group")
+    if (isNil(internalGroupContactId)) {
+      throw new Error("Internal group contact ID must be present to create internal group")
     }
     if (isNil(signedAt)) {
       throw new Error("Signed date must be present to create groups")
     }
 
     return db.transaction(async () => {
-      const sharingGroup = await this.createSharingGroupAndAdmin(
+      const externalGroup = await this.createExternalGroupAndAdmin(
         informationSharingAgreementId,
-        sharingGroupContactId,
+        externalGroupContactId,
         signedAt
       )
-      const receivingGroup = await this.createReceivingGroupAndAdmins(
+      const internalGroup = await this.createInternalGroupAndAdmins(
         informationSharingAgreementId,
-        receivingGroupContactId,
-        receivingGroupSecondaryContactId,
+        internalGroupContactId,
+        internalGroupSecondaryContactId,
         signedAt
       )
 
       await this.informationSharingAgreement.update({
-        sharingGroupId: sharingGroup.id,
-        receivingGroupId: receivingGroup.id,
+        externalGroupId: externalGroup.id,
+        internalGroupId: internalGroup.id,
       })
     })
   }
 
-  private async createSharingGroupAndAdmin(
+  private async createExternalGroupAndAdmin(
     informationSharingAgreementId: number,
-    sharingGroupContactId: number,
+    externalGroupContactId: number,
     signedAt: Date
   ): Promise<Group> {
-    const sharingGroupContact = await User.findByPk(sharingGroupContactId, {
+    const externalGroupContact = await User.findByPk(externalGroupContactId, {
       include: ["externalOrganization"],
     })
-    if (isNil(sharingGroupContact)) {
-      throw new Error("Sharing group contact not found")
+    if (isNil(externalGroupContact)) {
+      throw new Error("External group contact not found")
     }
 
-    if (sharingGroupContact.isExternal !== true) {
-      throw new Error("Sharing group contact must be an external user")
+    if (externalGroupContact.isExternal !== true) {
+      throw new Error("External group contact must be an external user")
     }
 
-    if (isNil(sharingGroupContact.externalOrganization)) {
-      throw new Error("Sharing group contact is missing its associated external organization")
+    if (isNil(externalGroupContact.externalOrganization)) {
+      throw new Error("External group contact is missing its associated external organization")
     }
 
     const signedDate = this.formatSignedDate(signedAt)
-    const sharingGroupName = this.buildGroupName(
+    const externalGroupName = this.buildGroupName(
       informationSharingAgreementId,
-      sharingGroupContact.externalOrganization.name,
+      externalGroupContact.externalOrganization.name,
       signedDate
     )
-    const sharingGroupAttributes = {
-      name: sharingGroupName,
+    const externalGroupAttributes = {
+      name: externalGroupName,
+      isExternal: true,
     }
-    const sharingGroup = await Groups.CreateService.perform(
-      sharingGroupAttributes,
+    const externalGroup = await Groups.CreateService.perform(
+      externalGroupAttributes,
       this.currentUser
     )
 
-    await this.addGroupAdmin(sharingGroupContact, sharingGroup)
+    await this.addGroupAdmin(externalGroupContact, externalGroup)
 
-    return sharingGroup
+    return externalGroup
   }
 
-  private async createReceivingGroupAndAdmins(
+  private async createInternalGroupAndAdmins(
     informationSharingAgreementId: number,
-    receivingGroupContactId: number,
-    receivingGroupSecondaryContactId: number | null,
+    internalGroupContactId: number,
+    internalGroupSecondaryContactId: number | null,
     signedAt: Date
   ): Promise<Group> {
-    const receivingGroupContact = await User.findByPk(receivingGroupContactId)
-    if (isNil(receivingGroupContact)) {
-      throw new Error("Receiving group contact not found")
+    const internalGroupContact = await User.findByPk(internalGroupContactId)
+    if (isNil(internalGroupContact)) {
+      throw new Error("Internal group contact not found")
     }
 
-    if (receivingGroupContact.isExternal !== false) {
-      throw new Error("Receiving group contact must be an internal user")
+    if (internalGroupContact.isExternal !== false) {
+      throw new Error("Internal group contact must be an internal user")
     }
 
     const signedDate = this.formatSignedDate(signedAt)
-    const receivingGroupName = this.buildGroupName(
+    const internalGroupName = this.buildGroupName(
       informationSharingAgreementId,
-      receivingGroupContact.department ?? "UNKNOWN",
+      internalGroupContact.department ?? "UNKNOWN",
       signedDate
     )
-    const receivingGroupAttributes = {
-      name: receivingGroupName,
+    const internalGroupAttributes = {
+      name: internalGroupName,
+      isExternal: false,
     }
-    const receivingGroup = await Groups.CreateService.perform(
-      receivingGroupAttributes,
+    const internalGroup = await Groups.CreateService.perform(
+      internalGroupAttributes,
       this.currentUser
     )
 
-    await this.addGroupAdmin(receivingGroupContact, receivingGroup)
+    await this.addGroupAdmin(internalGroupContact, internalGroup)
 
-    if (!isNil(receivingGroupSecondaryContactId)) {
-      const receivingGroupSecondaryContact = await User.findByPk(receivingGroupSecondaryContactId)
-      if (!isNil(receivingGroupSecondaryContact)) {
-        await this.addGroupAdmin(receivingGroupSecondaryContact, receivingGroup)
+    if (!isNil(internalGroupSecondaryContactId)) {
+      const internalGroupSecondaryContact = await User.findByPk(internalGroupSecondaryContactId)
+      if (!isNil(internalGroupSecondaryContact)) {
+        await this.addGroupAdmin(internalGroupSecondaryContact, internalGroup)
       }
     }
-    return receivingGroup
+    return internalGroup
   }
 
   private async addGroupAdmin(user: User, group: Group): Promise<void> {

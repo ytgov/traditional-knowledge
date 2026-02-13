@@ -117,7 +117,7 @@ entity "groups" {
   * name : nvarchar(255)
   acronym : nvarchar(255)
   description : nvarchar(MAX)
-  * is_host : bit
+  * is_external : bit
   * created_at : datetime2(0)
   * updated_at : datetime2(0)
   deleted_at : datetime2(0)
@@ -127,26 +127,23 @@ entity "information_sharing_agreements" {
   * id : int [PK]
   --
   * creator_id : int [FK]
-  sharing_group_id : int [FK]
-  sharing_group_contact_id : int [FK]
-  receiving_group_id : int [FK]
-  receiving_group_contact_id : int [FK]
+  external_group_id : int [FK]
+  external_group_contact_id : int [FK]
+  internal_group_id : int [FK]
+  internal_group_contact_id : int [FK]
+  internal_group_secondary_contact_id : int [FK]
   --
   identifier : nvarchar(100)
   * title : nvarchar(255)
   description : nvarchar(MAX)
   * start_date : date
   * end_date : date
-  sharing_group_info : nvarchar(MAX)
-  receiving_group_info : nvarchar(MAX)
-  sharing_group_contact_name : nvarchar(255)
-  receiving_group_contact_name : nvarchar(255)
-  sharing_group_contact_title : nvarchar(255)
-  receiving_group_contact_title : nvarchar(255)
-  sharing_group_signed_by : nvarchar(100)
-  receiving_group_signed_by : nvarchar(100)
-  sharing_group_signed_date : date
-  receiving_group_signed_date : date
+  external_group_info : nvarchar(MAX)
+  internal_group_info : nvarchar(MAX)
+  external_group_contact_name : nvarchar(255)
+  internal_group_contact_name : nvarchar(255)
+  external_group_contact_title : nvarchar(255)
+  internal_group_contact_title : nvarchar(255)
   purpose : nvarchar(MAX)
   detail_level : nvarchar(250)
   detail_notes : nvarchar(MAX)
@@ -311,10 +308,11 @@ information_sharing_agreement_archive_items::archive_item_id ||--o{ archive_item
 information_sharing_agreement_archive_items::creator_id ||--o{ users::id
 information_sharing_agreement_archive_items::information_sharing_agreement_id ||--o{ information_sharing_agreements::id
 information_sharing_agreements::creator_id ||--o{ users::id
-information_sharing_agreements::receiving_group_contact_id |o--o{ users::id
-information_sharing_agreements::receiving_group_id |o--o{ groups::id
-information_sharing_agreements::sharing_group_contact_id |o--o{ users::id
-information_sharing_agreements::sharing_group_id |o--o{ groups::id
+information_sharing_agreements::external_group_id |o--o{ groups::id
+information_sharing_agreements::external_group_contact_id |o--o{ users::id
+information_sharing_agreements::internal_group_id |o--o{ groups::id
+information_sharing_agreements::internal_group_contact_id |o--o{ users::id
+information_sharing_agreements::internal_group_secondary_contact_id |o--o{ users::id
 notifications::user_id ||--o{ users::id
 user_groups::creator_id ||--o{ users::id
 user_groups::group_id ||--o{ groups::id

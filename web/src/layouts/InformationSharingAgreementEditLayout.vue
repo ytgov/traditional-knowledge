@@ -154,9 +154,9 @@ const basicInformationSubtitle = computed(() => {
   if (isNil(title)) return "Not configured"
 
   const parts = [title]
-  const { sharingGroupContactName, receivingGroupContactName } = informationSharingAgreement.value
-  if (sharingGroupContactName || receivingGroupContactName) {
-    const contacts = [sharingGroupContactName, receivingGroupContactName]
+  const { externalGroupContactName, internalGroupContactName } = informationSharingAgreement.value
+  if (externalGroupContactName || internalGroupContactName) {
+    const contacts = [externalGroupContactName, internalGroupContactName]
       .filter(Boolean)
       .join(" & ")
     parts.push(contacts)

@@ -45,12 +45,12 @@ const { informationSharingAgreement } = useInformationSharingAgreement(
 const groupId = computed(() => {
   if (isNil(informationSharingAgreement.value)) return null
 
-  const { sharingGroupContactId, sharingGroupId, receivingGroupContactId, receivingGroupId } =
+  const { externalGroupContactId, externalGroupId, internalGroupContactId, internalGroupId } =
     informationSharingAgreement.value
-  if (currentUser.value.id === sharingGroupContactId) {
-    return sharingGroupId
-  } else if (currentUser.value.id === receivingGroupContactId) {
-    return receivingGroupId
+  if (currentUser.value.id === externalGroupContactId) {
+    return externalGroupId
+  } else if (currentUser.value.id === internalGroupContactId) {
+    return internalGroupId
   } else {
     return null
   }

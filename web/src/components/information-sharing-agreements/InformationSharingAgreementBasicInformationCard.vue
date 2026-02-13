@@ -41,18 +41,18 @@
           <div class="mb-3">
             <div class="text-body-2 text-grey-darken-1 mb-1">Contact Name</div>
             <span
-              v-if="isNil(sharingGroupContactId)"
+              v-if="isNil(externalGroupContactId)"
               class="font-weight-medium"
               >Not specified</span
             >
             <UserChip
               v-else
-              :user-id="sharingGroupContactId"
+              :user-id="externalGroupContactId"
             />
           </div>
           <div>
             <div class="text-body-2 text-grey-darken-1 mb-1">Title</div>
-            <div class="font-weight-medium">{{ sharingGroupContactTitle || "Not specified" }}</div>
+            <div class="font-weight-medium">{{ externalGroupContactTitle || "Not specified" }}</div>
           </div>
         </v-col>
 
@@ -72,31 +72,31 @@
           <div class="mb-3">
             <div class="text-body-2 text-grey-darken-1 mb-1">Contact Name</div>
             <span
-              v-if="isNil(receivingGroupContactId)"
+              v-if="isNil(internalGroupContactId)"
               class="font-weight-medium"
               >Not specified</span
             >
             <UserChip
               v-else
-              :user-id="receivingGroupContactId"
+              :user-id="internalGroupContactId"
             />
           </div>
           <div class="mb-3">
             <div class="text-body-2 text-grey-darken-1 mb-1">Title</div>
             <div class="font-weight-medium">
-              {{ receivingGroupContactTitle || "Not specified" }}
+              {{ internalGroupContactTitle || "Not specified" }}
             </div>
           </div>
           <div>
             <div class="text-body-2 text-grey-darken-1 mb-1">Manager Contact Name</div>
             <span
-              v-if="isNil(receivingGroupSecondaryContactId)"
+              v-if="isNil(internalGroupSecondaryContactId)"
               class="font-weight-medium"
               >Not specified</span
             >
             <UserChip
               v-else
-              :user-id="receivingGroupSecondaryContactId"
+              :user-id="internalGroupSecondaryContactId"
             />
           </div>
         </v-col>
@@ -113,11 +113,11 @@ import UserChip from "@/components/users/UserChip.vue"
 defineProps<{
   title: string | null | undefined
   purpose: string | null | undefined
-  sharingGroupContactId: number | null | undefined
-  sharingGroupContactTitle: string | null | undefined
-  receivingGroupContactId: number | null | undefined
-  receivingGroupContactTitle: string | null | undefined
-  receivingGroupSecondaryContactId: number | null | undefined
+  externalGroupContactId: number | null | undefined
+  externalGroupContactTitle: string | null | undefined
+  internalGroupContactId: number | null | undefined
+  internalGroupContactTitle: string | null | undefined
+  internalGroupSecondaryContactId: number | null | undefined
 }>()
 </script>
 

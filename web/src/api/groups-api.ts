@@ -12,15 +12,15 @@ export type Group = {
   name: string
   acronym: string | null
   description: string | null
-  isHost: boolean
+  isExternal: boolean
   createdAt: string
   updatedAt: string
 }
 
 /** Keep in sync with api/src/serializers/groups/reference-serializer.ts */
-export type GroupAsReference = Pick<Group, "id" | "name" | "acronym" | "description" | "isHost">
+export type GroupAsReference = Pick<Group, "id" | "name" | "acronym" | "description" | "isExternal">
 
-export type GroupWhereOptions = WhereOptions<Group, "name" | "acronym" | "isHost">
+export type GroupWhereOptions = WhereOptions<Group, "name" | "acronym" | "isExternal">
 
 export type GroupFiltersOptions = FiltersOptions<{
   search: string | string[]

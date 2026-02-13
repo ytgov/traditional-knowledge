@@ -73,19 +73,19 @@ export class InformationSharingAgreement extends BaseModel<
   declare creatorId: number
 
   @Attribute(DataTypes.INTEGER)
-  declare sharingGroupId: number | null
+  declare externalGroupId: number | null
 
   @Attribute(DataTypes.INTEGER)
-  declare sharingGroupContactId: number | null
+  declare externalGroupContactId: number | null
 
   @Attribute(DataTypes.INTEGER)
-  declare receivingGroupId: number | null
+  declare internalGroupId: number | null
 
   @Attribute(DataTypes.INTEGER)
-  declare receivingGroupContactId: number | null
+  declare internalGroupContactId: number | null
 
   @Attribute(DataTypes.INTEGER)
-  declare receivingGroupSecondaryContactId: number | null
+  declare internalGroupSecondaryContactId: number | null
 
   @Attribute(DataTypes.STRING)
   @NotNull
@@ -96,22 +96,22 @@ export class InformationSharingAgreement extends BaseModel<
   declare identifier: string | null
 
   @Attribute(DataTypes.TEXT)
-  declare sharingGroupInfo: string | null
+  declare externalGroupInfo: string | null
 
   @Attribute(DataTypes.TEXT)
-  declare receivingGroupInfo: string | null
+  declare internalGroupInfo: string | null
 
   @Attribute(DataTypes.STRING)
-  declare sharingGroupContactName: string | null
+  declare externalGroupContactName: string | null
 
   @Attribute(DataTypes.STRING)
-  declare receivingGroupContactName: string | null
+  declare internalGroupContactName: string | null
 
   @Attribute(DataTypes.STRING)
-  declare sharingGroupContactTitle: string | null
+  declare externalGroupContactTitle: string | null
 
   @Attribute(DataTypes.STRING)
-  declare receivingGroupContactTitle: string | null
+  declare internalGroupContactTitle: string | null
 
   @Attribute(DataTypes.INTEGER)
   declare signedById: number | null
@@ -245,49 +245,49 @@ export class InformationSharingAgreement extends BaseModel<
   declare creator?: NonAttribute<User>
 
   @BelongsTo(() => Group, {
-    foreignKey: "sharingGroupId",
+    foreignKey: "externalGroupId",
     inverse: {
-      as: "sharedInformationAgreements",
+      as: "externalInformationAgreements",
       type: "hasMany",
     },
   })
-  declare sharingGroup?: NonAttribute<Group>
+  declare externalGroup?: NonAttribute<Group>
 
   @BelongsTo(() => User, {
-    foreignKey: "sharingGroupContactId",
+    foreignKey: "externalGroupContactId",
     inverse: {
-      as: "sharedInformationAgreementAsContact",
+      as: "externalInformationAgreementAsContact",
       type: "hasMany",
     },
   })
-  declare sharingGroupContact?: NonAttribute<User>
+  declare externalGroupContact?: NonAttribute<User>
 
   @BelongsTo(() => Group, {
-    foreignKey: "receivingGroupId",
+    foreignKey: "internalGroupId",
     inverse: {
-      as: "receivedInformationAgreements",
+      as: "internalInformationAgreements",
       type: "hasMany",
     },
   })
-  declare receivingGroup?: NonAttribute<Group>
+  declare internalGroup?: NonAttribute<Group>
 
   @BelongsTo(() => User, {
-    foreignKey: "receivingGroupContactId",
+    foreignKey: "internalGroupContactId",
     inverse: {
-      as: "receivedInformationAgreementAsContact",
+      as: "internalInformationAgreementAsContact",
       type: "hasMany",
     },
   })
-  declare receivingGroupContact?: NonAttribute<User>
+  declare internalGroupContact?: NonAttribute<User>
 
   @BelongsTo(() => User, {
-    foreignKey: "receivingGroupSecondaryContactId",
+    foreignKey: "internalGroupSecondaryContactId",
     inverse: {
-      as: "receivedInformationAgreementAsSecondaryContact",
+      as: "internalInformationAgreementAsSecondaryContact",
       type: "hasMany",
     },
   })
-  declare receivingGroupSecondaryContact?: NonAttribute<User>
+  declare internalGroupSecondaryContact?: NonAttribute<User>
 
   @BelongsTo(() => User, {
     foreignKey: "signedById",

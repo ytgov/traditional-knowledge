@@ -22,17 +22,17 @@ export class UpdateService extends BaseService {
       await this.informationSharingAgreement.update(this.attributes)
 
       if (
-        this.informationSharingAgreement.sharingGroupId &&
-        this.informationSharingAgreement.sharingGroupContactId &&
-        this.informationSharingAgreement.receivingGroupId &&
-        this.informationSharingAgreement.receivingGroupContactId
+        this.informationSharingAgreement.externalGroupId &&
+        this.informationSharingAgreement.externalGroupContactId &&
+        this.informationSharingAgreement.internalGroupId &&
+        this.informationSharingAgreement.internalGroupContactId
       ) {
         await this.ensureAdminAccessGrants(
           this.informationSharingAgreement.id,
-          this.informationSharingAgreement.sharingGroupId,
-          this.informationSharingAgreement.sharingGroupContactId,
-          this.informationSharingAgreement.receivingGroupId,
-          this.informationSharingAgreement.receivingGroupContactId,
+          this.informationSharingAgreement.externalGroupId,
+          this.informationSharingAgreement.externalGroupContactId,
+          this.informationSharingAgreement.internalGroupId,
+          this.informationSharingAgreement.internalGroupContactId,
           this.currentUser
         )
       }
@@ -45,18 +45,18 @@ export class UpdateService extends BaseService {
 
   private async ensureAdminAccessGrants(
     informationSharingAgreementId: number,
-    sharingGroupId: number,
-    sharingGroupContactId: number,
-    receivingGroupId: number,
-    receivingGroupContactId: number,
+    externalGroupId: number,
+    externalGroupContactId: number,
+    internalGroupId: number,
+    internalGroupContactId: number,
     currentUser: User
   ) {
     await EnsureAdminAccessService.perform(
       informationSharingAgreementId,
-      sharingGroupId,
-      sharingGroupContactId,
-      receivingGroupId,
-      receivingGroupContactId,
+      externalGroupId,
+      externalGroupContactId,
+      internalGroupId,
+      internalGroupContactId,
       currentUser
     )
   }
