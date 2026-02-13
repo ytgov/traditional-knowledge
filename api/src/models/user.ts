@@ -181,6 +181,14 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     return this.adminGroups.some((group) => group.id === groupId)
   }
 
+  isMemberOfGroup(groupId: number | null): boolean {
+    if (isUndefined(this.groups)) {
+      throw new Error("Expected groups association to be pre-loaded.")
+    }
+
+    return this.groups.some((group) => group.id === groupId)
+  }
+
   isAdminForInformationSharingAgreement(informationSharingAgreementId: number): boolean {
     if (isUndefined(this.adminInformationSharingAgreementAccessGrants)) {
       throw new Error(
