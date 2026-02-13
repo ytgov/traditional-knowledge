@@ -1,6 +1,9 @@
-import { type Attributes, type FindOptions, Op, sql } from "@sequelize/core"
+import { type Attributes, type FindOptions, Op } from "@sequelize/core"
 
 import { type Path } from "@/utils/deep-pick"
+
+import Queries from "@/queries"
+
 import { InformationSharingAgreement, User } from "@/models"
 import { BasePolicy, PolicyFactory } from "@/policies/base-policy"
 import {
@@ -40,8 +43,8 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
         where: {
           [Op.or]: [
             {
-              creatorId: user.id,
               status: InformationSharingAgreement.Status.DRAFT,
+              creatorId: user.id,
             },
             {
               status: {
@@ -53,36 +56,32 @@ export class InformationSharingAgreementPolicy extends PolicyFactory(Information
       }
     }
 
-    const agreementsWithAccessGrantsQuery = sql`
-      (
-        SELECT
-          information_sharing_agreement_id
-        FROM
-          information_sharing_agreement_access_grants
-        WHERE
-          user_id = :userId
-      )
-    `
-    return {
-      where: {
-        [Op.or]: [
-          {
-            creatorId: user.id,
-            status: InformationSharingAgreement.Status.DRAFT,
+    if (user.isExternal) {
+      const accessibleIdsQueryForExternalUser =
+        Queries.InformationSharingAgreements.buildAccessibleInformationSharingAgreementIdsForExternalUserQuery()
+      return {
+        where: {
+          id: {
+            [Op.in]: accessibleIdsQueryForExternalUser,
           },
-          {
-            status: {
-              [Op.ne]: InformationSharingAgreement.Status.DRAFT,
-            },
-            id: {
-              [Op.in]: agreementsWithAccessGrantsQuery,
-            },
+        },
+        replacements: {
+          userId: user.id,
+        },
+      }
+    } else {
+      const accessibleIdsQueryForInternalUser =
+        Queries.InformationSharingAgreements.buildAccessibleInformationSharingAgreementIdsForInternalUserQuery()
+      return {
+        where: {
+          id: {
+            [Op.in]: accessibleIdsQueryForInternalUser,
           },
-        ],
-      },
-      replacements: {
-        userId: user.id,
-      },
+        },
+        replacements: {
+          userId: user.id,
+        },
+      }
     }
   }
 
