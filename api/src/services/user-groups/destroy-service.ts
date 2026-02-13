@@ -3,16 +3,17 @@ import { isUndefined } from "lodash"
 import { NotifyUserOfRemovalMailer, NotifyAdminsOfRemovedUserMailer } from "@/mailers/groups"
 import db, { UserGroup, User, Group, InformationSharingAgreementAccessGrant } from "@/models"
 import BaseService from "@/services/base-service"
-import { Notifications } from "@/services"
+import { Notifications, InformationSharingAgreementAccessGrants } from "@/services"
 
 export class DestroyService extends BaseService {
-  private userGroup: UserGroup
-  private currentUser: User
-
-  constructor(userGroup: UserGroup, currentUser: User) {
+  constructor(
+    private userGroup: UserGroup,
+    private currentUser: User,
+    private options: {
+      skipAccessGrantRemoval?: boolean
+    } = {}
+  ) {
     super()
-    this.userGroup = userGroup
-    this.currentUser = currentUser
   }
 
   async perform() {
@@ -27,7 +28,10 @@ export class DestroyService extends BaseService {
     const { user, group } = this.userGroup
 
     return db.transaction(async () => {
-      await this.removeAccessGrantsForGroupMembership(user, group)
+      if (!this.options.skipAccessGrantRemoval) {
+        await this.removeAccessGrantsForGroupMembership(user, group)
+      }
+
       await this.userGroup.destroy()
 
       await this.notifyUserOfRemoval(user, group)
@@ -50,12 +54,21 @@ export class DestroyService extends BaseService {
   }
 
   private async removeAccessGrantsForGroupMembership(user: User, group: Group) {
-    await InformationSharingAgreementAccessGrant.destroy({
-      where: {
-        userId: user.id,
-        groupId: group.id,
+    await InformationSharingAgreementAccessGrant.findEach(
+      {
+        where: {
+          userId: user.id,
+          groupId: group.id,
+        },
       },
-    })
+      async (accessGrant) => {
+        await InformationSharingAgreementAccessGrants.DestroyService.perform(
+          accessGrant,
+          this.currentUser,
+          { skipUserGroupRemoval: true }
+        )
+      }
+    )
   }
 }
 

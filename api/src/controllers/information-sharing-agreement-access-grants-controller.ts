@@ -3,7 +3,10 @@ import { isNil } from "lodash"
 import logger from "@/utils/logger"
 import { InformationSharingAgreementAccessGrant } from "@/models"
 import { InformationSharingAgreementAccessGrantPolicy } from "@/policies"
-import { CreateService } from "@/services/information-sharing-agreement-access-grants"
+import {
+  CreateService,
+  DestroyService,
+} from "@/services/information-sharing-agreement-access-grants"
 import {
   IndexSerializer,
   ShowSerializer,
@@ -162,7 +165,7 @@ export class InformationSharingAgreementAccessGrantsController extends BaseContr
         })
       }
 
-      await informationSharingAgreementAccessGrant.destroy()
+      await DestroyService.perform(informationSharingAgreementAccessGrant, this.currentUser)
       return this.response.status(204).send()
     } catch (error) {
       logger.error(`Error deleting information sharing agreement access grant: ${error}`, { error })

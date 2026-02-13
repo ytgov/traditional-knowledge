@@ -10,14 +10,17 @@ import db, {
   UserGroup,
 } from "@/models"
 import BaseService from "@/services/base-service"
-import { Notifications } from "@/services"
+import { Notifications, InformationSharingAgreementAccessGrants } from "@/services"
 
 export type UserGroupCreationAttributes = Partial<Attributes<UserGroup>>
 
 export class CreateService extends BaseService {
   constructor(
     private attributes: UserGroupCreationAttributes,
-    private currentUser: User
+    private currentUser: User,
+    private options: {
+      skipAccessGrantCreation?: boolean
+    } = {}
   ) {
     super()
   }
@@ -44,7 +47,9 @@ export class CreateService extends BaseService {
       const user = await this.loadUser(userId)
       const group = await this.loadGroup(groupId)
 
-      await this.createAccessGrantsForGroupMembership(userGroup, user, group)
+      if (!this.options.skipAccessGrantCreation) {
+        await this.createAccessGrantsForGroupMembership(userGroup, user, group)
+      }
 
       await this.notifyUserOfMembership(user, group)
       await this.notifyAdminsOfMembership(user, group)
@@ -127,13 +132,17 @@ export class CreateService extends BaseService {
       isAdmin,
       isExternalGroup
     )
-    return InformationSharingAgreementAccessGrant.create({
-      informationSharingAgreementId,
-      groupId,
-      userId,
-      accessLevel,
-      creatorId: this.currentUser.id,
-    })
+
+    return InformationSharingAgreementAccessGrants.CreateService.perform(
+      {
+        informationSharingAgreementId,
+        groupId,
+        userId,
+        accessLevel,
+      },
+      this.currentUser,
+      { skipUserGroupCreation: true }
+    )
   }
 }
 

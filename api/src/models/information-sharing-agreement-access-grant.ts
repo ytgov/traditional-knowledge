@@ -1,5 +1,6 @@
 import {
   DataTypes,
+  Op,
   sql,
   type CreationOptional,
   type InferAttributes,
@@ -13,6 +14,7 @@ import {
   BelongsToMany,
   Default,
   HasMany,
+  ModelValidator,
   NotNull,
   PrimaryKey,
   Table,
@@ -88,6 +90,23 @@ export class InformationSharingAgreementAccessGrant extends BaseModel<
 
   @Attribute(DataTypes.DATE(0))
   declare deletedAt: Date | null
+
+  // Model Validators
+  @ModelValidator
+  async ensureInformationSharingAgreementGroupContinuity(): Promise<void> {
+    const informationSharingAgreementCount = await InformationSharingAgreement.count({
+      where: {
+        id: this.informationSharingAgreementId,
+        [Op.or]: [{ externalGroupId: this.groupId }, { internalGroupId: this.groupId }],
+      },
+    })
+
+    if (informationSharingAgreementCount === 0) {
+      throw new Error(
+        "Group id must match either the information sharing agreement's external group id or internal group id"
+      )
+    }
+  }
 
   // Helpers
   static defaultAccessLevelFor(
