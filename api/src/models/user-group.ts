@@ -13,9 +13,11 @@ import {
   AutoIncrement,
   BelongsTo,
   Default,
+  ModelValidator,
   NotNull,
   PrimaryKey,
 } from "@sequelize/core/decorators-legacy"
+import { isNil } from "lodash"
 
 import arrayWrap from "@/utils/array-wrap"
 import whereFieldsOptionallyLikeTerms from "@/utils/search/where-fields-optionally-like-terms"
@@ -65,6 +67,26 @@ export class UserGroup extends BaseModel<
 
   @Attribute(DataTypes.DATE(0))
   declare deletedAt: Date | null
+
+  // Model Validators
+  @ModelValidator
+  async ensureUserGroupTypeConsistency(): Promise<void> {
+    const user = await User.findByPk(this.userId)
+    if (isNil(user)) {
+      throw new Error("User not found")
+    }
+
+    const group = await Group.findByPk(this.groupId)
+    if (isNil(group)) {
+      throw new Error("Group not found")
+    }
+
+    if (user.isExternal !== group.isExternal) {
+      throw new Error(
+        "Users can only be added to groups of the same type (internal users to internal groups, external users to external groups)"
+      )
+    }
+  }
 
   // Associations
   @BelongsTo(() => User, {
