@@ -250,14 +250,16 @@ SQL
 
 ### Testing
 
-**Running tests:**
+**Running tests:** (see `api/tests/README.md` for full details)
 
 - All API tests: `dev test` or `dev test api`
 - All web tests: `dev test web`
-- Specific API file: `dev test api -- tests/services/example.test.ts --run`
-- Specific web file: `dev test web -- tests/components/example.test.ts --run`
+- Specific API file: `dev test -- --run api/tests/services/example.test.ts` (`dev test` defaults to `api`)
+- Specific web file: `dev test web -- --run web/tests/components/example.test.ts` (`web` keyword required)
+- Source file shortcut: `dev test -- --run api/src/services/example.ts` (auto-converts to test path)
 - Watch mode: omit `--run`
 - Pattern matching: `dev test api -- --grep "pattern"`
+- Path prefix (`api/` or `web/`) is auto-stripped by `bin/dev` for any argument position
 - Legacy commands: `dev test_api` and `dev test_web` still work
 
 **Test structure:**

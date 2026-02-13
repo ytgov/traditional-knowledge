@@ -16,6 +16,29 @@ Test initialization goes like this:
 
 5. Runs the next test file, and repeats from step 3.
 
+## Running Tests
+
+Tests run inside Docker via the `dev` command. The `dev test` helper automatically strips the `api/` or `web/` prefix from file paths so vitest receives container-relative paths.
+
+```bash
+# Run all API tests
+dev test api
+
+# Run a specific test file (path auto-reformatted, can appear in any argument position)
+dev test api -- --run api/tests/policies/information-sharing-agreements/signed-state-policy.test.ts
+
+# Run a specific source file's tests (auto-converts src/ to tests/ and .ts to .test.ts)
+dev test api -- --run api/src/services/users/ensure-from-auth0-token-service.ts
+
+# Watch mode (omit --run)
+dev test api api/tests/policies/information-sharing-agreements/signed-state-policy.test.ts
+
+# Pattern matching
+dev test api -- --grep "pattern"
+```
+
+The path reformatting logic lives in `bin/dev` (`reformat_project_relative_path_filter_for_vitest!`). It scans all arguments for the service prefix (`api/` or `web/`), so the path can appear in any argument position.
+
 ## General Notes About Tests
 
 1. Tests should map to a specific file in the api/src folder.
