@@ -90,6 +90,21 @@ export class InformationSharingAgreementAccessGrant extends BaseModel<
   declare deletedAt: Date | null
 
   // Helpers
+  static defaultAccessLevelFor(
+    isAdmin: boolean,
+    isExternal: boolean
+  ): InformationSharingAgreementAccessGrantAccessLevels {
+    if (isAdmin) {
+      return InformationSharingAgreementAccessGrantAccessLevels.ADMIN
+    }
+
+    if (isExternal) {
+      return InformationSharingAgreementAccessGrantAccessLevels.EDIT
+    }
+
+    return InformationSharingAgreementAccessGrantAccessLevels.READ
+  }
+
   get selfAndSiblings(): NonAttribute<InformationSharingAgreementAccessGrant[]> {
     if (isUndefined(this.siblings)) {
       throw new Error("Expected siblings association to be pre-loaded.")

@@ -1,7 +1,7 @@
 import { isUndefined } from "lodash"
 
 import { NotifyUserOfRemovalMailer, NotifyAdminsOfRemovedUserMailer } from "@/mailers/groups"
-import db, { UserGroup, User, Group } from "@/models"
+import db, { UserGroup, User, Group, InformationSharingAgreementAccessGrant } from "@/models"
 import BaseService from "@/services/base-service"
 import { Notifications } from "@/services"
 
@@ -27,9 +27,11 @@ export class DestroyService extends BaseService {
     const { user, group } = this.userGroup
 
     return db.transaction(async () => {
+      await this.removeAccessGrantsForGroupMembership(user, group)
+      await this.userGroup.destroy()
+
       await this.notifyUserOfRemoval(user, group)
       await this.notifyAdminsOfRemoval(user, group)
-      await this.userGroup.destroy()
     })
   }
 
@@ -45,6 +47,15 @@ export class DestroyService extends BaseService {
       this.currentUser
     )
     await NotifyAdminsOfRemovedUserMailer.perform(group, user, this.currentUser)
+  }
+
+  private async removeAccessGrantsForGroupMembership(user: User, group: Group) {
+    await InformationSharingAgreementAccessGrant.destroy({
+      where: {
+        userId: user.id,
+        groupId: group.id,
+      },
+    })
   }
 }
 

@@ -1,8 +1,14 @@
-import { Attributes } from "@sequelize/core"
+import { type Attributes, type WhereOptions } from "@sequelize/core"
 import { isNil } from "lodash"
 
 import Mailers from "@/mailers"
-import db, { Group, User, UserGroup } from "@/models"
+import db, {
+  Group,
+  InformationSharingAgreement,
+  InformationSharingAgreementAccessGrant,
+  User,
+  UserGroup,
+} from "@/models"
 import BaseService from "@/services/base-service"
 import { Notifications } from "@/services"
 
@@ -37,6 +43,9 @@ export class CreateService extends BaseService {
 
       const user = await this.loadUser(userId)
       const group = await this.loadGroup(groupId)
+
+      await this.createAccessGrantsForGroupMembership(userGroup, user, group)
+
       await this.notifyUserOfMembership(user, group)
       await this.notifyAdminsOfMembership(user, group)
 
@@ -68,6 +77,63 @@ export class CreateService extends BaseService {
   private async notifyAdminsOfMembership(user: User, group: Group) {
     await Notifications.Groups.NotifyAdminsOfAddedUserService.perform(user, group, this.currentUser)
     await Mailers.Groups.NotifyAdminsOfAddedUserMailer.perform(group, user, this.currentUser)
+  }
+
+  private async createAccessGrantsForGroupMembership(
+    userGroup: UserGroup,
+    user: User,
+    group: Group
+  ) {
+    const where: WhereOptions<InformationSharingAgreement> = {}
+    if (group.isExternal) {
+      where.externalGroupId = group.id
+    } else {
+      where.internalGroupId = group.id
+    }
+    await InformationSharingAgreement.findEach(
+      {
+        where,
+      },
+      async (informationSharingAgreement) => {
+        await this.ensureAccessGrantFor(
+          informationSharingAgreement.id,
+          group.id,
+          user.id,
+          userGroup.isAdmin,
+          group.isExternal
+        )
+      }
+    )
+  }
+
+  private async ensureAccessGrantFor(
+    informationSharingAgreementId: number,
+    groupId: number,
+    userId: number,
+    isAdmin: boolean,
+    isExternalGroup: boolean
+  ): Promise<InformationSharingAgreementAccessGrant | void> {
+    // TODO: reflect if this should just be a "create" operation?
+    const existingAccessGrant = await InformationSharingAgreementAccessGrant.findOne({
+      where: {
+        informationSharingAgreementId,
+        groupId,
+        userId,
+      },
+    })
+    if (existingAccessGrant) return
+
+    const accessLevel = InformationSharingAgreementAccessGrant.defaultAccessLevelFor(
+      isAdmin,
+      isExternalGroup
+    )
+    return InformationSharingAgreementAccessGrant.create({
+      informationSharingAgreementId,
+      groupId,
+      userId,
+      accessLevel,
+      creatorId: this.currentUser.id,
+    })
   }
 }
 
