@@ -1,7 +1,8 @@
 import { isNil } from "lodash"
 
-import db, { Group, InformationSharingAgreement, UserGroup, User } from "@/models"
+import db, { Group, InformationSharingAgreement, User } from "@/models"
 import BaseService from "@/services/base-service"
+import { Groups } from "@/services"
 
 export class DestroyGroupsService extends BaseService {
   constructor(
@@ -22,16 +23,16 @@ export class DestroyGroupsService extends BaseService {
     }
 
     return db.transaction(async () => {
-      await UserGroup.destroy({
-        where: {
-          groupId: [externalGroupId, internalGroupId],
+      await Group.findEach(
+        {
+          where: {
+            id: [externalGroupId, internalGroupId],
+          },
         },
-      })
-      await Group.destroy({
-        where: {
-          id: [externalGroupId, internalGroupId],
-        },
-      })
+        async (group) => {
+          await Groups.DestroyService.perform(group, this.currentUser)
+        }
+      )
     })
   }
 }
