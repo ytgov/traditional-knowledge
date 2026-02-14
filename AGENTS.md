@@ -275,7 +275,9 @@ SQL
 
 - Numbered entities: `user1`, `user2` (not `existingUser`, `newUser`)
 - Descriptive variable names: `knowledgeEntryAttributes` not `attributes`
+- **One `expect` per test** — each test verifies one thing
 - Assert database state via `findAll()` without where clauses (test isolation handles cleanup)
+- Combine count + content: `expect(records).toEqual([expect.objectContaining({...})])` (not separate `toHaveLength` + `toEqual`)
 - Negative spy assertions: `expect(spy).not.toHaveBeenCalled()` (never use `not.toHaveBeenCalledWith`)
 - Controller tests: `mockCurrentUser(user)` and `request().get("/api/path")` from `@/support`
 - **Error testing**: Use `.create()` with complete valid data, then destroy records to test "no longer exists" scenarios instead of using `.build()` with invalid IDs that cause foreign key violations
