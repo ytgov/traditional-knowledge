@@ -61,7 +61,7 @@ export class DraftStatePolicy extends GenericStatePolicy {
   }
 
   permittedAttributesForCreate(): Path[] {
-    return ["externalGroupId", "internalGroupId", ...this.permittedAttributes()]
+    return [...this.permittedAttributes()]
   }
 }
 
