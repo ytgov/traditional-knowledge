@@ -1,6 +1,6 @@
 import { DateTime } from "luxon"
 
-import { Group } from "@/models"
+import { Group, InformationSharingAgreementAccessGrant, UserGroup } from "@/models"
 
 import {
   externalOrganizationFactory,
@@ -109,6 +109,128 @@ describe("api/src/services/information-sharing-agreements/create-groups-service.
             internalGroupId: createdGroups[1].id,
           })
         )
+      })
+
+      test("when groups are created, adds contacts as group admins", async () => {
+        // Arrange
+        const currentUser = await userFactory.create()
+        const externalOrganization = await externalOrganizationFactory.create()
+        const externalGroupContact = await userFactory.create({
+          isExternal: true,
+          externalOrganizationId: externalOrganization.id,
+        })
+        const internalGroupContact = await userFactory.create({
+          department: "Test Department",
+        })
+        const informationSharingAgreement = await informationSharingAgreementFactory.create({
+          externalGroupContactId: externalGroupContact.id,
+          internalGroupContactId: internalGroupContact.id,
+          signedAt: DateTime.now().toJSDate(),
+        })
+
+        // Act
+        await CreateGroupsService.perform(informationSharingAgreement, currentUser)
+
+        // Assert
+        const userGroups = await UserGroup.findAll({
+          order: [["userId", "ASC"]],
+        })
+        expect(userGroups).toEqual([
+          expect.objectContaining({
+            userId: externalGroupContact.id,
+            groupId: informationSharingAgreement.externalGroupId,
+            isAdmin: true,
+          }),
+          expect.objectContaining({
+            userId: internalGroupContact.id,
+            groupId: informationSharingAgreement.internalGroupId,
+            isAdmin: true,
+          }),
+        ])
+      })
+
+      test("when groups are created, auto-creates access grants for contacts with admin access level", async () => {
+        // Arrange
+        const currentUser = await userFactory.create()
+        const externalOrganization = await externalOrganizationFactory.create()
+        const externalGroupContact = await userFactory.create({
+          isExternal: true,
+          externalOrganizationId: externalOrganization.id,
+        })
+        const internalGroupContact = await userFactory.create({
+          department: "Test Department",
+        })
+        const informationSharingAgreement = await informationSharingAgreementFactory.create({
+          externalGroupContactId: externalGroupContact.id,
+          internalGroupContactId: internalGroupContact.id,
+          signedAt: DateTime.now().toJSDate(),
+        })
+
+        // Act
+        await CreateGroupsService.perform(informationSharingAgreement, currentUser)
+
+        // Assert
+        const accessGrants = await InformationSharingAgreementAccessGrant.findAll({
+          order: [["userId", "ASC"]],
+        })
+        expect(accessGrants).toEqual([
+          expect.objectContaining({
+            informationSharingAgreementId: informationSharingAgreement.id,
+            groupId: informationSharingAgreement.externalGroupId,
+            userId: externalGroupContact.id,
+            accessLevel: "admin",
+          }),
+          expect.objectContaining({
+            informationSharingAgreementId: informationSharingAgreement.id,
+            groupId: informationSharingAgreement.internalGroupId,
+            userId: internalGroupContact.id,
+            accessLevel: "admin",
+          }),
+        ])
+      })
+
+      test("when internal secondary contact exists, adds secondary contact as group admin with access grant", async () => {
+        // Arrange
+        const currentUser = await userFactory.create()
+        const externalOrganization = await externalOrganizationFactory.create()
+        const externalGroupContact = await userFactory.create({
+          isExternal: true,
+          externalOrganizationId: externalOrganization.id,
+        })
+        const internalGroupContact = await userFactory.create({
+          department: "Test Department",
+        })
+        const internalGroupSecondaryContact = await userFactory.create({
+          department: "Test Department",
+        })
+        const informationSharingAgreement = await informationSharingAgreementFactory.create({
+          externalGroupContactId: externalGroupContact.id,
+          internalGroupContactId: internalGroupContact.id,
+          internalGroupSecondaryContactId: internalGroupSecondaryContact.id,
+          signedAt: DateTime.now().toJSDate(),
+        })
+
+        // Act
+        await CreateGroupsService.perform(informationSharingAgreement, currentUser)
+
+        // Assert
+        const accessGrants = await InformationSharingAgreementAccessGrant.findAll({
+          order: [["userId", "ASC"]],
+        })
+        expect(accessGrants).toEqual([
+          expect.objectContaining({
+            userId: externalGroupContact.id,
+            accessLevel: "admin",
+          }),
+          expect.objectContaining({
+            userId: internalGroupContact.id,
+            accessLevel: "admin",
+          }),
+          expect.objectContaining({
+            userId: internalGroupSecondaryContact.id,
+            accessLevel: "admin",
+          }),
+        ])
       })
 
       test("when external group contact ID is nil, errors informatively", async () => {

@@ -33,15 +33,14 @@ export class CreateGroupsService extends BaseService {
     }
 
     return db.transaction(async () => {
-      const externalGroup = await this.createExternalGroupAndAdmin(
+      const externalGroup = await this.createExternalGroup(
         informationSharingAgreementId,
         externalGroupContactId,
         signedAt
       )
-      const internalGroup = await this.createInternalGroupAndAdmins(
+      const internalGroup = await this.createInternalGroup(
         informationSharingAgreementId,
         internalGroupContactId,
-        internalGroupSecondaryContactId,
         signedAt
       )
 
@@ -49,10 +48,17 @@ export class CreateGroupsService extends BaseService {
         externalGroupId: externalGroup.id,
         internalGroupId: internalGroup.id,
       })
+
+      await this.addExternalGroupAdmin(externalGroupContactId, externalGroup)
+      await this.addInternalGroupAdmins(
+        internalGroupContactId,
+        internalGroupSecondaryContactId,
+        internalGroup
+      )
     })
   }
 
-  private async createExternalGroupAndAdmin(
+  private async createExternalGroup(
     informationSharingAgreementId: number,
     externalGroupContactId: number,
     signedAt: Date
@@ -78,24 +84,18 @@ export class CreateGroupsService extends BaseService {
       externalGroupContact.externalOrganization.name,
       signedDate
     )
-    const externalGroupAttributes = {
-      name: externalGroupName,
-      isExternal: true,
-    }
-    const externalGroup = await Groups.CreateService.perform(
-      externalGroupAttributes,
+    return Groups.CreateService.perform(
+      {
+        name: externalGroupName,
+        isExternal: true,
+      },
       this.currentUser
     )
-
-    await this.addGroupAdmin(externalGroupContact, externalGroup)
-
-    return externalGroup
   }
 
-  private async createInternalGroupAndAdmins(
+  private async createInternalGroup(
     informationSharingAgreementId: number,
     internalGroupContactId: number,
-    internalGroupSecondaryContactId: number | null,
     signedAt: Date
   ): Promise<Group> {
     const internalGroupContact = await User.findByPk(internalGroupContactId)
@@ -113,14 +113,36 @@ export class CreateGroupsService extends BaseService {
       internalGroupContact.department ?? "UNKNOWN",
       signedDate
     )
-    const internalGroupAttributes = {
-      name: internalGroupName,
-      isExternal: false,
-    }
-    const internalGroup = await Groups.CreateService.perform(
-      internalGroupAttributes,
+    return Groups.CreateService.perform(
+      {
+        name: internalGroupName,
+        isExternal: false,
+      },
       this.currentUser
     )
+  }
+
+  private async addExternalGroupAdmin(
+    externalGroupContactId: number,
+    externalGroup: Group
+  ): Promise<void> {
+    const externalGroupContact = await User.findByPk(externalGroupContactId)
+    if (isNil(externalGroupContact)) {
+      throw new Error("External group contact not found")
+    }
+
+    await this.addGroupAdmin(externalGroupContact, externalGroup)
+  }
+
+  private async addInternalGroupAdmins(
+    internalGroupContactId: number,
+    internalGroupSecondaryContactId: number | null,
+    internalGroup: Group
+  ): Promise<void> {
+    const internalGroupContact = await User.findByPk(internalGroupContactId)
+    if (isNil(internalGroupContact)) {
+      throw new Error("Internal group contact not found")
+    }
 
     await this.addGroupAdmin(internalGroupContact, internalGroup)
 
@@ -130,7 +152,6 @@ export class CreateGroupsService extends BaseService {
         await this.addGroupAdmin(internalGroupSecondaryContact, internalGroup)
       }
     }
-    return internalGroup
   }
 
   private async addGroupAdmin(user: User, group: Group): Promise<void> {
