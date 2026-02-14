@@ -17,6 +17,7 @@ auto_execution_mode: 1
 
 **Decision Rules:**
 - **Title format:** Use `Issue-<number>: Description` for GitHub issues, `TICKET-ID: Description` for Jira tickets, `Fix: Description` for bug fixes, or `Action Verb + Noun` for features. Always use AP style title case.
+- **Ticket prefix rule:** Only use ticket prefixes (`TK-123:`, `Issue-123:`) when referencing actual external ticket entities. For internal work without external tracking, use descriptive titles without prefixes.
 - **Implementation section:** Focus on purpose and intent, not specific files. A reviewer can see file changes in the diff - the Implementation section explains the reasoning behind those changes.
 - **Screenshots:** Check the diff for `web/src/components/` or `web/src/pages/` changes. If present, write "TODO" and let user add screenshots. Only write "N/A - backend changes only" if there are truly no frontend changes.
 - **Draft mode:** Always create PRs as drafts first
@@ -96,6 +97,7 @@ Use one of these patterns:
 - Use **AP style title case** (validate at https://titlecaseconverter.com/?style=AP)
 - Be specific but concise
 - Start with action verb when no ticket ID
+- **Important:** Only use ticket prefixes (`TK-123:`, `Issue-123:`) when referencing actual external ticket entities. For internal work without external tracking, use descriptive titles without prefixes.
 
 ### 3. Write PR Body
 

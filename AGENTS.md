@@ -372,6 +372,13 @@ See `/api/src/config.ts` for complete details.
 
 ### Pull Request Guidelines
 
+Follow the detailed patterns in `/agents/workflows/pull-request-management.md` for:
+
+- Title conventions and formatting
+- PR body structure and content
+- Testing instructions format
+- Quality checklist requirements
+
 **Pre-submission:**
 
 - All tests pass:
