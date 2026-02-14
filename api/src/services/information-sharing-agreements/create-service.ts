@@ -3,7 +3,6 @@ import { isNil } from "lodash"
 
 import db, { User, InformationSharingAgreement } from "@/models"
 import BaseService from "@/services/base-service"
-import { EnsureAdminAccessService } from "@/services/information-sharing-agreements/admin-access-grants-service"
 
 export type InformationSharingAgreementCreationAttributes = Partial<
   Attributes<InformationSharingAgreement>
@@ -32,44 +31,10 @@ export class CreateService extends BaseService {
         status: InformationSharingAgreement.Status.DRAFT,
       })
 
-      if (
-        !isNil(informationSharingAgreement.externalGroupId) &&
-        !isNil(informationSharingAgreement.externalGroupContactId) &&
-        !isNil(informationSharingAgreement.internalGroupId) &&
-        !isNil(informationSharingAgreement.internalGroupContactId)
-      ) {
-        await this.ensureAdminAccessGrants(
-          informationSharingAgreement.id,
-          informationSharingAgreement.externalGroupId,
-          informationSharingAgreement.externalGroupContactId,
-          informationSharingAgreement.internalGroupId,
-          informationSharingAgreement.internalGroupContactId,
-          this.currentUser
-        )
-      }
-
       return informationSharingAgreement.reload({
         include: ["accessGrants", "signedAcknowledgement"],
       })
     })
-  }
-
-  private async ensureAdminAccessGrants(
-    informationSharingAgreementId: number,
-    externalGroupId: number,
-    externalGroupContactId: number,
-    internalGroupId: number,
-    internalGroupContactId: number,
-    currentUser: User
-  ) {
-    await EnsureAdminAccessService.perform(
-      informationSharingAgreementId,
-      externalGroupId,
-      externalGroupContactId,
-      internalGroupId,
-      internalGroupContactId,
-      currentUser
-    )
   }
 }
 
