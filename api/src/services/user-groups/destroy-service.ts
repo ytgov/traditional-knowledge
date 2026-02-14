@@ -17,15 +17,15 @@ export class DestroyService extends BaseService {
   }
 
   async perform() {
-    if (isUndefined(this.userGroup.user)) {
+    const { user, group } = this.userGroup
+
+    if (isUndefined(user)) {
       throw new Error("Expected user association to be preloaded")
     }
 
-    if (isUndefined(this.userGroup.group)) {
+    if (isUndefined(group)) {
       throw new Error("Expected group association to be preloaded")
     }
-
-    const { user, group } = this.userGroup
 
     return db.transaction(async () => {
       if (!this.options.skipAccessGrantRemoval) {

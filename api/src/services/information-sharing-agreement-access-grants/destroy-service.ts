@@ -51,6 +51,7 @@ export class DestroyService extends BaseService {
           userId,
           groupId,
         },
+        include: ["user", "group"],
       },
       async (userGroup) => {
         await UserGroups.DestroyService.perform(userGroup, this.currentUser, {

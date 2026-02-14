@@ -23,6 +23,7 @@ export class DestroyService extends BaseService {
         where: {
           groupId: this.group.id,
         },
+        include: ["user", "group"],
       },
       async (userGroup) => {
         await UserGroups.DestroyService.perform(userGroup, this.currentUser)
