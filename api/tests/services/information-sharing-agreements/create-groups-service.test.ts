@@ -1,5 +1,4 @@
 import { DateTime } from "luxon"
-import { vi } from "vitest"
 
 import { Group } from "@/models"
 
