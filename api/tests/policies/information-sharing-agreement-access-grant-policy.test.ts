@@ -1,6 +1,7 @@
 import { InformationSharingAgreementAccessGrant } from "@/models"
 
 import {
+  groupFactory,
   informationSharingAgreementAccessGrantFactory,
   informationSharingAgreementFactory,
   userFactory,
@@ -13,13 +14,19 @@ describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts"
     describe("#show", () => {
       test("when the user has any level of access to the information sharing agreement, returns true", async () => {
         // Arrange
-        const user = await userFactory.create()
+        const user1 = await userFactory.create()
+        const group = await groupFactory.create({
+          isExternal: false,
+        })
+        const informationSharingAgreement = await informationSharingAgreementFactory.create({
+          internalGroupId: group.id,
+        })
 
-        const informationSharingAgreement = await informationSharingAgreementFactory.create()
         const informationSharingAgreementAccessGrant =
           await informationSharingAgreementAccessGrantFactory.create({
             informationSharingAgreementId: informationSharingAgreement.id,
-            userId: user.id,
+            groupId: group.id,
+            userId: user1.id,
             accessLevel: InformationSharingAgreementAccessGrant.AccessLevels.READ,
           })
 
@@ -29,7 +36,7 @@ describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts"
 
         // Act
         const policy = new InformationSharingAgreementAccessGrantPolicy(
-          user,
+          user1,
           informationSharingAgreementAccessGrant
         )
 
@@ -39,14 +46,20 @@ describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts"
 
       test("when the user does not have any level of access to the information sharing agreement, returns false", async () => {
         // Arrange
-        const user = await userFactory.create()
+        const user1 = await userFactory.create()
+        const user2 = await userFactory.create()
+        const group = await groupFactory.create({
+          isExternal: false,
+        })
+        const informationSharingAgreement = await informationSharingAgreementFactory.create({
+          internalGroupId: group.id,
+        })
 
-        const otherUser = await userFactory.create()
-        const informationSharingAgreement = await informationSharingAgreementFactory.create()
         const informationSharingAgreementAccessGrant =
           await informationSharingAgreementAccessGrantFactory.create({
             informationSharingAgreementId: informationSharingAgreement.id,
-            userId: otherUser.id,
+            groupId: group.id,
+            userId: user2.id,
             accessLevel: InformationSharingAgreementAccessGrant.AccessLevels.READ,
           })
 
@@ -56,7 +69,7 @@ describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts"
 
         // Act
         const policy = new InformationSharingAgreementAccessGrantPolicy(
-          user,
+          user1,
           informationSharingAgreementAccessGrant
         )
 
@@ -68,14 +81,19 @@ describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts"
     describe("#create", () => {
       test("when the user has admin level access to the information sharing agreement, returns true", async () => {
         // Arrange
-        const user = await userFactory.create()
-
-        const informationSharingAgreement = await informationSharingAgreementFactory.create()
+        const user1 = await userFactory.create()
+        const group = await groupFactory.create({
+          isExternal: false,
+        })
+        const informationSharingAgreement = await informationSharingAgreementFactory.create({
+          internalGroupId: group.id,
+        })
 
         const informationSharingAgreementAccessGrant =
           await informationSharingAgreementAccessGrantFactory.create({
             informationSharingAgreementId: informationSharingAgreement.id,
-            userId: user.id,
+            groupId: group.id,
+            userId: user1.id,
             accessLevel: InformationSharingAgreementAccessGrant.AccessLevels.ADMIN,
           })
 
@@ -85,7 +103,7 @@ describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts"
 
         // Act
         const policy = new InformationSharingAgreementAccessGrantPolicy(
-          user,
+          user1,
           informationSharingAgreementAccessGrant
         )
 
@@ -95,14 +113,19 @@ describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts"
 
       test("when the user does not have admin level access to the information sharing agreement, returns false", async () => {
         // Arrange
-        const user = await userFactory.create()
-
-        const informationSharingAgreement = await informationSharingAgreementFactory.create()
+        const user1 = await userFactory.create()
+        const group = await groupFactory.create({
+          isExternal: false,
+        })
+        const informationSharingAgreement = await informationSharingAgreementFactory.create({
+          internalGroupId: group.id,
+        })
 
         const informationSharingAgreementAccessGrant =
           await informationSharingAgreementAccessGrantFactory.create({
             informationSharingAgreementId: informationSharingAgreement.id,
-            userId: user.id,
+            groupId: group.id,
+            userId: user1.id,
             accessLevel: InformationSharingAgreementAccessGrant.AccessLevels.EDIT,
           })
 
@@ -112,7 +135,7 @@ describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts"
 
         // Act
         const policy = new InformationSharingAgreementAccessGrantPolicy(
-          user,
+          user1,
           informationSharingAgreementAccessGrant
         )
 
@@ -124,76 +147,99 @@ describe("api/src/policies/information-sharing-agreement-access-grant-policy.ts"
     describe(".applyScope", () => {
       test("when the user has an access grant, returns all access grants for information sharing agreements the user has grants to", async () => {
         // Arrange
-        const user = await userFactory.create()
-
-        const informationSharingAgreement = await informationSharingAgreementFactory.create()
+        const user1 = await userFactory.create()
+        const group = await groupFactory.create({
+          isExternal: false,
+        })
+        const informationSharingAgreement = await informationSharingAgreementFactory.create({
+          internalGroupId: group.id,
+        })
 
         const informationSharingAgreementAccessGrant =
           await informationSharingAgreementAccessGrantFactory.create({
             informationSharingAgreementId: informationSharingAgreement.id,
-            userId: user.id,
+            groupId: group.id,
+            userId: user1.id,
             accessLevel: InformationSharingAgreementAccessGrant.AccessLevels.READ,
           })
 
         // Act
-        const policyScope = InformationSharingAgreementAccessGrantPolicy.applyScope([], user)
+        const policyScope = InformationSharingAgreementAccessGrantPolicy.applyScope([], user1)
         const informationSharingAgreementAccessGrants = await policyScope.findAll()
 
         // Assert
-        const ids = informationSharingAgreementAccessGrants.map((accessGrant) => accessGrant.id)
-        expect(ids).toEqual([informationSharingAgreementAccessGrant.id])
+        expect(informationSharingAgreementAccessGrants).toEqual([
+          expect.objectContaining({
+            id: informationSharingAgreementAccessGrant.id,
+          }),
+        ])
       })
 
       test("when the user does not have an access grant, returns an empty array", async () => {
         // Arrange
-        const user = await userFactory.create()
+        const user1 = await userFactory.create()
+        const user2 = await userFactory.create()
+        const group = await groupFactory.create({
+          isExternal: false,
+        })
+        const informationSharingAgreement = await informationSharingAgreementFactory.create({
+          internalGroupId: group.id,
+        })
 
-        const otherUser = await userFactory.create()
-        const informationSharingAgreement = await informationSharingAgreementFactory.create()
         await informationSharingAgreementAccessGrantFactory.create({
           informationSharingAgreementId: informationSharingAgreement.id,
-          userId: otherUser.id,
+          groupId: group.id,
+          userId: user2.id,
           accessLevel: InformationSharingAgreementAccessGrant.AccessLevels.READ,
         })
 
         // Act
-        const policyScope = InformationSharingAgreementAccessGrantPolicy.applyScope([], user)
+        const policyScope = InformationSharingAgreementAccessGrantPolicy.applyScope([], user1)
         const informationSharingAgreementAccessGrants = await policyScope.findAll()
 
         // Assert
-        expect(informationSharingAgreementAccessGrants.length).toEqual(0)
+        expect(informationSharingAgreementAccessGrants).toEqual([])
       })
 
       test("when the user has an access grant, and other access grants to the same information sharing agreement, returns all access grants for the information sharing agreement", async () => {
         // Arrange
-        const user = await userFactory.create()
+        const user1 = await userFactory.create()
+        const group = await groupFactory.create({
+          isExternal: false,
+        })
+        const informationSharingAgreement = await informationSharingAgreementFactory.create({
+          internalGroupId: group.id,
+        })
 
-        const informationSharingAgreement = await informationSharingAgreementFactory.create()
-
-        const informationSharingAgreementAccessGrant =
+        const informationSharingAgreementAccessGrant1 =
           await informationSharingAgreementAccessGrantFactory.create({
             informationSharingAgreementId: informationSharingAgreement.id,
-            userId: user.id,
+            groupId: group.id,
+            userId: user1.id,
             accessLevel: InformationSharingAgreementAccessGrant.AccessLevels.READ,
           })
 
-        const otherUser = await userFactory.create()
-        const otherInformationSharingAgreementAccessGrant =
+        const user2 = await userFactory.create()
+        const informationSharingAgreementAccessGrant2 =
           await informationSharingAgreementAccessGrantFactory.create({
             informationSharingAgreementId: informationSharingAgreement.id,
-            userId: otherUser.id,
+            groupId: group.id,
+            userId: user2.id,
             accessLevel: InformationSharingAgreementAccessGrant.AccessLevels.EDIT,
           })
 
         // Act
-        const policyScope = InformationSharingAgreementAccessGrantPolicy.applyScope([], user)
+        const policyScope = InformationSharingAgreementAccessGrantPolicy.applyScope([], user1)
         const informationSharingAgreementAccessGrants = await policyScope.findAll()
 
         // Assert
-        const ids = informationSharingAgreementAccessGrants.map((accessGrant) => accessGrant.id)
-        expect(ids).toEqual([
-          informationSharingAgreementAccessGrant.id,
-          otherInformationSharingAgreementAccessGrant.id,
+        expect(informationSharingAgreementAccessGrants).toEqual([
+          expect.objectContaining({
+            id: informationSharingAgreementAccessGrant1.id,
+          }),
+          expect.objectContaining({
+            id: informationSharingAgreementAccessGrant2.id,
+          }),
         ])
       })
     })
