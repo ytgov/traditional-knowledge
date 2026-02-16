@@ -17,6 +17,7 @@ auto_execution_mode: 1
 
 **Decision Rules:**
 - **Title format:** Use `Issue-<number>: Description` for GitHub issues, `TICKET-ID: Description` for Jira tickets, `Fix: Description` for bug fixes, or `Action Verb + Noun` for features. Always use AP style title case.
+- **Ticket prefix rule:** Only use ticket prefixes (`TK-123:`, `Issue-123:`) when referencing actual external ticket entities. For internal work without external tracking, use descriptive titles without prefixes.
 - **Implementation section:** Focus on purpose and intent, not specific files. A reviewer can see file changes in the diff - the Implementation section explains the reasoning behind those changes.
 - **Screenshots:** Check the diff for `web/src/components/` or `web/src/pages/` changes. If present, write "TODO" and let user add screenshots. Only write "N/A - backend changes only" if there are truly no frontend changes.
 - **Draft mode:** Always create PRs as drafts first
@@ -96,6 +97,7 @@ Use one of these patterns:
 - Use **AP style title case** (validate at https://titlecaseconverter.com/?style=AP)
 - Be specific but concise
 - Start with action verb when no ticket ID
+- **Important:** Only use ticket prefixes (`TK-123:`, `Issue-123:`) when referencing actual external ticket entities. For internal work without external tracking, use descriptive titles without prefixes.
 
 ### 3. Write PR Body
 
@@ -232,20 +234,23 @@ git diff main...HEAD --name-only | grep -E "^web/src/(components|pages)/"
 
 **QA Testing Principles:**
 
-Write testing instructions for someone with zero project knowledge:
+Write testing instructions as if a real person is sitting at the app doing QA. Reference actual UI labels, button text, menu items, and page headings — not code identifiers or route names. The tester should never have to look at code to follow the instructions.
 
-- **User-focused**: Focus on UI interactions ("Click on", "Verify", "Fill out")
+- **Use actual UI labels**: Reference the exact text the tester will see — button labels, menu items, page titles, field labels. Read the Vue templates to get these right.
+- **Describe real actions**: "Click the **Add User** button", not "trigger the create user flow"
 - **Sequential steps**: Clear, numbered steps with specific verification points
 - **Complete workflows**: Test creation, editing, saving, and navigation
 - **Browser behavior**: Include back button, refresh, and direct URL testing
-- **Simple language**: Avoid technical jargon, minimal bolding
+- **Verify with visible outcomes**: "Verify a success message appears", "Verify the new entry appears in the table", not "verify the record was created"
 
 **Example:**
 ```markdown
-4. Navigate to **Knowledge Base** → **Create New**.
-5. Fill out the knowledge entry form with test data.
-6. Submit the entry.
-7. Verify the entry appears in the search results with correct display.
+4. Click **Information Sharing Agreements** in the left sidebar.
+5. Click the **New Agreement** button.
+6. Fill in the **Title** field with "Test Agreement".
+7. Select a contact from the **Yukon First Nation or Transboundary Contact Name** dropdown.
+8. Click **Save**.
+9. Verify the agreement appears in the list with status "Draft".
 ```
 
 ### 5. Create the PR

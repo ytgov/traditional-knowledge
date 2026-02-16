@@ -10,7 +10,7 @@ import { User } from "@/models"
 /**
  * Usage:
  * At the top level of a test file import:
- *   import { mockCurrentUser } from "@/support"
+ *   import { mockCurrentUser } from "@/tests/support"
  *
  * Then where you want to set the current user:
  *   mockCurrentUser(currentUser)

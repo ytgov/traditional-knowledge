@@ -35,19 +35,19 @@ export enum InformationSharingAgreementStatuses {
 export type InformationSharingAgreement = {
   id: number
   creatorId: number
-  sharingGroupId: number | null
-  sharingGroupContactId: number | null
-  receivingGroupId: number | null
-  receivingGroupContactId: number | null
-  receivingGroupSecondaryContactId: number | null
+  externalGroupId: number | null
+  externalGroupContactId: number | null
+  internalGroupId: number | null
+  internalGroupContactId: number | null
+  internalGroupSecondaryContactId: number | null
   status: InformationSharingAgreementStatuses
   identifier: string | null
-  sharingGroupInfo: string | null
-  receivingGroupInfo: string | null
-  sharingGroupContactName: string | null
-  receivingGroupContactName: string | null
-  sharingGroupContactTitle: string | null
-  receivingGroupContactTitle: string | null
+  externalGroupInfo: string | null
+  internalGroupInfo: string | null
+  externalGroupContactName: string | null
+  internalGroupContactName: string | null
+  externalGroupContactTitle: string | null
+  internalGroupContactTitle: string | null
   signedById: number | null
   signedAt: string | null
   title: string
@@ -83,10 +83,10 @@ export type InformationSharingAgreementAsIndex = Pick<
   InformationSharingAgreement,
   | "id"
   | "creatorId"
-  | "sharingGroupId"
-  | "sharingGroupContactId"
-  | "receivingGroupId"
-  | "receivingGroupContactId"
+  | "externalGroupId"
+  | "externalGroupContactId"
+  | "internalGroupId"
+  | "internalGroupContactId"
   | "status"
   | "title"
   | "createdAt"
@@ -101,19 +101,19 @@ export type InformationSharingAgreementAsShow = Pick<
   InformationSharingAgreement,
   | "id"
   | "creatorId"
-  | "sharingGroupId"
-  | "sharingGroupContactId"
-  | "receivingGroupId"
-  | "receivingGroupContactId"
-  | "receivingGroupSecondaryContactId"
+  | "externalGroupId"
+  | "externalGroupContactId"
+  | "internalGroupId"
+  | "internalGroupContactId"
+  | "internalGroupSecondaryContactId"
   | "status"
   | "identifier"
-  | "sharingGroupInfo"
-  | "receivingGroupInfo"
-  | "sharingGroupContactName"
-  | "receivingGroupContactName"
-  | "sharingGroupContactTitle"
-  | "receivingGroupContactTitle"
+  | "externalGroupInfo"
+  | "internalGroupInfo"
+  | "externalGroupContactName"
+  | "internalGroupContactName"
+  | "externalGroupContactTitle"
+  | "internalGroupContactTitle"
   | "signedById"
   | "title"
   | "description"
@@ -152,19 +152,19 @@ export type InformationSharingAgreementPolicy = Policy
 export type InformationSharingAgreementWhereOptions = WhereOptions<
   InformationSharingAgreement,
   | "creatorId"
-  | "sharingGroupId"
-  | "sharingGroupContactId"
-  | "receivingGroupId"
-  | "receivingGroupContactId"
-  | "receivingGroupSecondaryContactId"
+  | "externalGroupId"
+  | "externalGroupContactId"
+  | "internalGroupId"
+  | "internalGroupContactId"
+  | "internalGroupSecondaryContactId"
   | "status"
   | "identifier"
-  | "sharingGroupInfo"
-  | "receivingGroupInfo"
-  | "sharingGroupContactName"
-  | "receivingGroupContactName"
-  | "sharingGroupContactTitle"
-  | "receivingGroupContactTitle"
+  | "externalGroupInfo"
+  | "internalGroupInfo"
+  | "externalGroupContactName"
+  | "internalGroupContactName"
+  | "externalGroupContactTitle"
+  | "internalGroupContactTitle"
   | "signedById"
   | "signedAt"
   | "title"

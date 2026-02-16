@@ -1,7 +1,8 @@
 import { isNil } from "lodash"
 
-import db, { Group, InformationSharingAgreement, UserGroup, User } from "@/models"
+import db, { Group, InformationSharingAgreement, User } from "@/models"
 import BaseService from "@/services/base-service"
+import { Groups } from "@/services"
 
 export class DestroyGroupsService extends BaseService {
   constructor(
@@ -12,26 +13,26 @@ export class DestroyGroupsService extends BaseService {
   }
 
   async perform(): Promise<void> {
-    const { sharingGroupId, receivingGroupId } = this.informationSharingAgreement
-    if (isNil(sharingGroupId)) {
-      throw new Error("Sharing group ID is required")
+    const { externalGroupId, internalGroupId } = this.informationSharingAgreement
+    if (isNil(externalGroupId)) {
+      throw new Error("External group ID is required")
     }
 
-    if (isNil(receivingGroupId)) {
-      throw new Error("Receiving group ID is required")
+    if (isNil(internalGroupId)) {
+      throw new Error("Internal group ID is required")
     }
 
     return db.transaction(async () => {
-      await UserGroup.destroy({
-        where: {
-          groupId: [sharingGroupId, receivingGroupId],
+      await Group.findEach(
+        {
+          where: {
+            id: [externalGroupId, internalGroupId],
+          },
         },
-      })
-      await Group.destroy({
-        where: {
-          id: [sharingGroupId, receivingGroupId],
-        },
-      })
+        async (group) => {
+          await Groups.DestroyService.perform(group, this.currentUser)
+        }
+      )
     })
   }
 }

@@ -1,9 +1,9 @@
 import { Factory } from "fishery"
 
 import { UserGroup } from "@/models"
-import { nestedSaveAndAssociateIfNew } from "@/factories/helpers"
-import userFactory from "@/factories/user-factory"
-import groupFactory from "@/factories/group-factory"
+import { nestedSaveAndAssociateIfNew } from "@/tests/factories/helpers"
+import userFactory from "@/tests/factories/user-factory"
+import groupFactory from "@/tests/factories/group-factory"
 
 export const userGroupFactory = Factory.define<UserGroup>(({ associations, onCreate }) => {
   onCreate(async (userGroup) => {

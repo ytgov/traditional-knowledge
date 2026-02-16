@@ -51,12 +51,14 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 **For implementation templates, see `agents/templates/`** - copy-paste-ready code for all patterns below.
 
 ### Vue 3 Composable Patterns
+
 - **State Management**: Use `reactive()` + `toRefs()` for composables instead of individual refs
 - **Form References**: Use `ref<InstanceType<VForm> | null>(null)` for newer patterns
 - **Server-Side Tables**: Use `v-data-table-server` with `useRouteQuery` for URL state
 - **Component Naming**: `{Model}{Purpose}{VuetifyComponent}.vue` pattern
 
 ### Function Naming Patterns
+
 - **Effect-Based Naming**: Name functions by their complete effect, not trigger conditions
 - **Pattern**: `[primaryEffect](Optionally[SecondaryEffect])` for conditional side effects
 - **Avoid**: `handle*`, `update*With*`, business logic in names
@@ -64,12 +66,14 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 - **Example**: `emitExpirationConditionAndOptionallyUpdateEndDate`
 
 ### Backend Service Architecture
+
 - **Constructor Injection**: Use constructor pattern instead of static methods
 - **Database Transactions**: All write operations wrapped in transactions
 - **One Service Per File**: Separate CreateService, UpdateService, DestroyService with barrel exports
 - **Error Handling**: Structured logging with context and proper HTTP status codes
 
 ### Model Scopes and Validation
+
 - **Search Scopes**: Implement `addSearchScope()` for searchable fields
 - **Exclusion Logic**: Use `arrayWrap()` utility with `Op.notIn` for current record exclusion
 - **Unique Validation**: Combine excludeById with unique text field components
@@ -112,17 +116,20 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 ### Database Queries
 
 **For interactive database access:**
+
 ```bash
 dev sqlcmd
 ```
 
 **For direct queries without special characters:**
+
 ```bash
 dev sqlcmd-query "SELECT COUNT(*) FROM users"
 dev sqlcmd-query "SELECT id, name FROM external_organizations WHERE id = 12"
 ```
 
 **For queries with special characters (single quotes, Unicode, Indigenous names):**
+
 ```bash
 cat << 'SQL' | ./bin/dev sqlcmd
 SELECT id, name FROM external_organizations WHERE name = 'Tr''ondëk Hwëch''in';
@@ -130,6 +137,7 @@ SQL
 ```
 
 **Key points:**
+
 - Use `dev sqlcmd` for interactive database console access
 - Use `dev sqlcmd-query` for direct queries without special characters
 - Use here documents (`cat << 'SQL' | ./bin/dev sqlcmd`) for queries with special characters
@@ -237,27 +245,29 @@ SQL
   - Use proper TypeScript generics: `.returning<{ id: number }[]>(["id"])`
   - **CRITICAL: Never manually generate migration timestamps** - Always use `dev migrate make <description>` which generates correct local timestamps automatically
   - **Foreign key constraints**: Create column first, then add foreign key separately:
+
     ```ts
     table.integer("field_name").nullable()
 
-    table
-      .foreign("field_name")
-      .references("users.id")
-      // optionally depending on the use case
-      // .onDelete("SET NULL")
+    table.foreign("field_name").references("users.id")
+    // optionally depending on the use case
+    // .onDelete("SET NULL")
     ```
+
   - **Down migration cleanup**: Always drop foreign key before dropping column
 
 ### Testing
 
-**Running tests:**
+**Running tests:** (see `api/tests/README.md` for full details)
 
 - All API tests: `dev test` or `dev test api`
 - All web tests: `dev test web`
-- Specific API file: `dev test api -- tests/services/example.test.ts --run`
-- Specific web file: `dev test web -- tests/components/example.test.ts --run`
+- Specific API file: `dev test -- --run api/tests/services/example.test.ts` (`dev test` defaults to `api`)
+- Specific web file: `dev test web -- --run web/tests/components/example.test.ts` (`web` keyword required)
+- Source file shortcut: `dev test -- --run api/src/services/example.ts` (auto-converts to test path)
 - Watch mode: omit `--run`
 - Pattern matching: `dev test api -- --grep "pattern"`
+- Path prefix (`api/` or `web/`) is auto-stripped by `bin/dev` for any argument position
 - Legacy commands: `dev test_api` and `dev test_web` still work
 
 **Test structure:**
@@ -273,7 +283,9 @@ SQL
 
 - Numbered entities: `user1`, `user2` (not `existingUser`, `newUser`)
 - Descriptive variable names: `knowledgeEntryAttributes` not `attributes`
+- **One `expect` per test** — each test verifies one thing
 - Assert database state via `findAll()` without where clauses (test isolation handles cleanup)
+- Combine count + content: `expect(records).toEqual([expect.objectContaining({...})])` (not separate `toHaveLength` + `toEqual`)
 - Negative spy assertions: `expect(spy).not.toHaveBeenCalled()` (never use `not.toHaveBeenCalledWith`)
 - Controller tests: `mockCurrentUser(user)` and `request().get("/api/path")` from `@/support`
 - **Error testing**: Use `.create()` with complete valid data, then destroy records to test "no longer exists" scenarios instead of using `.build()` with invalid IDs that cause foreign key violations
@@ -368,17 +380,27 @@ See `/api/src/config.ts` for complete details.
 
 ### Pull Request Guidelines
 
+Follow the detailed patterns in `/agents/workflows/pull-request-management.md` for:
+
+- Title conventions and formatting
+- PR body structure and content
+- Testing instructions format
+- Quality checklist requirements
+
 **Pre-submission:**
 
 - All tests pass:
-  - API: `npm test` from `/api`
-  - Web: `npm test` from `/web`
+  - API: `dev test` or `dev test api`
+  - Web: `dev test web`
 - Type checking passes:
-  - API: `npm run check-types` from `/api`
-  - Web: `npm run check-types` from `/web`
+  - API: `dev test api -- --run api/src/**/*.ts` (type checking included)
+  - Web: `dev test web -- --run web/src/**/*.ts` (type checking included)
 - Linting passes:
-  - API: `npm run lint` from `/api`
-  - Web: `npm run lint` from `/web`
+  - API: `dev api npm run lint`
+  - Web: `dev web npm run lint`
+- Code formatting passes:
+  - Check formatting: `git diff --name-only --diff-filter=ACM HEAD~1 | xargs npx prettier --check`
+  - Fix formatting: `git diff --name-only --diff-filter=ACM HEAD~1 | xargs npx prettier --write`
 - No `@ts-ignore`, `@ts-expect-error`, or `any` types
 - Follow naming conventions (no abbreviations)
 - Write tests for new functionality (AAA pattern)
@@ -388,8 +410,8 @@ See `/api/src/config.ts` for complete details.
 
 Standard setup (always include):
 
-1. Run test suite: `npm run test`
-2. Boot app: `npm run dev`
+1. Run test suite: `dev test`
+2. Boot app: `dev up`
 3. Log in at http://localhost:3000
 
 Navigation/verification steps:
@@ -418,6 +440,7 @@ The `agents/` folder contains reusable templates and workflows. **Use these inst
 Copy-paste-ready code for specific file types. Use when you know exactly what you need.
 
 **Backend:**
+
 - `backend/model.md` - Sequelize model with scopes
 - `backend/controller.md` - CRUD controller with error handling
 - `backend/policy.md` - Authorization with PolicyFactory
@@ -425,6 +448,7 @@ Copy-paste-ready code for specific file types. Use when you know exactly what yo
 - `backend/serializers.md` - Index, Show, Reference serializers
 
 **Frontend:**
+
 - `frontend/api-client.md` - Type-safe HTTP client
 - `frontend/composables.md` - Reactive data fetching (list/single)
 - `frontend/components.md` - DataTable, Forms, UniqueTextField
@@ -457,6 +481,7 @@ See `agents/README.md` for full documentation.
 #### Plan File Naming Convention
 
 When creating new plan files in `/agents/plans/`, use the format:
+
 - File name: `Plan, <Ticket-ID> - <Descriptive Title>, <YYYY-MM-DD>.md`
 - Example: `Plan, TK-26 - Add Internal User from the Active Directory, 2026-01-22.md`
 
@@ -466,15 +491,15 @@ When creating new plan files in `/agents/plans/`, use the format:
 
 ### HTTP Status Codes
 
-| Code | Meaning | Used When |
-|------|---------|-----------|
-| 200 | OK | Successful GET, PATCH |
-| 201 | Created | Successful POST |
-| 204 | No Content | Successful DELETE |
-| 400 | Bad Request | General error |
-| 403 | Forbidden | Policy check fails |
-| 404 | Not Found | Record not found |
-| 422 | Unprocessable | Create/Update fails |
+| Code | Meaning       | Used When             |
+| ---- | ------------- | --------------------- |
+| 200  | OK            | Successful GET, PATCH |
+| 201  | Created       | Successful POST       |
+| 204  | No Content    | Successful DELETE     |
+| 400  | Bad Request   | General error         |
+| 403  | Forbidden     | Policy check fails    |
+| 404  | Not Found     | Record not found      |
+| 422  | Unprocessable | Create/Update fails   |
 
 ### Lodash Utilities
 
@@ -508,21 +533,24 @@ When creating new plan files in `/agents/plans/`, use the format:
 ### Implementation Patterns
 
 **Cultural Protocol Model:**
+
 - Protocols are inherited from community settings
 - Multiple protocol types: viewing, sharing, downloading, printing
 - Role-based access within communities (Knowledge Keeper, Elder, Community Member)
 - Time-based restrictions (seasonal, ceremonial periods)
 
 **Indigenous Language Support:**
+
 - UTF-8 support for all Indigenous character sets
 - Language-specific search capabilities
 - Translation interface for community-provided translations
 - Audio/video support for oral traditions
 
 **Access Control Patterns:**
+
 ```typescript
 // Check cultural protocol before access
-if (!await culturalProtocolService.canView(knowledgeEntry, user, community)) {
+if (!(await culturalProtocolService.canView(knowledgeEntry, user, community))) {
   return response.status(403).json({ message: "Access restricted by cultural protocol" })
 }
 
@@ -532,11 +560,12 @@ await auditLogService.create({
   userId: user.id,
   communityId: community.id,
   action: "view",
-  timestamp: new Date()
+  timestamp: new Date(),
 })
 ```
 
 **Data Handling Considerations:**
+
 - Sensitive knowledge marked with protocol levels
 - Export restrictions based on cultural protocols
 - Watermarking for downloaded content

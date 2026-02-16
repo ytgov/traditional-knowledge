@@ -14,21 +14,21 @@ const IDENTIFIER_MAX_LENGTH = 80
 export type InformationSharingAgreementAsAcknowledgement = {
   identifier: string
   purpose: string
-  "sharing_group_contact.external_organization.name": string
-  "sharing_group_contact.display_name": string
-  "sharing_group_contact.title": string
-  "sharing_group_contact.email": string
-  "sharing_group_contact.phone": string
-  "receiving_group_contact.display_name": string
-  "receiving_group_contact.title": string
-  "receiving_group_contact.department": string
-  "receiving_group_contact.branch": string
-  "receiving_group_contact.phone": string
-  "receiving_group_contact.email": string
-  "receiving_group_secondary_contact.name_and_title": string
-  "receiving_group_secondary_contact.department_branch_unit_hierarchy": string
-  "receiving_group_secondary_contact.email": string
-  "receiving_group_secondary_contact.phone": string
+  "external_group_contact.external_organization.name": string
+  "external_group_contact.display_name": string
+  "external_group_contact.title": string
+  "external_group_contact.email": string
+  "external_group_contact.phone": string
+  "internal_group_contact.display_name": string
+  "internal_group_contact.title": string
+  "internal_group_contact.department": string
+  "internal_group_contact.branch": string
+  "internal_group_contact.phone": string
+  "internal_group_contact.email": string
+  "internal_group_secondary_contact.name_and_title": string
+  "internal_group_secondary_contact.department_branch_unit_hierarchy": string
+  "internal_group_secondary_contact.email": string
+  "internal_group_secondary_contact.phone": string
   "expiration_condition.is_completion_of_purpose": boolean
   "expiration_condition.is_expiration_date": boolean
   "expiration_condition.is_undetermined_with_default_expiration": boolean
@@ -46,36 +46,36 @@ export type InformationSharingAgreementAsAcknowledgement = {
 
 export class CreateSerializer extends BaseSerializer<InformationSharingAgreement> {
   perform(): InformationSharingAgreementAsAcknowledgement {
-    const { sharingGroupContact, receivingGroupContact, receivingGroupSecondaryContact } =
+    const { externalGroupContact, internalGroupContact, internalGroupSecondaryContact } =
       this.record
-    if (isUndefined(sharingGroupContact)) {
-      throw new Error("Expected sharingGroupContact association to be preloaded")
+    if (isUndefined(externalGroupContact)) {
+      throw new Error("Expected externalGroupContact association to be preloaded")
     }
 
-    const { externalOrganization } = sharingGroupContact
+    const { externalOrganization } = externalGroupContact
     if (isUndefined(externalOrganization)) {
       throw new Error("Expected externalOrganization association to be preloaded")
     }
 
-    if (isUndefined(receivingGroupContact)) {
-      throw new Error("Expected receivingGroupContact association to be preloaded")
+    if (isUndefined(internalGroupContact)) {
+      throw new Error("Expected internalGroupContact association to be preloaded")
     }
 
-    if (isUndefined(receivingGroupSecondaryContact)) {
-      throw new Error("Expected receivingGroupSecondaryContact association to be preloaded")
+    if (isUndefined(internalGroupSecondaryContact)) {
+      throw new Error("Expected internalGroupSecondaryContact association to be preloaded")
     }
 
     const { id, title, purpose, expirationCondition, endDate } = this.record
     const identifier = this.buildIdentifier(id, title)
 
     const secondaryContactNameAndTitle = this.buildNameAndTitle(
-      receivingGroupSecondaryContact.displayName,
-      receivingGroupSecondaryContact.title
+      internalGroupSecondaryContact.displayName,
+      internalGroupSecondaryContact.title
     )
     const secondaryContactDepartmentBranchUnitHierarchy = this.buildDepartmentBranchUnitHierarchy(
-      receivingGroupSecondaryContact.department,
-      receivingGroupSecondaryContact.branch,
-      receivingGroupSecondaryContact.unit
+      internalGroupSecondaryContact.department,
+      internalGroupSecondaryContact.branch,
+      internalGroupSecondaryContact.unit
     )
 
     const isCompletionOfPurpose = this.isCompletionOfPurpose(expirationCondition)
@@ -104,22 +104,22 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
     return {
       identifier,
       purpose: purposeOrFallback,
-      "sharing_group_contact.external_organization.name": externalOrganization.name,
-      "sharing_group_contact.display_name": sharingGroupContact.displayName,
-      "sharing_group_contact.title": sharingGroupContact.title ?? "",
-      "sharing_group_contact.email": sharingGroupContact.email,
-      "sharing_group_contact.phone": sharingGroupContact.phoneNumber ?? "",
-      "receiving_group_contact.display_name": receivingGroupContact.displayName,
-      "receiving_group_contact.title": receivingGroupContact.title ?? "",
-      "receiving_group_contact.department": receivingGroupContact.department ?? "",
-      "receiving_group_contact.branch": receivingGroupContact.branch ?? "",
-      "receiving_group_contact.phone": receivingGroupContact.phoneNumber ?? "",
-      "receiving_group_contact.email": receivingGroupContact.email,
-      "receiving_group_secondary_contact.name_and_title": secondaryContactNameAndTitle,
-      "receiving_group_secondary_contact.department_branch_unit_hierarchy":
+      "external_group_contact.external_organization.name": externalOrganization.name,
+      "external_group_contact.display_name": externalGroupContact.displayName,
+      "external_group_contact.title": externalGroupContact.title ?? "",
+      "external_group_contact.email": externalGroupContact.email,
+      "external_group_contact.phone": externalGroupContact.phoneNumber ?? "",
+      "internal_group_contact.display_name": internalGroupContact.displayName,
+      "internal_group_contact.title": internalGroupContact.title ?? "",
+      "internal_group_contact.department": internalGroupContact.department ?? "",
+      "internal_group_contact.branch": internalGroupContact.branch ?? "",
+      "internal_group_contact.phone": internalGroupContact.phoneNumber ?? "",
+      "internal_group_contact.email": internalGroupContact.email,
+      "internal_group_secondary_contact.name_and_title": secondaryContactNameAndTitle,
+      "internal_group_secondary_contact.department_branch_unit_hierarchy":
         secondaryContactDepartmentBranchUnitHierarchy,
-      "receiving_group_secondary_contact.email": receivingGroupSecondaryContact?.email ?? "",
-      "receiving_group_secondary_contact.phone": receivingGroupSecondaryContact?.phoneNumber ?? "",
+      "internal_group_secondary_contact.email": internalGroupSecondaryContact?.email ?? "",
+      "internal_group_secondary_contact.phone": internalGroupSecondaryContact?.phoneNumber ?? "",
       "expiration_condition.is_completion_of_purpose": isCompletionOfPurpose,
       "expiration_condition.is_expiration_date": isExpirationDate,
       "expiration_condition.is_undetermined_with_default_expiration":

@@ -75,6 +75,7 @@ const props = defineProps<{
 
 const userFilters = computed(() => ({
   notInGroup: props.groupId,
+  withSameTypeAsGroup: props.groupId,
 }))
 
 const userGroupAttributes = ref<Partial<UserGroup>>({})

@@ -1,13 +1,9 @@
-import { Attributes } from "@sequelize/core"
+import { type Attributes } from "@sequelize/core"
 import { isNil } from "lodash"
 
-import {
-  User,
-  InformationSharingAgreementAccessGrant,
-  InformationSharingAgreement,
-  UserGroup,
-} from "@/models"
+import db, { User, InformationSharingAgreementAccessGrant, UserGroup } from "@/models"
 import BaseService from "@/services/base-service"
+import { UserGroups } from "@/services"
 
 export type InformationSharingAgreementAccessGrantCreationAttributes = Partial<
   Attributes<InformationSharingAgreementAccessGrant>
@@ -17,13 +13,17 @@ export type InformationSharingAgreementAccessGrantCreationAttributes = Partial<
 export class CreateService extends BaseService {
   constructor(
     private attributes: InformationSharingAgreementAccessGrantCreationAttributes,
-    private currentUser: User
+    private currentUser: User,
+    private options: {
+      skipUserGroupCreation?: boolean
+    } = {}
   ) {
     super()
   }
 
   async perform(): Promise<InformationSharingAgreementAccessGrant> {
-    const { informationSharingAgreementId, groupId, ...optionalAttributes } = this.attributes
+    const { informationSharingAgreementId, groupId, userId, ...optionalAttributes } =
+      this.attributes
 
     if (isNil(informationSharingAgreementId)) {
       throw new Error("Information sharing agreement id is required")
@@ -33,80 +33,40 @@ export class CreateService extends BaseService {
       throw new Error("Group id is required")
     }
 
-    // TODO: Consider if these should be model level validations?
-    const informationSharingAgreement = await this.loadInformationSharingAgreement(
-      informationSharingAgreementId
-    )
-    const { sharingGroupId, receivingGroupId } = informationSharingAgreement
+    if (isNil(userId)) {
+      throw new Error("User id is required")
+    }
 
-    if (!isNil(sharingGroupId) && !isNil(receivingGroupId)) {
-      await this.assertGroupIdIsValidInformationSharingAgreementGroup(
-        groupId,
-        sharingGroupId,
-        receivingGroupId
-      )
-
-      const { userId } = this.attributes
-      if (!isNil(userId)) {
-        await this.assertUserIdIsValidInformationSharingAgreementGroupMember(
+    return db.transaction(async () => {
+      const informationSharingAgreementAccessGrant =
+        await InformationSharingAgreementAccessGrant.create({
+          ...optionalAttributes,
+          creatorId: this.currentUser.id,
+          informationSharingAgreementId,
+          groupId,
           userId,
-          sharingGroupId,
-          receivingGroupId
-        )
+        })
+
+      if (!this.options.skipUserGroupCreation) {
+        await this.ensureUserGroupMembership(userId, groupId)
       }
-    }
 
-    const informationSharingAgreementAccessGrant =
-      await InformationSharingAgreementAccessGrant.create({
-        ...optionalAttributes,
-        creatorId: this.currentUser.id,
-        informationSharingAgreementId,
-        groupId,
-      })
-
-    return informationSharingAgreementAccessGrant
+      return informationSharingAgreementAccessGrant
+    })
   }
 
-  private async assertGroupIdIsValidInformationSharingAgreementGroup(
-    groupId: number,
-    sharingGroupId: number,
-    receivingGroupId: number
-  ): Promise<void> {
-    if (groupId !== sharingGroupId && groupId !== receivingGroupId) {
-      throw new Error(
-        "Group id must match either the information sharing agreement's sharing group id or receiving group id"
-      )
-    }
-  }
-
-  private async assertUserIdIsValidInformationSharingAgreementGroupMember(
-    userId: number,
-    sharingGroupId: number,
-    receivingGroupId: number
-  ): Promise<void> {
-    const userGroupCount = await UserGroup.count({
+  private async ensureUserGroupMembership(userId: number, groupId: number): Promise<void> {
+    const existingUserGroup = await UserGroup.findOne({
       where: {
         userId,
-        groupId: [sharingGroupId, receivingGroupId],
+        groupId,
       },
     })
-    if (userGroupCount === 0) {
-      throw new Error(
-        "User must be a member of either the information sharing agreement's sharing group or receiving group"
-      )
-    }
-  }
+    if (existingUserGroup) return
 
-  private async loadInformationSharingAgreement(
-    informationSharingAgreementId: number
-  ): Promise<InformationSharingAgreement> {
-    const informationSharingAgreement = await InformationSharingAgreement.findByPk(
-      informationSharingAgreementId,
-      {
-        rejectOnEmpty: true,
-      }
-    )
-    return informationSharingAgreement
+    await UserGroups.CreateService.perform({ userId, groupId }, this.currentUser, {
+      skipAccessGrantCreation: true,
+    })
   }
 }
 

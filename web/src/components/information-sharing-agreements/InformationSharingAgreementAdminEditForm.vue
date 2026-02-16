@@ -13,14 +13,14 @@
         <InformationSharingAgreementBasicInformationEditCard
           v-model:title="informationSharingAgreement.title"
           v-model:purpose="informationSharingAgreement.purpose"
-          v-model:sharing-group-contact-id="informationSharingAgreement.sharingGroupContactId"
-          v-model:sharing-group-contact-title="informationSharingAgreement.sharingGroupContactTitle"
-          v-model:receiving-group-contact-id="informationSharingAgreement.receivingGroupContactId"
-          v-model:receiving-group-contact-title="
-            informationSharingAgreement.receivingGroupContactTitle
+          v-model:external-group-contact-id="informationSharingAgreement.externalGroupContactId"
+          v-model:external-group-contact-title="informationSharingAgreement.externalGroupContactTitle"
+          v-model:internal-group-contact-id="informationSharingAgreement.internalGroupContactId"
+          v-model:internal-group-contact-title="
+            informationSharingAgreement.internalGroupContactTitle
           "
-          v-model:receiving-group-secondary-contact-id="
-            informationSharingAgreement.receivingGroupSecondaryContactId
+          v-model:internal-group-secondary-contact-id="
+            informationSharingAgreement.internalGroupSecondaryContactId
           "
           class="border"
         />

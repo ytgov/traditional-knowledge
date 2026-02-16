@@ -6,7 +6,12 @@
   <v-alert
     v-else-if="isNil(groupId)"
     type="error"
-    title="You are not a contact (admin) for this information sharing agreement"
+    title="We could not determine your group ID for this information sharing agreement."
+  />
+  <v-alert
+    v-else-if="!isGroupAdminFor(groupId)"
+    type="error"
+    title="You are not a group admin for this information sharing agreement."
   />
   <InformationSharingAgreementAccessGrantCreateForm
     v-else
@@ -33,26 +38,21 @@ const informationSharingAgreementIdAsNumber = computed(() =>
   parseInt(props.informationSharingAgreementId)
 )
 
-const { currentUser } = useCurrentUser<true>()
+const { currentUser, isGroupAdminFor } = useCurrentUser<true>()
 
 const { informationSharingAgreement } = useInformationSharingAgreement(
   informationSharingAgreementIdAsNumber
 )
 
-// TODO: come up with a better way to handle this?
-// Preferably by an association on the user or by UI design that ensures users are attempting to create
-// permissions for the correct group
 const groupId = computed(() => {
   if (isNil(informationSharingAgreement.value)) return null
 
-  const { sharingGroupContactId, sharingGroupId, receivingGroupContactId, receivingGroupId } =
-    informationSharingAgreement.value
-  if (currentUser.value.id === sharingGroupContactId) {
-    return sharingGroupId
-  } else if (currentUser.value.id === receivingGroupContactId) {
-    return receivingGroupId
+  const { externalGroupId, internalGroupId } = informationSharingAgreement.value
+
+  if (currentUser.value.isExternal) {
+    return externalGroupId
   } else {
-    return null
+    return internalGroupId
   }
 })
 

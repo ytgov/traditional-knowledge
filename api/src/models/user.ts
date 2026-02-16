@@ -181,6 +181,14 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
     return this.adminGroups.some((group) => group.id === groupId)
   }
 
+  isMemberOfGroup(groupId: number | null): boolean {
+    if (isUndefined(this.groups)) {
+      throw new Error("Expected groups association to be pre-loaded.")
+    }
+
+    return this.groups.some((group) => group.id === groupId)
+  }
+
   isAdminForInformationSharingAgreement(informationSharingAgreementId: number): boolean {
     if (isUndefined(this.adminInformationSharingAgreementAccessGrants)) {
       throw new Error(
@@ -233,22 +241,22 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
   declare createdInformationSharingAgreements?: NonAttribute<InformationSharingAgreement[]>
 
   @HasMany(() => InformationSharingAgreement, {
-    foreignKey: "sharingGroupContactId",
-    inverse: "sharingGroupContact",
+    foreignKey: "externalGroupContactId",
+    inverse: "externalGroupContact",
   })
-  declare sharedInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
+  declare externalInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
 
   @HasMany(() => InformationSharingAgreement, {
-    foreignKey: "receivingGroupContactId",
-    inverse: "receivingGroupContact",
+    foreignKey: "internalGroupContactId",
+    inverse: "internalGroupContact",
   })
-  declare receivedInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
+  declare internalInformationAgreementAsContact?: NonAttribute<InformationSharingAgreement[]>
 
   @HasMany(() => InformationSharingAgreement, {
-    foreignKey: "receivingGroupSecondaryContactId",
-    inverse: "receivingGroupSecondaryContact",
+    foreignKey: "internalGroupSecondaryContactId",
+    inverse: "internalGroupSecondaryContact",
   })
-  declare receivedInformationAgreementAsSecondaryContact?: NonAttribute<
+  declare internalInformationAgreementAsSecondaryContact?: NonAttribute<
     InformationSharingAgreement[]
   >
 
@@ -411,6 +419,22 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
         replacements: {
           groupId,
         },
+      }
+    })
+
+    this.addScope("withSameTypeAsGroup", (groupId: number) => {
+      return {
+        where: sql`
+          ${sql.attribute("isExternal")} = (
+            SELECT
+              is_external
+            FROM
+              [groups]
+            WHERE
+              deleted_at IS NULL
+              AND id = ${groupId}
+          )
+        `,
       }
     })
 

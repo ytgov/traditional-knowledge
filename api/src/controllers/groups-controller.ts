@@ -3,7 +3,7 @@ import { isNil } from "lodash"
 import logger from "@/utils/logger"
 import { Group } from "@/models"
 import { GroupPolicy } from "@/policies"
-import { CreateService } from "@/services/groups"
+import { CreateService, DestroyService } from "@/services/groups"
 import BaseController from "@/controllers/base-controller"
 
 export class GroupsController extends BaseController<Group> {
@@ -125,7 +125,7 @@ export class GroupsController extends BaseController<Group> {
         })
       }
 
-      await group.destroy()
+      await DestroyService.perform(group, this.currentUser)
       return this.response.status(204).send()
     } catch (error) {
       logger.error(`Error deleting group: ${error}`, { error })

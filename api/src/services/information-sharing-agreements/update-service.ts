@@ -1,8 +1,9 @@
 import { Attributes } from "@sequelize/core"
+import { isNil } from "lodash"
 
-import db, { InformationSharingAgreement, User } from "@/models"
+import db, { InformationSharingAgreement, User, UserGroup } from "@/models"
 import BaseService from "@/services/base-service"
-import { EnsureAdminAccessService } from "@/services/information-sharing-agreements/admin-access-grants-service"
+import { UserGroups } from "@/services"
 
 export type InformationSharingAgreementUpdateAttributes = Partial<
   Attributes<InformationSharingAgreement>
@@ -18,22 +19,41 @@ export class UpdateService extends BaseService {
   }
 
   async perform(): Promise<InformationSharingAgreement> {
+    const {
+      externalGroupContactId: oldExternalGroupContactId,
+      internalGroupContactId: oldInternalGroupContactId,
+      internalGroupSecondaryContactId: oldInternalGroupSecondaryContactId,
+    } = this.informationSharingAgreement
+
     return db.transaction(async () => {
       await this.informationSharingAgreement.update(this.attributes)
 
-      if (
-        this.informationSharingAgreement.sharingGroupId &&
-        this.informationSharingAgreement.sharingGroupContactId &&
-        this.informationSharingAgreement.receivingGroupId &&
-        this.informationSharingAgreement.receivingGroupContactId
-      ) {
-        await this.ensureAdminAccessGrants(
-          this.informationSharingAgreement.id,
-          this.informationSharingAgreement.sharingGroupId,
-          this.informationSharingAgreement.sharingGroupContactId,
-          this.informationSharingAgreement.receivingGroupId,
-          this.informationSharingAgreement.receivingGroupContactId,
-          this.currentUser
+      const {
+        externalGroupId,
+        internalGroupId,
+        externalGroupContactId: newExternalGroupContactId,
+        internalGroupContactId: newInternalGroupContactId,
+        internalGroupSecondaryContactId: newInternalGroupSecondaryContactId,
+      } = this.informationSharingAgreement
+
+      if (!isNil(externalGroupId)) {
+        await this.syncGroupAdmin(
+          externalGroupId,
+          oldExternalGroupContactId,
+          newExternalGroupContactId
+        )
+      }
+
+      if (!isNil(internalGroupId)) {
+        await this.syncGroupAdmin(
+          internalGroupId,
+          oldInternalGroupContactId,
+          newInternalGroupContactId
+        )
+        await this.syncGroupAdmin(
+          internalGroupId,
+          oldInternalGroupSecondaryContactId,
+          newInternalGroupSecondaryContactId
         )
       }
 
@@ -43,21 +63,45 @@ export class UpdateService extends BaseService {
     })
   }
 
-  private async ensureAdminAccessGrants(
-    informationSharingAgreementId: number,
-    sharingGroupId: number,
-    sharingGroupContactId: number,
-    receivingGroupId: number,
-    receivingGroupContactId: number,
-    currentUser: User
-  ) {
-    await EnsureAdminAccessService.perform(
-      informationSharingAgreementId,
-      sharingGroupId,
-      sharingGroupContactId,
-      receivingGroupId,
-      receivingGroupContactId,
-      currentUser
+  private async syncGroupAdmin(
+    groupId: number,
+    oldContactId: number | null,
+    newContactId: number | null
+  ): Promise<void> {
+    if (oldContactId === newContactId) return
+
+    if (!isNil(oldContactId)) {
+      await this.removeGroupAdmin(oldContactId, groupId)
+    }
+
+    if (!isNil(newContactId)) {
+      await this.addGroupAdmin(newContactId, groupId)
+    }
+  }
+
+  private async removeGroupAdmin(userId: number, groupId: number): Promise<void> {
+    await UserGroup.findEach(
+      {
+        where: {
+          userId,
+          groupId,
+        },
+        include: ["user", "group"],
+      },
+      async (userGroup) => {
+        await UserGroups.DestroyService.perform(userGroup, this.currentUser)
+      }
+    )
+  }
+
+  private async addGroupAdmin(userId: number, groupId: number): Promise<void> {
+    await UserGroups.CreateService.perform(
+      {
+        userId,
+        groupId,
+        isAdmin: true,
+      },
+      this.currentUser
     )
   }
 }

@@ -19,7 +19,7 @@ export type InformationSharingAgreementAccessGrant = {
   id: number
   informationSharingAgreementId: number
   groupId: number
-  userId: number | null
+  userId: number
   accessLevel: InformationSharingAgreementAccessGrantAccessLevels
   creatorId: number
   createdAt: string
@@ -28,7 +28,7 @@ export type InformationSharingAgreementAccessGrant = {
 
 export type InformationSharingAgreementAccessGrantIndexView =
   InformationSharingAgreementAccessGrant & {
-    user: UserAsReference | null
+    user: UserAsReference
     group: GroupAsReference
   }
 
@@ -81,18 +81,6 @@ export const informationSharingAgreementAccessGrantsApi = {
     informationSharingAgreementAccessGrant: InformationSharingAgreementAccessGrant
   }> {
     const { data } = await http.post("/api/information-sharing-agreement-access-grants", attributes)
-    return data
-  },
-  async update(
-    informationSharingAgreementAccessGrantId: number,
-    attributes: Partial<InformationSharingAgreementAccessGrant>
-  ): Promise<{
-    informationSharingAgreementAccessGrant: InformationSharingAgreementAccessGrant
-  }> {
-    const { data } = await http.patch(
-      `/api/information-sharing-agreement-access-grants/${informationSharingAgreementAccessGrantId}`,
-      attributes
-    )
     return data
   },
   async delete(informationSharingAgreementAccessGrantId: number): Promise<void> {

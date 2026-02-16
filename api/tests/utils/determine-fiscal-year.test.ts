@@ -1,4 +1,4 @@
-import { determineFiscalYear } from "@/utils/determine-fiscal-year"
+import determineFiscalYear from "@/utils/determine-fiscal-year"
 
 describe("api/src/utils/determine-fiscal-year.ts", () => {
   describe("determineFiscalYear", () => {

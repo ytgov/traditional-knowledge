@@ -23,16 +23,16 @@ export class DraftStatePolicy extends GenericStatePolicy {
 
   permittedAttributes(): Path[] {
     return [
-      "sharingGroupContactId",
-      "receivingGroupContactId",
-      "receivingGroupSecondaryContactId",
+      "externalGroupContactId",
+      "internalGroupContactId",
+      "internalGroupSecondaryContactId",
       "identifier",
-      "sharingGroupInfo",
-      "receivingGroupInfo",
-      "sharingGroupContactName",
-      "receivingGroupContactName",
-      "sharingGroupContactTitle",
-      "receivingGroupContactTitle",
+      "externalGroupInfo",
+      "internalGroupInfo",
+      "externalGroupContactName",
+      "internalGroupContactName",
+      "externalGroupContactTitle",
+      "internalGroupContactTitle",
       "title",
       "description",
       "purpose",
@@ -61,7 +61,7 @@ export class DraftStatePolicy extends GenericStatePolicy {
   }
 
   permittedAttributesForCreate(): Path[] {
-    return ["sharingGroupId", "receivingGroupId", ...this.permittedAttributes()]
+    return [...this.permittedAttributes()]
   }
 }
 

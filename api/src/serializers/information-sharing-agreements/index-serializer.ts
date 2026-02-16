@@ -9,10 +9,10 @@ export type InformationSharingAgreementAsIndex = Pick<
   InformationSharingAgreement,
   | "id"
   | "creatorId"
-  | "sharingGroupId"
-  | "sharingGroupContactId"
-  | "receivingGroupId"
-  | "receivingGroupContactId"
+  | "externalGroupId"
+  | "externalGroupContactId"
+  | "internalGroupId"
+  | "internalGroupContactId"
   | "status"
   | "title"
   | "createdAt"
@@ -31,10 +31,10 @@ export class IndexSerializer extends BaseSerializer<InformationSharingAgreement>
       ...pick(this.record, [
         "id",
         "creatorId",
-        "sharingGroupId",
-        "sharingGroupContactId",
-        "receivingGroupId",
-        "receivingGroupContactId",
+        "externalGroupId",
+        "externalGroupContactId",
+        "internalGroupId",
+        "internalGroupContactId",
         "status",
         "title",
         "createdAt",
