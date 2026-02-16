@@ -146,6 +146,7 @@ export type UserFiltersOptions = FiltersOptions<{
   inGroup: number
   notInGroup: number
   withoutAccessGrantFor: number
+  withSameTypeAsGroup: number
   // TODO: implement isActive scope in back-end
 }>
 

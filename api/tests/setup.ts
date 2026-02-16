@@ -16,8 +16,8 @@
  * See: https://vitest.dev/api/vi#vi-mock
  */
 
-import cleanDatabase from "@/support/clean-database"
-import * as matchers from "@/support/matchers"
+import cleanDatabase from "@/tests/support/clean-database"
+import * as matchers from "@/tests/support/matchers"
 
 // Add New Matchers
 expect.extend(matchers)

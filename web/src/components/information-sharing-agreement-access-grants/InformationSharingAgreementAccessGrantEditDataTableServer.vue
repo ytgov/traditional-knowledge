@@ -9,18 +9,14 @@
     :loading="isLoading"
     @click:row="
       (_event: unknown, { item }: InformationSharingAgreementAccessGrantTableRow) =>
-        goToGroupOrUserPage(item.groupId, item.userId)
+        goToUserPage(item.userId)
     "
   >
     <template #item.group.name="{ item }">
       <GroupChip :group-id="item.groupId" />
     </template>
     <template #item.userId="{ item }">
-      <UserChip
-        v-if="item.userId"
-        :user-id="item.userId"
-      />
-      <span v-else>All members of group</span>
+      <UserChip :user-id="item.userId" />
     </template>
     <template #item.accessLevel="{ item }">
       {{ item.accessLevel }}
@@ -53,7 +49,6 @@
 
 <script lang="ts" setup>
 import { computed, ref } from "vue"
-import { isNil } from "lodash"
 import { useRouteQuery } from "@vueuse/router"
 import { useRouter } from "vue-router"
 
@@ -144,17 +139,8 @@ const { isAdminForInformationSharingAgreement } = useCurrentUser<true>()
 
 const router = useRouter()
 
-function goToGroupOrUserPage(groupId: number, userId: number | null) {
-  if (isNil(userId)) {
-    return router.push({
-      name: "administration/groups/GroupPage",
-      params: {
-        groupId,
-      },
-    })
-  }
-
-  // TODO: standardize this route to redirect to user read page
+function goToUserPage(userId: number) {
+  // TODO: standardize this route to redirect to user read page (once a read page exists)
   return router.push({
     name: "users/UserEditPage",
     params: {
@@ -169,20 +155,12 @@ const isDeleting = ref(false)
 async function confirmThenDelete(
   informationSharingAgreementAccessGrant: InformationSharingAgreementAccessGrantIndexView
 ) {
-  const { user, group } = informationSharingAgreementAccessGrant
+  const { user } = informationSharingAgreementAccessGrant
+  const { displayName, email } = user
 
-  let result = false
-  if (!isNil(user)) {
-    const { displayName, email } = user
-    result = confirm(
-      `Are you sure you want to remove ${displayName}: ${email} from this information sharing agreement?`
-    )
-  } else {
-    const { name } = group
-    result = confirm(
-      `Are you sure you want to remove access for all members of ${name} from this information sharing agreement?`
-    )
-  }
+  const result = confirm(
+    `Are you sure you want to remove ${displayName}: ${email} from this information sharing agreement?`
+  )
   if (result === false) return
 
   isDeleting.value = true

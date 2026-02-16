@@ -1,4 +1,4 @@
-import { deepPick } from "@/utils/deep-pick"
+import deepPick from "@/utils/deep-pick"
 
 describe("api/src/utils/deep-pick.ts", () => {
   describe(".deepPick", () => {

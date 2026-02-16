@@ -1,8 +1,9 @@
 import { auth0Integration, yukonGovernmentIntegration } from "@/integrations"
 import { User } from "@/models"
-import { EnsureFromAuth0TokenService } from "@/services/users"
 
-import { userFactory } from "@/factories"
+import { userFactory } from "@/tests/factories"
+
+import EnsureFromAuth0TokenService from "@/services/users/ensure-from-auth0-token-service"
 
 vi.mock("@/integrations", () => ({
   auth0Integration: {

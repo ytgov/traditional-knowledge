@@ -1,3 +1,4 @@
+export { externalOrganizationFactory } from "./external-organization-factory"
 export { groupFactory } from "./group-factory"
 export { informationSharingAgreementAccessGrantFactory } from "./information-sharing-agreement-access-grant-factory"
 export { informationSharingAgreementFactory } from "./information-sharing-agreement-factory"

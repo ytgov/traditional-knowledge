@@ -3,7 +3,10 @@ import { isNil } from "lodash"
 import logger from "@/utils/logger"
 import { InformationSharingAgreementAccessGrant } from "@/models"
 import { InformationSharingAgreementAccessGrantPolicy } from "@/policies"
-import { CreateService } from "@/services/information-sharing-agreement-access-grants"
+import {
+  CreateService,
+  DestroyService,
+} from "@/services/information-sharing-agreement-access-grants"
 import {
   IndexSerializer,
   ShowSerializer,
@@ -110,38 +113,9 @@ export class InformationSharingAgreementAccessGrantsController extends BaseContr
   }
 
   async update() {
-    try {
-      const informationSharingAgreementAccessGrant =
-        await this.loadInformationSharingAgreementAccessGrant()
-      if (isNil(informationSharingAgreementAccessGrant)) {
-        return this.response.status(404).json({
-          message: "Information sharing agreement access grant not found",
-        })
-      }
-
-      const policy = this.buildPolicy(informationSharingAgreementAccessGrant)
-      if (!policy.update()) {
-        return this.response.status(403).json({
-          message:
-            "You are not authorized to update this information sharing agreement access grant",
-        })
-      }
-
-      const permittedAttributes = policy.permitAttributes(this.request.body)
-      await informationSharingAgreementAccessGrant.update(permittedAttributes)
-      const serializedInformationSharingAgreementAccessGrant = ShowSerializer.perform(
-        informationSharingAgreementAccessGrant
-      )
-      return this.response.json({
-        informationSharingAgreementAccessGrant: serializedInformationSharingAgreementAccessGrant,
-        policy,
-      })
-    } catch (error) {
-      logger.error(`Error updating information sharing agreement access grant: ${error}`, { error })
-      return this.response.status(422).json({
-        message: `Error updating information sharing agreement access grant: ${error}`,
-      })
-    }
+    throw new Error(
+      "Only create and destroy are supported for information sharing agreement access grants."
+    )
   }
 
   async destroy() {
@@ -162,7 +136,7 @@ export class InformationSharingAgreementAccessGrantsController extends BaseContr
         })
       }
 
-      await informationSharingAgreementAccessGrant.destroy()
+      await DestroyService.perform(informationSharingAgreementAccessGrant, this.currentUser)
       return this.response.status(204).send()
     } catch (error) {
       logger.error(`Error deleting information sharing agreement access grant: ${error}`, { error })

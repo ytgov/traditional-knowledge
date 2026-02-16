@@ -4,8 +4,8 @@ import { Factory } from "fishery"
 import acronymize from "@/utils/acronymize"
 
 import { Group } from "@/models"
-import { nestedSaveAndAssociateIfNew } from "@/factories/helpers"
-import userFactory from "@/factories/user-factory"
+import { nestedSaveAndAssociateIfNew } from "@/tests/factories/helpers"
+import userFactory from "@/tests/factories/user-factory"
 
 export const groupFactory = Factory.define<Group>(({ sequence, associations, onCreate }) => {
   onCreate(async (group) => {

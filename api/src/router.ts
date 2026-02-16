@@ -173,7 +173,6 @@ router
     "/api/information-sharing-agreement-access-grants/:informationSharingAgreementAccessGrantId"
   )
   .get(InformationSharingAgreementAccessGrantsController.show)
-  .patch(InformationSharingAgreementAccessGrantsController.update)
   .delete(InformationSharingAgreementAccessGrantsController.destroy)
 
 router

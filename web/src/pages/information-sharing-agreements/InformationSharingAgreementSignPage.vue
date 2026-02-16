@@ -103,7 +103,6 @@ async function signAndRedirect() {
   const { valid } = await form.value.validate()
   if (!valid) return
 
-  console.log(`signedAcknowledgement.value:`, signedAcknowledgement.value)
   if (isNil(signedAcknowledgement.value)) {
     throw new Error("Signed acknowledgement is required")
   }

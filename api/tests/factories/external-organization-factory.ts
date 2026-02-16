@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker"
 import { Factory } from "fishery"
 
 import { ExternalOrganization } from "@/models"
-import { nestedSaveAndAssociateIfNew } from "@/factories/helpers"
+import { nestedSaveAndAssociateIfNew } from "@/tests/factories/helpers"
 
 export const externalOrganizationFactory = Factory.define<ExternalOrganization>(
   ({ sequence, onCreate }) => {

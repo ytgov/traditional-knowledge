@@ -20,22 +20,12 @@
           :key="item.id"
         >
           <UserListItem
-            v-if="!isNil(item.userId)"
             :user-id="item.userId"
             class="py-2"
             :class="{
               'border-b border-opacity-50': index < items.length - 1,
             }"
             @click.stop="goToUserPage(item.userId)"
-          />
-          <GroupListItem
-            v-else
-            :group-id="item.groupId"
-            class="py-2"
-            :class="{
-              'border-b border-opacity-50': index < items.length - 1,
-            }"
-            @click.stop="goToGroupPage(item.groupId)"
           />
         </template>
       </v-list>
@@ -56,7 +46,6 @@
 
 <script lang="ts" setup>
 import { computed } from "vue"
-import { isNil } from "lodash"
 import { useRouteQuery } from "@vueuse/router"
 import { useRouter } from "vue-router"
 
@@ -66,7 +55,6 @@ import useInformationSharingAgreementAccessGrants, {
 } from "@/use/use-information-sharing-agreement-access-grants"
 
 import UserListItem from "@/components/users/UserListItem.vue"
-import GroupListItem from "@/components/groups/GroupListItem.vue"
 
 const props = withDefaults(
   defineProps<{
@@ -102,15 +90,6 @@ function goToUserPage(userId: number) {
     name: "users/UserEditPage",
     params: {
       userId,
-    },
-  })
-}
-
-function goToGroupPage(groupId: number) {
-  return router.push({
-    name: "administration/groups/GroupPage",
-    params: {
-      groupId,
     },
   })
 }

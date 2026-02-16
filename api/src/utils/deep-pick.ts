@@ -100,3 +100,5 @@ function isSimpleType(value: unknown) {
     isString(value) || isNumber(value) || isBoolean(value) || isNull(value) || isUndefined(value)
   )
 }
+
+export default deepPick

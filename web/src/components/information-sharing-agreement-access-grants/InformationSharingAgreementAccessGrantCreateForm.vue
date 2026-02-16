@@ -6,10 +6,8 @@
     <v-card>
       <template #title>Access Details</template>
       <template #text>
-        <v-row> </v-row>
         <v-row>
           <v-col
-            v-if="!shareWithEntireGroup"
             cols="12"
             md="6"
           >
@@ -21,33 +19,6 @@
               required
             />
           </v-col>
-          <v-col
-            v-else
-            cols="12"
-            md="6"
-            class="d-flex align-center"
-          >
-            <GroupSearchableAutocomplete
-              v-model="informationSharingAgreementAccessGrantAttributes.groupId"
-              label="Group *"
-              :rules="[required]"
-              :clearable="false"
-              required
-              readonly
-              append-inner-icon="mdi-lock"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            md="6"
-          >
-            <v-switch
-              v-model="shareWithEntireGroup"
-              label="Share with entire group?"
-            />
-          </v-col>
-        </v-row>
-        <v-row>
           <v-col
             cols="12"
             md="6"
@@ -91,21 +62,19 @@
 
 <script setup lang="ts">
 import { isNil } from "lodash"
-import { computed, ref } from "vue"
+import { computed, ref, useTemplateRef } from "vue"
 import { useRouter } from "vue-router"
 
-import { VForm } from "vuetify/components"
-
 import { required } from "@/utils/validators"
+
 import informationSharingAgreementAccessGrantsApi, {
   type InformationSharingAgreementAccessGrant,
   InformationSharingAgreementAccessGrantAccessLevels,
 } from "@/api/information-sharing-agreement-access-grants-api"
 import useSnack from "@/use/use-snack"
 
-import GroupSearchableAutocomplete from "@/components/groups/GroupSearchableAutocomplete.vue"
-import InformationSharingAgreementAccessGrantAccessLevelSelect from "./InformationSharingAgreementAccessGrantAccessLevelSelect.vue"
 import UserSearchableAutocomplete from "@/components/users/UserSearchableAutocomplete.vue"
+import InformationSharingAgreementAccessGrantAccessLevelSelect from "@/components/information-sharing-agreement-access-grants/InformationSharingAgreementAccessGrantAccessLevelSelect.vue"
 
 const props = defineProps<{
   informationSharingAgreementId: number
@@ -122,16 +91,14 @@ const informationSharingAgreementAccessGrantAttributes = ref<
 })
 
 const userFilters = computed(() => ({
-  inGroup: props.groupId,
+  withSameTypeAsGroup: props.groupId,
   withoutAccessGrantFor: props.informationSharingAgreementId,
 }))
 
-const shareWithEntireGroup = ref(false)
-
+const isLoading = ref(false)
+const form = useTemplateRef("form")
 const snack = useSnack()
 const router = useRouter()
-const isLoading = ref(false)
-const form = ref<InstanceType<typeof VForm> | null>(null)
 
 async function saveWrapper() {
   if (isNil(form.value)) return
