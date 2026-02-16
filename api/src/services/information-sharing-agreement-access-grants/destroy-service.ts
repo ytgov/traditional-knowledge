@@ -1,6 +1,5 @@
 import db, { InformationSharingAgreementAccessGrant, User, UserGroup } from "@/models"
 import BaseService from "@/services/base-service"
-import { isNil } from "lodash"
 import { UserGroups } from "@/services"
 
 export class DestroyService extends BaseService {
@@ -21,7 +20,7 @@ export class DestroyService extends BaseService {
     return db.transaction(async () => {
       await this.informationSharingAgreementAccessGrant.destroy()
 
-      if (!this.options.skipUserGroupRemoval && !isNil(userId)) {
+      if (!this.options.skipUserGroupRemoval) {
         await this.removeUserGroupMembershipIfNoRemainingGrants(
           informationSharingAgreementId,
           groupId,

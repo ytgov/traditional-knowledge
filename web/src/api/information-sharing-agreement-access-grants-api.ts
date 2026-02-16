@@ -19,7 +19,7 @@ export type InformationSharingAgreementAccessGrant = {
   id: number
   informationSharingAgreementId: number
   groupId: number
-  userId: number | null
+  userId: number
   accessLevel: InformationSharingAgreementAccessGrantAccessLevels
   creatorId: number
   createdAt: string
@@ -28,7 +28,7 @@ export type InformationSharingAgreementAccessGrant = {
 
 export type InformationSharingAgreementAccessGrantIndexView =
   InformationSharingAgreementAccessGrant & {
-    user: UserAsReference | null
+    user: UserAsReference
     group: GroupAsReference
   }
 

@@ -59,7 +59,8 @@ export class InformationSharingAgreementAccessGrant extends BaseModel<
   declare groupId: number
 
   @Attribute(DataTypes.INTEGER)
-  declare userId: number | null
+  @NotNull
+  declare userId: number
 
   @Attribute(DataTypes.STRING)
   @NotNull

@@ -32,6 +32,12 @@ export const informationSharingAgreementAccessGrantFactory =
         id: undefined,
       })
 
+    const user =
+      associations.user ??
+      userFactory.build({
+        id: undefined,
+      })
+
     const creator =
       associations.creator ??
       userFactory.build({
@@ -41,11 +47,13 @@ export const informationSharingAgreementAccessGrantFactory =
     const accessGrant = InformationSharingAgreementAccessGrant.build({
       informationSharingAgreementId: informationSharingAgreement.id,
       groupId: group.id,
+      userId: user.id,
       creatorId: creator.id,
     })
 
     accessGrant.informationSharingAgreement = informationSharingAgreement
     accessGrant.group = group
+    accessGrant.user = user
     accessGrant.creator = creator
 
     return accessGrant

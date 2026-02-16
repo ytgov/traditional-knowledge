@@ -1,4 +1,4 @@
-import { isNil, isUndefined, pick } from "lodash"
+import { isUndefined, pick } from "lodash"
 
 import { InformationSharingAgreementAccessGrant } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
@@ -23,7 +23,7 @@ export type AccessGrantIndexView = Pick<
   | "updatedAt"
 > & {
   group: GroupShowView
-  user: UserAsReference | null
+  user: UserAsReference
 }
 
 export class IndexSerializer extends BaseSerializer<InformationSharingAgreementAccessGrant> {
@@ -37,11 +37,7 @@ export class IndexSerializer extends BaseSerializer<InformationSharingAgreementA
       throw new Error("Expected group association to be preloaded")
     }
 
-    let serializedUser = null
-    if (!isNil(user)) {
-      serializedUser = UserReferenceSerializer.perform(user)
-    }
-
+    const serializedUser = UserReferenceSerializer.perform(user)
     const serializedGroup = GroupShowSerializer.perform(group)
 
     return {
