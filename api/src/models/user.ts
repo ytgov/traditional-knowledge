@@ -424,22 +424,17 @@ export class User extends BaseModel<InferAttributes<User>, InferCreationAttribut
 
     this.addScope("withSameTypeAsGroup", (groupId: number) => {
       return {
-        where: {
-          isExternal: sql`
-            (
-              SELECT
-                is_external
-              FROM
-                groups
-              WHERE
-                deleted_at IS NULL
-                AND id = :groupId
-            )
-          `,
-        },
-        replacements: {
-          groupId,
-        },
+        where: sql`
+          ${sql.attribute("isExternal")} = (
+            SELECT
+              is_external
+            FROM
+              [groups]
+            WHERE
+              deleted_at IS NULL
+              AND id = ${groupId}
+          )
+        `,
       }
     })
 
