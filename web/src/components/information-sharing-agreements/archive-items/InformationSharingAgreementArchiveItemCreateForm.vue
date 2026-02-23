@@ -45,18 +45,20 @@
         <v-card-title>Yukon First Nation</v-card-title>
         <v-card-text>
           <p class="mb-4">
-            Please select the Yukon First Nations that this Traditional Knowledge pertains to. You
-            can select as many as are applicable to this item. If it is not listed, please directly
-            type in the name and click enter.
+            The Yukon First Nation is determined by the sharing contact on the Information Sharing
+            Agreement.
           </p>
-          <YukonFirstNationsComboBox
-            v-model="archiveItemAttributes.yukonFirstNations"
-            label="Yukon First Nations"
-            multiple
-            chips
-            clearable
+          <ExternalOrganizationChip
+            v-if="externalGroupContactOrganization"
+            :external-organization-id="externalGroupContactOrganization.id"
             variant="outlined"
           />
+          <span
+            v-else
+            class="text-medium-emphasis"
+          >
+            No organization found for the sharing contact on this agreement.
+          </span>
         </v-card-text>
 
         <v-card-title>Sharing Purpose</v-card-title>
@@ -130,24 +132,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, useTemplateRef, watchEffect } from "vue"
+import { computed, ref, toRefs, useTemplateRef, watchEffect } from "vue"
 import { useRouter } from "vue-router"
 import { isNil } from "lodash"
 
 import { required } from "@/utils/validators"
 
-import achiveItemsApi, {
-  type ArchiveItemCreationAttributes,
-} from "@/api/information-sharing-agreements/archive-items-api"
+import Api from "@/api"
+import { type ArchiveItemCreationAttributes } from "@/api/information-sharing-agreements/archive-items-api"
 import { SecurityLevel } from "@/api/archive-items-api"
 import { InformationSharingAgreementAccessLevels } from "@/api/information-sharing-agreements-api"
 
+import useExternalOrganizations from "@/use/use-external-organizations"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import useSnack from "@/use/use-snack"
 
-import CategorySelect from "@/components/categories/CategorySelect.vue"
 import FileDrop from "@/components/common/FileDrop.vue"
-import YukonFirstNationsComboBox from "@/components/archive-items/YukonFirstNationsComboBox.vue"
+
+import CategorySelect from "@/components/categories/CategorySelect.vue"
+import ExternalOrganizationChip from "@/components/external-organizations/ExternalOrganizationChip.vue"
+
+import SecurityLevelSelect from "@/components/archive-items/SecurityLevelSelect.vue"
 
 const props = defineProps<{
   informationSharingAgreementId: number
@@ -190,7 +195,27 @@ watchEffect(() => {
   }
 })
 
-function attachDroppedFiles(_droppedFiles: File[]) {
+const NULL_USER_ID = -1
+const externalGroupContactId = computed(
+  () => informationSharingAgreement.value?.externalGroupContactId
+)
+const externalOrganizationsQuery = computed(() => ({
+  filters: {
+    withUserId: externalGroupContactId.value ?? NULL_USER_ID,
+  },
+}))
+const { externalOrganizations } = useExternalOrganizations(externalOrganizationsQuery, {
+  skipWatchIf: () => isNil(externalGroupContactId.value),
+})
+const externalGroupContactOrganization = computed(() => externalOrganizations.value[0])
+
+watchEffect(() => {
+  if (isNil(externalGroupContactOrganization.value)) return
+
+  archiveItemAttributes.value.yukonFirstNations = [externalGroupContactOrganization.value.name]
+})
+
+function attachDroppedFiles(droppedFiles: File[]) {
   if (archiveItemAttributes.value) {
     archiveItemAttributes.value.filesAttributes = droppedFiles
   }
