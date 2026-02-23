@@ -111,7 +111,7 @@
         <v-card-text>
           <p class="mb-4">Drag and drop files or click the box belox</p>
           <v-file-input
-            v-model="archiveItemAttributes.files"
+            v-model="archiveItemAttributes.filesAttributes"
             multiple
             chips
             clearable
@@ -158,7 +158,6 @@ const { informationSharingAgreement } = useInformationSharingAgreement(
   informationSharingAgreementId
 )
 
-// TODO: need to add ISA id in payload to create relationship.
 const archiveItemAttributes = ref<Partial<ArchiveItemCreationAttributes>>({
   title: "",
   securityLevel: SecurityLevel.LOW,
@@ -168,7 +167,7 @@ const archiveItemAttributes = ref<Partial<ArchiveItemCreationAttributes>>({
   confidentialityReceipt: false,
   yukonFirstNations: null,
   tags: [],
-  // files: [],
+  filesAttributes: [],
   // categoryIds: [],
 })
 
@@ -193,7 +192,7 @@ watchEffect(() => {
 
 function attachDroppedFiles(_droppedFiles: File[]) {
   if (archiveItemAttributes.value) {
-    // archiveItemAttributes.value.files = droppedFiles
+    archiveItemAttributes.value.filesAttributes = droppedFiles
   }
 }
 
@@ -213,7 +212,10 @@ async function saveAndRedirect() {
 
   isLoading.value = true
   try {
-    await achiveItemsApi.create(props.informationSharingAgreementId, archiveItemAttributes.value)
+    await Api.InformationSharingAgreements.archiveItemsApi.create(
+      props.informationSharingAgreementId,
+      archiveItemAttributes.value
+    )
 
     snack.success("Item created.")
 

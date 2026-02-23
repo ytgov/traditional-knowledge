@@ -11,7 +11,8 @@ export type ArchiveItemCreationAttributes = {
   yukonFirstNations: string[] | null
   securityLevel: SecurityLevel
   tags: string[] | null
-  // files: File[] | null
+} & {
+  filesAttributes: File[] | null
   // categoryIds: number[] | null
 }
 
