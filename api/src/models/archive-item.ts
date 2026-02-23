@@ -29,13 +29,13 @@ import Category from "@/models/category"
 import ArchiveItemCategory from "@/models/archive-item-category"
 
 /** Keep in sync with web/src/api/users-api.ts */
-export enum SecurityLevel {
+export enum SecurityLevels {
   LOW = 1,
   MEDIUM = 2,
   HIGH = 3,
 }
 
-export enum ArchiveItemStatus {
+export enum ArchiveItemStatuses {
   ACCEPTED = "Accepted",
   REVIEWED = "Reviewed",
   LOCKED = "Locked",
@@ -46,8 +46,8 @@ export class ArchiveItem extends BaseModel<
   InferAttributes<ArchiveItem>,
   InferCreationAttributes<ArchiveItem>
 > {
-  static readonly SecurityLevel = SecurityLevel
-  static readonly ArchiveItemStatus = ArchiveItemStatus
+  static readonly Levels = SecurityLevels
+  static readonly Statuses = ArchiveItemStatuses
 
   @Attribute(DataTypes.INTEGER)
   @PrimaryKey
@@ -85,21 +85,21 @@ export class ArchiveItem extends BaseModel<
   @NotNull
   @ValidateAttribute({
     isIn: {
-      args: [Object.values(ArchiveItemStatus)],
-      msg: `Status must be one of ${Object.values(ArchiveItemStatus).join(", ")}`,
+      args: [Object.values(ArchiveItemStatuses)],
+      msg: `Status must be one of ${Object.values(ArchiveItemStatuses).join(", ")}`,
     },
   })
-  declare status: ArchiveItemStatus
+  declare status: ArchiveItemStatuses
 
   @Attribute(DataTypes.INTEGER)
   @NotNull
   @ValidateAttribute({
     isIn: {
-      args: [Object.values(SecurityLevel)],
-      msg: `Security Level must be one of ${Object.values(SecurityLevel).join(", ")}`,
+      args: [Object.values(SecurityLevels)],
+      msg: `Security Level must be one of ${Object.values(SecurityLevels).join(", ")}`,
     },
   })
-  declare securityLevel: SecurityLevel
+  declare securityLevel: SecurityLevels
 
   @Attribute({
     type: DataTypes.STRING(255),
