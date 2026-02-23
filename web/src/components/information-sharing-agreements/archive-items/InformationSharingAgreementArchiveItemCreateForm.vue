@@ -35,7 +35,8 @@
               <v-textarea
                 v-model="archiveItemAttributes.description"
                 label="Description"
-                rows="3"
+                auto-grow
+                rows="8"
               />
             </v-col>
           </v-row>
@@ -64,8 +65,8 @@
           <v-textarea
             v-model="archiveItemAttributes.sharingPurpose"
             label="Sharing Purpose"
-            rows="2"
-            variant="outlined"
+            auto-grow
+            rows="8"
           />
           <v-checkbox
             v-model="archiveItemAttributes.confidentialityReceipt"
