@@ -17,7 +17,8 @@
                 v-model="archiveItemAttributes.title"
                 label="Title"
                 :rules="[required]"
-              ></v-text-field>
+                required
+              />
             </v-col>
             <v-col
               cols="12"
@@ -27,6 +28,7 @@
                 v-model="archiveItemAttributes.securityLevel"
                 :rules="[required]"
                 label="Security level"
+                required
               />
             </v-col>
             <v-col cols="12">
@@ -133,7 +135,10 @@ import { isNil } from "lodash"
 
 import { required } from "@/utils/validators"
 
-import { archiveItemsApi, type ArchiveItemCreate, SecurityLevel } from "@/api/archive-items-api"
+import achiveItemsApi, {
+  type ArchiveItemCreationAttributes,
+} from "@/api/information-sharing-agreements/archive-items-api"
+import { SecurityLevel } from "@/api/archive-items-api"
 import { InformationSharingAgreementAccessLevels } from "@/api/information-sharing-agreements-api"
 
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
@@ -153,7 +158,7 @@ const { informationSharingAgreement } = useInformationSharingAgreement(
 )
 
 // TODO: need to add ISA id in payload to create relationship.
-const archiveItemAttributes = ref<Partial<ArchiveItemCreate>>({
+const archiveItemAttributes = ref<Partial<ArchiveItemCreationAttributes>>({
   title: "",
   securityLevel: SecurityLevel.LOW,
   description: null,
@@ -162,8 +167,8 @@ const archiveItemAttributes = ref<Partial<ArchiveItemCreate>>({
   confidentialityReceipt: false,
   yukonFirstNations: null,
   tags: [],
-  files: [],
-  categoryIds: [],
+  // files: [],
+  // categoryIds: [],
 })
 
 const ACCESS_LEVEL_TO_SECURITY_LEVEL = {
@@ -185,9 +190,9 @@ watchEffect(() => {
   }
 })
 
-function attachDroppedFiles(droppedFiles: File[]) {
+function attachDroppedFiles(_droppedFiles: File[]) {
   if (archiveItemAttributes.value) {
-    archiveItemAttributes.value.files = droppedFiles
+    // archiveItemAttributes.value.files = droppedFiles
   }
 }
 
@@ -207,8 +212,7 @@ async function saveAndRedirect() {
 
   isLoading.value = true
   try {
-    // TODO: need to add dedicated endpoint for creation ArchiveItem from ISA namespace.
-    await archiveItemsApi.create(archiveItemAttributes.value)
+    await achiveItemsApi.create(props.informationSharingAgreementId, archiveItemAttributes.value)
 
     snack.success("Item created.")
 
@@ -219,7 +223,6 @@ async function saveAndRedirect() {
     snack.error("Save failed!")
     throw error
   } finally {
-    archiveItemAttributes
     isLoading.value = false
   }
 }
