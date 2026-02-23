@@ -28,7 +28,7 @@ export const archiveItemsApi = {
       `/api/information-sharing-agreements/${informationSharingAgreementId}/archive-items`,
       {
         ...attributes,
-        files,
+        archiveItemFiles: files,
       }
     )
     return data

@@ -1,8 +1,6 @@
 import { type CreationAttributes } from "@sequelize/core"
 import { isEmpty, isNil } from "lodash"
 
-import type { ExpressFormDataFile } from "@/utils/express-form-data-types"
-
 import db, {
   ArchiveItem,
   ArchiveItemCategory,
@@ -11,20 +9,17 @@ import db, {
   User,
 } from "@/models"
 import BaseService from "@/services/base-service"
+import { ArchiveItemFiles } from "@/services"
 
 export type ArchiveItemCreationAttributes = Partial<CreationAttributes<ArchiveItem>> & {
   archiveItemCategoriesAttributes?: { categoryId: number }[]
 }
-export type ArchiveItemFiles = Record<
-  string,
-  ExpressFormDataFile | ExpressFormDataFile[] | undefined
->
 
 export class CreateService extends BaseService {
   constructor(
     private informationSharingAgreement: InformationSharingAgreement,
     private attributes: ArchiveItemCreationAttributes,
-    private files: ArchiveItemFiles,
+    private filePaths: string[],
     private currentUser: User
   ) {
     super()
@@ -68,11 +63,24 @@ export class CreateService extends BaseService {
       })
 
       await this.linkArchiveItemToInformationSharingAgreement(archiveItem.id)
-      // TODO: handle file uploads
+      await this.uploadFilesForArchiveItem(archiveItem.id, this.filePaths)
+
       await this.assignCategoriesToArchiveItem(archiveItem.id, archiveItemCategoriesAttributes)
 
       return archiveItem
     })
+  }
+
+  private async uploadFilesForArchiveItem(
+    archiveItemId: number,
+    filePaths: string[]
+  ): Promise<void> {
+    if (isEmpty(filePaths)) return
+
+    for (const [index, filePath] of filePaths.entries()) {
+      const fileName = `file-${index + 1}` // TODO: generate file name
+      await ArchiveItemFiles.CreateService.perform(filePath, fileName, { archiveItemId })
+    }
   }
 
   private async linkArchiveItemToInformationSharingAgreement(archiveItemId: number): Promise<void> {
