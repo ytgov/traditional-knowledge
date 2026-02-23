@@ -5,27 +5,31 @@ import { SecurityLevel } from "@/api/archive-items-api"
 export type ArchiveItemCreationAttributes = {
   title: string
   description: string | null
-  summary: string | null
   sharingPurpose: string | null
   confidentialityReceipt: boolean
-  yukonFirstNations: string[] | null
+  yukonFirstNations: string[]
   securityLevel: SecurityLevel
-  tags: string[] | null
+  tags: string[]
 } & {
-  filesAttributes: File[] | null
-  // categoryIds: number[] | null
+  archiveItemCategoriesAttributes: {
+    categoryId: number
+  }[]
 }
 
 export const archiveItemsApi = {
   async create(
     informationSharingAgreementId: number,
-    attributes: Partial<ArchiveItemCreationAttributes>
+    attributes: Partial<ArchiveItemCreationAttributes>,
+    files: File[]
   ): Promise<{
     archiveItem: ArchiveItemShowView
   }> {
     const { data } = await http.post(
       `/api/information-sharing-agreements/${informationSharingAgreementId}/archive-items`,
-      attributes
+      {
+        ...attributes,
+        files,
+      }
     )
     return data
   },

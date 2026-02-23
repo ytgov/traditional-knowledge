@@ -5,13 +5,16 @@ import type { ExpressFormDataFile } from "@/utils/express-form-data-types"
 
 import db, {
   ArchiveItem,
+  ArchiveItemCategory,
   InformationSharingAgreement,
   InformationSharingAgreementArchiveItem,
   User,
 } from "@/models"
 import BaseService from "@/services/base-service"
 
-export type ArchiveItemCreationAttributes = Partial<CreationAttributes<ArchiveItem>>
+export type ArchiveItemCreationAttributes = Partial<CreationAttributes<ArchiveItem>> & {
+  archiveItemCategoriesAttributes?: { categoryId: number }[]
+}
 export type ArchiveItemFiles = Record<
   string,
   ExpressFormDataFile | ExpressFormDataFile[] | undefined
@@ -34,6 +37,7 @@ export class CreateService extends BaseService {
       isDecision,
       confidentialityReceipt,
       securityLevel,
+      archiveItemCategoriesAttributes,
       ...optionalAttributes
     } = this.attributes
 
@@ -65,7 +69,7 @@ export class CreateService extends BaseService {
 
       await this.linkArchiveItemToInformationSharingAgreement(archiveItem.id)
       // TODO: handle file uploads
-      // TODO: handle category assignments
+      await this.assignCategoriesToArchiveItem(archiveItem.id, archiveItemCategoriesAttributes)
 
       return archiveItem
     })
@@ -77,6 +81,23 @@ export class CreateService extends BaseService {
       archiveItemId: archiveItemId,
       creatorId: this.currentUser.id,
     })
+  }
+
+  private async assignCategoriesToArchiveItem(
+    archiveItemId: number,
+    archiveItemCategoriesAttributes: { categoryId: number }[] | undefined
+  ): Promise<void> {
+    if (isNil(archiveItemCategoriesAttributes) || isEmpty(archiveItemCategoriesAttributes)) {
+      return
+    }
+
+    const archiveItemCategoriesAttributesWithArchiveItemId = archiveItemCategoriesAttributes.map(
+      ({ categoryId }) => ({
+        archiveItemId,
+        categoryId,
+      })
+    )
+    await ArchiveItemCategory.bulkCreate(archiveItemCategoriesAttributesWithArchiveItemId)
   }
 }
 

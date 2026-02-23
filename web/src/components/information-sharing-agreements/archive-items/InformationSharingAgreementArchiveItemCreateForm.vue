@@ -90,7 +90,7 @@
             each as are applicable to this item.
           </p>
           <CategorySelect
-            v-model="archiveItemAttributes.categoryIds"
+            v-model="categoryIds"
             :rules="[required]"
             :hide-details="false"
             label="Categories"
@@ -113,7 +113,7 @@
         <v-card-text>
           <p class="mb-4">Drag and drop files or click the box belox</p>
           <v-file-input
-            v-model="archiveItemAttributes.filesAttributes"
+            v-model="files"
             multiple
             chips
             clearable
@@ -167,13 +167,11 @@ const archiveItemAttributes = ref<Partial<ArchiveItemCreationAttributes>>({
   title: "",
   securityLevel: SecurityLevel.LOW,
   description: null,
-  summary: null,
   sharingPurpose: null,
   confidentialityReceipt: false,
-  yukonFirstNations: null,
+  yukonFirstNations: [],
   tags: [],
-  filesAttributes: [],
-  // categoryIds: [],
+  archiveItemCategoriesAttributes: [],
 })
 
 const ACCESS_LEVEL_TO_SECURITY_LEVEL = {
@@ -215,11 +213,21 @@ watchEffect(() => {
   archiveItemAttributes.value.yukonFirstNations = [externalGroupContactOrganization.value.name]
 })
 
+const files = ref<File[]>([])
+
 function attachDroppedFiles(droppedFiles: File[]) {
-  if (archiveItemAttributes.value) {
-    archiveItemAttributes.value.filesAttributes = droppedFiles
-  }
+  files.value = droppedFiles
 }
+
+const categoryIds = ref<number[]>([])
+
+watchEffect(() => {
+  archiveItemAttributes.value.archiveItemCategoriesAttributes = categoryIds.value.map(
+    (categoryId) => ({
+      categoryId,
+    })
+  )
+})
 
 const isLoading = ref(false)
 const form = useTemplateRef("form")
@@ -239,7 +247,8 @@ async function saveAndRedirect() {
   try {
     await Api.InformationSharingAgreements.archiveItemsApi.create(
       props.informationSharingAgreementId,
-      archiveItemAttributes.value
+      archiveItemAttributes.value,
+      files.value
     )
 
     snack.success("Item created.")

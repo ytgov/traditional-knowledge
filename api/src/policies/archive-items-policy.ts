@@ -36,25 +36,19 @@ export class ArchiveItemsPolicy extends PolicyFactory(ArchiveItem) {
     const attributes: (keyof Attributes<ArchiveItem>)[] = [
       "title",
       "description",
-      "summary",
       "sharingPurpose",
       "confidentialityReceipt",
       "yukonFirstNations",
       "status",
       "securityLevel",
       "tags",
-      "submittedAt",
     ]
-
-    /* if (this.user.isSystemAdmin) {
-      attributes.push("email", "roles", "deactivatedAt")
-    } */
 
     return attributes
   }
 
   permittedAttributesForCreate(): Path[] {
-    return [...this.permittedAttributes()]
+    return [...this.permittedAttributes(), "archiveItemCategoriesAttributes"]
   }
 
   static policyScope(user: User): FindOptions<Attributes<ArchiveItem>> {
