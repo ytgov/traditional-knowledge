@@ -163,6 +163,9 @@ router
     "/api/information-sharing-agreements/:informationSharingAgreementId/generate-acknowledgement"
   )
   .post(InformationSharingAgreements.GenerateAcknowledgementController.create)
+router
+  .route("/api/information-sharing-agreements/:informationSharingAgreementId/archive-items")
+  .post(InformationSharingAgreements.ArchiveItemsController.create)
 
 router
   .route("/api/information-sharing-agreement-access-grants")
