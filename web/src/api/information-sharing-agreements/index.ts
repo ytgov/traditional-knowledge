@@ -1,1 +1,1 @@
-export { default as archiveItemsApi } from "./archive-items-api"
+export { archiveItemsApi } from "./archive-items-api"
