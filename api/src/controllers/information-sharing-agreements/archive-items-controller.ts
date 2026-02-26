@@ -36,7 +36,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
         })
       }
 
-      const archiveItemFilesPaths = this.extractFilePaths(this.files.archiveItemFiles)
+      const archiveItemFilesPaths = this.extractFilePaths(this.files?.archiveItemFiles)
 
       const permittedAttributes = policy.permitAttributesForCreate(this.request.body)
       const archiveItem = await InformationSharingAgreements.ArchiveItems.CreateService.perform(
@@ -73,13 +73,15 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
     return new ArchiveItemsPolicy(this.currentUser, archiveItem)
   }
 
-  private extractFilePaths(files: ExpressFormDataFile | ExpressFormDataFile[] | undefined): string[] {
+  private extractFilePaths(
+    files: ExpressFormDataFile | ExpressFormDataFile[] | undefined
+  ): string[] {
     if (isNil(files)) {
       return []
     }
 
     if (isArray(files)) {
-      return files.map(file => file.path)
+      return files.map((file) => file.path)
     }
 
     return [files.path]

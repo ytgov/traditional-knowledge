@@ -15,7 +15,7 @@ export type Actions = "index" | "show" | "new" | "edit" | "create" | "update" | 
 
 type ControllerRequest = Request & {
   currentUser: User
-  files: Record<string, ExpressFormDataFile | ExpressFormDataFile[] | undefined>
+  files?: Record<string, ExpressFormDataFile | ExpressFormDataFile[] | undefined>
 }
 
 /** Keep in sync with web/src/api/base-api.ts */
