@@ -15,7 +15,7 @@
             >
               <v-text-field
                 v-model="archiveItemAttributes.title"
-                label="Title"
+                label="Title *"
                 :rules="[required]"
                 required
               />
@@ -27,15 +27,17 @@
               <SecurityLevelSelect
                 v-model="archiveItemAttributes.securityLevel"
                 :rules="[required]"
-                label="Security level"
+                label="Security level *"
                 required
               />
             </v-col>
             <v-col cols="12">
               <v-textarea
                 v-model="archiveItemAttributes.description"
-                label="Description"
+                label="Description *"
+                :rules="[required]"
                 auto-grow
+                required
                 rows="8"
               />
             </v-col>
@@ -66,22 +68,26 @@
           <p class="mb-3">For what purpose this traditional knowledge is shared?</p>
           <v-textarea
             v-model="archiveItemAttributes.sharingPurpose"
-            label="Sharing Purpose"
+            label="Sharing Purpose *"
+            :rules="[required]"
             auto-grow
+            required
             rows="8"
           />
           <v-checkbox
             v-model="archiveItemAttributes.confidentialityReceipt"
             label="I confirm that I have received and agreed to the confidentiality terms."
-            hide-details
             class="mt-3"
+            :rules="[required]"
+            required
+            hide-details
           />
         </v-card-text>
 
         <v-divider
-          thickness="3"
+          thickness="2"
           class="mb-4"
-        ></v-divider>
+        />
 
         <v-card-title>Categories and Tags</v-card-title>
         <v-card-text>
@@ -91,17 +97,16 @@
           </p>
           <CategorySelect
             v-model="categoryIds"
+            label="Categories *"
             :rules="[required]"
-            :hide-details="false"
-            label="Categories"
             hide-selected
-            clearable
             multiple
             chips
           />
           <v-combobox
             v-model="archiveItemAttributes.tags"
             label="Tags"
+            class="mt-3"
             multiple
             chips
             clearable
