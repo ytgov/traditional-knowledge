@@ -29,6 +29,11 @@ export const archiveItemsApi = {
       {
         ...attributes,
         archiveItemFiles: files,
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }
     )
     return data
