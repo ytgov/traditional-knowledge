@@ -117,7 +117,7 @@
 
         <v-card-text>
           <p class="mb-4">Drag and drop files or click the box belox</p>
-          <v-file-input
+          <EnhancedFileInput
             v-model="files"
             multiple
             chips
@@ -152,6 +152,7 @@ import useExternalOrganizations from "@/use/use-external-organizations"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import useSnack from "@/use/use-snack"
 
+import EnhancedFileInput from "@/components/common/EnhancedFileInput.vue"
 import FileDrop from "@/components/common/FileDrop.vue"
 
 import CategorySelect from "@/components/categories/CategorySelect.vue"
