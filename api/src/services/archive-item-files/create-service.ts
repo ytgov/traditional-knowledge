@@ -3,9 +3,10 @@ import { statSync } from "fs"
 import { Attributes } from "@sequelize/core"
 import { isNil } from "lodash"
 
+import { BlobStorageIntegration } from "@/integrations"
+
 import { ArchiveItemFile } from "@/models"
 import BaseService from "@/services/base-service"
-import { BlobStorageIntegration } from "@/integrations/blob-storage-integration"
 
 export type ArchiveItemFileCreationAttributes = Partial<Attributes<ArchiveItemFile>>
 
