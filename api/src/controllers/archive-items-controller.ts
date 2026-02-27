@@ -1,11 +1,12 @@
 import { isNil } from "lodash"
 
+import logger from "@/utils/logger"
+
 import { ArchiveItem, ArchiveItemAudit } from "@/models"
 import { ArchiveItemsPolicy } from "@/policies"
-import BaseController from "@/controllers/base-controller"
-import { CreateService } from "@/services/archive-items"
+import { CreateService, DestroyService } from "@/services/archive-items"
 import { IndexSerializer, ShowSerializer } from "@/serializers/archive-items"
-import logger from "@/utils/logger"
+import BaseController from "@/controllers/base-controller"
 
 export class ArchiveItemsController extends BaseController<ArchiveItem> {
   async index() {
@@ -109,6 +110,32 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
       logger.error(`Error creating archive item: ${error}`, { error })
       return this.response.status(422).json({
         message: `Error creating archive item: ${error}`,
+      })
+    }
+  }
+
+  async destroy() {
+    try {
+      const archiveItem = await this.loadArchiveItem()
+      if (isNil(archiveItem)) {
+        return this.response.status(404).json({
+          message: "Archive item not found",
+        })
+      }
+
+      const policy = this.buildPolicy(archiveItem)
+      if (!policy.destroy()) {
+        return this.response.status(403).json({
+          message: "You are not authorized to delete this item",
+        })
+      }
+
+      await DestroyService.perform(archiveItem, this.currentUser)
+      return this.response.status(204).send()
+    } catch (error) {
+      logger.error(`Error deleting archive item: ${error}`, { error })
+      return this.response.status(422).json({
+        message: `Error deleting archive item: ${error}`,
       })
     }
   }
