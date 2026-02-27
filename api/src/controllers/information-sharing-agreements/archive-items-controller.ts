@@ -36,7 +36,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
         })
       }
 
-      const archiveItemFilesPaths = this.extractFilePaths(this.files?.archiveItemFiles)
+      const archiveItemFilesPaths = this.extractFilePaths(this.files.archiveItemFiles)
 
       const permittedAttributes = policy.permitAttributesForCreate(this.request.body)
       const archiveItem = await InformationSharingAgreements.ArchiveItems.CreateService.perform(
