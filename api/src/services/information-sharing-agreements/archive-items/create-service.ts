@@ -70,6 +70,7 @@ export class CreateService extends BaseService {
         isDecision: isDecisionOrFallback,
         status: statusOrFallback,
         securityLevel,
+        userId: this.currentUser.id,
       })
 
       await this.linkArchiveItemToInformationSharingAgreement(archiveItem.id)

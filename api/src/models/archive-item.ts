@@ -61,6 +61,7 @@ export class ArchiveItem extends BaseModel<
   @Attribute(DataTypes.STRING(255))
   declare decisionText: string | null
 
+  // TODO: rename this to "creatorId" and make it required
   @Attribute(DataTypes.INTEGER)
   declare userId: number | null
 
