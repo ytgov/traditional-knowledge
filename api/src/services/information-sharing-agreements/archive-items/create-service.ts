@@ -80,7 +80,9 @@ export class CreateService extends BaseService {
 
       await this.assignCategoriesToArchiveItem(archiveItem.id, archiveItemCategoriesAttributes)
 
-      return archiveItem
+      return archiveItem.reload({
+        include: ["categories", "informationSharingAgreementAccessGrants", "user"],
+      })
     })
   }
 
