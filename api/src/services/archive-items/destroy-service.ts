@@ -4,7 +4,6 @@ import db, {
   ArchiveItemCategory,
   ArchiveItemFile,
   InformationSharingAgreementArchiveItem,
-  ArchiveItemInformationSharingAgreementAccessGrant,
   User,
 } from "@/models"
 import BaseService from "@/services/base-service"
@@ -32,19 +31,10 @@ export class DestroyService extends BaseService {
   }
 
   private async removeChildEntities(archiveItemId: number): Promise<void> {
-    await this.removeAccessGrants(archiveItemId)
     await this.removeInformationSharingAgreementLinks(archiveItemId)
     await this.removeCategories(archiveItemId)
     await this.removeFiles(archiveItemId)
     await this.removeAuditTrail(archiveItemId)
-  }
-
-  private async removeAccessGrants(archiveItemId: number): Promise<void> {
-    await ArchiveItemInformationSharingAgreementAccessGrant.destroy({
-      where: {
-        archiveItemId,
-      },
-    })
   }
 
   private async removeInformationSharingAgreementLinks(archiveItemId: number): Promise<void> {
