@@ -45,7 +45,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
       const serializedArchiveItem = ShowSerializer.perform(archiveItem)
       return this.response.status(201).json({
         archiveItem: serializedArchiveItem,
-        policy: policy,
+        policy,
       })
     } catch (error) {
       logger.error(`Error creating archive item: ${error}`, { error })
@@ -66,6 +66,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
   }
 
   private buildPolicy(archiveItem: ArchiveItem = ArchiveItem.build()): ArchiveItemsPolicy {
+    archiveItem.accessGrants ??= []
     return new ArchiveItemsPolicy(this.currentUser, archiveItem)
   }
 }
