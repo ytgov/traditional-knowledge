@@ -48,7 +48,15 @@ export class ArchiveItemsPolicy extends PolicyFactory(ArchiveItem) {
   }
 
   permittedAttributesForCreate(): Path[] {
-    return [...this.permittedAttributes(), "archiveItemCategoriesAttributes"]
+    return [
+      ...this.permittedAttributes(),
+      {
+        archiveItemCategoriesAttributes: ["categoryId"],
+      },
+      {
+        archiveItemFilesAttributes: ["name", "path"],
+      },
+    ]
   }
 
   static policyScope(user: User): FindOptions<Attributes<ArchiveItem>> {

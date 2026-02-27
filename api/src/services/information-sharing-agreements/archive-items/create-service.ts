@@ -11,15 +11,24 @@ import db, {
 import BaseService from "@/services/base-service"
 import { ArchiveItemFiles } from "@/services"
 
+export type ArchiveItemCategoriesAttributes = {
+  categoryId: number
+}
+
+export type ArchiveItemFilesAttributes = {
+  name: string
+  path: string
+}
+
 export type ArchiveItemCreationAttributes = Partial<CreationAttributes<ArchiveItem>> & {
-  archiveItemCategoriesAttributes?: { categoryId: number }[]
+  archiveItemCategoriesAttributes?: ArchiveItemCategoriesAttributes[]
+  archiveItemFilesAttributes?: ArchiveItemFilesAttributes[]
 }
 
 export class CreateService extends BaseService {
   constructor(
     private informationSharingAgreement: InformationSharingAgreement,
     private attributes: ArchiveItemCreationAttributes,
-    private filePaths: string[],
     private currentUser: User
   ) {
     super()
@@ -33,6 +42,7 @@ export class CreateService extends BaseService {
       confidentialityReceipt,
       securityLevel,
       archiveItemCategoriesAttributes,
+      archiveItemFilesAttributes,
       ...optionalAttributes
     } = this.attributes
 
@@ -63,7 +73,10 @@ export class CreateService extends BaseService {
       })
 
       await this.linkArchiveItemToInformationSharingAgreement(archiveItem.id)
-      await this.uploadFilesForArchiveItem(archiveItem.id, this.filePaths)
+
+      if (!isNil(archiveItemFilesAttributes)) {
+        await this.uploadFilesForArchiveItem(archiveItem.id, archiveItemFilesAttributes)
+      }
 
       await this.assignCategoriesToArchiveItem(archiveItem.id, archiveItemCategoriesAttributes)
 
@@ -73,13 +86,10 @@ export class CreateService extends BaseService {
 
   private async uploadFilesForArchiveItem(
     archiveItemId: number,
-    filePaths: string[]
+    archiveItemFilesAttributes: ArchiveItemFilesAttributes[]
   ): Promise<void> {
-    if (isEmpty(filePaths)) return
-
-    for (const [index, filePath] of filePaths.entries()) {
-      const fileName = `file-${index + 1}` // TODO: generate file name
-      await ArchiveItemFiles.CreateService.perform(filePath, fileName, { archiveItemId })
+    for (const { name, path } of archiveItemFilesAttributes) {
+      await ArchiveItemFiles.CreateService.perform(path, name, { archiveItemId })
     }
   }
 

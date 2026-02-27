@@ -1,7 +1,6 @@
-import { isArray, isNil } from "lodash"
+import { isNil } from "lodash"
 
 import logger from "@/utils/logger"
-import { type ExpressFormDataFile } from "@/utils/express-form-data-types"
 
 import { ArchiveItem, InformationSharingAgreement } from "@/models"
 import { ArchiveItemsPolicy, InformationSharingAgreementPolicy } from "@/policies"
@@ -36,13 +35,10 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
         })
       }
 
-      const archiveItemFilesPaths = this.extractFilePaths(this.files.archiveItemFiles)
-
       const permittedAttributes = policy.permitAttributesForCreate(this.request.body)
       const archiveItem = await InformationSharingAgreements.ArchiveItems.CreateService.perform(
         informationSharingAgreement,
         permittedAttributes,
-        archiveItemFilesPaths,
         this.currentUser
       )
 
@@ -71,20 +67,6 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
 
   private buildPolicy(archiveItem: ArchiveItem = ArchiveItem.build()): ArchiveItemsPolicy {
     return new ArchiveItemsPolicy(this.currentUser, archiveItem)
-  }
-
-  private extractFilePaths(
-    files: ExpressFormDataFile | ExpressFormDataFile[] | undefined
-  ): string[] {
-    if (isNil(files)) {
-      return []
-    }
-
-    if (isArray(files)) {
-      return files.map((file) => file.path)
-    }
-
-    return [files.path]
   }
 }
 
