@@ -45,9 +45,9 @@ export type ArchiveItem = {
   categories: Category[] | null
 }
 
-export type ArchiveItemShowView = ArchiveItem & {
+export type ArchiveItemAsShow = ArchiveItem & {
   user: User
-  informationSharingAgreementAccessGrants: InformationSharingAgreementAccessGrant[]
+  accessGrants: InformationSharingAgreementAccessGrant[]
 }
 
 export type ArchiveItemCreate = {
@@ -89,14 +89,14 @@ export const archiveItemsApi = {
     return data
   },
   async get(archiveItemId: number): Promise<{
-    archiveItem: ArchiveItemShowView
+    archiveItem: ArchiveItemAsShow
     policy: Policy
   }> {
     const { data } = await http.get(`/api/archive-items/${archiveItemId}`)
     return data
   },
   async create(attributes: FormData | GenericFormData | Partial<ArchiveItemCreate>): Promise<{
-    archiveItem: ArchiveItemShowView
+    archiveItem: ArchiveItemAsShow
   }> {
     const { data } = await http.post("/api/archive-items", attributes, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -107,7 +107,7 @@ export const archiveItemsApi = {
     archiveItemId: number,
     attributes: Partial<ArchiveItem>
   ): Promise<{
-    archiveItem: ArchiveItemShowView
+    archiveItem: ArchiveItemAsShow
   }> {
     const { data } = await http.patch(`/api/archive-items/${archiveItemId}`, attributes)
     return data

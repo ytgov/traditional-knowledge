@@ -9,7 +9,7 @@ import { PolicyFactory } from "@/policies/base-policy"
 export class ArchiveItemsPolicy extends PolicyFactory(ArchiveItem) {
   show(): boolean {
     if (this.user.id === this.record.userId) return true
-    if (this.record.hasInformationSharingAgreementAccessGrantFor(this.user.id)) return true
+    if (this.record.hasAccessGrantFor(this.user.id)) return true
 
     return false
   }
@@ -20,14 +20,14 @@ export class ArchiveItemsPolicy extends PolicyFactory(ArchiveItem) {
 
   update(): boolean {
     if (this.user.id === this.record.userId) return true
-    if (this.record.hasAdminInformationSharingAgreementAccessGrantFor(this.user.id)) return true
+    if (this.record.hasAdminAccessGrantFor(this.user.id)) return true
 
     return false
   }
 
   destroy(): boolean {
     if (this.user.id === this.record.userId) return true
-    if (this.record.hasAdminInformationSharingAgreementAccessGrantFor(this.user.id)) return true
+    if (this.record.hasAdminAccessGrantFor(this.user.id)) return true
 
     return false
   }

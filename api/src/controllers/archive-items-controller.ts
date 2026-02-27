@@ -120,7 +120,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
         "user",
         { association: "categories", through: { attributes: [] } },
         {
-          association: "informationSharingAgreementAccessGrants",
+          association: "accessGrants",
           through: {
             // NOTE: suppressing through model attributes as their names are too long
             attributes: [],

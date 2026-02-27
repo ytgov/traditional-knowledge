@@ -163,26 +163,20 @@ export class ArchiveItem extends BaseModel<
   declare archiveItemFileCount?: number
 
   // Helper functions
-  hasInformationSharingAgreementAccessGrantFor(userId: number): boolean {
-    if (isUndefined(this.informationSharingAgreementAccessGrants)) {
-      throw new Error(
-        "Expected informationSharingAgreementAccessGrants association to be pre-loaded."
-      )
+  hasAccessGrantFor(userId: number): boolean {
+    if (isUndefined(this.accessGrants)) {
+      throw new Error("Expected accessGrants association to be pre-loaded.")
     }
 
-    return this.informationSharingAgreementAccessGrants.some(
-      (accessGrant) => accessGrant.userId === userId
-    )
+    return this.accessGrants.some((accessGrant) => accessGrant.userId === userId)
   }
 
-  hasAdminInformationSharingAgreementAccessGrantFor(userId: number): boolean {
-    if (isUndefined(this.informationSharingAgreementAccessGrants)) {
-      throw new Error(
-        "Expected informationSharingAgreementAccessGrants association to be pre-loaded."
-      )
+  hasAdminAccessGrantFor(userId: number): boolean {
+    if (isUndefined(this.accessGrants)) {
+      throw new Error("Expected accessGrants association to be pre-loaded.")
     }
 
-    return this.informationSharingAgreementAccessGrants.some(
+    return this.accessGrants.some(
       (accessGrant) =>
         accessGrant.userId === userId &&
         accessGrant.accessLevel === InformationSharingAgreementAccessGrant.AccessLevels.ADMIN
@@ -231,18 +225,20 @@ export class ArchiveItem extends BaseModel<
     foreignKey: "archiveItemId",
     otherKey: "informationSharingAgreementAccessGrantId",
     inverse: "archiveItems",
+    throughAssociations: {
+      fromSource: "archiveItemAccessGrants",
+      toSource: "archiveItem",
+      fromTarget: "archiveItemAccessGrants",
+      toTarget: "informationSharingAgreementAccessGrant",
+    },
   })
-  declare informationSharingAgreementAccessGrants?: NonAttribute<
-    InformationSharingAgreementAccessGrant[]
-  >
+  declare accessGrants?: NonAttribute<InformationSharingAgreementAccessGrant[]>
   /**
    * Created by ArchiveItem.belongsToMany(InformationSharingAgreementAccessGrant), refers to a direct connection to a given InformationSharingAgreementAccessGrant
    * Populated by by { include: [{ association: "informationSharingAgreementAccessGrants", through: { attributes: [xxx] } }] }
    * See https://sequelize.org/docs/v7/querying/select-in-depth/#eager-loading-the-belongstomany-through-model
    */
-  declare informationSharingAgreementAccessGrant?: NonAttribute<
-    InformationSharingAgreementAccessGrant[]
-  >
+  declare accessGrant?: NonAttribute<InformationSharingAgreementAccessGrant[]>
 
   // Scopes
   static establishScopes(): void {

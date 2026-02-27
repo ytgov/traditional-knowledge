@@ -1,5 +1,5 @@
 import http from "@/api/http-client"
-import { type ArchiveItemShowView } from "@/api/archive-items-api"
+import { type ArchiveItemAsShow } from "@/api/archive-items-api"
 import { SecurityLevel } from "@/api/archive-items-api"
 
 export type ArchiveItemCreationAttributes = {
@@ -22,7 +22,7 @@ export const archiveItemsApi = {
     attributes: Partial<ArchiveItemCreationAttributes>,
     files: File[]
   ): Promise<{
-    archiveItem: ArchiveItemShowView
+    archiveItem: ArchiveItemAsShow
   }> {
     const { data } = await http.post(
       `/api/information-sharing-agreements/${informationSharingAgreementId}/archive-items`,
