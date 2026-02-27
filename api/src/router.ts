@@ -118,7 +118,7 @@ router
   .get(ArchiveItemsController.index)
   .post(ArchiveItemsController.create)
 router
-  .route("/api/archive-items/:id")
+  .route("/api/archive-items/:archiveItemId")
   .get(ArchiveItemsController.show)
   .patch(ArchiveItemsController.update)
   .delete(ArchiveItemsController.destroy)

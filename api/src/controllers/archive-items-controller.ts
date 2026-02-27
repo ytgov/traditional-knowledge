@@ -141,7 +141,7 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
   }
 
   private loadArchiveItem() {
-    return ArchiveItem.findByPk(this.params.id, {
+    return ArchiveItem.findByPk(this.params.archiveItemId, {
       include: [
         "files",
         "user",
