@@ -251,16 +251,17 @@ async function saveAndRedirect() {
 
   isLoading.value = true
   try {
-    await Api.InformationSharingAgreements.archiveItemsApi.create(
+    const { archiveItem } = await Api.InformationSharingAgreements.archiveItemsApi.create(
       props.informationSharingAgreementId,
       archiveItemAttributes.value,
       files.value
     )
-
     snack.success("Item created.")
-
-    router.push({
-      name: "archive-items/ArchiveItemListPage",
+    await router.push({
+      name: "archive-items/ArchiveItemInformationSharingAgreementsPage",
+      params: {
+        archiveItemId: archiveItem.id,
+      },
     })
   } catch (error) {
     snack.error("Save failed!")
