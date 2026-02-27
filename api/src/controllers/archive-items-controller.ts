@@ -35,6 +35,44 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
     }
   }
 
+  async show() {
+    try {
+      const archiveItem = await this.loadArchiveItem()
+      if (isNil(archiveItem)) {
+        return this.response.status(404).json({
+          message: "Archive item not found",
+        })
+      }
+
+      const policy = this.buildPolicy(archiveItem)
+      if (!policy.show()) {
+        return this.response.status(403).json({
+          message: "You are not authorized to view this item",
+        })
+      }
+
+      // TODO: move to /services/archive-items/show-service.ts
+      await ArchiveItemAudit.create({
+        archiveItemId: archiveItem.id,
+        action: "Viewed Metadata",
+        userId: this.currentUser.id,
+        description: `${this.currentUser.displayName} viewed metadata`,
+      })
+
+      const serializedArchiveItem = ShowSerializer.perform(archiveItem)
+
+      return this.response.json({
+        archiveItem: serializedArchiveItem,
+        policy,
+      })
+    } catch (error) {
+      logger.error(`Error fetching item: ${error}`, { error })
+      return this.response.status(400).json({
+        message: `Error fetching item: ${error}`,
+      })
+    }
+  }
+
   async create() {
     try {
       const policy = this.buildPolicy()
@@ -75,46 +113,8 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
     }
   }
 
-  async show() {
-    try {
-      const archiveItem = await this.loadArchiveItem()
-      if (isNil(archiveItem)) {
-        return this.response.status(404).json({
-          message: "Archive item not found",
-        })
-      }
-
-      const policy = this.buildPolicy(archiveItem)
-      if (!policy.show()) {
-        return this.response.status(403).json({
-          message: "You are not authorized to view this item",
-        })
-      }
-
-      // TODO: move to /services/archive-items/show-service.ts
-      await ArchiveItemAudit.create({
-        archiveItemId: archiveItem.id,
-        action: "Viewed Metadata",
-        userId: this.currentUser.id,
-        description: `${this.currentUser.displayName} viewed metadata`,
-      })
-
-      const serializedArchiveItem = ShowSerializer.perform(archiveItem)
-
-      return this.response.json({
-        archiveItem: serializedArchiveItem,
-        policy,
-      })
-    } catch (error) {
-      logger.error(`Error fetching item: ${error}`, { error })
-      return this.response.status(400).json({
-        message: `Error fetching item: ${error}`,
-      })
-    }
-  }
-
-  private async loadArchiveItem() {
-    const item = await ArchiveItem.findByPk(this.params.id, {
+  private loadArchiveItem() {
+    return ArchiveItem.findByPk(this.params.id, {
       include: [
         "files",
         "user",
@@ -128,9 +128,6 @@ export class ArchiveItemsController extends BaseController<ArchiveItem> {
         },
       ],
     })
-    if (isNil(item)) return null
-
-    return item
   }
 
   private buildPolicy(archiveItem: ArchiveItem = ArchiveItem.build()) {
