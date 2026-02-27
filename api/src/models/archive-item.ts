@@ -224,7 +224,7 @@ export class ArchiveItem extends BaseModel<
   @BelongsToMany(() => InformationSharingAgreementAccessGrant, {
     through: () => ArchiveItemInformationSharingAgreementAccessGrant,
     foreignKey: "archiveItemId",
-    otherKey: "informationSharingAgreementAccessGrantId",
+    otherKey: "accessGrantId",
     inverse: "archiveItems",
     throughAssociations: {
       fromSource: "archiveItemAccessGrants",

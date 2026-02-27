@@ -66,7 +66,7 @@ export class ArchiveItemsPolicy extends PolicyFactory(ArchiveItem) {
           archive_item_information_sharing_agreement_access_grants.archive_item_id
         FROM
           archive_item_information_sharing_agreement_access_grants
-          INNER JOIN information_sharing_agreement_access_grants ON archive_item_information_sharing_agreement_access_grants.information_sharing_agreement_access_grant_id = information_sharing_agreement_access_grants.id
+          INNER JOIN information_sharing_agreement_access_grants ON archive_item_information_sharing_agreement_access_grants.access_grant_id = information_sharing_agreement_access_grants.id
         WHERE
           information_sharing_agreement_access_grants.user_id = :userId
       )
