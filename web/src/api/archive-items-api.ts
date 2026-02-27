@@ -117,6 +117,7 @@ export const archiveItemsApi = {
     return data
   },
 
+  // Special Actions
   async download(archiveItemId: number, fileId: number, getProtected: boolean) {
     const { data } = await http.get(
       `/api/archive-items/${archiveItemId}/files/${fileId}${getProtected ? "?format=protected" : ""}`,
