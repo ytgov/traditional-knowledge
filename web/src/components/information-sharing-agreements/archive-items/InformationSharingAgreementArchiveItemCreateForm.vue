@@ -102,6 +102,7 @@
             hide-selected
             multiple
             chips
+            :closable-chips="categoryIds.length > 1"
           />
           <v-combobox
             v-model="archiveItemAttributes.tags"
