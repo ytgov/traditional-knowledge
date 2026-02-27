@@ -49,8 +49,8 @@
       />
     </v-list-item>
 
-    <!-- Create Archive Item -->
     <v-list-item
+      v-if="!hasArchiveItem"
       :to="{
         name: 'information-sharing-agreements/archive-items/InformationSharingAgreementArchiveItemNewPage',
         params: {
@@ -76,11 +76,12 @@
 
 <script setup lang="ts">
 import { computed, toRefs } from "vue"
-import { isNil } from "lodash"
+import { isEmpty, isNil } from "lodash"
 
 import Api from "@/api"
 import useAuthenticatedDownload from "@/use/utils/use-authenticated-download"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
+import useInformationSharingAgreementArchiveItems from "@/use/use-information-sharing-agreement-archive-items"
 
 import BaseActionsMenuBtnGroup from "@/components/common/BaseActionsMenuBtnGroup.vue"
 import InformationSharingAgreementRevertToDraftDialog from "@/components/information-sharing-agreements/InformationSharingAgreementRevertToDraftDialog.vue"
@@ -95,6 +96,17 @@ const emit = defineEmits<{
 
 const { informationSharingAgreementId } = toRefs(props)
 const { isLoading, policy } = useInformationSharingAgreement(informationSharingAgreementId)
+
+const informationSharingAgreementArchiveItemsQuery = computed(() => ({
+  where: {
+    informationSharingAgreementId: props.informationSharingAgreementId,
+  },
+  perPage: 1,
+}))
+const { informationSharingAgreementArchiveItems } = useInformationSharingAgreementArchiveItems(
+  informationSharingAgreementArchiveItemsQuery
+)
+const hasArchiveItem = computed(() => !isEmpty(informationSharingAgreementArchiveItems.value))
 
 const generateSignedAcknowledgementUrl = computed(() =>
   Api.Downloads.InformationSharingAgreements.signedAcknowledgementApi.downloadPath(
