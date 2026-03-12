@@ -27,7 +27,8 @@ export class InformationSharingAgreementsController extends BaseController<Infor
         offset: this.pagination.offset,
       })
       const serializedInformationSharingAgreements = IndexSerializer.perform(
-        informationSharingAgreements
+        informationSharingAgreements,
+        this.currentUser
       )
       return this.response.json({
         informationSharingAgreements: serializedInformationSharingAgreements,

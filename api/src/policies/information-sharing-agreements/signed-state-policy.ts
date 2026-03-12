@@ -13,20 +13,10 @@ export class SignedStatePolicy extends GenericStatePolicy {
   }
 
   update(): boolean {
-    if (this.user.id === this.record.creatorId) return true
-    if (this.user.isSystemAdmin) return true
-    if (this.isAdminOfInternalGroup()) return true
-    if (this.isAdminOfExternalGroup()) return true
-
     return false
   }
 
   destroy(): boolean {
-    if (this.user.id === this.record.creatorId) return true
-    if (this.user.isSystemAdmin) return true
-    if (this.isAdminOfInternalGroup()) return true
-    if (this.isAdminOfExternalGroup()) return true
-
     return false
   }
 
@@ -42,20 +32,6 @@ export class SignedStatePolicy extends GenericStatePolicy {
     if (isNil(externalGroupId)) return false
 
     return this.user.isMemberOfGroup(externalGroupId)
-  }
-
-  private isAdminOfInternalGroup(): boolean {
-    const { internalGroupId } = this.record
-    if (isNil(internalGroupId)) return false
-
-    return this.user.isGroupAdminOf(internalGroupId)
-  }
-
-  private isAdminOfExternalGroup(): boolean {
-    const { externalGroupId } = this.record
-    if (isNil(externalGroupId)) return false
-
-    return this.user.isGroupAdminOf(externalGroupId)
   }
 }
 

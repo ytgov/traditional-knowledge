@@ -16,11 +16,11 @@ export class PDFConverterJob {
   constructor() {}
 
   async run(statDate: Date) {
-    logger.info("Running PDF Converter Job", statDate)
     const toConvert = await cache.getKeysByPattern(`CONVERT_`)
     const fileStore = new FileStorageService()
 
     for (const key of toConvert) {
+      logger.info(`Processing PDF conversion for key: ${key} on ${statDate}`)
       const data = await cache.getValue(key)
 
       if (isNil(data)) return

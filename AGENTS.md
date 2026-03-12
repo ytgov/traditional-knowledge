@@ -461,7 +461,9 @@ Multi-step guides that orchestrate templates. Use for complete features.
 
 - `create-admin-ui.md` - Full CRUD admin interface (references templates)
 - `pull-request-management.md` - Creating and editing PRs
-- `jira-issue-creation.md` - Creating Jira issues in TK project
+- `jira-issue-management.md` - Creating, enhancing, and managing Jira issues
+- `code-review.md` - Code review quality control
+- `testing-instructions.md` - Comprehensive testing instructions for PRs
 
 #### Usage Examples
 
