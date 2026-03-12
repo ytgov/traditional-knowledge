@@ -117,7 +117,7 @@
         <v-card-title>Attachments</v-card-title>
 
         <v-card-text>
-          <p class="mb-4">Drag and drop files or click the box belox</p>
+          <p class="mb-4">Drag and drop files or click the box below</p>
           <EnhancedFileInput
             v-model="files"
             multiple
