@@ -342,6 +342,7 @@ export class InformationSharingAgreement extends BaseModel<
                   information_sharing_agreement_archive_items
                 WHERE
                   archive_item_id = :archiveItemId
+                  AND deleted_at IS NULL
               )
             `,
           },
