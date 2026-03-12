@@ -50,7 +50,29 @@
     </v-list-item>
 
     <v-list-item
-      v-if="!hasArchiveItem"
+      v-if="!isNil(archiveItemId)"
+      :to="{
+        name: 'archive-items/ArchiveItemInformationSharingAgreementsPage',
+        params: {
+          archiveItemId,
+        },
+      }"
+    >
+      <v-list-item-title>View Knowledge Item</v-list-item-title>
+      <template #prepend>
+        <v-icon
+          size="small"
+          color="secondary"
+          icon="mdi-plus-circle-outline"
+        />
+      </template>
+      <v-tooltip
+        activator="parent"
+        text="View the knowledge item for this agreement."
+      />
+    </v-list-item>
+    <v-list-item
+      v-else
       :to="{
         name: 'information-sharing-agreements/archive-items/InformationSharingAgreementArchiveItemNewPage',
         params: {
@@ -76,7 +98,7 @@
 
 <script setup lang="ts">
 import { computed, toRefs } from "vue"
-import { isEmpty, isNil } from "lodash"
+import { isNil } from "lodash"
 
 import Api from "@/api"
 import useAuthenticatedDownload from "@/use/utils/use-authenticated-download"
@@ -106,7 +128,7 @@ const informationSharingAgreementArchiveItemsQuery = computed(() => ({
 const { informationSharingAgreementArchiveItems } = useInformationSharingAgreementArchiveItems(
   informationSharingAgreementArchiveItemsQuery
 )
-const hasArchiveItem = computed(() => !isEmpty(informationSharingAgreementArchiveItems.value))
+const archiveItemId = computed(() => informationSharingAgreementArchiveItems.value?.at(0)?.archiveItemId)
 
 const generateSignedAcknowledgementUrl = computed(() =>
   Api.Downloads.InformationSharingAgreements.signedAcknowledgementApi.downloadPath(
