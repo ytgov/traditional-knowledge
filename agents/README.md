@@ -12,7 +12,9 @@ agents/
 │   └── frontend/          (api-client, composables, components, pages, searchable-autocomplete)
 ├── workflows/             (multi-step task guides)
 │   ├── create-admin-ui.md
-│   ├── jira-issue-creation.md
+│   ├── jira-issue-management.md
+│   ├── code-review.md
+│   ├── testing-instructions.md
 │   └── pull-request-management.md
 ├── plans/                 (implementation plans for complex refactoring work)
 │   ├── README.md          (planning guidelines and structure)
@@ -58,7 +60,9 @@ Reusable code patterns organized by layer:
 Multi-step task guides:
 
 - [create-admin-ui.md](workflows/create-admin-ui.md) - Full CRUD admin UI (references templates)
-- [jira-issue-creation.md](workflows/jira-issue-creation.md) - Create Jira issues in TK project
+- [jira-issue-management.md](workflows/jira-issue-management.md) - Create, enhance, and manage Jira issues
+- [code-review.md](workflows/code-review.md) - Code review quality control
+- [testing-instructions.md](workflows/testing-instructions.md) - Comprehensive testing instructions for PRs
 - [pull-request-management.md](workflows/pull-request-management.md) - Create and manage PRs
 
 ### Plans (`agents/plans/`)
