@@ -35,8 +35,8 @@
     </template>
     <template #item.actions="{ item }">
       <div class="d-flex justify-end align-center">
-        <!-- TODO: only show edit button to users who can edit the agreement -->
         <v-btn
+          v-if="item.policy.update"
           :to="{
             name: 'information-sharing-agreements/InformationSharingAgreementEditBasicInformationPage',
             params: {
@@ -51,8 +51,8 @@
           variant="outlined"
           @click.stop
         />
-        <!-- TODO: only show edit button to users who can edit the agreement -->
         <v-btn
+          v-if="item.policy.destroy"
           class="ml-2"
           :loading="isDeleting"
           title="Delete"
@@ -62,6 +62,13 @@
           variant="outlined"
           @click.stop="confirmThenDelete(item)"
         />
+
+        <div
+          v-if="!item.policy.update && !item.policy.destroy"
+          class="mx-auto text-caption text-medium-emphasis"
+        >
+          &mdash;
+        </div>
       </div>
     </template>
   </v-data-table-server>

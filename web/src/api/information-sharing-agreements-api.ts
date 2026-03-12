@@ -94,6 +94,8 @@ export type InformationSharingAgreementAsIndex = Pick<
 > & {
   startDate: string | null
   endDate: string | null
+} & {
+  policy: Policy
 }
 
 /** Keep in sync with api/src/serializers/information-sharing-agreements/show-serializer.ts */
