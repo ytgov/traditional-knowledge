@@ -1,12 +1,6 @@
 <template>
   <BaseActionsMenuBtnGroup
-    primary-button-text="Edit"
-    :primary-button-to="{
-      name: 'information-sharing-agreements/InformationSharingAgreementEditPage',
-      params: {
-        informationSharingAgreementId,
-      },
-    }"
+    v-bind="primaryButtonAttributes"
     :loading="isLoading"
   >
     <v-list-item
@@ -27,7 +21,7 @@
       />
     </v-list-item>
     <v-list-item
-      v-if="!isNil(policy) && policy.update"
+      v-if="policy?.update"
       class="cursor-pointer"
     >
       <v-list-item-title>Revert to Draft</v-list-item-title>
@@ -46,51 +40,6 @@
         :information-sharing-agreement-id="informationSharingAgreementId"
         activator="parent"
         @success="emit('updated', informationSharingAgreementId)"
-      />
-    </v-list-item>
-
-    <v-list-item
-      v-if="!isNil(archiveItemId)"
-      :to="{
-        name: 'archive-items/ArchiveItemInformationSharingAgreementsPage',
-        params: {
-          archiveItemId,
-        },
-      }"
-    >
-      <v-list-item-title>View Knowledge Item</v-list-item-title>
-      <template #prepend>
-        <v-icon
-          size="small"
-          color="secondary"
-          icon="mdi-plus-circle-outline"
-        />
-      </template>
-      <v-tooltip
-        activator="parent"
-        text="View the knowledge item for this agreement."
-      />
-    </v-list-item>
-    <v-list-item
-      v-else
-      :to="{
-        name: 'information-sharing-agreements/archive-items/InformationSharingAgreementArchiveItemNewPage',
-        params: {
-          informationSharingAgreementId: props.informationSharingAgreementId,
-        },
-      }"
-    >
-      <v-list-item-title>Create Knowledge Item</v-list-item-title>
-      <template #prepend>
-        <v-icon
-          size="small"
-          color="secondary"
-          icon="mdi-plus-circle-outline"
-        />
-      </template>
-      <v-tooltip
-        activator="parent"
-        text="Create a knowledge item from this agreement."
       />
     </v-list-item>
   </BaseActionsMenuBtnGroup>
@@ -128,7 +77,32 @@ const informationSharingAgreementArchiveItemsQuery = computed(() => ({
 const { informationSharingAgreementArchiveItems } = useInformationSharingAgreementArchiveItems(
   informationSharingAgreementArchiveItemsQuery
 )
-const archiveItemId = computed(() => informationSharingAgreementArchiveItems.value?.at(0)?.archiveItemId)
+const archiveItemId = computed(
+  () => informationSharingAgreementArchiveItems.value?.at(0)?.archiveItemId
+)
+const primaryButtonAttributes = computed(() => {
+  if (!isNil(archiveItemId.value)) {
+    return {
+      primaryButtonText: "View Knowledge Item",
+      primaryButtonTo: {
+        name: "archive-items/ArchiveItemInformationSharingAgreementsPage",
+        params: {
+          archiveItemId: archiveItemId.value,
+        },
+      },
+    }
+  } else {
+    return {
+      primaryButtonText: "Create Knowledge Item",
+      primaryButtonTo: {
+        name: "information-sharing-agreements/archive-items/InformationSharingAgreementArchiveItemNewPage",
+        params: {
+          informationSharingAgreementId: props.informationSharingAgreementId,
+        },
+      },
+    }
+  }
+})
 
 const generateSignedAcknowledgementUrl = computed(() =>
   Api.Downloads.InformationSharingAgreements.signedAcknowledgementApi.downloadPath(
