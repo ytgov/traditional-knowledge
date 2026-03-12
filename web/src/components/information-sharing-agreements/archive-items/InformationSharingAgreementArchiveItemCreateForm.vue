@@ -129,6 +129,7 @@
           <v-btn
             type="submit"
             class="mt-5"
+            :loading="isLoading"
             >Save</v-btn
           >
         </v-card-text>
