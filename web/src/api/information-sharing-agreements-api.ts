@@ -196,6 +196,7 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
 export type InformationSharingAgreementFiltersOptions = FiltersOptions<{
   search: string | string[]
   notAssociatedWithArchiveItem: number
+  notLinkedToAnyArchiveItem: boolean
 }>
 
 export type InformationSharingAgreementQueryOptions = QueryOptions<

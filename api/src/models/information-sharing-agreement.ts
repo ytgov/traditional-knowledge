@@ -352,6 +352,26 @@ export class InformationSharingAgreement extends BaseModel<
         },
       }
     })
+
+    this.addScope("notLinkedToAnyArchiveItem", () => {
+      return {
+        where: {
+          [Op.and]: sql`
+            NOT EXISTS (
+              SELECT
+                1
+              FROM
+                information_sharing_agreement_archive_items
+              WHERE
+                information_sharing_agreement_archive_items.information_sharing_agreement_id = ${sql.attribute(
+                  "id"
+                )}
+                AND information_sharing_agreement_archive_items.deleted_at IS NULL
+            )
+          `,
+        },
+      }
+    })
   }
 }
 
