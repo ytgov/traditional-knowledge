@@ -8,9 +8,7 @@
         <ArchiveItemShareButton
           :archive-item-id="archiveItemIdAsNumber"
           :loading="isLoading"
-          @shared="
-            refreshInformationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator
-          "
+          @shared="refreshAll"
         />
       </div>
       <div>
@@ -18,7 +16,7 @@
           ref="informationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator"
           :where="informationSharingAgreementArchiveItemsWhereOptions"
           route-query-suffix="InformationSharingAgreementArchiveItems"
-          @deleted="refreshArchiveItem"
+          @deleted="refreshArchiveAndLinks"
         />
       </div>
     </template>
@@ -54,9 +52,10 @@ const informationSharingAgreementArchiveItemsQuery = computed(() => ({
   },
   perPage: 1,
 }))
-const { informationSharingAgreementArchiveItems } = useInformationSharingAgreementArchiveItems(
-  informationSharingAgreementArchiveItemsQuery
-)
+const {
+  informationSharingAgreementArchiveItems,
+  refresh: refreshInformationSharingAgreementArchiveItems,
+} = useInformationSharingAgreementArchiveItems(informationSharingAgreementArchiveItemsQuery)
 const hasExistingLink = computed(() => !isEmpty(informationSharingAgreementArchiveItems.value))
 
 const informationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator =
@@ -66,8 +65,15 @@ const informationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditD
     >
   >("informationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator")
 
-function refreshInformationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator() {
-  refreshArchiveItem()
-  informationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator.value?.refresh()
+async function refreshAll() {
+  await Promise.all([
+    refreshArchiveItem(),
+    refreshInformationSharingAgreementArchiveItems(),
+    informationSharingAgreementArchiveItemsAsInformationSharingAgreementsEditDataIterator.value?.refresh(),
+  ])
+}
+
+async function refreshArchiveAndLinks() {
+  await Promise.all([refreshArchiveItem(), refreshInformationSharingAgreementArchiveItems()])
 }
 </script>
