@@ -128,7 +128,7 @@ const router = useRouter()
 
 function goToInformationSharingAgreementPage(informationSharingAgreementId: number) {
   return router.push({
-    name: "administration/information-sharing-agreements/InformationSharingAgreementPage",
+    name: "information-sharing-agreements/InformationSharingAgreementPage",
     params: {
       informationSharingAgreementId,
     },

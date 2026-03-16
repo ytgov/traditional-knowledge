@@ -94,6 +94,8 @@ export type InformationSharingAgreementAsIndex = Pick<
 > & {
   startDate: string | null
   endDate: string | null
+} & {
+  policy: Policy
 }
 
 /** Keep in sync with api/src/serializers/information-sharing-agreements/show-serializer.ts */
@@ -196,6 +198,7 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
 export type InformationSharingAgreementFiltersOptions = FiltersOptions<{
   search: string | string[]
   notAssociatedWithArchiveItem: number
+  notLinkedToAnyArchiveItem: boolean
 }>
 
 export type InformationSharingAgreementQueryOptions = QueryOptions<

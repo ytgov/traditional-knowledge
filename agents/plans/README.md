@@ -4,9 +4,7 @@ This directory contains implementation planning documents for the Traditional Kn
 
 ## Available Plans
 
-| Plan | Description |
-|------|-------------|
-| [Plan, Vue Component Expansion Panels Refactor, 2026-02-03](Plan, Vue Component Expansion Panels Refactor, 2026-02-03.md) | Refactor InformationSharingAgreementLayout to use named slots component instead of router-view |
+See this directory for available plans. Plans are created as needed for complex implementation work and follow the naming convention: `Type, Title, Date.md`.
 
 ## Using Plans
 
@@ -107,4 +105,4 @@ All plans follow this template:
 
 ---
 
-**Last Updated:** 2026-02-03
+**Last Updated:** 2026-03-12

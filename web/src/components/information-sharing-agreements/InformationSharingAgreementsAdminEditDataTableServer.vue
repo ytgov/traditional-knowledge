@@ -36,6 +36,7 @@
     <template #item.actions="{ item }">
       <div class="d-flex justify-end align-center">
         <v-btn
+          v-if="item.policy.update"
           :to="{
             name: 'administration/information-sharing-agreements/InformationSharingAgreementEditPage',
             params: {
@@ -51,6 +52,7 @@
           @click.stop
         />
         <v-btn
+          v-if="item.policy.destroy"
           class="ml-2"
           :loading="isDeleting"
           title="Delete"
@@ -60,6 +62,13 @@
           variant="outlined"
           @click.stop="confirmThenDelete(item)"
         />
+
+        <div
+          v-if="!item.policy.update && !item.policy.destroy"
+          class="mx-auto text-caption text-medium-emphasis"
+        >
+          &mdash;
+        </div>
       </div>
     </template>
   </v-data-table-server>

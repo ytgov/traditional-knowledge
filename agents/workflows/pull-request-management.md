@@ -21,6 +21,8 @@ auto_execution_mode: 1
 - **Implementation section:** Focus on purpose and intent, not specific files. A reviewer can see file changes in the diff - the Implementation section explains the reasoning behind those changes.
 - **Screenshots:** Check the diff for `web/src/components/` or `web/src/pages/` changes. If present, write "TODO" and let user add screenshots. Only write "N/A - backend changes only" if there are truly no frontend changes.
 - **Draft mode:** Always create PRs as drafts first
+- **QA Testing:** Write testing instructions for someone with zero project knowledge, focusing on user interactions rather than technical implementation. Follow the `testing-instructions` workflow for comprehensive guidance on creating detailed, accurate testing instructions with exact UI element names and proper test case structure.
+- **Complete workflow sequence:** This is step 3 of 4 in the complete PR creation process. Always use after jira-issue-management and code-review workflows, then follow with testing-instructions workflow for comprehensive test coverage.
 
 This workflow covers the process of creating and editing well-structured pull requests that follow the established patterns in the Traditional Knowledge project.
 
@@ -478,6 +480,14 @@ The current system only supports screen viewing and printing, making it difficul
 
 ---
 
-**Last Updated:** 2026-01-23
+## Related Workflows
+
+- [`./jira-issue-management.md`](./jira-issue-management.md) - Creating well-structured Jira issues
+- [`./testing-instructions.md`](./testing-instructions.md) - Generate comprehensive testing instructions
+- [`./code-review.md`](./code-review.md) - Code review quality control
+
+---
+
+**Last Updated:** 2026-03-12
 
 *Update this workflow when you discover better patterns or Traditional Knowledge project conventions evolve.*

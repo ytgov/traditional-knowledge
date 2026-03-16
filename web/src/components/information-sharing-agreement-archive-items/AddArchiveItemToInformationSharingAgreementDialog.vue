@@ -95,6 +95,7 @@ const informationSharingAgreementArchiveItemAttributes = ref<
 
 const informationSharingAgreementFilters = computed(() => ({
   notAssociatedWithArchiveItem: archiveItemId.value,
+  notLinkedToAnyArchiveItem: true,
 }))
 
 const form = ref<InstanceType<typeof VForm> | null>(null)

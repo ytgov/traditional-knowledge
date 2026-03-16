@@ -15,59 +15,22 @@ These workflows exist to ensure consistent, high-quality output from AI agents. 
 
 ## Available Workflows
 
-### [create-admin-ui.md](create-admin-ui.md)
+| Workflow | Description |
+|----------|-------------|
+| [jira-issue-management.md](./jira-issue-management.md) | Create well-structured Jira issues following project patterns |
+| [code-review.md](./code-review.md) | Code review quality control for TypeScript code |
+| [pull-request-management.md](./pull-request-management.md) | Create and edit well-structured pull requests following project patterns |
+| [testing-instructions.md](./testing-instructions.md) | Generate comprehensive testing instructions for pull requests |
+| [create-admin-ui.md](./create-admin-ui.md) | Complete workflow for adding full CRUD admin UI for any model |
 
-Complete workflow for adding full CRUD admin UI for any model.
+### Complete PR Creation Sequence
 
-**Uses templates from:** [`agents/templates/`](../templates/)
+For a full PR workflow, follow these steps in order:
 
-**Produces:**
-- Backend: Model, Controller, Policy, Services, Serializers, Routes
-- Frontend: API Client, Composables, Components, Pages
-
-**Key Features:**
-- References reusable templates from `agents/templates/`
-- Includes implementation order, checklists, common pitfalls
-- Matches actual implementation from External Organizations
-
-**Reference:** External Organizations (`d4a9366`, `1f1dac8`)
-
----
-
-### [jira-issue-creation.md](jira-issue-creation.md)
-
-Complete workflow for creating well-structured Jira issues in the Traditional Knowledge (TK) project.
-
-**Includes:**
-- Step-by-step guidance for bugs, stories, tasks, and epics
-- Proper issue type selection and formatting
-- Acceptance criteria and definition of done
-- Priority and component assignment
-- Quality checklists and best practices
-
-**Project URL:** https://yg-hpw.atlassian.net/jira/software/projects/TK/boards/27
-
----
-
-### [pull-request-management.md](pull-request-management.md)
-
-Complete workflow for creating and editing well-structured pull requests following Traditional Knowledge project patterns and conventions.
-
-**Includes:**
-- PR title patterns (TICKET-ID, Fix:, Action Verb + Noun)
-- Comprehensive PR body template with Context, Implementation, Screenshots, Testing Instructions
-- Traditional Knowledge-specific testing commands and navigation patterns
-- Quality checklist and common pitfalls
-- Examples from actual Traditional Knowledge pull requests
-- Complete guide for editing existing pull requests
-
-**Key Features:**
-- Draft PR creation process
-- Standardized testing instructions
-- UI navigation patterns for Traditional Knowledge
-- Code quality standards integration
-- Common editing scenarios and workflows
-- Step-by-step examples for updating PR content
+1. **[jira-issue-management.md](./jira-issue-management.md)** — Create/update the Jira issue
+2. **[code-review.md](./code-review.md)** — Review code quality before PR
+3. **[pull-request-management.md](./pull-request-management.md)** — Create the draft PR
+4. **[testing-instructions.md](./testing-instructions.md)** — Add comprehensive testing instructions
 
 ---
 
@@ -81,20 +44,32 @@ Follow the workflow in agents/workflows/create-admin-ui.md
 to create admin UI for the KnowledgeCategory model.
 ```
 
+**Example - Create PR:**
+```
+Follow the workflow in agents/workflows/pull-request-management.md
+to create a PR for my changes.
+```
+
+**Example - Testing Instructions:**
+```
+Follow the workflow in agents/workflows/testing-instructions.md
+to create testing instructions for this PR.
+```
+
+**Example - Code Review:**
+```
+Follow the workflow in agents/workflows/code-review.md
+to review the code changes on this branch.
+```
+
 **Example - Specific Template:**
 ```
 Follow the template in agents/templates/frontend/components.md
 to create the KnowledgeCategoriesDataTable component.
 ```
 
-**Example - Backend Only:**
-```
-Follow the backend templates in agents/templates/backend/
-to create the API for KnowledgeCategory.
-```
-
 See parent [agents/README.md](../README.md) for setup instructions.
 
 ---
 
-**Last Updated:** 2026-01-27
+**Last Updated:** 2026-03-12

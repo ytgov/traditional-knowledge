@@ -121,7 +121,13 @@ const allInformationSharingAgreements = computed<InformationSharingAgreementAsIn
     return informationSharingAgreements.value
   }
 
-  return uniqBy([...informationSharingAgreements.value, informationSharingAgreement.value], "id")
+  return uniqBy(
+    [
+      ...informationSharingAgreements.value,
+      informationSharingAgreement.value as unknown as InformationSharingAgreementAsIndex,
+    ],
+    "id"
+  )
 })
 
 /**
