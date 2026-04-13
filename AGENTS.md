@@ -5,6 +5,20 @@ Traditional Knowledge is a web application for preserving, managing, and sharing
 This file follows the format from https://agents.md/ for AI agent documentation.
 
 **Documentation philosophy:** This file focuses on patterns, conventions, and architecture rather than documenting specific features or domain models. Examples illustrate patterns, not exhaustive feature documentation.
+Less is more: prefer the smallest guidance, implementation, or abstraction that fully solves the problem. A thing is complete not when there is nothing left to add, but when there is nothing left to take away.
+Do not remove durable reference material that is hard to rediscover later, such as known-good test inputs, sample payloads, or validated reference values.
+
+Keep `AGENTS.md` focused on project-wide conventions and high-level concepts. When guidance becomes specific to a subsystem or directory, move it into the nearest `README.md` or `agents/` workflow document and link to it from here.
+
+---
+
+## Design Philosophy
+
+**Perfection through removal, not addition:**
+
+Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away. Focus on removing unnecessary complexity, verbosity, and redundancy rather than adding more features or content.
+
+**Application:** Question whether new features are actually needed before implementing. Simpler is better when the feature doesn't add clear value.
 
 ---
 
@@ -30,6 +44,7 @@ This file follows the format from https://agents.md/ for AI agent documentation.
   - [Pull Request Guidelines](#pull-request-guidelines)
   - [Agent Workflow Patterns](#agent-workflow-patterns)
 - [Cultural Protocols & Indigenous Considerations](#cultural-protocols--indigenous-considerations)
+- [Changelog Management](#changelog-management)
 
 ---
 
@@ -109,6 +124,7 @@ This file follows the format from https://agents.md/ for AI agent documentation.
 ### Conventions
 
 - Use `@/` import alias for src directory (both API and web)
+- No relative imports anywhere except barrel `index.ts` re-exports
 - Database: snake_case, Models: camelCase (Sequelize handles mapping)
 - Test files mirror source structure: `api/src/services/example.ts` → `api/tests/services/example.test.ts`
 - Jira project: TK (https://yg-hpw.atlassian.net/jira/software/projects/TK/boards/27)
@@ -153,6 +169,7 @@ SQL
 ### Code Style
 
 - TypeScript only - no `any`, `as` type assertions, `@ts-expect-error`, `@ts-ignore`, or `!` (non-null assertion). Use `instanceof` narrowing with fallbacks instead of `as` casts.
+- **Use `type` instead of `interface`:** Prefer `type Foo = { ... }` over `interface Foo { ... }` — `interface` has unexpected side-effects (declaration merging, etc.)
 - Use optional chaining (`?.`) and nullish coalescing (`??`) for null handling
 - 2 spaces, no semicolons, double quotes, 100 char line limit
 - **No abbreviations:** Full descriptive names (`knowledgeEntry` not `ke`)
@@ -161,6 +178,17 @@ SQL
 - **Guard clauses:** Early returns with blank line after each guard
 - **Named constants:** Hoist magic numbers to named `const`
 - camelCase for variables/functions, PascalCase for classes/types
+- **Import formatting:** Use multi-line expanded imports for 4+ named items
+- **Extract and rename pattern:** When building data objects, extract and rename variables on separate lines before constructing the object rather than inline:
+  ```typescript
+  // Good
+  const { order: knowledgeEntryOrder } = this.knowledgeEntry
+  const data = { knowledgeEntryOrder, ...otherProps }
+
+  // Bad
+  const data = { knowledgeEntryOrder: this.knowledgeEntry.order, ...otherProps }
+  ```
+- **Prefer orchestration up front, pure helpers below:** Load required associations or context near the top-level `perform()`/service method, then pass simple values into small helper methods instead of hiding extra async lookups inside helpers.
 
 **Import ordering (PEP8-style):**
 
@@ -177,8 +205,14 @@ SQL
 - Business logic in services extending `BaseService`
 - Call via static method: `ServiceName.perform(args)` (never instantiate directly)
 - Services call other services, not queries directly
+- **Per-action class scaling:** For complex domains, use per-action classes in a subdirectory with barrel exports:
+  - `services/estimates/bulk-generate.ts` exports `BulkGenerate extends BaseService`
+  - `services/estimates/index.ts` re-exports with `export * from "./bulk-generate"`
+  - Import as `import { BulkGenerate } from "@/services/estimates"` or namespace-imported
 
 **Controller Pattern:**
+
+Request lifecycle: `Route → Controller → Policy → Service → Model → Serializer → Response`
 
 - RESTful controllers extending `BaseController`
 - Standard CRUD: `index()`, `show()`, `create()`, `update()`, `destroy()`
@@ -186,6 +220,7 @@ SQL
 - Authorization via `this.buildPolicy()` and `Policy.applyScope()`
 - Serializers format output (IndexSerializer, ShowSerializer)
 - Nested controllers in subfolders: `controllers/resource/action-controller.ts`
+- **Namespacing rule:** Prefer `Forms.Estimates.GenerateController.create` over `FormsController#generateEstimates` — non-CRUD actions on large controllers reduce readability
 
 **Serializer Naming Convention:**
 
@@ -197,6 +232,7 @@ SQL
 
 - Multi-line JSON responses with consistent formatting
 - Return policy information in create/update responses: `{ record, policy }`
+- When create/update/show responses need association data beyond the base model, reload with the required includes and serialize the response instead of returning the raw Sequelize model
 - Structured error logging: ``logger.error(`Failed to [action] [resource]: ${error}`, { error })``
 - Consistent error message format: `"Failed to [action] [resource]: ${error}"`
 
@@ -212,7 +248,13 @@ SQL
 
 **Models:**
 
+- One model per database table
+- Keep model concerns focused on persistence, associations, scopes, and model-adjacent helpers
+- Put business logic in services rather than growing models into service objects
 - **Soft deletes:** All models support `deletedAt` timestamp (paranoid mode enabled globally)
+- **Section order:** Prefer `Fields → Helpers → Associations → Static methods` ordering within model files
+- **Scope naming:** Name scopes for the relationship or business rule, not the parameter type (e.g., `byFundingPeriod`, `byCentre`)
+- **Anti-match scopes:** When excluding rows that already have a related record, prefer correlated `NOT EXISTS` predicates over client-built exclusion lists and over `NOT IN`
 - **Index Decorators:** When using `createIndexDecorator` on models:
   - First parameter (decorator identifier): Use kebab-case following JS/TS conventions
   - `name` property: Use snake_case to match the actual database index name from migrations
@@ -232,6 +274,27 @@ SQL
   - Place enums directly in relevant model files (not separate utilities)
   - Include model name in enum description: `UserYukonFirstNations` not generic `YukonFirstNations`
   - Add validation decorators with `@ValidateAttribute` and `isIn` for enum fields
+
+**Ledger vs Template Model Pattern:**
+
+- **Template models** hold current configuration and rates. Can be updated over time. Changes only affect new ledger records.
+- **Ledger models** record period-specific facts. Store values "as of" a specific period. Rate and other period-anchored fields are **copied at creation** and not re-templated later. User edits to transaction fields (such as `estimatedCost`, `notes`) are allowed for corrections.
+- Do not re-template or automatically recompute frozen, period-anchored fields on ledger models.
+- When designing new models, be explicit about which fields are copied "as of" a given period.
+
+**Queries Directory:**
+
+Use `api/src/queries/` for reusable raw SQL query builders when:
+- The SQL is substantial enough that keeping it inline obscures the surrounding code
+- The SQL is reused in multiple places or is likely to be
+- The SQL should be tested directly as its own unit
+
+Rules:
+- Return a single SQL fragment or subquery — keep queries focused
+- Prefer dedicated query files over overly generic helpers
+- Models consume query builders from scopes; services consume them when composing larger expressions
+- Test mirror: `api/src/queries/example/build-thing-query.ts` → `api/tests/queries/example/build-thing-query.test.ts`
+- If a fragment is only used once and reads clearly inline, it does not need its own file
 
 **Database:**
 
@@ -269,6 +332,8 @@ SQL
 - Pattern matching: `dev test api -- --grep "pattern"`
 - Path prefix (`api/` or `web/`) is auto-stripped by `bin/dev` for any argument position
 - Legacy commands: `dev test_api` and `dev test_web` still work
+- **Quick mode (skip global setup):** `dev test api --skip-setup -- --run <file>` runs ~5s instead of ~14s. Only use after the database is already initialized in the current session. Re-run without `--skip-setup` after pulling new migrations or resetting the database.
+- **Single container rule (AI agents):** Only one test container can run at a time — two containers cause database deadlocks. Before starting a test run, check for an existing container: `docker ps --format '{{.Names}}' | grep test_api`. If one is running, watch its output instead of starting another: `docker logs -f <container-name>`. Do not start a second `dev test api` command while another is active.
 
 **Test structure:**
 
@@ -283,12 +348,24 @@ SQL
 
 - Numbered entities: `user1`, `user2` (not `existingUser`, `newUser`)
 - Descriptive variable names: `knowledgeEntryAttributes` not `attributes`
-- **One `expect` per test** — each test verifies one thing
+- **One `expect` per test** — each test verifies one thing. Split distinct behaviors into separate tests.
 - Assert database state via `findAll()` without where clauses (test isolation handles cleanup)
+- Prefer concrete record assertions over count-only assertions. When asserting persisted results, prefer `findAll()` on the full table and compare records directly. Do not add restrictive `where` or `order` clauses unless that filter is the behavior under test.
 - Combine count + content: `expect(records).toEqual([expect.objectContaining({...})])` (not separate `toHaveLength` + `toEqual`)
+- **Expanded assertions:** When test expectation arrays or objects are easier to scan expanded, keep them one thing per line instead of collapsing:
+  ```typescript
+  expect(result).toEqual([
+    expect.objectContaining({
+      id: record.id,
+    }),
+  ])
+  ```
+- Avoid redundant `where` clauses in isolated scope or query tests unless the filter itself is under test.
+- Import order in tests: third-party libraries first, then models, then factories, then the file under test.
 - Negative spy assertions: `expect(spy).not.toHaveBeenCalled()` (never use `not.toHaveBeenCalledWith`)
 - Controller tests: `mockCurrentUser(user)` and `request().get("/api/path")` from `@/support`
 - **Error testing**: Use `.create()` with complete valid data, then destroy records to test "no longer exists" scenarios instead of using `.build()` with invalid IDs that cause foreign key violations
+- When a lookup must exist in tests, prefer `rejectOnEmpty: true` instead of a manual null guard after `findByPk`/`findOne`
 
 ---
 
@@ -301,10 +378,25 @@ SQL
 - 2 spaces, no semicolons, double quotes, 100 char line limit
 - camelCase for variables/functions, PascalCase for components
 - **Props definition:** Prefer TypeScript generic style `defineProps<{ prop: type }>()`
+- **Props defaults:** When `script setup` props need defaults, prefer `withDefaults(defineProps<...>(), ...)` rather than relying on optional props plus template checks alone.
 - **Loading states:** Use `isNil(data)` instead of boolean `isLoading` flags for more precise data presence checks
 - **Reactivity:** Use `toRefs(props)` when passing props to composables to maintain ref types and reactivity
+- **Shared formatters:** Prefer existing helpers from `@/utils/formatters` over creating local inline formatters. Only add a new formatter when no suitable one exists.
+- **Template refs:** Use `useTemplateRef("name")` instead of manual `ref<InstanceType<...> | null>(null)` for template references.
+- **Top-level const placement:** Keep top-level `const` declarations near the code that uses them. Group by conceptual distance rather than hoisting everything to the top of `script setup`.
+- **Explicit props over `$attrs`:** Define props explicitly rather than relying on `$attrs` inheritance or disabling it — explicit props are simpler and clearer.
+- **Pass shared context from parents:** When a parent already has contextual data, pass it as a prop rather than having the child refetch the same record.
+- **Date-only form state stays date-only:** For date-only inputs, keep form values as date-only strings and do timezone-aware datetime conversion only at the save boundary.
+- **Prefer simple one-way helpers over writable proxy computeds:** Derive with a readonly helper/computed instead of introducing a writable proxy layer when a value is only needed for display or save-time transformation.
+- **Vuetify-only classes:** Never use non-Vuetify utility classes (like Tailwind's `tracking-wide`). Stick to Vuetify typography and utility classes.
+- **Semantic color usage:** Use theme colors (`primary`, `warning`, `secondary`) directly without lighten/darken modifiers.
+- **Error notifications:** Use `console.error(...)` before `snack.error(...)` when handling a real error path. Do not log validation or other expected non-error user feedback with `console.error(...)`.
+- **Legacy cleanup triage:** Before modernizing an isolated legacy frontend component, verify it is still reachable. If it is orphaned, prefer deleting it over migrating it.
+- **Date formatter guard ordering:** In formatter helpers that accept `string | Date`, check `input instanceof Date` before generic `isEmpty(...)` checks — lodash treats JS `Date` objects as empty objects.
+- **Browser setTimeout:** Use `number` type, not `NodeJS.Timeout`. Example: `const timer = ref<number | undefined>(undefined)`
+- **Component guidance sharding:** Component-specific Vue/Vuetify patterns that are too granular for `AGENTS.md` belong in the nearest `web/src/components/README.md`. When a pattern is mainly about Vue component structure or Vuetify usage (not repo-wide architecture), document it there rather than expanding this file.
 
-### Component Naming Convention
+**Component Naming Convention:**
 
 **Pattern:** `{Model}{Purpose}{VuetifyComponent}.vue`
 
@@ -324,6 +416,13 @@ SQL
 - `CulturalProtocolEditDialog.vue` - Edit dialog for cultural protocols
 - `IndigenousLanguageSelect.vue` - Select for Indigenous languages
 
+**Layout vs Page components:**
+
+- **Pages** (`pages/`): Directly routable components. Name ends in `Page`. Path mirrors the URL.
+- **Layouts** (`layouts/`): Components that contain a `<router-view>`. Name ends in `Layout`. Use a `Redirect` sibling (same name, suffix swapped) to redirect to the first child.
+- **Page-specific components** live in `components/{page-name}/` subdirectory alongside their page.
+- Route naming follows `{domain}/{resource}/{PageName}` — e.g., `administration/knowledge-entries/KnowledgeEntryEditPage`
+
 ### Architecture Patterns
 
 **API Module Pattern:**
@@ -334,6 +433,18 @@ Type-safe API clients in `web/src/api/*-api.ts`
 - Export API object with methods: `list()`, `get()`, `create()`, `update()`, `delete()`
 - Methods return typed promises
 - Example: `knowledgeEntriesApi.list(params)` → `Promise<{ knowledgeEntries: KnowledgeEntryAsIndex[], totalCount: number }>`
+- **Type conventions:**
+  - `list()` → returns `{ resources: ResourceAsIndex[], totalCount: number }`
+  - `get()` → returns `{ resource: ResourceAsShow, policy: Policy }`
+  - `create()` → returns `{ resource: ResourceAsShow }` or `{ resource: ResourceAsShow, policy: Policy }`
+  - `update()` → returns `{ resource: ResourceAsShow, policy: Policy }`
+  - `delete()` → returns `Promise<void>`
+  - Always use `AsShow` for get/create/update, even if it's just an alias to the base model
+  - Exclude `deletedAt` from frontend types (internal only)
+  - Export `export type ResourcePolicy = Policy` for each resource
+  - `FiltersOptions` come from the backend model's `establishScopes()` method
+  - Keep deprecated `Object.freeze` constants alongside new TypeScript enums for backward compatibility, annotated with `@deprecated`
+  - Enum naming: `{ModelName}{FieldName}` in PascalCase (e.g., `KnowledgeEntryStatuses`)
 
 **Composable Pattern:**
 Reactive data fetching in `web/src/use/use-*.ts`
@@ -344,13 +455,89 @@ _Plural form (`useResources`) for collections:_
 - Return: `resources`, `totalCount`, `isLoading`, `isErrored`
 - Provide: `fetch()` and `refresh()` methods
 - Watch options with `deep: true, immediate: true`
+- Use array watch pattern: `watch(() => [skipWatchIf(), unref(options)], async ([skip]) => { if (skip) return ... })`
+- Always include `skipWatchIf` parameter (default `() => false`)
+- Re-export types for consumer convenience (`WhereOptions`, `FiltersOptions`, `QueryOptions`, enums)
+- State typed with explicit generic: `reactive<{ resources: ResourceAsIndex[]; totalCount: number; isLoading: boolean; isErrored: boolean }>()`
 
 _Singular form (`useResource`) for single items:_
 
 - Accept `id` ref (can be `number | null | undefined`)
+- Parameter type is always `Ref<number | null | undefined>` — use descriptive name: `resourceId`
 - Return: `resource`, `policy`, `isLoading`, `isErrored`
 - Provide: `fetch()`, `refresh()`, optionally `save()`
 - Watch id with `immediate: true`, skip if nil
+- Always include null guard in `save()`: throw if `state.resource` is nil before updating
+- Add `@deprecated` to stateful action methods (submit, approve) — prefer inline API calls in components
+- Error logging: ``console.error(`Failed to fetch resource: ${error}`, { error })`` (template literal + object)
+
+_Chaining composables with computed IDs:_
+
+When you need to fetch a detail record based on a list lookup, chain composables using a computed ID:
+
+```typescript
+const resourcesQuery = computed(() => ({
+  where: { name: props.name },
+}))
+const { resources } = useResources(resourcesQuery, {
+  skipWatchIf: () => !isReady.value,
+})
+const resourceId = computed(() => resources.value[0]?.id)
+const { resource } = useResource(resourceId)
+```
+
+This leverages Vue's reactivity — when `resources` updates, `resourceId` recomputes, triggering the singular composable to fetch automatically. Avoid manual watchers and imperative `fetch()` calls when reactive chaining suffices.
+
+**Page-Based Edit Pattern (preferred over inline dialogs):**
+
+For CRUD with server-side state, prefer the page pattern over inline dialogs:
+
+- **EditCard** (`{Model}EditCard.vue`) — wrapper card with title and "New" button that navigates to `NewPage`
+- **EditDataTable** (`{Model}EditDataTable.vue`) — server-paginated table with edit/delete navigation to `EditPage`
+- **NewPage** (`{Model}NewPage.vue`) — standalone page for creating records
+- **EditPage** (`{Model}EditPage.vue`) — standalone page for editing records
+
+Key rules:
+- Route props are always `string` — create `...AsNumber` computed using `parseInt()` for API calls, never `Number()`
+- Action method naming: `createAndReturn()`, `saveAndReturn()`, `deleteAndReturn()`
+- Form wrapper: `HeaderActionsFormCard` with `ref` and `validate()` guard before submit
+- Use `v-skeleton-loader type="card@2"` on `EditPage` while record loads
+- `returnTo` navigation: `useRouteQuery("returnTo", defaultReturnTo)` where `defaultReturnTo` uses `router.resolve().href`
+- Route names follow `{model-plural}/{Model}NewPage` and `{model-plural}/{Model}EditPage` pattern
+- `breadcrumbs` is a `computed` value passed to `useBreadcrumbs(breadcrumbs)`
+- Never create separate `CreateForm` components — embed form inline in `NewPage`
+- Always create separate `EditForm` components for `EditPage` (complex edit logic)
+
+**Serializer Association Pattern:**
+
+When a serializer depends on an eager-loaded association:
+- Destructure associations first: `const { organization } = this.record`
+- Fail with explicit preload errors: `throw new Error("Expected workflow organization association to be preloaded.")`
+- Serialize associations into named locals before the returned object:
+  ```typescript
+  const serializedOrganization = Organizations.ReferenceSerializer.perform(organization)
+  return {
+    ...pick(this.record, ["id", "organizationId"]),
+    organization: serializedOrganization,
+  }
+  ```
+- When index rows need policy data, serialize it as `PolicyAsReference` using a small `serializePolicy(record, currentUser)` helper.
+
+**Unique Field Validation Pattern:**
+
+For fields requiring uniqueness validation across the database:
+- Create a dedicated `{Model}{Field}UniqueTextField.vue` component
+- Accept `excludingIds?: number[]` prop to allow the current record's own value
+- Use `filters: { excludingIds }` (not `where: { excludeId }`) when querying for availability
+- Component calls the API's `list()` endpoint with the candidate value and checks for zero results
+
+**Financial Precision (if applicable):**
+
+- Never use JavaScript arithmetic operators on financial values directly.
+- Financial values should be strings in TypeScript, not `number`.
+- Use SQL `DECIMAL` types for storage.
+- Use `big.js` for arithmetic.
+- Use `.toFixed(4)` for money and `.toFixed(2)` for percentages or hours.
 
 ---
 
@@ -405,6 +592,33 @@ Follow the detailed patterns in `/agents/workflows/pull-request-management.md` f
 - Follow naming conventions (no abbreviations)
 - Write tests for new functionality (AAA pattern)
 - Never `git push --force` on main branch
+- **One commit per logical change** — don't bundle multiple fixes or changes into a single commit
+
+**Commit emoji guidance:**
+
+Format: `:emoji: Verb phrase.` — imperative mood, ends with a period.
+
+- Use `:butterfly:` for database migrations and data backfills
+- Use `:bug:` for bug fixes
+- Use `:sparkles:` for new features
+- Use `:recycle:` for structural cleanup or migration-safe refactors that preserve behavior
+- Use `:art:` for theme, styling, or visual changes
+- Use `:cherry_blossom:` for UI polish and cosmetic improvements
+- Use `:wrench:` for config and settings changes
+- Use `:memo:` for documentation and plan updates
+- Use `:hammer:` for infrastructure and tooling changes (docker, scripts)
+- Use `:arrow_up:` for dependency, runtime, and version bumps
+- Use `:construction:` for intentionally incomplete migration slices that may leave the app broken between commits
+- Use `Part of <issue-url>` in PR bodies for multi-PR work. Reserve `Fixes <issue-url>` for the PR that should actually close the issue.
+
+**Commit body guidance:**
+
+Write in plain English for the next developer reading `git log`. Focus on:
+- What changed (briefly, since the diff shows the how)
+- Why it was needed — the problem being solved
+- What the observable effect is for users or callers
+
+Avoid: in-progress reasoning, implementation mechanics, and code symbols in prose.
 
 **Testing Instructions Format:**
 
@@ -421,6 +635,7 @@ Navigation/verification steps:
 - Use navigation arrows: **Knowledge Base** → **Create Entry**
 - Explicit verification: "Verify success message: 'Entry created!'"
 - Format: Bold for **UI elements**, inline code for `exact values/URLs/errors`
+- **Always verify UI element names against the actual Vue component source** before writing instructions — do not guess button labels or field names
 
 For complex scenarios, use `## Test Case N: Description` subheadings.
 
@@ -430,6 +645,23 @@ For complex scenarios, use `## Test Case N: Description` subheadings.
 - **Context section**: Focus on the problem and solution. Use present tense ("implements" not "will implement")
 - **Implementation section**: Short, focused bullet points. Combine related items. Avoid qualifiers and unnecessary detail
 - **Example**: "Add group creation service" instead of "Add proper group creation service for the entire system"
+
+### Agent Workflow Discipline
+
+**Codebase-wide search discipline:**
+- Search for the **method or pattern**, not the variable name — variable names differ per file
+- BAD: `form\.value\.validate` — misses `formRef`, `headerActionsFormCard`, etc.
+- GOOD: `\.validate\(\)` — catches all call sites regardless of ref name
+- When doing a codebase-wide pass, use the most general regex that captures the semantic pattern, then filter false positives manually
+
+**Tracked files and permissions:**
+- Do not ask for permission to edit or delete a file that is already tracked by git.
+- Only escalate or ask for approval when the action is genuinely outside normal repository editing: sandbox restrictions, network access, or destructive operations the user did not request.
+
+**Template/Workflow Separation:**
+- Keep GitHub templates minimal with just structure
+- Move detailed guidance, examples, and instructions to agent workflows
+- Template = what to fill out, Workflow = how to fill it out
 
 ### Agent Templates and Workflows
 
@@ -484,8 +716,30 @@ See `agents/README.md` for full documentation.
 
 When creating new plan files in `/agents/plans/`, use the format:
 
-- File name: `Plan, <Ticket-ID> - <Descriptive Title>, <YYYY-MM-DD>.md`
-- Example: `Plan, TK-26 - Add Internal User from the Active Directory, 2026-01-22.md`
+- File name: `Type, Title, Date.md` (comma-separated, ISO date `YYYY-MM-DD`)
+- **Type** is a clear category: `Plan`, `Backend Refactoring`, `Frontend Feature`, `Infrastructure`
+- Examples:
+  - `Plan, TK-26 - Add Internal User from the Active Directory, 2026-01-22.md`
+  - `Backend Refactoring, Simplified Workflow Step Reordering, 2026-01-30.md`
+  - `Frontend Feature, User Profile Enhancement, 2026-01-30.md`
+- Use commas to separate components; no brackets or special characters; always ISO date format
+- See `agents/plans/README.md` for the full plan structure template (problem statement, current state, options, recommended action, files changed)
+
+**Reference Implementations in Workflows:**
+
+Workflow files should cite a reference commit hash for any concrete implementation they describe:
+- Format: `Reference: ModelName (commit: abc1234)`
+- Include reference commits in workflow files so readers can `git show <hash>` for the authoritative example
+
+**Workflow Frontmatter:**
+
+All workflow files should include:
+```yaml
+---
+description: Brief description of workflow purpose and scope
+---
+```
+The `description` field helps AI assistants understand when to apply the workflow automatically.
 
 ---
 
@@ -575,6 +829,19 @@ await auditLogService.create({
 
 ---
 
-**Version:** 1.1
-**Last Updated:** 2026-01-27
+## Changelog Management
+
+- Maintain a single canonical `CHANGELOG.md` in the origin repository.
+- Use Keep a Changelog structure with `## [Unreleased]` at the top.
+- Track upstream releases with time-based versions: `vYYYY.MM.DD.x`.
+- Keep origin-only work under `Unreleased` until it becomes part of an upstream release.
+- Write user-facing entries grouped by theme, not commit-log summaries.
+- For pull requests that change user-visible behavior or database schema, add at least one `Unreleased` entry. Pure refactors and test-only changes may be omitted and summarized later as a single "developer improvements" bullet during release preparation.
+- Use a single bullet such as "Developer improvements to tests, migrations, and logging" for large batches of internal changes.
+- Include short "Why?" explanations for major technical changes: framework upgrades, new subsystems, schema changes.
+
+---
+
+**Version:** 1.3
+**Last Updated:** 2026-04-27
 **Project:** Traditional Knowledge (TK)
