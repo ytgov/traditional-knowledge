@@ -51,6 +51,25 @@ Vue 3 + Vuetify 3 + TypeScript + Vite + Pinia.
 
 ---
 
+## Open In Editor
+
+When the frontend runs in Docker, Vue Devtools cannot launch your host editor directly from inside the container. This project handles that by:
+
+- Proxying Vite `"/__open-in-editor"` requests from the container to a small host-side bridge.
+- Translating container paths like `/usr/src/web/...` back to your host checkout path.
+- Launching `windsurf --goto ...` on the host by default.
+
+If you use the repo-level `dev` wrapper, this is automatic:
+
+- `dev up` starts the bridge before Docker Compose boots the stack.
+- `dev down` stops the bridge again.
+
+If you run Docker Compose manually on Linux, include `docker-compose.development.linux.yml` so the container can resolve `host.docker.internal`.
+
+The bridge prefers `OPEN_IN_EDITOR_COMMAND`, then `EDITOR`, and falls back to `windsurf`.
+
+---
+
 ## Subsystem Documentation
 
 - **API clients** → [`src/api/README.md`](src/api/README.md)
