@@ -119,6 +119,14 @@
                 color: 'secondary',
               }"
             />
+            <InformationSharingAgreementConfidentialityReceiptGenerateButton
+              v-if="isConfidentialityTypeAcceptedInConfidence"
+              :information-sharing-agreement-id="informationSharingAgreementId"
+              :activator-props="{
+                variant: 'outlined',
+                color: 'secondary',
+              }"
+            />
             <v-btn
               color="secondary"
               v-bind="signButtonProps"
@@ -172,10 +180,13 @@ import { isNil } from "lodash"
 import { type VBtn } from "vuetify/components"
 
 import { formatDate } from "@/utils/formatters"
+
 import useInformationSharingAgreement, {
   InformationSharingAgreementStatuses,
+  InformationSharingAgreementConfidentialityType,
 } from "@/use/use-information-sharing-agreement"
 
+import InformationSharingAgreementConfidentialityReceiptGenerateButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityReceiptGenerateButton.vue"
 import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
 import InformationSharingAgreementDownloadSignedAcknowledgementButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadSignedAcknowledgementButton.vue"
 import InformationSharingAgreementRevertToDraftDialog from "@/components/information-sharing-agreements/InformationSharingAgreementRevertToDraftDialog.vue"
@@ -223,6 +234,11 @@ const { informationSharingAgreement, policy, refresh } = useInformationSharingAg
 )
 const signedAcknowledgement = computed(
   () => informationSharingAgreement.value?.signedAcknowledgement
+)
+const isConfidentialityTypeAcceptedInConfidence = computed(
+  () =>
+    informationSharingAgreement.value?.confidentialityType ===
+    InformationSharingAgreementConfidentialityType.ACCEPTED_IN_CONFIDENCE
 )
 </script>
 
