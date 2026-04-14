@@ -1,6 +1,6 @@
 <template>
   <AuthenticatedPostForm
-    :action-url="generateAcknowledgementUrl"
+    :action-url="generateConfidentialityAcknowledgementUrl"
     text="Download Confidentiality Acknowledgement"
     :activator-props="{
       title: 'Download the confidentiality acknowledgement for printing and signature',
@@ -28,7 +28,7 @@ const props = withDefaults(
   }
 )
 
-const generateAcknowledgementUrl = computed(() =>
-  informationSharingAgreementsApi.generateAcknowledgementPath(props.informationSharingAgreementId)
+const generateConfidentialityAcknowledgementUrl = computed(() =>
+  informationSharingAgreementsApi.generateConfidentialityAcknowledgementPath(props.informationSharingAgreementId)
 )
 </script>

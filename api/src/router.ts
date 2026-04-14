@@ -165,7 +165,7 @@ router
   .post(InformationSharingAgreements.RevertToDraftController.create)
 router
   .route(
-    "/api/information-sharing-agreements/:informationSharingAgreementId/generate-acknowledgement"
+    "/api/information-sharing-agreements/:informationSharingAgreementId/generate-confidentiality-acknowledgement"
   )
   .post(InformationSharingAgreements.GenerateConfidentialityAcknowledgementController.create)
 router

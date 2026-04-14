@@ -211,8 +211,8 @@ export type InformationSharingAgreementQueryOptions = QueryOptions<
 >
 
 export const informationSharingAgreementsApi = {
-  generateAcknowledgementPath(informationSharingAgreementId: number) {
-    return `${API_BASE_URL}/api/information-sharing-agreements/${informationSharingAgreementId}/generate-acknowledgement?format=docx`
+  generateConfidentialityAcknowledgementPath(informationSharingAgreementId: number) {
+    return `${API_BASE_URL}/api/information-sharing-agreements/${informationSharingAgreementId}/generate-confidentiality-acknowledgement?format=docx`
   },
   generateConfidentialityReceiptPath(informationSharingAgreementId: number) {
     return `${API_BASE_URL}/api/information-sharing-agreements/${informationSharingAgreementId}/generate-confidentiality-receipt?format=docx`

@@ -112,11 +112,11 @@ const { informationSharingAgreement, isLoading, policy } = useInformationSharing
   informationSharingAgreementId
 )
 
-const generateAcknowledgementUrl = computed(() =>
-  informationSharingAgreementsApi.generateAcknowledgementPath(props.informationSharingAgreementId)
+const generateConfidentialityAcknowledgementUrl = computed(() =>
+  informationSharingAgreementsApi.generateConfidentialityAcknowledgementPath(props.informationSharingAgreementId)
 )
 const { submit: downloadDraft, isLoading: isDownloadingDraft } = useAuthenticatedDownload(
-  generateAcknowledgementUrl
+  generateConfidentialityAcknowledgementUrl
 )
 
 const isConfidentialityTypeAcceptedInConfidence = computed(
