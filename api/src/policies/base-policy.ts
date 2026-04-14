@@ -42,11 +42,11 @@ export class BasePolicy<M extends Model> {
     throw new Error("Derived classes must implement policyScope method")
   }
 
-  permitAttributes(record: Partial<M>): Partial<M> {
+  permitAttributes<TRecord = M>(record: Partial<TRecord>): Partial<TRecord> {
     return deepPick(record, this.permittedAttributes())
   }
 
-  permitAttributesForCreate(record: Partial<M>): Partial<M> {
+  permitAttributesForCreate<TRecord = M>(record: Partial<TRecord>): Partial<TRecord> {
     if (this.permittedAttributesForCreate !== BasePolicy.prototype.permittedAttributesForCreate) {
       return deepPick(record, this.permittedAttributesForCreate())
     } else {
@@ -54,7 +54,7 @@ export class BasePolicy<M extends Model> {
     }
   }
 
-  permitAttributesForUpdate(record: Partial<M>): Partial<M> {
+  permitAttributesForUpdate<TRecord = M>(record: Partial<TRecord>): Partial<TRecord> {
     if (this.permittedAttributesForUpdate !== BasePolicy.prototype.permittedAttributesForUpdate) {
       return deepPick(record, this.permittedAttributesForUpdate())
     } else {

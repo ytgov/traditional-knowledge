@@ -1,3 +1,5 @@
+import { isNil, omitBy } from "lodash"
+
 import { API_BASE_URL } from "@/config"
 import http from "@/api/http-client"
 import {
@@ -261,24 +263,19 @@ export const informationSharingAgreementsApi = {
   // Stateful Actions
   async sign(
     informationSharingAgreementId: number,
-    signedAcknowledgement: File,
-    signedConfidentialityAgreement?: File
+    attributes: {
+      signedAcknowledgement: File
+      signedConfidentialityReceipt?: File | null
+    }
   ): Promise<{
     informationSharingAgreement: InformationSharingAgreementAsShow
   }> {
-    const formData = new FormData()
-    formData.append("signedAcknowledgement", signedAcknowledgement)
-    if (signedConfidentialityAgreement !== undefined) {
-      formData.append("signedConfidentialityAgreement", signedConfidentialityAgreement)
-    }
-    const { data } = await http.post(
+    const cleanedAttributes = omitBy(attributes, isNil)
+    // https://github.com/axios/axios?tab=readme-ov-file#files-posting
+    // Axios supports the following shortcut methods: postForm, putForm, patchForm which are just the corresponding http methods with the Content-Type header preset to multipart/form-data.
+    const { data } = await http.postForm(
       `/api/information-sharing-agreements/${informationSharingAgreementId}/sign`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
+      cleanedAttributes
     )
     return data
   },

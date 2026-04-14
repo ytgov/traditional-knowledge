@@ -1,3 +1,5 @@
+import { type Path } from "@/utils/deep-pick"
+
 import { InformationSharingAgreement } from "@/models"
 import { PolicyFactory } from "@/policies/base-policy"
 
@@ -10,5 +12,16 @@ export class SignPolicy extends PolicyFactory(InformationSharingAgreement) {
     if (this.record.hasAccessGrantFor(this.user.id)) return true
 
     return false
+  }
+
+  permittedAttributesForCreate(): Path[] {
+    return [
+      {
+        signedAcknowledgement: ["path"],
+      },
+      {
+        signedConfidentialityReceipt: ["path"],
+      },
+    ]
   }
 }
