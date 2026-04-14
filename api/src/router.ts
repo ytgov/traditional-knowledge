@@ -164,6 +164,11 @@ router
   )
   .post(InformationSharingAgreements.GenerateAcknowledgementController.create)
 router
+  .route(
+    "/api/information-sharing-agreements/:informationSharingAgreementId/generate-confidentiality-receipt"
+  )
+  .post(InformationSharingAgreements.GenerateConfidentialityReceiptController.create)
+router
   .route("/api/information-sharing-agreements/:informationSharingAgreementId/archive-items")
   .post(InformationSharingAgreements.ArchiveItemsController.create)
 

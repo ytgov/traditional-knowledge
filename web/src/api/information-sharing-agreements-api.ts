@@ -20,6 +20,7 @@ export enum InformationSharingAgreementExpirationConditions {
   UNDETERMINED_WITH_DEFAULT_EXPIRATION = "undetermined_with_default_expiration",
 }
 
+// TODO: rename to InformationSharingAgreementConfidentialityTypes for consistency
 export enum InformationSharingAgreementConfidentialityType {
   ACCORDANCE = "ACCORDANCE",
   ACCEPTED_IN_CONFIDENCE = "ACCEPTED_IN_CONFIDENCE",
@@ -210,6 +211,9 @@ export const informationSharingAgreementsApi = {
   generateAcknowledgementPath(informationSharingAgreementId: number) {
     return `${API_BASE_URL}/api/information-sharing-agreements/${informationSharingAgreementId}/generate-acknowledgement?format=docx`
   },
+  generateConfidentialityReceiptPath(informationSharingAgreementId: number) {
+    return `${API_BASE_URL}/api/information-sharing-agreements/${informationSharingAgreementId}/generate-confidentiality-receipt?format=docx`
+  },
 
   async list(params: InformationSharingAgreementQueryOptions = {}): Promise<{
     informationSharingAgreements: InformationSharingAgreementAsIndex[]
@@ -257,12 +261,16 @@ export const informationSharingAgreementsApi = {
   // Stateful Actions
   async sign(
     informationSharingAgreementId: number,
-    signedAcknowledgement: File
+    signedAcknowledgement: File,
+    signedConfidentialityAgreement?: File
   ): Promise<{
     informationSharingAgreement: InformationSharingAgreementAsShow
   }> {
     const formData = new FormData()
     formData.append("signedAcknowledgement", signedAcknowledgement)
+    if (signedConfidentialityAgreement !== undefined) {
+      formData.append("signedConfidentialityAgreement", signedConfidentialityAgreement)
+    }
     const { data } = await http.post(
       `/api/information-sharing-agreements/${informationSharingAgreementId}/sign`,
       formData,

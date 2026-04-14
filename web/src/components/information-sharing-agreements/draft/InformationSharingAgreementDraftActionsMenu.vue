@@ -34,7 +34,7 @@
       :loading="isDownloadingDraft"
       @click="downloadDraft"
     >
-      <v-list-item-title>Download Draft</v-list-item-title>
+      <v-list-item-title>Download Confidentiality Acknowledgement</v-list-item-title>
       <template #prepend>
         <v-icon
           size="small"
@@ -44,7 +44,25 @@
       </template>
       <v-tooltip
         activator="parent"
-        text="Download a draft of the agreement for printing and signature."
+        text="Download the confidentiality acknowledgement for printing and signature."
+      />
+    </v-list-item>
+    <v-list-item
+      v-if="isConfidentialityTypeAcceptedInConfidence"
+      :loading="isDownloadingConfidentialityReceipt"
+      @click="downloadConfidentialityReceipt"
+    >
+      <v-list-item-title>Download Confidentiality Receipt</v-list-item-title>
+      <template #prepend>
+        <v-icon
+          size="small"
+          color="secondary"
+          icon="mdi-download"
+        />
+      </template>
+      <v-tooltip
+        activator="parent"
+        text="Download the confidentiality receipt for printing and signature."
       />
     </v-list-item>
     <v-list-item
@@ -71,10 +89,11 @@
 import { computed, ref, toRefs } from "vue"
 import { useRouter } from "vue-router"
 
-import informationSharingAgreementsApi from "@/api/information-sharing-agreements-api"
+import informationSharingAgreementsApi, {
+  InformationSharingAgreementConfidentialityType,
+} from "@/api/information-sharing-agreements-api"
 
 import useAuthenticatedDownload from "@/use/utils/use-authenticated-download"
-
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import useSnack from "@/use/use-snack"
 
@@ -89,7 +108,9 @@ const _emit = defineEmits<{
 }>()
 
 const { informationSharingAgreementId } = toRefs(props)
-const { isLoading, policy } = useInformationSharingAgreement(informationSharingAgreementId)
+const { informationSharingAgreement, isLoading, policy } = useInformationSharingAgreement(
+  informationSharingAgreementId
+)
 
 const generateAcknowledgementUrl = computed(() =>
   informationSharingAgreementsApi.generateAcknowledgementPath(props.informationSharingAgreementId)
@@ -97,6 +118,19 @@ const generateAcknowledgementUrl = computed(() =>
 const { submit: downloadDraft, isLoading: isDownloadingDraft } = useAuthenticatedDownload(
   generateAcknowledgementUrl
 )
+
+const isConfidentialityTypeAcceptedInConfidence = computed(
+  () =>
+    informationSharingAgreement.value?.confidentialityType ===
+    InformationSharingAgreementConfidentialityType.ACCEPTED_IN_CONFIDENCE
+)
+const confidentialityReceiptUrl = computed(() =>
+  informationSharingAgreementsApi.generateConfidentialityReceiptPath(
+    props.informationSharingAgreementId
+  )
+)
+const { submit: downloadConfidentialityReceipt, isLoading: isDownloadingConfidentialityReceipt } =
+  useAuthenticatedDownload(confidentialityReceiptUrl)
 
 const isDeleting = ref(false)
 const snack = useSnack()
