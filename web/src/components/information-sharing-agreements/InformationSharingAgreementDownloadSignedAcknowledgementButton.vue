@@ -1,9 +1,9 @@
 <template>
   <AuthenticatedPostForm
     :action-url="downloadSignedAcknowledgementUrl"
-    text="Signed Acknowledgement"
+    text="Signed Confidentiality Acknowledgement"
     :activator-props="{
-      title: 'Download the signed acknowledgement document',
+      title: 'Download the signed confidentiality acknowledgement document',
       ...activatorProps,
     }"
   />

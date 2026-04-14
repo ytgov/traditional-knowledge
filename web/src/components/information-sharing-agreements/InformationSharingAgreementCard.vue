@@ -100,7 +100,7 @@
             color="#ffffff66"
           >
             <v-card-text>
-              <h3 class="mt-n1 mb-3">Signed Acknowledgement</h3>
+              <h3 class="mt-n1 mb-3">Signed Confidentiality Acknowledgement</h3>
               <span>{{ signedAcknowledgement.name }}</span>
             </v-card-text>
           </v-card>
