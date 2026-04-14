@@ -83,7 +83,7 @@
         </v-col>
         <v-col cols="12">
           <v-text-field
-            :model-value="`${formatDate(informationSharingAgreement.startDate)} to ${formatDate(informationSharingAgreement.endDate)}`"
+            :model-value="duration"
             label="Duration"
             readonly
           />
@@ -232,6 +232,12 @@ const { informationSharingAgreementId } = toRefs(props)
 const { informationSharingAgreement, policy, refresh } = useInformationSharingAgreement(
   informationSharingAgreementId
 )
+const duration = computed(() => {
+  const startDateFormatted = formatDate(informationSharingAgreement.value?.startDate)
+  const endDateFormatted = formatDate(informationSharingAgreement.value?.endDate)
+  return [startDateFormatted, endDateFormatted].filter(Boolean).join(" to ")
+})
+
 const signedAcknowledgement = computed(
   () => informationSharingAgreement.value?.signedAcknowledgement
 )
