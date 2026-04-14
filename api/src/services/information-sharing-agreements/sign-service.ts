@@ -76,11 +76,11 @@ export class SignService extends BaseService {
       )
 
       if (!isNil(signedConfidentialityReceiptFilePath)) {
-        const confidentialityAgreementFileName =
-          this.buildConfidentialityAgreementFileName(safeTitle)
+        const confidentialityReceiptFileName =
+          this.buildConfidentialityReceiptFileName(safeTitle)
         await Attachments.UpsertService.perform(
           signedConfidentialityReceiptFilePath,
-          confidentialityAgreementFileName,
+          confidentialityReceiptFileName,
           {
             targetId: this.informationSharingAgreement.id,
             targetType: Attachment.TargetTypes.InformationSharingAgreement,
@@ -122,7 +122,7 @@ export class SignService extends BaseService {
     return `Signed Confidentiality Acknowledgement, ${safeTitle}, ${date}`
   }
 
-  private buildConfidentialityAgreementFileName(safeTitle: string): string {
+  private buildConfidentialityReceiptFileName(safeTitle: string): string {
     const date = DateTime.now().toFormat("yyyy-MM-dd")
     return `Signed Confidentiality Receipt, ${safeTitle}, ${date}`
   }
