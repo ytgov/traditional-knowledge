@@ -167,7 +167,7 @@ router
   .route(
     "/api/information-sharing-agreements/:informationSharingAgreementId/generate-acknowledgement"
   )
-  .post(InformationSharingAgreements.GenerateAcknowledgementController.create)
+  .post(InformationSharingAgreements.GenerateConfidentialityAcknowledgementController.create)
 router
   .route(
     "/api/information-sharing-agreements/:informationSharingAgreementId/generate-confidentiality-receipt"

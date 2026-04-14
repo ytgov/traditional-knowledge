@@ -10,7 +10,7 @@ import { CreateService } from "@/services/information-sharing-agreements/generat
 
 import BaseController from "@/controllers/base-controller"
 
-export class GenerateAcknowledgementController extends BaseController<InformationSharingAgreement> {
+export class GenerateConfidentialityAcknowledgementController extends BaseController<InformationSharingAgreement> {
   async create() {
     try {
       const informationSharingAgreement = await this.loadInformationSharingAgreement()
@@ -89,4 +89,4 @@ export class GenerateAcknowledgementController extends BaseController<Informatio
   }
 }
 
-export default GenerateAcknowledgementController
+export default GenerateConfidentialityAcknowledgementController
