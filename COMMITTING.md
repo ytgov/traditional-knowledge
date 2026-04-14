@@ -45,3 +45,37 @@ Avoid: in-progress reasoning, implementation mechanics, and code symbols in pros
 - **One commit per logical change** — don't bundle multiple fixes or changes into a single commit
 - Never `git push --force` on main branch
 - Use `Part of <issue-url>` in PR bodies for multi-PR work. Reserve `Fixes <issue-url>` for the PR that should actually close the issue.
+
+---
+
+## PR Description Guidelines
+
+See also: [`agents/workflows/pull-request-management.md`](agents/workflows/pull-request-management.md) for full PR creation workflow.
+
+- **Concise language:** use direct, active voice. Avoid redundant words like "entire", "proper", "fully".
+- **Context section:** focus on the problem and solution. Use present tense ("implements" not "will implement").
+- **Implementation section:** short, focused bullet points. Combine related items. Avoid qualifiers and unnecessary detail.
+- **Example:** "Add group creation service" instead of "Add proper group creation service for the entire system".
+
+---
+
+## Testing Instructions Format
+
+See also: [`agents/workflows/testing-instructions.md`](agents/workflows/testing-instructions.md) for comprehensive guidance.
+
+Standard setup (always include):
+
+1. Run test suite: `dev test`
+2. Boot app: `dev up`
+3. Log in at http://localhost:3000
+
+Navigation/verification steps:
+
+- Use exact UI element names: **Add Entry**, **Set Protocol**
+- Reference menu locations: "top right dropdown nav", "left sidebar nav"
+- Use navigation arrows: **Knowledge Base** → **Create Entry**
+- Explicit verification: "Verify success message: 'Entry created!'"
+- Format: Bold for **UI elements**, inline code for `exact values/URLs/errors`
+- **Always verify UI element names against the actual Vue component source** before writing instructions — do not guess button labels or field names.
+
+For complex scenarios, use `## Test Case N: Description` subheadings.

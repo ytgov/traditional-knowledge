@@ -1,5 +1,23 @@
 # Controllers
 
+→ **Copy-paste template:** [`agents/templates/backend/controller.md`](../../../agents/templates/backend/controller.md)
+
+For complete feature scaffolding: [`agents/workflows/create-admin-ui.md`](../../../agents/workflows/create-admin-ui.md)
+
+## Conventions
+
+Request lifecycle: `Route → Controller → Policy → Service → Model → Serializer → Response`
+
+- Extend `BaseController`. Standard CRUD: `index()`, `show()`, `create()`, `update()`, `destroy()`.
+- Authorization via `this.buildPolicy()` and `Policy.applyScope()`.
+- Serializers format output (`IndexSerializer`, `ShowSerializer`).
+- Return `{ record, policy }` from create/update responses.
+- When responses need association data, reload with required includes before serializing.
+- Error logging: `` logger.error(`Failed to [action] [resource]: ${error}`, { error }) ``
+- Serializer types: `AsIndex` for lists, `AsShow` for single records. Pattern: `{Model}AsIndex`, `{Model}AsShow`.
+
+---
+
 These files map api routes to models, policies, services, and serializers.
 See https://guides.rubyonrails.org/routing.html#crud-verbs-and-actions
 

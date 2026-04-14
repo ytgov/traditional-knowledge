@@ -97,3 +97,35 @@ The path reformatting logic lives in `bin/dev` (`reformat_project_relative_path_
      ]
    }
    ```
+
+## Test Structure
+
+- Use `test` not `it`.
+- Nested describe blocks: file path → class name → method name.
+- AAA pattern with explicit comments: `// Arrange`, `// Act`, `// Assert`.
+- Test naming: `"when [condition], [expected behavior]"`.
+- Use Fishery factories for all test data.
+
+## Test Patterns
+
+- **Numbered entities:** `user1`, `user2` (not `existingUser`, `newUser`).
+- **Descriptive names:** `knowledgeEntryAttributes` not `attributes`.
+- **One `expect` per test** — each test verifies one thing.
+- Assert database state via `findAll()` without where clauses (test isolation handles cleanup).
+- Prefer `findAll()` on the full table and compare records directly. Do not add restrictive `where` or `order` clauses unless that filter is the behavior under test.
+- Combine count + content: `expect(records).toEqual([expect.objectContaining({...})])` — not separate `toHaveLength` + `toEqual`.
+- **Expanded assertions:** keep expectation arrays one thing per line:
+  ```typescript
+  expect(result).toEqual([
+    expect.objectContaining({
+      id: record.id,
+    }),
+  ])
+  ```
+- Import order: third-party libraries → models → factories → file under test.
+- Negative spy assertions: `expect(spy).not.toHaveBeenCalled()` — never use `not.toHaveBeenCalledWith`.
+- Controller tests: `mockCurrentUser(user)` and `request().get("/api/path")` from `@/support`.
+- **Error testing:** use `.create()` with complete valid data, then destroy records to test "no longer exists" — do not use `.build()` with invalid IDs that cause foreign key violations.
+- Prefer `rejectOnEmpty: true` instead of a manual null guard after `findByPk`/`findOne`.
+- **Quick mode:** `dev test api --skip-setup -- --run <file>` runs ~5s instead of ~14s. Only use after DB is already initialized in the current session.
+- **Single container rule:** only one test container at a time — two containers cause DB deadlocks. Check with `docker ps --format '{{.Names}}' | grep test_api` before starting.
