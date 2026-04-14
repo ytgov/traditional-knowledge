@@ -146,18 +146,20 @@ class OpenInEditorBridge
     end
 
     translated_target = translate_target(file)
-    success = system(*editor_command_args, "--goto", translated_target)
 
     write_json_response(
       socket,
-      status: success ? 200 : 500,
+      status: 200,
       payload: {
-        ok: success,
+        ok: true,
         requestedFile: file,
         translatedTarget: translated_target,
         editorCommand: EDITOR_COMMAND,
       }
     )
+
+    pid = Process.spawn(*editor_command_args, "--goto", translated_target)
+    Process.detach(pid)
   end
 
   def write_json_response(socket, status: 200, payload:)
