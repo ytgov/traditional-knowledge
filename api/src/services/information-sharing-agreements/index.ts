@@ -11,5 +11,5 @@ export { DestroyGroupsService } from "./destroy-groups-service"
 
 // Bundled exports
 export * as ArchiveItems from "./archive-items"
-export * as GenerateAcknowledgement from "./generate-acknowledgement"
+export * as GenerateConfidentialityAcknowledgement from "./generate-confidentiality-acknowledgement"
 export * as GenerateConfidentialityAgreement from "./generate-confidentiality-agreement"
