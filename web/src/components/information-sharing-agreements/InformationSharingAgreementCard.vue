@@ -150,7 +150,7 @@
                 @success="refresh"
               />
             </v-btn>
-            <InformationSharingAgreementDownloadSignedAcknowledgementButton
+            <InformationSharingAgreementDownloadSignedConfidentialityAcknowledgementButton
               :information-sharing-agreement-id="informationSharingAgreementId"
             />
           </template>
@@ -188,7 +188,7 @@ import useInformationSharingAgreement, {
 
 import InformationSharingAgreementConfidentialityAcknowledgementDownloadButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityAcknowledgementDownloadButton.vue"
 import InformationSharingAgreementConfidentialityReceiptGenerateButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityReceiptGenerateButton.vue"
-import InformationSharingAgreementDownloadSignedAcknowledgementButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadSignedAcknowledgementButton.vue"
+import InformationSharingAgreementDownloadSignedConfidentialityAcknowledgementButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadSignedConfidentialityAcknowledgementButton.vue"
 import InformationSharingAgreementRevertToDraftDialog from "@/components/information-sharing-agreements/InformationSharingAgreementRevertToDraftDialog.vue"
 
 import GroupChip from "@/components/groups/GroupChip.vue"
