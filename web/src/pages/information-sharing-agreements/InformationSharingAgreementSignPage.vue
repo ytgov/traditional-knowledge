@@ -46,7 +46,7 @@
             below:
           </p>
           <div class="d-flex flex-column ga-2">
-            <InformationSharingAgreementDownloadDraftButton
+            <InformationSharingAgreementConfidentialityAcknowledgementDownloadButton
               :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
               :activator-props="{
                 variant: 'text',
@@ -112,8 +112,8 @@ import useInformationSharingAgreement from "@/use/use-information-sharing-agreem
 import useSnack from "@/use/use-snack"
 
 import EnhancedFileInput from "@/components/common/EnhancedFileInput.vue"
+import InformationSharingAgreementConfidentialityAcknowledgementDownloadButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityAcknowledgementDownloadButton.vue"
 import InformationSharingAgreementConfidentialityReceiptGenerateButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityReceiptGenerateButton.vue"
-import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
 
 const props = defineProps<{
   informationSharingAgreementId: string

@@ -112,7 +112,7 @@
           <template
             v-if="informationSharingAgreement.status === InformationSharingAgreementStatuses.DRAFT"
           >
-            <InformationSharingAgreementDownloadDraftButton
+            <InformationSharingAgreementConfidentialityAcknowledgementDownloadButton
               :information-sharing-agreement-id="informationSharingAgreementId"
               :activator-props="{
                 variant: 'outlined',
@@ -186,8 +186,8 @@ import useInformationSharingAgreement, {
   InformationSharingAgreementConfidentialityType,
 } from "@/use/use-information-sharing-agreement"
 
+import InformationSharingAgreementConfidentialityAcknowledgementDownloadButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityAcknowledgementDownloadButton.vue"
 import InformationSharingAgreementConfidentialityReceiptGenerateButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityReceiptGenerateButton.vue"
-import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
 import InformationSharingAgreementDownloadSignedAcknowledgementButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadSignedAcknowledgementButton.vue"
 import InformationSharingAgreementRevertToDraftDialog from "@/components/information-sharing-agreements/InformationSharingAgreementRevertToDraftDialog.vue"
 
