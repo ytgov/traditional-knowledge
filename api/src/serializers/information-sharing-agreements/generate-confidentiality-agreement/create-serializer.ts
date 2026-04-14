@@ -1,4 +1,4 @@
-import { isUndefined } from "lodash"
+import { isEmpty, isUndefined } from "lodash"
 
 import { InformationSharingAgreement } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
@@ -6,11 +6,12 @@ import BaseSerializer from "@/serializers/base-serializer"
 export type InformationSharingAgreementAsConfidentialityAgreement = {
   "external_group_contact.external_organization.name": string
   "information_sharing_agreement.purpose": string
-  "information_sharing_agreement.department_branch_unit_hierarchy": string
   "information_sharing_agreement.authorized_application": string
+  "internal_group_contact.department": string
+  "internal_group_contact.branch_unit_hierarchy": string
   "internal_group_contact.display_name": string
   "internal_group_contact.title": string
-  "internal_group_contact.branch": string
+  has_internal_group_contact_branch_or_unit: boolean
 }
 
 export class CreateSerializer extends BaseSerializer<InformationSharingAgreement> {
@@ -33,29 +34,27 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
     const purposeOrFallback = purpose ?? ""
     const authorizedApplicationOrFallback = authorizedApplication ?? ""
 
-    const departmentBranchUnitHierarchy = this.buildDepartmentBranchUnitHierarchy(
-      this.record.accessLevelDepartmentRestriction,
-      this.record.accessLevelBranchRestriction,
-      this.record.accessLevelUnitRestriction
+    const internalGroupContactDepartment = internalGroupContact.department ?? ""
+    const internalGroupContactBranchUnitHierarchy = this.buildBranchUnitHierarchy(
+      internalGroupContact.branch,
+      internalGroupContact.unit
     )
+    const hasInternalGroupContactBranchOrUnit = !isEmpty(internalGroupContactBranchUnitHierarchy)
 
     return {
       "external_group_contact.external_organization.name": externalOrganization.name,
       "information_sharing_agreement.purpose": purposeOrFallback,
-      "information_sharing_agreement.department_branch_unit_hierarchy": departmentBranchUnitHierarchy,
       "information_sharing_agreement.authorized_application": authorizedApplicationOrFallback,
+      "internal_group_contact.department": internalGroupContactDepartment,
+      "internal_group_contact.branch_unit_hierarchy": internalGroupContactBranchUnitHierarchy,
       "internal_group_contact.display_name": internalGroupContact.displayName,
       "internal_group_contact.title": internalGroupContact.title ?? "",
-      "internal_group_contact.branch": internalGroupContact.branch ?? "",
+      has_internal_group_contact_branch_or_unit: hasInternalGroupContactBranchOrUnit,
     }
   }
 
-  private buildDepartmentBranchUnitHierarchy(
-    department: string | null,
-    branch: string | null,
-    unit: string | null
-  ): string {
-    return [department, branch, unit].filter(Boolean).join(", ")
+  private buildBranchUnitHierarchy(branch: string | null, unit: string | null): string {
+    return [branch, unit].filter(Boolean).join(", ")
   }
 }
 
