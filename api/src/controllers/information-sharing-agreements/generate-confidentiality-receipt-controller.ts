@@ -6,7 +6,7 @@ import quickStartBufferStream from "@/utils/quick-start-buffer-stream"
 
 import { InformationSharingAgreement } from "@/models"
 import { InformationSharingAgreementPolicy } from "@/policies"
-import { CreateService } from "@/services/information-sharing-agreements/generate-confidentiality-agreement"
+import { CreateService } from "@/services/information-sharing-agreements/generate-confidentiality-receipt"
 
 import BaseController from "@/controllers/base-controller"
 

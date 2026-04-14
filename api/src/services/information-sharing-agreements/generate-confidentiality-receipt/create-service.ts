@@ -10,7 +10,7 @@ import BaseService from "@/services/base-service"
 import {
   CreateSerializer,
   type AsConfidentialityReceipt,
-} from "@/serializers/information-sharing-agreements/generate-confidentiality-agreement"
+} from "@/serializers/information-sharing-agreements/generate-confidentiality-receipt"
 
 export class CreateService extends BaseService {
   constructor(

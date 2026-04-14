@@ -3,4 +3,4 @@ export { ShowSerializer } from "./show-serializer"
 
 // Bundle exports
 export * as GenerateAcknowledgement from "./generate-acknowledgement"
-export * as GenerateConfidentialityAgreement from "./generate-confidentiality-agreement"
+export * as GenerateConfidentialityReceipt from "./generate-confidentiality-receipt"

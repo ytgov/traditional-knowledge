@@ -3,7 +3,7 @@ import { isEmpty, isUndefined } from "lodash"
 import { InformationSharingAgreement } from "@/models"
 import BaseSerializer from "@/serializers/base-serializer"
 
-export type InformationSharingAgreementAsConfidentialityAgreement = {
+export type InformationSharingAgreementAsConfidentialityReceipt = {
   "external_group_contact.external_organization.name": string
   "information_sharing_agreement.purpose": string
   "information_sharing_agreement.authorized_application": string
@@ -15,7 +15,7 @@ export type InformationSharingAgreementAsConfidentialityAgreement = {
 }
 
 export class CreateSerializer extends BaseSerializer<InformationSharingAgreement> {
-  perform(): InformationSharingAgreementAsConfidentialityAgreement {
+  perform(): InformationSharingAgreementAsConfidentialityReceipt {
     const { externalGroupContact, internalGroupContact } = this.record
     if (isUndefined(externalGroupContact)) {
       throw new Error("Expected externalGroupContact association to be preloaded")
