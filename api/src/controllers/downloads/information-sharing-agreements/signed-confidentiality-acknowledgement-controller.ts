@@ -6,7 +6,7 @@ import { AttachmentTargetTypes } from "@/models/attachment"
 import { InformationSharingAgreementPolicy } from "@/policies"
 import BaseController from "@/controllers/base-controller"
 
-export class SignedAcknowledgementController extends BaseController<InformationSharingAgreement> {
+export class SignedConfidentialityAcknowledgementController extends BaseController<InformationSharingAgreement> {
   async create() {
     try {
       const informationSharingAgreement = await this.loadInformationSharingAgreement()
@@ -63,4 +63,4 @@ export class SignedAcknowledgementController extends BaseController<InformationS
   }
 }
 
-export default SignedAcknowledgementController
+export default SignedConfidentialityAcknowledgementController
