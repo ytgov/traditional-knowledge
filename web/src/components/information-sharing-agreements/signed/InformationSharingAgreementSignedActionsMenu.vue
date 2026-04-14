@@ -39,7 +39,7 @@
       />
     </v-list-item>
     <v-list-item
-      v-if="policy?.update"
+      v-if="isNil(archiveItemId)"
       class="cursor-pointer"
     >
       <v-list-item-title>Revert to Draft</v-list-item-title>
@@ -84,7 +84,7 @@ const emit = defineEmits<{
 }>()
 
 const { informationSharingAgreementId } = toRefs(props)
-const { informationSharingAgreement, isLoading, policy } = useInformationSharingAgreement(
+const { informationSharingAgreement, isLoading } = useInformationSharingAgreement(
   informationSharingAgreementId
 )
 
