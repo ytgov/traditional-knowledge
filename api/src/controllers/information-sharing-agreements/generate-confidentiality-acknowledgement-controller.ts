@@ -62,7 +62,7 @@ export class GenerateConfidentialityAcknowledgementController extends BaseContro
     const { id, title } = informationSharingAgreement
     const currentDateTime = DateTime.now().toFormat("yyyy-MM-dd")
     const displayName = `${title} - ${id}`
-    return `Acknowledgement, ${displayName}, ${currentDateTime}.docx`
+    return `Confidentiality Acknowledgement, ${displayName}, ${currentDateTime}.docx`
   }
 
   private buildMimeType() {
