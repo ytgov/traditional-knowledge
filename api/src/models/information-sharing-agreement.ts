@@ -307,10 +307,10 @@ export class InformationSharingAgreement extends BaseModel<
     inverse: "informationSharingAgreement",
     scope: {
       targetType: AttachmentTargetTypes.InformationSharingAgreement,
-      associationName: "signedAcknowledgement",
+      associationName: "signedConfidentialityAcknowledgement",
     },
   })
-  declare signedAcknowledgement?: NonAttribute<Attachment | null>
+  declare signedConfidentialityAcknowledgement?: NonAttribute<Attachment | null>
 
   @HasOne(() => Attachment, {
     foreignKey: {

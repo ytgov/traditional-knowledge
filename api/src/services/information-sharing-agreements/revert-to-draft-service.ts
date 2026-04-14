@@ -37,7 +37,7 @@ export class RevertToDraftService extends BaseService {
         where: {
           targetId: this.informationSharingAgreement.id,
           targetType: AttachmentTargetTypes.InformationSharingAgreement,
-          associationName: "signedAcknowledgement",
+          associationName: "signedConfidentialityAcknowledgement",
         },
       })
       await this.informationSharingAgreement.update({
@@ -46,7 +46,11 @@ export class RevertToDraftService extends BaseService {
         signedAt: null,
       })
       return this.informationSharingAgreement.reload({
-        include: ["accessGrants", "signedAcknowledgement", "signedConfidentialityReceipt"],
+        include: [
+          "accessGrants",
+          "signedConfidentialityAcknowledgement",
+          "signedConfidentialityReceipt",
+        ],
       })
     })
   }

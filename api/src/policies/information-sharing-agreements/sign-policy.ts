@@ -17,7 +17,7 @@ export class SignPolicy extends PolicyFactory(InformationSharingAgreement) {
   permittedAttributesForCreate(): Path[] {
     return [
       {
-        signedAcknowledgement: ["path"],
+        signedConfidentialityAcknowledgement: ["path"],
       },
       {
         signedConfidentialityReceipt: ["path"],

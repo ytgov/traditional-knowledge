@@ -149,7 +149,7 @@ export type InformationSharingAgreementAsShow = Pick<
   endDate: string | null
   signedAt: string | null
   // Associations
-  signedAcknowledgement: AttachmentAsReference | null
+  signedConfidentialityAcknowledgement: AttachmentAsReference | null
   signedConfidentialityReceipt: AttachmentAsReference | null
 }
 
@@ -265,7 +265,7 @@ export const informationSharingAgreementsApi = {
   async sign(
     informationSharingAgreementId: number,
     attributes: {
-      signedAcknowledgement: File
+      signedConfidentialityAcknowledgement: File
       signedConfidentialityReceipt?: File | null
     }
   ): Promise<{

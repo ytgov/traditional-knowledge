@@ -6,10 +6,13 @@ import BaseService from "@/services/base-service"
 import { Attachments, InformationSharingAgreements } from "@/services"
 
 export type SignServiceAttributes = Partial<
-  Omit<InformationSharingAgreement, "signedAcknowledgement" | "signedConfidentialityReceipt">
+  Omit<
+    InformationSharingAgreement,
+    "signedConfidentialityAcknowledgement" | "signedConfidentialityReceipt"
+  >
 > &
   Partial<{
-    signedAcknowledgement: {
+    signedConfidentialityAcknowledgement: {
       path: string
     }
     signedConfidentialityReceipt: {
@@ -31,12 +34,13 @@ export class SignService extends BaseService {
       throw new Error("Only draft agreements can be signed.")
     }
 
-    const { signedAcknowledgement } = this.attributes
-    if (isNil(signedAcknowledgement)) {
-      throw new Error("A signed acknowledgement file is required.")
+    const { signedConfidentialityAcknowledgement } = this.attributes
+    if (isNil(signedConfidentialityAcknowledgement)) {
+      throw new Error("A signed confidentiality acknowledgement file is required.")
     }
 
-    const { path: signedAcknowledgementFilePath } = signedAcknowledgement
+    const { path: signedConfidentialityAcknowledgementFilePath } =
+      signedConfidentialityAcknowledgement
 
     const { confidentialityType } = this.informationSharingAgreement
     const isConfidentialityTypeAcceptedInConfidence =
@@ -57,16 +61,17 @@ export class SignService extends BaseService {
 
     const { title } = this.informationSharingAgreement
     const safeTitle = this.buildSafeTitle(title)
-    const acknowledgementFileName = this.buildAcknowledgementFileName(safeTitle)
+    const confidentialityAcknowledgementFileName =
+      this.buildConfidentialityAcknowledgementFileName(safeTitle)
 
     return db.transaction(async () => {
       await Attachments.UpsertService.perform(
-        signedAcknowledgementFilePath,
-        acknowledgementFileName,
+        signedConfidentialityAcknowledgementFilePath,
+        confidentialityAcknowledgementFileName,
         {
           targetId: this.informationSharingAgreement.id,
           targetType: Attachment.TargetTypes.InformationSharingAgreement,
-          associationName: "signedAcknowledgement",
+          associationName: "signedConfidentialityAcknowledgement",
         }
       )
 
@@ -93,7 +98,11 @@ export class SignService extends BaseService {
       await this.createGroups(this.informationSharingAgreement, this.currentUser)
 
       return this.informationSharingAgreement.reload({
-        include: ["accessGrants", "signedAcknowledgement", "signedConfidentialityReceipt"],
+        include: [
+          "accessGrants",
+          "signedConfidentialityAcknowledgement",
+          "signedConfidentialityReceipt",
+        ],
       })
     })
   }
@@ -108,9 +117,9 @@ export class SignService extends BaseService {
     )
   }
 
-  private buildAcknowledgementFileName(safeTitle: string): string {
+  private buildConfidentialityAcknowledgementFileName(safeTitle: string): string {
     const date = DateTime.now().toFormat("yyyy-MM-dd")
-    return `Signed Acknowledgement, ${safeTitle}, ${date}`
+    return `Signed Confidentiality Acknowledgement, ${safeTitle}, ${date}`
   }
 
   private buildConfidentialityAgreementFileName(safeTitle: string): string {

@@ -91,7 +91,7 @@
         <v-col
           v-if="
             informationSharingAgreement.status === InformationSharingAgreementStatuses.SIGNED &&
-            !isNil(signedAcknowledgement)
+            !isNil(signedConfidentialityAcknowledgement)
           "
           cols="12"
         >
@@ -101,7 +101,7 @@
           >
             <v-card-text>
               <h3 class="mt-n1 mb-3">Signed Confidentiality Acknowledgement</h3>
-              <span>{{ signedAcknowledgement.name }}</span>
+              <span>{{ signedConfidentialityAcknowledgement.name }}</span>
             </v-card-text>
           </v-card>
         </v-col>
@@ -238,8 +238,8 @@ const duration = computed(() => {
   return [startDateFormatted, endDateFormatted].filter(Boolean).join(" to ")
 })
 
-const signedAcknowledgement = computed(
-  () => informationSharingAgreement.value?.signedAcknowledgement
+const signedConfidentialityAcknowledgement = computed(
+  () => informationSharingAgreement.value?.signedConfidentialityAcknowledgement
 )
 const isConfidentialityTypeAcceptedInConfidence = computed(
   () =>

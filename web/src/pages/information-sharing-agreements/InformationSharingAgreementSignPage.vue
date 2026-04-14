@@ -13,12 +13,10 @@
         cols="12"
         md="8"
       >
-        <p class="mb-4">
-          Upload the signed document(s) to mark this agreement as signed.
-        </p>
+        <p class="mb-4">Upload the signed document(s) to mark this agreement as signed.</p>
 
         <EnhancedFileInput
-          v-model="signedAcknowledgement"
+          v-model="signedConfidentialityAcknowledgement"
           label="Signed Confidentiality Acknowledgement"
           :rules="[required]"
           accept=".pdf,.doc,.docx"
@@ -144,7 +142,7 @@ const defaultReturnTo = computed(() => {
 })
 const returnTo = useRouteQuery("returnTo", defaultReturnTo)
 
-const signedAcknowledgement = ref<File | null>(null)
+const signedConfidentialityAcknowledgement = ref<File | null>(null)
 const signedConfidentialityReceipt = ref<File | null>(null)
 const form = useTemplateRef("form")
 const snack = useSnack()
@@ -155,14 +153,14 @@ async function signAndRedirect() {
   const { valid } = await form.value.validate()
   if (!valid) return
 
-  if (isNil(signedAcknowledgement.value)) {
+  if (isNil(signedConfidentialityAcknowledgement.value)) {
     throw new Error("Signed confidentiality acknowledgement is required")
   }
 
   isLoading.value = true
   try {
     await informationSharingAgreementsApi.sign(informationSharingAgreementIdAsNumber.value, {
-      signedAcknowledgement: signedAcknowledgement.value,
+      signedConfidentialityAcknowledgement: signedConfidentialityAcknowledgement.value,
       signedConfidentialityReceipt: signedConfidentialityReceipt.value,
     })
     snack.success("Agreement marked as signed!")

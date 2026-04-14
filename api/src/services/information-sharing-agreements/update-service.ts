@@ -58,7 +58,11 @@ export class UpdateService extends BaseService {
       }
 
       return this.informationSharingAgreement.reload({
-        include: ["accessGrants", "signedAcknowledgement", "signedConfidentialityReceipt"],
+        include: [
+          "accessGrants",
+          "signedConfidentialityAcknowledgement",
+          "signedConfidentialityReceipt",
+        ],
       })
     })
   }

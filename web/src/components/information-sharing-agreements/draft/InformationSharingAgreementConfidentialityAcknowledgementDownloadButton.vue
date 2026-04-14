@@ -29,6 +29,8 @@ const props = withDefaults(
 )
 
 const generateConfidentialityAcknowledgementUrl = computed(() =>
-  informationSharingAgreementsApi.generateConfidentialityAcknowledgementPath(props.informationSharingAgreementId)
+  informationSharingAgreementsApi.generateConfidentialityAcknowledgementPath(
+    props.informationSharingAgreementId
+  )
 )
 </script>

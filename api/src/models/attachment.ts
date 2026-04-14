@@ -94,7 +94,7 @@ export class Attachment extends BaseModel<
 
   // Associations
   /**
-   * Defined by {@link InformationSharingAgreement#signedAcknowledgement}
+   * Defined by {@link InformationSharingAgreement#signedConfidentialityAcknowledgement}
    *
    * NOTE: lookup must include targetType or result will return a random model
    * @example
