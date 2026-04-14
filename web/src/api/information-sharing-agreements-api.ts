@@ -150,6 +150,7 @@ export type InformationSharingAgreementAsShow = Pick<
   signedAt: string | null
   // Associations
   signedAcknowledgement: AttachmentAsReference | null
+  signedConfidentialityReceipt: AttachmentAsReference | null
 }
 
 export type InformationSharingAgreementPolicy = Policy

@@ -21,6 +21,24 @@
       />
     </v-list-item>
     <v-list-item
+      v-if="hasSignedConfidentialityReceipt"
+      :loading="isDownloadingSignedConfidentialityReceipt"
+      @click="downloadSignedConfidentialityReceipt"
+    >
+      <v-list-item-title>Signed Confidentiality Receipt</v-list-item-title>
+      <template #prepend>
+        <v-icon
+          size="small"
+          color="primary"
+          icon="mdi-download"
+        />
+      </template>
+      <v-tooltip
+        activator="parent"
+        text="Download the signed confidentiality receipt document."
+      />
+    </v-list-item>
+    <v-list-item
       v-if="policy?.update"
       class="cursor-pointer"
     >
@@ -66,7 +84,18 @@ const emit = defineEmits<{
 }>()
 
 const { informationSharingAgreementId } = toRefs(props)
-const { isLoading, policy } = useInformationSharingAgreement(informationSharingAgreementId)
+const { informationSharingAgreement, isLoading, policy } = useInformationSharingAgreement(
+  informationSharingAgreementId
+)
+
+const hasSignedConfidentialityReceipt = computed(() => {
+  if (isNil(informationSharingAgreement.value)) {
+    return false
+  }
+
+  const { signedConfidentialityReceipt } = informationSharingAgreement.value
+  return !isNil(signedConfidentialityReceipt)
+})
 
 const informationSharingAgreementArchiveItemsQuery = computed(() => ({
   where: {
@@ -111,6 +140,16 @@ const generateSignedAcknowledgementUrl = computed(() =>
 )
 const { submit: downloadSignedAcknowledgement, isLoading: isDownloadingSignedAcknowledgement } =
   useAuthenticatedDownload(generateSignedAcknowledgementUrl)
+
+const generateSignedConfidentialityReceiptUrl = computed(() =>
+  Api.Downloads.InformationSharingAgreements.signedConfidentialityReceiptApi.downloadPath(
+    props.informationSharingAgreementId
+  )
+)
+const {
+  submit: downloadSignedConfidentialityReceipt,
+  isLoading: isDownloadingSignedConfidentialityReceipt,
+} = useAuthenticatedDownload(generateSignedConfidentialityReceiptUrl)
 </script>
 
 <style scoped></style>

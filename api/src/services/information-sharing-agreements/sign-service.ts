@@ -93,7 +93,7 @@ export class SignService extends BaseService {
       await this.createGroups(this.informationSharingAgreement, this.currentUser)
 
       return this.informationSharingAgreement.reload({
-        include: ["accessGrants", "signedAcknowledgement"],
+        include: ["accessGrants", "signedAcknowledgement", "signedConfidentialityReceipt"],
       })
     })
   }

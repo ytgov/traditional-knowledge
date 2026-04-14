@@ -70,6 +70,11 @@ router
     "/api/downloads/information-sharing-agreements/:informationSharingAgreementId/signed-acknowledgement"
   )
   .post(Downloads.InformationSharingAgreements.SignedAcknowledgementController.create)
+router
+  .route(
+    "/api/downloads/information-sharing-agreements/:informationSharingAgreementId/signed-confidentiality-receipt"
+  )
+  .post(Downloads.InformationSharingAgreements.SignedConfidentialityReceiptController.create)
 
 router.route("/api/current-user").get(CurrentUserController.show)
 

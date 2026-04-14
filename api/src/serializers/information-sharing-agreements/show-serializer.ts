@@ -54,13 +54,18 @@ export type InformationSharingAgreementAsShow = Pick<
   signedAt: string | null
   // Associations
   signedAcknowledgement: Attachments.AsReference | null
+  signedConfidentialityReceipt: Attachments.AsReference | null
 }
 
 export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> {
   perform(): InformationSharingAgreementAsShow {
-    const { signedAcknowledgement } = this.record
+    const { signedAcknowledgement, signedConfidentialityReceipt } = this.record
     if (isUndefined(signedAcknowledgement)) {
       throw new Error("Expected signed acknowledgement association to be preloaded.")
+    }
+
+    if (isUndefined(signedConfidentialityReceipt)) {
+      throw new Error("Expected signed confidentiality receipt association to be preloaded.")
     }
 
     const { startDate, endDate, signedAt } = this.record
@@ -70,6 +75,8 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
 
     const serializedSignedAcknowledgement =
       this.serializeSignedAcknowledgement(signedAcknowledgement)
+    const serializedSignedConfidentialityReceipt =
+      this.serializeSignedConfidentialityReceipt(signedConfidentialityReceipt)
 
     return {
       ...pick(this.record, [
@@ -118,6 +125,7 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
       endDate: formattedEndDate,
       signedAt: formattedSignedAt,
       signedAcknowledgement: serializedSignedAcknowledgement,
+      signedConfidentialityReceipt: serializedSignedConfidentialityReceipt,
     }
   }
 
@@ -127,6 +135,14 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
     if (isNil(signedAcknowledgement)) return null
 
     return Attachments.ReferenceSerializer.perform(signedAcknowledgement)
+  }
+
+  private serializeSignedConfidentialityReceipt(
+    signedConfidentialityReceipt: Attachment | null
+  ): Attachments.AsReference | null {
+    if (isNil(signedConfidentialityReceipt)) return null
+
+    return Attachments.ReferenceSerializer.perform(signedConfidentialityReceipt)
   }
 }
 

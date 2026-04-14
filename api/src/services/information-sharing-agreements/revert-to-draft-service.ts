@@ -46,7 +46,7 @@ export class RevertToDraftService extends BaseService {
         signedAt: null,
       })
       return this.informationSharingAgreement.reload({
-        include: ["accessGrants", "signedAcknowledgement"],
+        include: ["accessGrants", "signedAcknowledgement", "signedConfidentialityReceipt"],
       })
     })
   }
