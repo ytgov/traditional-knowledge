@@ -1,6 +1,6 @@
 <template>
   <AuthenticatedPostForm
-    :action-url="downloadSignedAcknowledgementUrl"
+    :action-url="downloadSignedConfidentialityAcknowledgementUrl"
     text="Signed Confidentiality Acknowledgement"
     :activator-props="{
       title: 'Download the signed confidentiality acknowledgement document',
@@ -28,8 +28,8 @@ const props = withDefaults(
   }
 )
 
-const downloadSignedAcknowledgementUrl = computed(() =>
-  Api.Downloads.InformationSharingAgreements.signedAcknowledgementApi.downloadPath(
+const downloadSignedConfidentialityAcknowledgementUrl = computed(() =>
+  Api.Downloads.InformationSharingAgreements.signedConfidentialityAcknowledgementApi.downloadPath(
     props.informationSharingAgreementId
   )
 )

@@ -4,8 +4,8 @@
     :loading="isLoading"
   >
     <v-list-item
-      :loading="isDownloadingSignedAcknowledgement"
-      @click="downloadSignedAcknowledgement"
+      :loading="isDownloadingSignedConfidentialityAcknowledgement"
+      @click="downloadSignedConfidentialityAcknowledgement"
     >
       <v-list-item-title>Signed Confidentiality Acknowledgement</v-list-item-title>
       <template #prepend>
@@ -133,13 +133,15 @@ const primaryButtonAttributes = computed(() => {
   }
 })
 
-const generateSignedAcknowledgementUrl = computed(() =>
-  Api.Downloads.InformationSharingAgreements.signedAcknowledgementApi.downloadPath(
+const generateSignedConfidentialityAcknowledgementUrl = computed(() =>
+  Api.Downloads.InformationSharingAgreements.signedConfidentialityAcknowledgementApi.downloadPath(
     props.informationSharingAgreementId
   )
 )
-const { submit: downloadSignedAcknowledgement, isLoading: isDownloadingSignedAcknowledgement } =
-  useAuthenticatedDownload(generateSignedAcknowledgementUrl)
+const {
+  submit: downloadSignedConfidentialityAcknowledgement,
+  isLoading: isDownloadingSignedConfidentialityAcknowledgement,
+} = useAuthenticatedDownload(generateSignedConfidentialityAcknowledgementUrl)
 
 const generateSignedConfidentialityReceiptUrl = computed(() =>
   Api.Downloads.InformationSharingAgreements.signedConfidentialityReceiptApi.downloadPath(

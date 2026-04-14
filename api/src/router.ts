@@ -67,7 +67,7 @@ router.use(
 
 router
   .route(
-    "/api/downloads/information-sharing-agreements/:informationSharingAgreementId/signed-acknowledgement"
+    "/api/downloads/information-sharing-agreements/:informationSharingAgreementId/signed-confidentiality-acknowledgement"
   )
   .post(
     Downloads.InformationSharingAgreements.SignedConfidentialityAcknowledgementController.create
