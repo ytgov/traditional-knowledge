@@ -4,8 +4,13 @@
 
 `:emoji: Verb phrase.` — imperative mood, subject line ends with a period.
 
+**Subject line describes the outcome or "why", not what was added.** The diff already shows what changed — the subject should tell the reader why it matters or what the user-visible effect is.
+
+- ❌ `:sparkles: Add signed documents card for ISA admin view.` — describes what was built
+- ✅ `:sparkles: Show signed documents with download actions on ISA admin card.` — describes the outcome
+
 **Simple commits:** Single line when the change is self-explanatory.
-**Complex commits:** Title line followed by bullet points or explanation lines when needed.
+**Complex commits:** Title line followed by one or two plain sentences explaining the non-obvious context — things the diff doesn't make immediately clear. Each sentence ends with a period.
 
 ## When to use bullet points
 
@@ -106,6 +111,37 @@ Focus on:
 - What the observable effect is for users or callers
 
 Avoid: in-progress reasoning, implementation mechanics, and code symbols in prose.
+
+## Rewording past commits
+
+The global git editor is `windsurf --wait`, which hangs when invoked non-interactively. Use these patterns instead.
+
+**Reword HEAD:**
+```bash
+git commit --amend -m "new message"
+```
+
+**Reword an older commit:**
+```bash
+# 1. Detach HEAD at the target commit
+git checkout <hash>
+# 2. Amend directly (-m bypasses the editor)
+git commit --amend -m "new message"
+# 3. Rebase the branch tip back on top
+git rebase --onto HEAD <branch-tip>~ <branch-tip>
+# 4. Move the branch pointer back
+git branch -f <branch> HEAD && git checkout <branch>
+```
+
+**Interactive rebase without editor hang:**
+```bash
+GIT_EDITOR="true" git rebase -i <base>
+```
+`GIT_EDITOR="true"` makes git use the `true` no-op command for commit message editing, so the sequence editor step works normally but individual message editing is skipped. Combine with `--amend -m` for rewording specific commits mid-rebase.
+
+NOTE: Multi-line `--exec` strings in `git rebase --onto` are not supported.
+
+---
 
 ## General rules
 
