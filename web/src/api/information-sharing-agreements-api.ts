@@ -1,3 +1,5 @@
+import { isNil, omitBy } from "lodash"
+
 import { API_BASE_URL } from "@/config"
 import http from "@/api/http-client"
 import {
@@ -20,6 +22,7 @@ export enum InformationSharingAgreementExpirationConditions {
   UNDETERMINED_WITH_DEFAULT_EXPIRATION = "undetermined_with_default_expiration",
 }
 
+// TODO: rename to InformationSharingAgreementConfidentialityTypes for consistency
 export enum InformationSharingAgreementConfidentialityType {
   ACCORDANCE = "ACCORDANCE",
   ACCEPTED_IN_CONFIDENCE = "ACCEPTED_IN_CONFIDENCE",
@@ -146,7 +149,8 @@ export type InformationSharingAgreementAsShow = Pick<
   endDate: string | null
   signedAt: string | null
   // Associations
-  signedAcknowledgement: AttachmentAsReference | null
+  signedConfidentialityAcknowledgement: AttachmentAsReference | null
+  signedConfidentialityReceipt: AttachmentAsReference | null
 }
 
 export type InformationSharingAgreementPolicy = Policy
@@ -207,8 +211,11 @@ export type InformationSharingAgreementQueryOptions = QueryOptions<
 >
 
 export const informationSharingAgreementsApi = {
-  generateAcknowledgementPath(informationSharingAgreementId: number) {
-    return `${API_BASE_URL}/api/information-sharing-agreements/${informationSharingAgreementId}/generate-acknowledgement?format=docx`
+  generateConfidentialityAcknowledgementPath(informationSharingAgreementId: number) {
+    return `${API_BASE_URL}/api/information-sharing-agreements/${informationSharingAgreementId}/generate-confidentiality-acknowledgement?format=docx`
+  },
+  generateConfidentialityReceiptPath(informationSharingAgreementId: number) {
+    return `${API_BASE_URL}/api/information-sharing-agreements/${informationSharingAgreementId}/generate-confidentiality-receipt?format=docx`
   },
 
   async list(params: InformationSharingAgreementQueryOptions = {}): Promise<{
@@ -257,20 +264,19 @@ export const informationSharingAgreementsApi = {
   // Stateful Actions
   async sign(
     informationSharingAgreementId: number,
-    signedAcknowledgement: File
+    attributes: {
+      signedConfidentialityAcknowledgement: File
+      signedConfidentialityReceipt?: File | null
+    }
   ): Promise<{
     informationSharingAgreement: InformationSharingAgreementAsShow
   }> {
-    const formData = new FormData()
-    formData.append("signedAcknowledgement", signedAcknowledgement)
-    const { data } = await http.post(
+    const cleanedAttributes = omitBy(attributes, isNil)
+    // https://github.com/axios/axios?tab=readme-ov-file#files-posting
+    // Axios supports the following shortcut methods: postForm, putForm, patchForm which are just the corresponding http methods with the Content-Type header preset to multipart/form-data.
+    const { data } = await http.postForm(
       `/api/information-sharing-agreements/${informationSharingAgreementId}/sign`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
+      cleanedAttributes
     )
     return data
   },

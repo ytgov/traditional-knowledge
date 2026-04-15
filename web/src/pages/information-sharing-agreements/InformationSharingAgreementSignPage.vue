@@ -13,19 +13,58 @@
         cols="12"
         md="8"
       >
-        <p class="mb-4">
-          Upload the signed acknowledgement document to mark this agreement as signed.
-        </p>
+        <p class="mb-4">Upload the signed document(s) to mark this agreement as signed.</p>
 
         <EnhancedFileInput
-          v-model="signedAcknowledgement"
-          label="Signed Acknowledgement"
+          v-model="signedConfidentialityAcknowledgement"
+          label="Signed Confidentiality Acknowledgement"
           :rules="[required]"
           accept=".pdf,.doc,.docx"
           show-size
           required
           validate-on="submit"
         />
+
+        <EnhancedFileInput
+          v-if="isConfidentialityTypeAcceptedInConfidence"
+          v-model="signedConfidentialityReceipt"
+          class="mt-4"
+          label="Signed Confidentiality Receipt"
+          :rules="[required]"
+          accept=".pdf,.doc,.docx"
+          show-size
+          required
+          validate-on="submit"
+        />
+
+        <div class="mt-6">
+          <p class="font-weight-bold mb-1">Download Documents</p>
+          <p class="text-body-2 text-medium-emphasis mb-3">
+            If you haven't already downloaded the necessary document(s) for signing, you can do so
+            below:
+          </p>
+          <div class="d-flex flex-column ga-2">
+            <InformationSharingAgreementConfidentialityAcknowledgementDownloadButton
+              :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
+              :activator-props="{
+                variant: 'text',
+                color: 'secondary',
+                density: 'compact',
+                prependIcon: 'mdi-download',
+              }"
+            />
+            <InformationSharingAgreementConfidentialityReceiptGenerateButton
+              v-if="isConfidentialityTypeAcceptedInConfidence"
+              :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
+              :activator-props="{
+                variant: 'text',
+                color: 'secondary',
+                density: 'compact',
+                prependIcon: 'mdi-download',
+              }"
+            />
+          </div>
+        </div>
       </v-col>
     </v-row>
 
@@ -62,13 +101,17 @@ import { isNil } from "lodash"
 
 import { required } from "@/utils/validators"
 
-import informationSharingAgreementsApi from "@/api/information-sharing-agreements-api"
+import informationSharingAgreementsApi, {
+  InformationSharingAgreementConfidentialityType,
+} from "@/api/information-sharing-agreements-api"
 
 import useBreadcrumbs, { BASE_CRUMB } from "@/use/use-breadcrumbs"
 import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 import useSnack from "@/use/use-snack"
 
 import EnhancedFileInput from "@/components/common/EnhancedFileInput.vue"
+import InformationSharingAgreementConfidentialityAcknowledgementDownloadButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityAcknowledgementDownloadButton.vue"
+import InformationSharingAgreementConfidentialityReceiptGenerateButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityReceiptGenerateButton.vue"
 
 const props = defineProps<{
   informationSharingAgreementId: string
@@ -79,6 +122,12 @@ const informationSharingAgreementIdAsNumber = computed(() =>
 )
 const { informationSharingAgreement, isLoading } = useInformationSharingAgreement(
   informationSharingAgreementIdAsNumber
+)
+
+const isConfidentialityTypeAcceptedInConfidence = computed(
+  () =>
+    informationSharingAgreement.value?.confidentialityType ===
+    InformationSharingAgreementConfidentialityType.ACCEPTED_IN_CONFIDENCE
 )
 
 const router = useRouter()
@@ -93,7 +142,8 @@ const defaultReturnTo = computed(() => {
 })
 const returnTo = useRouteQuery("returnTo", defaultReturnTo)
 
-const signedAcknowledgement = ref<File | null>(null)
+const signedConfidentialityAcknowledgement = ref<File | null>(null)
+const signedConfidentialityReceipt = ref<File | null>(null)
 const form = useTemplateRef("form")
 const snack = useSnack()
 
@@ -103,16 +153,16 @@ async function signAndRedirect() {
   const { valid } = await form.value.validate()
   if (!valid) return
 
-  if (isNil(signedAcknowledgement.value)) {
-    throw new Error("Signed acknowledgement is required")
+  if (isNil(signedConfidentialityAcknowledgement.value)) {
+    throw new Error("Signed confidentiality acknowledgement is required")
   }
 
   isLoading.value = true
   try {
-    await informationSharingAgreementsApi.sign(
-      informationSharingAgreementIdAsNumber.value,
-      signedAcknowledgement.value
-    )
+    await informationSharingAgreementsApi.sign(informationSharingAgreementIdAsNumber.value, {
+      signedConfidentialityAcknowledgement: signedConfidentialityAcknowledgement.value,
+      signedConfidentialityReceipt: signedConfidentialityReceipt.value,
+    })
     snack.success("Agreement marked as signed!")
 
     await router.push(returnTo.value)

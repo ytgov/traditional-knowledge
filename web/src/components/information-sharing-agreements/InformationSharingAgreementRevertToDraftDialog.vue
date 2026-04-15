@@ -10,8 +10,8 @@
 
       <v-card-text>
         <p>
-          Are you sure you want to revert this agreement to draft? The signed acknowledgement file
-          will be removed.
+          Are you sure you want to revert this agreement to draft? Any signed documents will be
+          removed.
         </p>
       </v-card-text>
 

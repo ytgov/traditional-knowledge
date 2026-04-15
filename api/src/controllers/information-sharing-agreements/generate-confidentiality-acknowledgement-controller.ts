@@ -6,11 +6,11 @@ import quickStartBufferStream from "@/utils/quick-start-buffer-stream"
 
 import { InformationSharingAgreement } from "@/models"
 import { InformationSharingAgreementPolicy } from "@/policies"
-import { CreateService } from "@/services/information-sharing-agreements/generate-acknowledgement"
+import { CreateService } from "@/services/information-sharing-agreements/generate-confidentiality-acknowledgement"
 
 import BaseController from "@/controllers/base-controller"
 
-export class GenerateAcknowledgementController extends BaseController<InformationSharingAgreement> {
+export class GenerateConfidentialityAcknowledgementController extends BaseController<InformationSharingAgreement> {
   async create() {
     try {
       const informationSharingAgreement = await this.loadInformationSharingAgreement()
@@ -62,7 +62,7 @@ export class GenerateAcknowledgementController extends BaseController<Informatio
     const { id, title } = informationSharingAgreement
     const currentDateTime = DateTime.now().toFormat("yyyy-MM-dd")
     const displayName = `${title} - ${id}`
-    return `Acknowledgement, ${displayName}, ${currentDateTime}.docx`
+    return `Confidentiality Acknowledgement, ${displayName}, ${currentDateTime}.docx`
   }
 
   private buildMimeType() {
@@ -89,4 +89,4 @@ export class GenerateAcknowledgementController extends BaseController<Informatio
   }
 }
 
-export default GenerateAcknowledgementController
+export default GenerateConfidentialityAcknowledgementController

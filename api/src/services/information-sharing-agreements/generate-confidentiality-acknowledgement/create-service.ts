@@ -9,8 +9,8 @@ import { InformationSharingAgreement, User } from "@/models"
 import BaseService from "@/services/base-service"
 import {
   CreateSerializer,
-  type AsAcknowledgement,
-} from "@/serializers/information-sharing-agreements/generate-acknowledgement"
+  type AsConfidentialityAcknowledgement,
+} from "@/serializers/information-sharing-agreements/generate-confidentiality-acknowledgement"
 
 export class CreateService extends BaseService {
   constructor(
@@ -27,7 +27,7 @@ export class CreateService extends BaseService {
   }
 
   private generateTemplate(templateData: Record<string, string | boolean>) {
-    const templatePath = `${TEMPLATE_ROOT_PATH}/information-sharing-agreements/acknowledgement-template.docx`
+    const templatePath = `${TEMPLATE_ROOT_PATH}/information-sharing-agreements/confidentiality-acknowledgement-template.docx`
     const templateContent = fs.readFileSync(templatePath, "binary")
 
     const templateZip = new PizZip(templateContent)
@@ -47,7 +47,7 @@ export class CreateService extends BaseService {
 
   private buildTemplateData(
     informationSharingAgreement: InformationSharingAgreement
-  ): AsAcknowledgement {
+  ): AsConfidentialityAcknowledgement {
     return CreateSerializer.perform(informationSharingAgreement)
   }
 }

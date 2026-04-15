@@ -83,7 +83,7 @@
         </v-col>
         <v-col cols="12">
           <v-text-field
-            :model-value="`${formatDate(informationSharingAgreement.startDate)} to ${formatDate(informationSharingAgreement.endDate)}`"
+            :model-value="duration"
             label="Duration"
             readonly
           />
@@ -91,19 +91,15 @@
         <v-col
           v-if="
             informationSharingAgreement.status === InformationSharingAgreementStatuses.SIGNED &&
-            !isNil(signedAcknowledgement)
+            !isNil(signedConfidentialityAcknowledgement)
           "
           cols="12"
         >
-          <v-card
-            class="border"
-            color="#ffffff66"
-          >
-            <v-card-text>
-              <h3 class="mt-n1 mb-3">Signed Acknowledgement</h3>
-              <span>{{ signedAcknowledgement.name }}</span>
-            </v-card-text>
-          </v-card>
+          <InformationSharingAgreementSignedDocumentsCard
+            :information-sharing-agreement-id="informationSharingAgreementId"
+            :acknowledgement="signedConfidentialityAcknowledgement"
+            :receipt="signedConfidentialityReceipt"
+          />
         </v-col>
       </v-row>
 
@@ -112,7 +108,15 @@
           <template
             v-if="informationSharingAgreement.status === InformationSharingAgreementStatuses.DRAFT"
           >
-            <InformationSharingAgreementDownloadDraftButton
+            <InformationSharingAgreementConfidentialityAcknowledgementDownloadButton
+              :information-sharing-agreement-id="informationSharingAgreementId"
+              :activator-props="{
+                variant: 'outlined',
+                color: 'secondary',
+              }"
+            />
+            <InformationSharingAgreementConfidentialityReceiptGenerateButton
+              v-if="isConfidentialityTypeAcceptedInConfidence"
               :information-sharing-agreement-id="informationSharingAgreementId"
               :activator-props="{
                 variant: 'outlined',
@@ -142,9 +146,6 @@
                 @success="refresh"
               />
             </v-btn>
-            <InformationSharingAgreementDownloadSignedAcknowledgementButton
-              :information-sharing-agreement-id="informationSharingAgreementId"
-            />
           </template>
         </div>
 
@@ -172,12 +173,15 @@ import { isNil } from "lodash"
 import { type VBtn } from "vuetify/components"
 
 import { formatDate } from "@/utils/formatters"
+
 import useInformationSharingAgreement, {
   InformationSharingAgreementStatuses,
+  InformationSharingAgreementConfidentialityType,
 } from "@/use/use-information-sharing-agreement"
 
-import InformationSharingAgreementDownloadDraftButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadDraftButton.vue"
-import InformationSharingAgreementDownloadSignedAcknowledgementButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadSignedAcknowledgementButton.vue"
+import InformationSharingAgreementConfidentialityAcknowledgementDownloadButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityAcknowledgementDownloadButton.vue"
+import InformationSharingAgreementConfidentialityReceiptGenerateButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityReceiptGenerateButton.vue"
+import InformationSharingAgreementSignedDocumentsCard from "@/components/information-sharing-agreements/InformationSharingAgreementSignedDocumentsCard.vue"
 import InformationSharingAgreementRevertToDraftDialog from "@/components/information-sharing-agreements/InformationSharingAgreementRevertToDraftDialog.vue"
 
 import GroupChip from "@/components/groups/GroupChip.vue"
@@ -221,8 +225,22 @@ const { informationSharingAgreementId } = toRefs(props)
 const { informationSharingAgreement, policy, refresh } = useInformationSharingAgreement(
   informationSharingAgreementId
 )
-const signedAcknowledgement = computed(
-  () => informationSharingAgreement.value?.signedAcknowledgement
+const duration = computed(() => {
+  const startDateFormatted = formatDate(informationSharingAgreement.value?.startDate)
+  const endDateFormatted = formatDate(informationSharingAgreement.value?.endDate)
+  return [startDateFormatted, endDateFormatted].filter(Boolean).join(" to ")
+})
+
+const signedConfidentialityAcknowledgement = computed(
+  () => informationSharingAgreement.value?.signedConfidentialityAcknowledgement
+)
+const signedConfidentialityReceipt = computed(
+  () => informationSharingAgreement.value?.signedConfidentialityReceipt
+)
+const isConfidentialityTypeAcceptedInConfidence = computed(
+  () =>
+    informationSharingAgreement.value?.confidentialityType ===
+    InformationSharingAgreementConfidentialityType.ACCEPTED_IN_CONFIDENCE
 )
 </script>
 

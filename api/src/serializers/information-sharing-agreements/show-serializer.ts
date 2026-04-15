@@ -53,14 +53,21 @@ export type InformationSharingAgreementAsShow = Pick<
   endDate: string | null
   signedAt: string | null
   // Associations
-  signedAcknowledgement: Attachments.AsReference | null
+  signedConfidentialityAcknowledgement: Attachments.AsReference | null
+  signedConfidentialityReceipt: Attachments.AsReference | null
 }
 
 export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> {
   perform(): InformationSharingAgreementAsShow {
-    const { signedAcknowledgement } = this.record
-    if (isUndefined(signedAcknowledgement)) {
-      throw new Error("Expected signed acknowledgement association to be preloaded.")
+    const { signedConfidentialityAcknowledgement, signedConfidentialityReceipt } = this.record
+    if (isUndefined(signedConfidentialityAcknowledgement)) {
+      throw new Error(
+        "Expected signed confidentiality acknowledgement association to be preloaded."
+      )
+    }
+
+    if (isUndefined(signedConfidentialityReceipt)) {
+      throw new Error("Expected signed confidentiality receipt association to be preloaded.")
     }
 
     const { startDate, endDate, signedAt } = this.record
@@ -68,8 +75,11 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
     const formattedEndDate = formatDate(endDate)
     const formattedSignedAt = formatDate(signedAt)
 
-    const serializedSignedAcknowledgement =
-      this.serializeSignedAcknowledgement(signedAcknowledgement)
+    const serializedSignedConfidentialityAcknowledgement =
+      this.serializeSignedConfidentialityAcknowledgement(signedConfidentialityAcknowledgement)
+    const serializedSignedConfidentialityReceipt = this.serializeSignedConfidentialityReceipt(
+      signedConfidentialityReceipt
+    )
 
     return {
       ...pick(this.record, [
@@ -117,16 +127,25 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
       startDate: formattedStartDate,
       endDate: formattedEndDate,
       signedAt: formattedSignedAt,
-      signedAcknowledgement: serializedSignedAcknowledgement,
+      signedConfidentialityAcknowledgement: serializedSignedConfidentialityAcknowledgement,
+      signedConfidentialityReceipt: serializedSignedConfidentialityReceipt,
     }
   }
 
-  private serializeSignedAcknowledgement(
-    signedAcknowledgement: Attachment | null
+  private serializeSignedConfidentialityAcknowledgement(
+    signedConfidentialityAcknowledgement: Attachment | null
   ): Attachments.AsReference | null {
-    if (isNil(signedAcknowledgement)) return null
+    if (isNil(signedConfidentialityAcknowledgement)) return null
 
-    return Attachments.ReferenceSerializer.perform(signedAcknowledgement)
+    return Attachments.ReferenceSerializer.perform(signedConfidentialityAcknowledgement)
+  }
+
+  private serializeSignedConfidentialityReceipt(
+    signedConfidentialityReceipt: Attachment | null
+  ): Attachments.AsReference | null {
+    if (isNil(signedConfidentialityReceipt)) return null
+
+    return Attachments.ReferenceSerializer.perform(signedConfidentialityReceipt)
   }
 }
 

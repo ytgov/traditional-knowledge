@@ -1,10 +1,11 @@
-import { isArray, isNil } from "lodash"
+import { isNil } from "lodash"
 
 import logger from "@/utils/logger"
 
 import { InformationSharingAgreement } from "@/models"
 import { SignPolicy } from "@/policies/information-sharing-agreements"
 import { SignService } from "@/services/information-sharing-agreements"
+import { type SignServiceAttributes } from "@/services/information-sharing-agreements/sign-service"
 import { ShowSerializer } from "@/serializers/information-sharing-agreements"
 import BaseController from "@/controllers/base-controller"
 
@@ -25,23 +26,12 @@ export class SignController extends BaseController<InformationSharingAgreement> 
         })
       }
 
-      const { signedAcknowledgement } = this.files
-      if (isNil(signedAcknowledgement)) {
-        return this.response.status(422).json({
-          message: "A signed acknowledgement file is required.",
-        })
-      }
-
-      if (isArray(signedAcknowledgement)) {
-        return this.response.status(422).json({
-          message: "Only one signed acknowledgement file is allowed.",
-        })
-      }
-
-      // Note: use permit attributes pattern as needed if needing to update the information sharing agreement
+      const permittedAttributes = policy.permitAttributesForCreate<SignServiceAttributes>(
+        this.request.body
+      )
       const updatedInformationSharingAgreement = await SignService.perform(
         informationSharingAgreement,
-        signedAcknowledgement.path,
+        permittedAttributes,
         this.currentUser
       )
       const serializedInformationSharingAgreement = ShowSerializer.perform(

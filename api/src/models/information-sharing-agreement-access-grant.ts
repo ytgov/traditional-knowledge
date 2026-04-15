@@ -183,7 +183,7 @@ export class InformationSharingAgreementAccessGrant extends BaseModel<
 
   @BelongsToMany(() => InformationSharingAgreementAccessGrant, {
     through: () => InformationSharingAgreementAccessGrantSibling,
-    foreignKey: "accessGrantId",
+    foreignKey: "informationSharingAgreementAccessGrantId",
     otherKey: "informationSharingAgreementAccessGrantSiblingId",
     inverse: "siblingsOf",
   })

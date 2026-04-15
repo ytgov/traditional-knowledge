@@ -4,10 +4,10 @@
     :loading="isLoading"
   >
     <v-list-item
-      :loading="isDownloadingSignedAcknowledgement"
-      @click="downloadSignedAcknowledgement"
+      :loading="isDownloadingSignedConfidentialityAcknowledgement"
+      @click="downloadSignedConfidentialityAcknowledgement"
     >
-      <v-list-item-title>Signed Acknowledgement</v-list-item-title>
+      <v-list-item-title>Signed Confidentiality Acknowledgement</v-list-item-title>
       <template #prepend>
         <v-icon
           size="small"
@@ -17,11 +17,29 @@
       </template>
       <v-tooltip
         activator="parent"
-        text="Download the signed acknowledgement document."
+        text="Download the signed confidentiality acknowledgement document."
       />
     </v-list-item>
     <v-list-item
-      v-if="policy?.update"
+      v-if="hasSignedConfidentialityReceipt"
+      :loading="isDownloadingSignedConfidentialityReceipt"
+      @click="downloadSignedConfidentialityReceipt"
+    >
+      <v-list-item-title>Signed Confidentiality Receipt</v-list-item-title>
+      <template #prepend>
+        <v-icon
+          size="small"
+          color="primary"
+          icon="mdi-download"
+        />
+      </template>
+      <v-tooltip
+        activator="parent"
+        text="Download the signed confidentiality receipt document."
+      />
+    </v-list-item>
+    <v-list-item
+      v-if="isNil(archiveItemId)"
       class="cursor-pointer"
     >
       <v-list-item-title>Revert to Draft</v-list-item-title>
@@ -66,7 +84,18 @@ const emit = defineEmits<{
 }>()
 
 const { informationSharingAgreementId } = toRefs(props)
-const { isLoading, policy } = useInformationSharingAgreement(informationSharingAgreementId)
+const { informationSharingAgreement, isLoading } = useInformationSharingAgreement(
+  informationSharingAgreementId
+)
+
+const hasSignedConfidentialityReceipt = computed(() => {
+  if (isNil(informationSharingAgreement.value)) {
+    return false
+  }
+
+  const { signedConfidentialityReceipt } = informationSharingAgreement.value
+  return !isNil(signedConfidentialityReceipt)
+})
 
 const informationSharingAgreementArchiveItemsQuery = computed(() => ({
   where: {
@@ -104,13 +133,25 @@ const primaryButtonAttributes = computed(() => {
   }
 })
 
-const generateSignedAcknowledgementUrl = computed(() =>
-  Api.Downloads.InformationSharingAgreements.signedAcknowledgementApi.downloadPath(
+const generateSignedConfidentialityAcknowledgementUrl = computed(() =>
+  Api.Downloads.InformationSharingAgreements.signedConfidentialityAcknowledgementApi.downloadPath(
     props.informationSharingAgreementId
   )
 )
-const { submit: downloadSignedAcknowledgement, isLoading: isDownloadingSignedAcknowledgement } =
-  useAuthenticatedDownload(generateSignedAcknowledgementUrl)
+const {
+  submit: downloadSignedConfidentialityAcknowledgement,
+  isLoading: isDownloadingSignedConfidentialityAcknowledgement,
+} = useAuthenticatedDownload(generateSignedConfidentialityAcknowledgementUrl)
+
+const generateSignedConfidentialityReceiptUrl = computed(() =>
+  Api.Downloads.InformationSharingAgreements.signedConfidentialityReceiptApi.downloadPath(
+    props.informationSharingAgreementId
+  )
+)
+const {
+  submit: downloadSignedConfidentialityReceipt,
+  isLoading: isDownloadingSignedConfidentialityReceipt,
+} = useAuthenticatedDownload(generateSignedConfidentialityReceiptUrl)
 </script>
 
 <style scoped></style>

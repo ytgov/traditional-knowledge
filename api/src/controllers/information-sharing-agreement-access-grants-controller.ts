@@ -150,14 +150,7 @@ export class InformationSharingAgreementAccessGrantsController extends BaseContr
     return InformationSharingAgreementAccessGrant.findByPk(
       this.params.informationSharingAgreementAccessGrantId,
       {
-        include: [
-          {
-            association: "siblings",
-            where: {
-              userId: this.currentUser.id,
-            },
-          },
-        ],
+        include: ["siblings"],
       }
     )
   }

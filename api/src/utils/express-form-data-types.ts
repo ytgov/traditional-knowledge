@@ -6,8 +6,8 @@ import { type File } from "multiparty"
  * @example
  * ```typescript
  * files: {
- *   signedAcknowledgement: {
- *     fieldName: 'signedAcknowledgement',
+ *   signedConfidentialityAcknowledgement: {
+ *     fieldName: 'signedConfidentialityAcknowledgement',
  *     originalFilename: 'test-v2.docx',
  *     path: '/tmp/L_g7giiW_TJolj9rOisA6Tsi.docx',
  *     headers: [Object],
