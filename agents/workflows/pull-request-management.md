@@ -18,7 +18,7 @@ auto_execution_mode: 1
 **Decision Rules:**
 - **Title format:** Use `Issue-<number>: Description` for GitHub issues, `TICKET-ID: Description` for Jira tickets, `Fix: Description` for bug fixes, or `Action Verb + Noun` for features. Always use AP style title case.
 - **Ticket prefix rule:** Only use ticket prefixes (`TK-123:`, `Issue-123:`) when referencing actual external ticket entities. For internal work without external tracking, use descriptive titles without prefixes.
-- **Implementation section:** Focus on purpose and intent, not specific files. A reviewer can see file changes in the diff - the Implementation section explains the reasoning behind those changes.
+- **Implementation section:** Describe what the user or system can now do — not how it was built. Never name specific methods, services, controllers, or files unless the file itself is the subject of the change. A reviewer can see the diff; they don't need a guided tour of it.
 - **Screenshots:** Check the diff for `web/src/components/` or `web/src/pages/` changes. If present, write "TODO" and let user add screenshots. Only write "N/A - backend changes only" if there are truly no frontend changes.
 - **Draft mode:** Always create PRs as drafts first
 - **QA Testing:** Write testing instructions for someone with zero project knowledge, focusing on user interactions rather than technical implementation. Follow the `testing-instructions` workflow for comprehensive guidance on creating detailed, accurate testing instructions with exact UI element names and proper test case structure.
@@ -168,24 +168,34 @@ Investigation revealed that the search indexing was not considering Indigenous l
 #### Implementation Section
 
 - Use numbered list
-- Focus on **purpose and intent**, not specific file changes
-- Extract meaning from commits - what was the goal of each change?
-- A reviewer can see file diffs - tell them WHY, not WHERE
+- Focus on **what the user or system can now do**, not how it was built
+- Extract meaning from commits — what was the goal of each change?
+- A reviewer can see file diffs — tell them WHY, not WHERE
+- **Avoid naming specific methods, services, controllers, or files** unless the file/method itself is the subject (e.g. a renamed component)
 - Keep it concise: 5-10 items maximum
-- **Use direct, active voice**: "Add group creation service" not "Add proper group creation service for the entire system"
+- **Use direct, active voice**: "Require signed receipt upload before signing" not "Add validation in SignService"
 - **Avoid redundant qualifiers**: Remove words like "entire", "proper", "fully", "completely"
 
-**Good Example (purpose-focused):**
+**Good Example (user/outcome-focused):**
 ```markdown
 # Implementation
 
-1. Replace dialog-based editing with dedicated page routes
-2. Convert JavaScript API and composables to TypeScript
-3. Split monolithic table into modular Card and DataTable components
-4. Standardize component naming to match Vuetify patterns
+1. Generate a filled Section 68 Receipt for ISAs set to "Accepted in Confidence" — downloadable from the draft card and actions menu.
+2. Require the signed receipt to be uploaded before the ISA can be marked as signed.
+3. Make the signed receipt available for download after signing.
+4. Rename "Download Draft" to "Download Confidentiality Acknowledgement" to distinguish it from the new receipt document.
 ```
 
-**Bad Example (file-focused - avoid this):**
+**Bad Example (technical-detail-focused — avoid this):**
+```markdown
+# Implementation
+
+1. Add `confidentialityAgreement` and `signedConfidentialityReceipt` HasOne associations to the ISA model, plus a `requiresConfidentialityAgreement()` helper.
+2. Add a generate service and serializer for the Section 68 Receipt DOCX template, mirroring the existing acknowledgement generation pattern.
+3. Add a download controller for the system-generated receipt and a separate controller for the uploaded signed receipt.
+```
+
+**Bad Example (file-focused — avoid this):**
 ```markdown
 # Implementation
 

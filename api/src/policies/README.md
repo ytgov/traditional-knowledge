@@ -1,5 +1,18 @@
 # Policies
 
+→ **Copy-paste template:** [`agents/templates/backend/policy.md`](../../../agents/templates/backend/policy.md)
+
+## Conventions
+
+- **Modern pattern:** extend `PolicyFactory(ModelClass)` and implement `policyScope()` for new/updated policies.
+- **Legacy pattern:** manual `applyScope()` (being phased out).
+- Use `ALL_RECORDS_SCOPE` constant for admin users with early returns.
+- Use `permittedAttributes()` — not `permittedAttributesForUpdate()`.
+- Role checks: use `user.isSystemAdmin` directly.
+- Compose scopes by storing parent policy scope in a variable and spreading.
+
+---
+
 Policies are used to control access to data in a controller, before it is returned to the client.
 Polices can be used in the following ways:
 

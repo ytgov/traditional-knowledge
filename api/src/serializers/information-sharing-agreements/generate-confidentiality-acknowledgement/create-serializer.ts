@@ -11,7 +11,7 @@ import BaseSerializer from "@/serializers/base-serializer"
 
 const IDENTIFIER_MAX_LENGTH = 80
 
-export type InformationSharingAgreementAsAcknowledgement = {
+export type InformationSharingAgreementAsConfidentialityAcknowledgement = {
   identifier: string
   purpose: string
   "external_group_contact.external_organization.name": string
@@ -45,7 +45,7 @@ export type InformationSharingAgreementAsAcknowledgement = {
 }
 
 export class CreateSerializer extends BaseSerializer<InformationSharingAgreement> {
-  perform(): InformationSharingAgreementAsAcknowledgement {
+  perform(): InformationSharingAgreementAsConfidentialityAcknowledgement {
     const { externalGroupContact, internalGroupContact, internalGroupSecondaryContact } =
       this.record
     if (isUndefined(externalGroupContact)) {

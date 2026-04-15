@@ -67,9 +67,16 @@ router.use(
 
 router
   .route(
-    "/api/downloads/information-sharing-agreements/:informationSharingAgreementId/signed-acknowledgement"
+    "/api/downloads/information-sharing-agreements/:informationSharingAgreementId/signed-confidentiality-acknowledgement"
   )
-  .post(Downloads.InformationSharingAgreements.SignedAcknowledgementController.create)
+  .post(
+    Downloads.InformationSharingAgreements.SignedConfidentialityAcknowledgementController.create
+  )
+router
+  .route(
+    "/api/downloads/information-sharing-agreements/:informationSharingAgreementId/signed-confidentiality-receipt"
+  )
+  .post(Downloads.InformationSharingAgreements.SignedConfidentialityReceiptController.create)
 
 router.route("/api/current-user").get(CurrentUserController.show)
 
@@ -160,9 +167,14 @@ router
   .post(InformationSharingAgreements.RevertToDraftController.create)
 router
   .route(
-    "/api/information-sharing-agreements/:informationSharingAgreementId/generate-acknowledgement"
+    "/api/information-sharing-agreements/:informationSharingAgreementId/generate-confidentiality-acknowledgement"
   )
-  .post(InformationSharingAgreements.GenerateAcknowledgementController.create)
+  .post(InformationSharingAgreements.GenerateConfidentialityAcknowledgementController.create)
+router
+  .route(
+    "/api/information-sharing-agreements/:informationSharingAgreementId/generate-confidentiality-receipt"
+  )
+  .post(InformationSharingAgreements.GenerateConfidentialityReceiptController.create)
 router
   .route("/api/information-sharing-agreements/:informationSharingAgreementId/archive-items")
   .post(InformationSharingAgreements.ArchiveItemsController.create)

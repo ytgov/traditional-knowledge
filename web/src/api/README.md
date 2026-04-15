@@ -1,4 +1,26 @@
-# API
+# API Clients
+
+→ **Copy-paste template:** [`agents/templates/frontend/api-client.md`](../../../agents/templates/frontend/api-client.md)
+
+For complete feature scaffolding: [`agents/workflows/create-admin-ui.md`](../../../agents/workflows/create-admin-ui.md)
+
+## Conventions
+
+- Export types matching backend serializers. Export `WhereOptions`, `FiltersOptions`, `QueryOptions`.
+- Methods: `list()`, `get()`, `create()`, `update()`, `delete()`.
+- Type conventions:
+  - `list()` → `{ resources: ResourceAsIndex[], totalCount: number }`
+  - `get()` → `{ resource: ResourceAsShow, policy: Policy }`
+  - `create()` / `update()` → `{ resource: ResourceAsShow, policy: Policy }`
+  - `delete()` → `Promise<void>`
+- Always use `AsShow` for get/create/update, even if it's just an alias to the base model.
+- Exclude `deletedAt` from frontend types (internal only).
+- Export `export type ResourcePolicy = Policy` for each resource.
+- `FiltersOptions` come from the backend model's `establishScopes()` method.
+- Keep deprecated `Object.freeze` constants alongside new TypeScript enums for backward compatibility, annotated with `@deprecated`.
+- Enum naming: `{ModelName}{FieldName}` in PascalCase (e.g., `KnowledgeEntryStatuses`).
+
+---
 
 > Explanation of Naming: _the_ API mapping to the back-end, if there was an api that corresponded to something else, such as auth0, then it would go in a folder named `web/src/auth0-api/`
 

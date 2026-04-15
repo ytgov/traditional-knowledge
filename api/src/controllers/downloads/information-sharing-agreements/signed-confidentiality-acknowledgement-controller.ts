@@ -6,7 +6,7 @@ import { AttachmentTargetTypes } from "@/models/attachment"
 import { InformationSharingAgreementPolicy } from "@/policies"
 import BaseController from "@/controllers/base-controller"
 
-export class SignedAcknowledgementController extends BaseController<InformationSharingAgreement> {
+export class SignedConfidentialityAcknowledgementController extends BaseController<InformationSharingAgreement> {
   async create() {
     try {
       const informationSharingAgreement = await this.loadInformationSharingAgreement()
@@ -19,14 +19,15 @@ export class SignedAcknowledgementController extends BaseController<InformationS
       const policy = this.buildPolicy(informationSharingAgreement)
       if (!policy.show()) {
         return this.response.status(403).json({
-          message: "You are not authorized to download this signed acknowledgement.",
+          message:
+            "You are not authorized to download this signed confidentiality acknowledgement.",
         })
       }
 
       const attachment = await this.loadAttachment(informationSharingAgreement)
       if (isNil(attachment)) {
         return this.response.status(404).json({
-          message: "No signed acknowledgement file found.",
+          message: "No signed confidentiality acknowledgement file found.",
         })
       }
 
@@ -34,9 +35,9 @@ export class SignedAcknowledgementController extends BaseController<InformationS
       this.response.setHeader("Content-Type", attachment.mimeType)
       return this.response.send(attachment.content)
     } catch (error) {
-      logger.error(`Failed to download signed acknowledgement: ${error}`, { error })
+      logger.error(`Failed to download signed confidentiality acknowledgement: ${error}`, { error })
       return this.response.status(400).json({
-        message: `Failed to download signed acknowledgement: ${error}`,
+        message: `Failed to download signed confidentiality acknowledgement: ${error}`,
       })
     }
   }
@@ -58,9 +59,10 @@ export class SignedAcknowledgementController extends BaseController<InformationS
       where: {
         targetId: informationSharingAgreement.id,
         targetType: AttachmentTargetTypes.InformationSharingAgreement,
+        associationName: "signedConfidentialityAcknowledgement",
       },
     })
   }
 }
 
-export default SignedAcknowledgementController
+export default SignedConfidentialityAcknowledgementController

@@ -1,9 +1,9 @@
 <template>
   <AuthenticatedPostForm
-    :action-url="downloadSignedAcknowledgementUrl"
-    text="Signed Acknowledgement"
+    :action-url="generateConfidentialityAcknowledgementUrl"
+    text="Download Confidentiality Acknowledgement"
     :activator-props="{
-      title: 'Download the signed acknowledgement document',
+      title: 'Download the confidentiality acknowledgement for printing and signature',
       ...activatorProps,
     }"
   />
@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import Api from "@/api"
+import informationSharingAgreementsApi from "@/api/information-sharing-agreements-api"
 
 import AuthenticatedPostForm, {
   type ActivatorProps,
@@ -28,8 +28,8 @@ const props = withDefaults(
   }
 )
 
-const downloadSignedAcknowledgementUrl = computed(() =>
-  Api.Downloads.InformationSharingAgreements.signedAcknowledgementApi.downloadPath(
+const generateConfidentialityAcknowledgementUrl = computed(() =>
+  informationSharingAgreementsApi.generateConfidentialityAcknowledgementPath(
     props.informationSharingAgreementId
   )
 )

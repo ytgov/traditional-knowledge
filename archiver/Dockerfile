@@ -1,7 +1,7 @@
 # Stage 0 - base node customizations
 FROM node:20.18.0-alpine3.19 AS base-node
 
-RUN npm install -g npm@10.9.0
+RUN npm install -g npm@11.12.1
 
 # Stage 1 - archiver build - requires development environment because typescript
 FROM base-node AS archiver-build-stage
