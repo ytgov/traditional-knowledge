@@ -95,15 +95,11 @@
           "
           cols="12"
         >
-          <v-card
-            class="border"
-            color="#ffffff66"
-          >
-            <v-card-text>
-              <h3 class="mt-n1 mb-3">Signed Confidentiality Acknowledgement</h3>
-              <span>{{ signedConfidentialityAcknowledgement.name }}</span>
-            </v-card-text>
-          </v-card>
+          <InformationSharingAgreementSignedDocumentsCard
+            :information-sharing-agreement-id="informationSharingAgreementId"
+            :acknowledgement="signedConfidentialityAcknowledgement"
+            :receipt="signedConfidentialityReceipt"
+          />
         </v-col>
       </v-row>
 
@@ -150,9 +146,6 @@
                 @success="refresh"
               />
             </v-btn>
-            <InformationSharingAgreementDownloadSignedConfidentialityAcknowledgementButton
-              :information-sharing-agreement-id="informationSharingAgreementId"
-            />
           </template>
         </div>
 
@@ -188,7 +181,7 @@ import useInformationSharingAgreement, {
 
 import InformationSharingAgreementConfidentialityAcknowledgementDownloadButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityAcknowledgementDownloadButton.vue"
 import InformationSharingAgreementConfidentialityReceiptGenerateButton from "@/components/information-sharing-agreements/draft/InformationSharingAgreementConfidentialityReceiptGenerateButton.vue"
-import InformationSharingAgreementDownloadSignedConfidentialityAcknowledgementButton from "@/components/information-sharing-agreements/InformationSharingAgreementDownloadSignedConfidentialityAcknowledgementButton.vue"
+import InformationSharingAgreementSignedDocumentsCard from "@/components/information-sharing-agreements/InformationSharingAgreementSignedDocumentsCard.vue"
 import InformationSharingAgreementRevertToDraftDialog from "@/components/information-sharing-agreements/InformationSharingAgreementRevertToDraftDialog.vue"
 
 import GroupChip from "@/components/groups/GroupChip.vue"
@@ -240,6 +233,9 @@ const duration = computed(() => {
 
 const signedConfidentialityAcknowledgement = computed(
   () => informationSharingAgreement.value?.signedConfidentialityAcknowledgement
+)
+const signedConfidentialityReceipt = computed(
+  () => informationSharingAgreement.value?.signedConfidentialityReceipt
 )
 const isConfidentialityTypeAcceptedInConfidence = computed(
   () =>
