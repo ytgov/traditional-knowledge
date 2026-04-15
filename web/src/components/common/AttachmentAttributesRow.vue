@@ -1,15 +1,17 @@
 <template>
   <v-row class="align-center pa-3 ma-0">
-    <v-col cols="auto">
-      <v-avatar :color="iconColor">
-        <v-icon color="white">{{ icon }}</v-icon>
-      </v-avatar>
-    </v-col>
-
     <v-col class="py-0">
       <div class="text-body-2 font-weight-medium">{{ attachment.name }}</div>
-      <div class="text-caption text-medium-emphasis">{{ formattedDate }}</div>
-      <div class="text-caption text-medium-emphasis">{{ formattedSize }}</div>
+      <div class="d-flex align-center justify-space-between text-caption text-medium-emphasis mt-1">
+        <div>
+          <div>{{ formattedDate }}</div>
+          <div>{{ formattedSize }}</div>
+        </div>
+        <v-icon
+          :color="iconColor"
+          size="28"
+        >{{ icon }}</v-icon>
+      </div>
     </v-col>
 
     <v-col
