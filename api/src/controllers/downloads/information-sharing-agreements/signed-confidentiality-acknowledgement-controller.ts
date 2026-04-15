@@ -59,6 +59,7 @@ export class SignedConfidentialityAcknowledgementController extends BaseControll
       where: {
         targetId: informationSharingAgreement.id,
         targetType: AttachmentTargetTypes.InformationSharingAgreement,
+        associationName: "signedConfidentialityAcknowledgement",
       },
     })
   }
