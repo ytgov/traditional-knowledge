@@ -36,6 +36,7 @@ export type InformationSharingAgreementAsConfidentialityAcknowledgement = {
   "access_level.is_internal": boolean
   "access_level.is_protected_and_limited": boolean
   "access_level.is_confidential_and_restricted": boolean
+  access_level_department_restriction: string
   department_branch_unit_hierarchy: string
   has_additional_access_restrictions: boolean
   additional_access_restrictions: string
@@ -128,6 +129,7 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       "access_level.is_internal": isInternal,
       "access_level.is_protected_and_limited": isProtectedAndLimited,
       "access_level.is_confidential_and_restricted": isConfidentialAndRestricted,
+      access_level_department_restriction: this.record.accessLevelDepartmentRestriction ?? "",
       department_branch_unit_hierarchy: departmentBranchUnitHierarchy,
       has_additional_access_restrictions: this.record.hasAdditionalAccessRestrictions ?? false,
       additional_access_restrictions: this.record.additionalAccessRestrictions ?? "",
