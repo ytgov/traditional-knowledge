@@ -129,7 +129,7 @@ export class CreateSerializer extends BaseSerializer<InformationSharingAgreement
       "access_level.is_internal": isInternal,
       "access_level.is_protected_and_limited": isProtectedAndLimited,
       "access_level.is_confidential_and_restricted": isConfidentialAndRestricted,
-      access_level_department_restriction: this.record.accessLevelDepartmentRestriction ?? "undefined",
+      access_level_department_restriction: this.record.accessLevelDepartmentRestriction ?? "",
       department_branch_unit_hierarchy: departmentBranchUnitHierarchy,
       has_additional_access_restrictions: this.record.hasAdditionalAccessRestrictions ?? false,
       additional_access_restrictions: this.record.additionalAccessRestrictions ?? "",
