@@ -288,6 +288,12 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@/pages/users/UserEditPage.vue"),
             props: true,
           },
+          {
+            path: "external-users/:userId/edit",
+            name: "users/UserExternalEditPage",
+            component: () => import("@/pages/users/UserExternalEditPage.vue"),
+            props: true,
+          },
         ],
       },
       {
