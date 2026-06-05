@@ -84,6 +84,35 @@
               label="Phone Number"
             />
           </v-col>
+          <v-col
+            v-if="isSystemAdmin"
+            cols="12"
+            md="3"
+          >
+            <UserAccountActivationSwitch
+              :user-id="user.id"
+              :is-active="isNil(user.deactivatedAt)"
+              :disabled="user.id === currentUser.id"
+              @success="refresh"
+            />
+            <v-tooltip
+              v-if="user.id === currentUser.id"
+              activator="parent"
+            >
+              <span>You cannot change account activation of current user.</span>
+            </v-tooltip>
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-switch
+              v-model="user.emailNotificationsEnabled"
+              label="Receive email notifications"
+              :false-value="false"
+              :true-value="true"
+            />
+          </v-col>
         </v-row>
       </v-card-text>
 
@@ -138,6 +167,8 @@ import useCurrentUser from "@/use/use-current-user"
 import useSnack from "@/use/use-snack"
 import useUser from "@/use/use-user"
 
+import UserAccountActivationSwitch from "@/components/users/UserAccountActivationSwitch.vue"
+
 type CancelButtonOptions = VBtn["$props"]
 
 const props = withDefaults(
@@ -164,7 +195,7 @@ const { user, policy, isLoading, save, refresh: refreshUser } = useUser(userId)
 
 const form = ref<InstanceType<typeof VForm> | null>(null)
 const snack = useSnack()
-const { currentUser, refresh: refreshCurrentUser } = useCurrentUser<true>()
+const { currentUser, isSystemAdmin, refresh: refreshCurrentUser } = useCurrentUser<true>()
 
 async function saveWrapper() {
   if (isNil(user.value)) return
@@ -187,6 +218,14 @@ async function saveWrapper() {
   } catch (error) {
     console.error(`Failed to save user: ${error}`, { error })
     snack.error(`Failed to save user: ${error}`)
+  }
+}
+
+async function refresh() {
+  await refreshUser()
+
+  if (user.value?.id === currentUser.value.id) {
+    await refreshCurrentUser()
   }
 }
 
