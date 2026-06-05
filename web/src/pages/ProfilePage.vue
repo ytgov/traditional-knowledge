@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <UserEditForm
+    <UserInternalEditForm
       class="mt-10"
       :user-id="currentUser.id"
       :cancel-button-options="{
@@ -35,7 +35,7 @@ import { isNil } from "lodash"
 import useBreadcrumbs from "@/use/use-breadcrumbs"
 import useCurrentUser from "@/use/use-current-user"
 
-import UserEditForm from "@/components/users/UserEditForm.vue"
+import UserInternalEditForm from "@/components/users/UserInternalEditForm.vue"
 
 const { currentUser, refresh } = useCurrentUser<true>()
 

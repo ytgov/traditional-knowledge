@@ -190,7 +190,7 @@ function goToUserEditPage(user: UserAsIndex) {
   }
 
   return router.push({
-    name: "users/UserEditPage",
+    name: "users/UserInternalEditPage",
     params: {
       userId: user.id,
     },
