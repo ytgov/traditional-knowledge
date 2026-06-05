@@ -7,7 +7,7 @@
     :items="users"
     :items-length="totalCount"
     :loading="isLoading"
-    @click:row="(_event: unknown, { item }: UserTableRow) => goToUserEditPage(item.id)"
+    @click:row="(_event: unknown, { item }: UserTableRow) => goToUserEditPage(item)"
   >
     <template #item.displayName="{ item }">
       <UserAttributesAvatarCard
@@ -179,11 +179,20 @@ const { isSystemAdmin } = useCurrentUser()
 
 const router = useRouter()
 
-function goToUserEditPage(userId: number) {
+function goToUserEditPage(user: UserAsIndex) {
+  if (user.isExternal) {
+    return router.push({
+      name: "users/UserExternalEditPage",
+      params: {
+        userId: user.id,
+      },
+    })
+  }
+
   return router.push({
-    name: "users/UserEditPage",
+    name: "users/UserInternalEditPage",
     params: {
-      userId,
+      userId: user.id,
     },
   })
 }

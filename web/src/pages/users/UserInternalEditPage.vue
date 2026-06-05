@@ -1,7 +1,7 @@
 <template>
   <v-skeleton-loader v-if="isNil(user)" />
   <div v-else>
-    <UserEditForm
+    <UserInternalEditForm
       :user-id="user.id"
       :cancel-button-options="{ to: { name: 'users/UsersPage' } }"
       @saved="refresh"
@@ -16,7 +16,7 @@ import { isNil } from "lodash"
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
 import useUser from "@/use/use-user"
 
-import UserEditForm from "@/components/users/UserEditForm.vue"
+import UserInternalEditForm from "@/components/users/UserInternalEditForm.vue"
 
 const props = defineProps<{
   userId: string

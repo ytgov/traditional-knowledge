@@ -160,7 +160,7 @@ const userProfileLink = computed(() => {
 
   if (isSystemAdmin.value) {
     return {
-      name: "users/UserEditPage",
+      name: "users/UserInternalEditPage",
       params: {
         userId: userId.value,
       },
