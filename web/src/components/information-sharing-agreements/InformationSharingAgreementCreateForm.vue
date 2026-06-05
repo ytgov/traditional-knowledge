@@ -80,21 +80,20 @@
           :loading="isLoading"
           color="secondary"
           variant="outlined"
+          text="Cancel"
           :to="{
-            name: 'administration/InformationSharingAgreementsPage',
+            name: 'InformationSharingAgreementsPage',
           }"
-        >
-          Cancel
-        </v-btn>
+          v-bind="cancelButtonProps"
+        />
         <v-spacer />
         <v-btn
           class="ml-3"
           :loading="isLoading"
           type="submit"
           color="primary"
-        >
-          Create
-        </v-btn>
+          text="Create"
+        />
       </v-col>
     </v-row>
   </v-form>
@@ -117,6 +116,15 @@ import InformationSharingAgreementAccessEditCard from "@/components/information-
 import InformationSharingAgreementBasicInformationEditCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationEditCard.vue"
 import InformationSharingAgreementConfidentialityEditCard from "@/components/information-sharing-agreements/InformationSharingAgreementConfidentialityEditCard.vue"
 import InformationSharingAgreementDurationEditCard from "@/components/information-sharing-agreements/InformationSharingAgreementDurationEditCard.vue"
+
+withDefaults(
+  defineProps<{
+    cancelButtonProps?: Record<string, unknown>
+  }>(),
+  {
+    cancelButtonProps: () => ({}),
+  }
+)
 
 const informationSharingAgreementAttributes = ref<Partial<InformationSharingAgreement>>({
   title: undefined,

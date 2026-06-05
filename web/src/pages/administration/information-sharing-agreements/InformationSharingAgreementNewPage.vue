@@ -1,10 +1,14 @@
 <template>
-  <InformationSharingAgreementAdminCreateForm />
+  <InformationSharingAgreementCreateForm
+    :cancel-button-props="{
+      to: { name: 'administration/InformationSharingAgreementsPage' },
+    }"
+  />
 </template>
 
 <script setup lang="ts">
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
-import InformationSharingAgreementAdminCreateForm from "@/components/information-sharing-agreements/InformationSharingAgreementAdminCreateForm.vue"
+import InformationSharingAgreementCreateForm from "@/components/information-sharing-agreements/InformationSharingAgreementCreateForm.vue"
 
 useBreadcrumbs("New Information Sharing Agreement", [
   ADMIN_CRUMB,
