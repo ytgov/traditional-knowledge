@@ -11,7 +11,7 @@
           v-if="isSystemAdmin || isExternalGroupAdmin"
           color="primary"
           :to="{
-            name: 'administration/information-sharing-agreements/InformationSharingAgreementNewPage',
+            name: 'information-sharing-agreements/InformationSharingAgreementNewPage',
           }"
           style="height: 40px"
         >

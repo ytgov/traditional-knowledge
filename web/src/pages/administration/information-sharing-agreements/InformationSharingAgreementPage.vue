@@ -59,7 +59,7 @@ const returnToHref = computed(() => {
 
 const editButtonProps = computed(() => ({
   to: {
-    name: "administration/information-sharing-agreements/InformationSharingAgreementEditPage",
+    name: "information-sharing-agreements/InformationSharingAgreementEditPage",
     params: {
       informationSharingAgreementId: props.informationSharingAgreementId,
     },

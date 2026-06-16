@@ -38,7 +38,7 @@
         <v-btn
           v-if="item.policy.update"
           :to="{
-            name: 'administration/information-sharing-agreements/InformationSharingAgreementEditPage',
+            name: 'information-sharing-agreements/InformationSharingAgreementEditPage',
             params: {
               informationSharingAgreementId: item.id,
             },

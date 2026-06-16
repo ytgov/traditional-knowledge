@@ -204,7 +204,7 @@ const props = withDefaults(
     }),
     editButtonProps: ({ informationSharingAgreementId }) => ({
       to: {
-        name: "administration/information-sharing-agreements/InformationSharingAgreementEditPage",
+        name: "information-sharing-agreements/InformationSharingAgreementEditPage",
         params: {
           informationSharingAgreementId,
         },
