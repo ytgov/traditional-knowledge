@@ -1,8 +1,10 @@
 <template>
   <v-card>
     <v-card-title class="bg-grey-lighten-4 d-flex align-center ga-3 px-6 py-4">
-      <v-icon color="accent">mdi-information-outline</v-icon>
-      <span>Basic Information</span>
+      <slot name="title">
+        <v-icon color="accent">mdi-information-outline</v-icon>
+        Basic Information
+      </slot>
     </v-card-title>
     <v-divider />
     <v-card-text class="pa-6 pa-md-8">
