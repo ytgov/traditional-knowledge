@@ -6,6 +6,23 @@
   >
     <v-card class="border">
       <FileDrop @files-dropped="attachDroppedFiles">
+        <v-card-title>Knowledge Item</v-card-title>
+        <v-card-text>
+          <v-checkbox
+            v-model="archiveItemAttributes.confidentialityReceipt"
+            label="I confirm that I have received and agreed to the confidentiality terms."
+            class="mt-3"
+            :rules="[required]"
+            required
+            hide-details
+          />
+        </v-card-text>
+
+        <v-divider
+          thickness="2"
+          class="mb-4"
+        />
+
         <v-card-title> Categories and Tags </v-card-title>
         <v-card-text>
           <p class="mb-4">
@@ -87,7 +104,7 @@ const archiveItemAttributes = ref<Partial<ArchiveItemCreationAttributes>>({
   securityLevel: SecurityLevel.LOW,
   description: null,
   sharingPurpose: null,
-  confidentialityReceipt: false,
+  confidentialityReceipt: undefined,
   yukonFirstNations: [],
   tags: [],
   archiveItemCategoriesAttributes: [],
