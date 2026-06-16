@@ -219,9 +219,6 @@ const routes: RouteRecordRaw[] = [
                   name: "administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage",
                 },
               },
-              /**
-               * TODO: consider if we should merge "access grant" concept with "groups". This would heavily simplify
-               */
               {
                 path: "access-grants",
                 name: "administration/information-sharing-agreements/InformationSharingAgreementAccessGrantsPage",
