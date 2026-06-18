@@ -7,16 +7,6 @@
           label="Search"
           density="compact"
         />
-        <v-btn
-          v-if="isSystemAdmin || isExternalGroupAdmin"
-          color="primary"
-          :to="{
-            name: 'information-sharing-agreements/InformationSharingAgreementNewPage',
-          }"
-          style="height: 40px"
-        >
-          <span class="text-pre-wrap">New Agreement</span>
-        </v-btn>
       </div>
 
       <InformationSharingAgreementsAdminEditDataTableServer :filters="filters" />
@@ -29,12 +19,9 @@ import { computed, ref } from "vue"
 import { isEmpty, isNil } from "lodash"
 
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
-import useCurrentUser from "@/use/use-current-user"
 
 import FilterSearchDebouncedTextField from "@/components/common/tables/FilterSearchDebouncedTextField.vue"
 import InformationSharingAgreementsAdminEditDataTableServer from "@/components/information-sharing-agreements/InformationSharingAgreementsAdminEditDataTableServer.vue"
-
-const { isSystemAdmin, isExternalGroupAdmin } = useCurrentUser()
 
 const search = ref("")
 

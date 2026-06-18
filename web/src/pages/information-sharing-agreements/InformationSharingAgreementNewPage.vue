@@ -39,9 +39,7 @@
           Create
         </v-btn>
         <v-btn
-          :to="{
-            name: 'InformationSharingAgreementsPage',
-          }"
+          :to="cancelTo"
           color="secondary"
           variant="outlined"
           :loading="isLoading"
@@ -55,10 +53,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef } from "vue"
-import { useRouter } from "vue-router"
+import { computed, ref, useTemplateRef } from "vue"
+import { useRoute, useRouter } from "vue-router"
 import { useDisplay } from "vuetify"
-import { isNil } from "lodash"
+import { isEmpty, isNil, isString } from "lodash"
 
 import { VForm } from "vuetify/components"
 
@@ -84,7 +82,17 @@ const informationSharingAgreementAttributes = ref<Partial<InformationSharingAgre
 const form = useTemplateRef("form")
 const isLoading = ref(false)
 const snack = useSnack()
+const route = useRoute()
 const router = useRouter()
+
+const cancelTo = computed(() => {
+  const rawReturnTo = route.query.returnTo
+  if (isNil(rawReturnTo) || isEmpty(rawReturnTo) || !isString(rawReturnTo)) {
+    return { name: "InformationSharingAgreementsPage" }
+  }
+
+  return rawReturnTo
+})
 
 async function saveAndGoToEditPage() {
   if (isNil(form.value)) return
