@@ -1,9 +1,33 @@
 <template>
-  <InformationSharingAgreementCard
-    :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
-    :edit-button-props="editButtonProps"
-    :sign-button-props="signButtonProps"
+  <v-skeleton-loader
+    v-if="isNil(informationSharingAgreement)"
+    type="card"
   />
+  <InformationSharingAgreementBasicInformationCard
+    v-else
+    class="rounded-lg"
+    :title="informationSharingAgreement.title"
+    :purpose="informationSharingAgreement.purpose"
+    :external-group-contact-id="informationSharingAgreement.externalGroupContactId"
+    :external-group-contact-title="informationSharingAgreement.externalGroupContactTitle"
+    :internal-group-contact-id="informationSharingAgreement.internalGroupContactId"
+    :internal-group-contact-title="informationSharingAgreement.internalGroupContactTitle"
+    :internal-group-secondary-contact-id="
+      informationSharingAgreement.internalGroupSecondaryContactId
+    "
+  >
+    <template #title>
+      <v-icon color="accent">mdi-information-outline</v-icon>
+      Basic Information
+      <v-spacer />
+      <v-btn
+        v-bind="editButtonProps"
+        variant="outlined"
+        prepend-icon="mdi-open-in-new"
+        text="Go To ISA Page"
+      />
+    </template>
+  </InformationSharingAgreementBasicInformationCard>
 
   <v-card class="mt-5 border">
     <!-- TODO: consider if we should have separate tabs for external and internal groups access grants? -->
@@ -31,12 +55,14 @@
 </template>
 
 <script setup lang="ts">
+import { isNil } from "lodash"
 import { computed } from "vue"
 import { useRouter } from "vue-router"
 
 import useBreadcrumbs, { ADMIN_CRUMB } from "@/use/use-breadcrumbs"
+import useInformationSharingAgreement from "@/use/use-information-sharing-agreement"
 
-import InformationSharingAgreementCard from "@/components/information-sharing-agreements/InformationSharingAgreementCard.vue"
+import InformationSharingAgreementBasicInformationCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationCard.vue"
 
 const props = defineProps<{
   informationSharingAgreementId: string
@@ -44,6 +70,10 @@ const props = defineProps<{
 
 const informationSharingAgreementIdAsNumber = computed(() =>
   parseInt(props.informationSharingAgreementId)
+)
+
+const { informationSharingAgreement } = useInformationSharingAgreement(
+  informationSharingAgreementIdAsNumber
 )
 
 const router = useRouter()
@@ -59,19 +89,7 @@ const returnToHref = computed(() => {
 
 const editButtonProps = computed(() => ({
   to: {
-    name: "administration/information-sharing-agreements/InformationSharingAgreementEditPage",
-    params: {
-      informationSharingAgreementId: props.informationSharingAgreementId,
-    },
-    query: {
-      returnTo: returnToHref.value,
-    },
-  },
-}))
-
-const signButtonProps = computed(() => ({
-  to: {
-    name: "information-sharing-agreements/InformationSharingAgreementSignPage",
+    name: "information-sharing-agreements/InformationSharingAgreementEditPage",
     params: {
       informationSharingAgreementId: props.informationSharingAgreementId,
     },
