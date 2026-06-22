@@ -23,31 +23,6 @@
           class="mb-4"
         />
 
-        <v-card-title> Categories and Tags </v-card-title>
-        <v-card-text>
-          <p class="mb-4">
-            Categories and Tags are used as filter criteria to find items. You can select as many of
-            each as are applicable to this item.
-          </p>
-          <CategorySelect
-            v-model="categoryIds"
-            label="Categories *"
-            :rules="[required]"
-            hide-selected
-            multiple
-            chips
-            :closable-chips="categoryIds.length > 1"
-          />
-          <v-combobox
-            v-model="archiveItemAttributes.tags"
-            label="Tags"
-            class="mt-3"
-            multiple
-            chips
-            clearable
-          />
-        </v-card-text>
-
         <v-card-title>Attachments</v-card-title>
 
         <v-card-text>
@@ -92,8 +67,6 @@ import useSnack from "@/use/use-snack"
 
 import EnhancedFileInput from "@/components/common/EnhancedFileInput.vue"
 import FileDrop from "@/components/common/FileDrop.vue"
-
-import CategorySelect from "@/components/categories/CategorySelect.vue"
 
 const props = defineProps<{
   informationSharingAgreement: InformationSharingAgreementAsShow
@@ -152,16 +125,6 @@ const files = ref<File[]>([])
 function attachDroppedFiles(droppedFiles: File[]) {
   files.value = droppedFiles
 }
-
-const categoryIds = ref<number[]>([])
-
-watchEffect(() => {
-  archiveItemAttributes.value.archiveItemCategoriesAttributes = categoryIds.value.map(
-    (categoryId) => ({
-      categoryId,
-    })
-  )
-})
 
 const isLoading = ref(false)
 const form = useTemplateRef("form")
