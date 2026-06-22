@@ -3,6 +3,15 @@
     v-bind="primaryButtonAttributes"
     :loading="isLoading"
   >
+    <template
+      v-if="!isNil(informationSharingAgreement) && isNil(archiveItemId)"
+      #dialogs
+    >
+      <InformationSharingAgreementArchiveItemCreateDialog
+        :information-sharing-agreement="informationSharingAgreement"
+        @created="goToInformationSharingAgreementsPage"
+      />
+    </template>
     <v-list-item
       :loading="isDownloadingSignedConfidentialityAcknowledgement"
       @click="downloadSignedConfidentialityAcknowledgement"
@@ -65,7 +74,11 @@
 
 <script setup lang="ts">
 import { computed, toRefs } from "vue"
+import { useRouter } from "vue-router"
+import { useRouteQuery } from "@vueuse/router"
 import { isNil } from "lodash"
+
+import { booleanTransformer } from "@/utils/use-route-query-transformers"
 
 import Api from "@/api"
 import useAuthenticatedDownload from "@/use/utils/use-authenticated-download"
@@ -73,6 +86,7 @@ import useInformationSharingAgreement from "@/use/use-information-sharing-agreem
 import useInformationSharingAgreementArchiveItems from "@/use/use-information-sharing-agreement-archive-items"
 
 import BaseActionsMenuBtnGroup from "@/components/common/BaseActionsMenuBtnGroup.vue"
+import InformationSharingAgreementArchiveItemCreateDialog from "@/components/information-sharing-agreements/archive-items/InformationSharingAgreementArchiveItemCreateDialog.vue"
 import InformationSharingAgreementRevertToDraftDialog from "@/components/information-sharing-agreements/InformationSharingAgreementRevertToDraftDialog.vue"
 
 const props = defineProps<{
@@ -82,6 +96,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   updated: [informationSharingAgreementId: number]
 }>()
+
+const router = useRouter()
 
 const { informationSharingAgreementId } = toRefs(props)
 const { informationSharingAgreement, isLoading } = useInformationSharingAgreement(
@@ -109,6 +125,10 @@ const { informationSharingAgreementArchiveItems } = useInformationSharingAgreeme
 const archiveItemId = computed(
   () => informationSharingAgreementArchiveItems.value?.at(0)?.archiveItemId
 )
+const showCreateArchiveItemDialog = useRouteQuery("showCreateArchiveItemDialog", "false", {
+  transform: booleanTransformer,
+})
+
 const primaryButtonAttributes = computed(() => {
   if (!isNil(archiveItemId.value)) {
     return {
@@ -123,12 +143,7 @@ const primaryButtonAttributes = computed(() => {
   } else {
     return {
       primaryButtonText: "Create Knowledge Item",
-      primaryButtonTo: {
-        name: "information-sharing-agreements/archive-items/InformationSharingAgreementArchiveItemNewPage",
-        params: {
-          informationSharingAgreementId: props.informationSharingAgreementId,
-        },
-      },
+      primaryButtonProps: { onClick: () => (showCreateArchiveItemDialog.value = true) },
     }
   }
 })
@@ -152,6 +167,10 @@ const {
   submit: downloadSignedConfidentialityReceipt,
   isLoading: isDownloadingSignedConfidentialityReceipt,
 } = useAuthenticatedDownload(generateSignedConfidentialityReceiptUrl)
+
+async function goToInformationSharingAgreementsPage() {
+  await router.push({ name: "InformationSharingAgreementsPage" })
+}
 </script>
 
 <style scoped></style>
