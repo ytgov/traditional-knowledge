@@ -13,12 +13,6 @@
           </p>
 
           <v-row>
-            <v-col cols="12">
-              <ArchiveItemNewButton />
-            </v-col>
-          </v-row>
-
-          <v-row>
             <v-col>
               <p>
                 <router-link :to="{ name: 'archive-items/ArchiveItemListPage' }"
@@ -57,7 +51,6 @@
 </template>
 
 <script lang="ts" setup>
-import ArchiveItemNewButton from "@/components/archive-items/ArchiveItemNewButton.vue"
 import InformationSharingAgreementNewCard from "@/components/information-sharing-agreements/InformationSharingAgreementNewCard.vue"
 import VaultInfoCard from "@/components/common/VaultInfoCard.vue"
 import VaultStatisticsCard from "@/components/common/VaultStatisticsCard.vue"
