@@ -104,14 +104,7 @@ const showDialog = useRouteQuery("showCreateArchiveItemDialog", "false", {
 })
 
 const archiveItemAttributes = ref<Partial<ArchiveItemCreationAttributes>>({
-  title: "",
   securityLevel: SecurityLevel.LOW,
-  description: null,
-  sharingPurpose: null,
-  confidentialityReceipt: undefined,
-  yukonFirstNations: [],
-  tags: [],
-  archiveItemCategoriesAttributes: [],
 })
 
 const ACCESS_LEVEL_TO_SECURITY_LEVEL = {
