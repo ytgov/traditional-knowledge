@@ -180,7 +180,13 @@ async function saveAndClose() {
   }
 }
 
+function open() {
+  showDialog.value = true
+}
+
 function close() {
   showDialog.value = false
 }
+
+defineExpose({ open })
 </script>

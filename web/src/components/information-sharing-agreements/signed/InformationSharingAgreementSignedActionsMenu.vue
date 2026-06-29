@@ -8,6 +8,7 @@
       #dialogs
     >
       <InformationSharingAgreementArchiveItemCreateDialog
+        ref="createArchiveItemDialog"
         :information-sharing-agreement="informationSharingAgreement"
         @created="goToInformationSharingAgreementsPage"
       />
@@ -73,12 +74,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from "vue"
+import { computed, toRefs, useTemplateRef } from "vue"
 import { useRouter } from "vue-router"
-import { useRouteQuery } from "@vueuse/router"
 import { isNil } from "lodash"
-
-import { booleanTransformer } from "@/utils/use-route-query-transformers"
 
 import Api from "@/api"
 import useAuthenticatedDownload from "@/use/utils/use-authenticated-download"
@@ -125,9 +123,11 @@ const { informationSharingAgreementArchiveItems } = useInformationSharingAgreeme
 const archiveItemId = computed(
   () => informationSharingAgreementArchiveItems.value?.at(0)?.archiveItemId
 )
-const showCreateArchiveItemDialog = useRouteQuery("showCreateArchiveItemDialog", "false", {
-  transform: booleanTransformer,
-})
+const createArchiveItemDialog = useTemplateRef("createArchiveItemDialog")
+
+function openCreateArchiveItemDialog() {
+  createArchiveItemDialog.value?.open()
+}
 
 const primaryButtonAttributes = computed(() => {
   if (!isNil(archiveItemId.value)) {
@@ -143,7 +143,7 @@ const primaryButtonAttributes = computed(() => {
   } else {
     return {
       primaryButtonText: "Create Knowledge Item",
-      primaryButtonProps: { onClick: () => (showCreateArchiveItemDialog.value = true) },
+      primaryButtonProps: { onClick: () => openCreateArchiveItemDialog() },
     }
   }
 })
