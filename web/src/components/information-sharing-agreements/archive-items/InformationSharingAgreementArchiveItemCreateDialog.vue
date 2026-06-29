@@ -70,22 +70,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useTemplateRef, watchEffect } from "vue"
+import { ref, useTemplateRef } from "vue"
 import { useRouteQuery } from "@vueuse/router"
-import { isNil } from "lodash"
 
 import { booleanTransformer } from "@/utils/use-route-query-transformers"
 import { required } from "@/utils/validators"
 
 import Api from "@/api"
 import { type ArchiveItemCreationAttributes } from "@/api/information-sharing-agreements/archive-items-api"
-import { SecurityLevel } from "@/api/archive-items-api"
-import {
-  InformationSharingAgreementAccessLevels,
-  type InformationSharingAgreementAsShow,
-} from "@/api/information-sharing-agreements-api"
+import { type InformationSharingAgreementAsShow } from "@/api/information-sharing-agreements-api"
 
-import useExternalOrganizations from "@/use/use-external-organizations"
 import useSnack from "@/use/use-snack"
 
 import EnhancedFileInput from "@/components/common/EnhancedFileInput.vue"
@@ -103,46 +97,7 @@ const showDialog = useRouteQuery("showCreateArchiveItemDialog", "false", {
   transform: booleanTransformer,
 })
 
-const archiveItemAttributes = ref<Partial<ArchiveItemCreationAttributes>>({
-  securityLevel: SecurityLevel.LOW,
-})
-
-const ACCESS_LEVEL_TO_SECURITY_LEVEL = {
-  [InformationSharingAgreementAccessLevels.INTERNAL]: SecurityLevel.LOW,
-  [InformationSharingAgreementAccessLevels.PROTECTED_AND_LIMITED]: SecurityLevel.MEDIUM,
-  [InformationSharingAgreementAccessLevels.CONFIDENTIAL_AND_RESTRICTED]: SecurityLevel.HIGH,
-}
-
-watchEffect(() => {
-  const { accessLevel, purpose, authorizedApplication, title } = props.informationSharingAgreement
-
-  const accessLevelOrDefault = accessLevel ?? InformationSharingAgreementAccessLevels.INTERNAL
-
-  archiveItemAttributes.value.securityLevel = ACCESS_LEVEL_TO_SECURITY_LEVEL[accessLevelOrDefault]
-  archiveItemAttributes.value.sharingPurpose = authorizedApplication
-  archiveItemAttributes.value.description = purpose
-  archiveItemAttributes.value.title = title
-})
-
-const NULL_USER_ID = -1
-const externalGroupContactId = computed(
-  () => props.informationSharingAgreement.externalGroupContactId
-)
-const externalOrganizationsQuery = computed(() => ({
-  filters: {
-    withUserId: externalGroupContactId.value ?? NULL_USER_ID,
-  },
-}))
-const { externalOrganizations } = useExternalOrganizations(externalOrganizationsQuery, {
-  skipWatchIf: () => isNil(externalGroupContactId.value),
-})
-const externalGroupContactOrganization = computed(() => externalOrganizations.value[0])
-
-watchEffect(() => {
-  if (isNil(externalGroupContactOrganization.value)) return
-
-  archiveItemAttributes.value.yukonFirstNations = [externalGroupContactOrganization.value.name]
-})
+const archiveItemAttributes = ref<Partial<ArchiveItemCreationAttributes>>({})
 
 const files = ref<File[]>([])
 
@@ -155,7 +110,7 @@ const form = useTemplateRef("form")
 const snack = useSnack()
 
 async function saveAndClose() {
-  if (isNil(form.value)) return
+  if (form.value === null) return
 
   const { valid } = await form.value.validate()
   if (!valid) {

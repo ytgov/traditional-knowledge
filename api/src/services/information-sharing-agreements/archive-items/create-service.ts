@@ -4,12 +4,19 @@ import { isEmpty, isNil } from "lodash"
 import db, {
   ArchiveItem,
   ArchiveItemCategory,
+  ExternalOrganization,
   InformationSharingAgreement,
   InformationSharingAgreementArchiveItem,
   User,
 } from "@/models"
 import BaseService from "@/services/base-service"
 import { ArchiveItemFiles } from "@/services"
+
+const ACCESS_LEVEL_TO_SECURITY_LEVEL: Record<string, number> = {
+  [InformationSharingAgreement.AccessLevels.INTERNAL]: ArchiveItem.Levels.LOW,
+  [InformationSharingAgreement.AccessLevels.PROTECTED_AND_LIMITED]: ArchiveItem.Levels.MEDIUM,
+  [InformationSharingAgreement.AccessLevels.CONFIDENTIAL_AND_RESTRICTED]: ArchiveItem.Levels.HIGH,
+}
 
 export type ArchiveItemCategoriesAttributes = {
   categoryId: number
@@ -36,40 +43,39 @@ export class CreateService extends BaseService {
 
   async perform(): Promise<ArchiveItem> {
     const {
-      title,
-      status,
-      isDecision,
       confidentialityReceipt,
-      securityLevel,
       archiveItemCategoriesAttributes,
       archiveItemFilesAttributes,
       ...optionalAttributes
     } = this.attributes
 
-    if (isNil(title) || isEmpty(title)) {
-      throw new Error("Title is required")
-    }
-
     if (isNil(confidentialityReceipt) || confidentialityReceipt !== true) {
       throw new Error("Confidentiality receipt is required, and must be true")
     }
 
-    if (isNil(securityLevel)) {
-      throw new Error("Security level is required")
+    const { title, purpose, authorizedApplication, accessLevel, externalGroupContactId } =
+      this.informationSharingAgreement
+
+    if (isNil(title) || isEmpty(title)) {
+      throw new Error("Title is required")
     }
 
-    // TODO: remove these from the model if they are unused by the UI.
-    const isDecisionOrFallback = isDecision ?? false
-    const statusOrFallback = status ?? ArchiveItem.Statuses.ACCEPTED
+    const accessLevelOrDefault = accessLevel ?? InformationSharingAgreement.AccessLevels.INTERNAL
+    const securityLevel = ACCESS_LEVEL_TO_SECURITY_LEVEL[accessLevelOrDefault]
+
+    const yukonFirstNations = await this.resolveYukonFirstNations(externalGroupContactId)
 
     return db.transaction(async () => {
       const archiveItem = await ArchiveItem.create({
         ...optionalAttributes,
         title,
         confidentialityReceipt,
-        isDecision: isDecisionOrFallback,
-        status: statusOrFallback,
+        isDecision: false,
+        status: ArchiveItem.Statuses.ACCEPTED,
         securityLevel,
+        sharingPurpose: authorizedApplication ?? undefined,
+        description: purpose ?? undefined,
+        yukonFirstNations: yukonFirstNations ?? undefined,
         userId: this.currentUser.id,
       })
 
@@ -102,6 +108,20 @@ export class CreateService extends BaseService {
       archiveItemId: archiveItemId,
       creatorId: this.currentUser.id,
     })
+  }
+
+  private async resolveYukonFirstNations(
+    externalGroupContactId: number | null
+  ): Promise<string[] | null> {
+    if (isNil(externalGroupContactId)) return null
+
+    const organization = await ExternalOrganization.findOne({
+      include: [{ association: "users", attributes: [], where: { id: externalGroupContactId } }],
+    })
+
+    if (isNil(organization)) return null
+
+    return [organization.name]
   }
 
   private async assignCategoriesToArchiveItem(

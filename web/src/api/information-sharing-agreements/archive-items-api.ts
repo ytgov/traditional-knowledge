@@ -1,17 +1,9 @@
 import http from "@/api/http-client"
 import { type ArchiveItemAsShow } from "@/api/archive-items-api"
-import { SecurityLevel } from "@/api/archive-items-api"
 
 export type ArchiveItemCreationAttributes = {
-  title: string
-  description: string | null
-  sharingPurpose: string | null
   confidentialityReceipt: boolean
-  yukonFirstNations: string[]
-  securityLevel: SecurityLevel
-  tags: string[]
-} & {
-  archiveItemCategoriesAttributes: {
+  archiveItemCategoriesAttributes?: {
     categoryId: number
   }[]
 }
