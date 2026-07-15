@@ -3,9 +3,6 @@ import { type ArchiveItemAsShow } from "@/api/archive-items-api"
 
 export type ArchiveItemCreationAttributes = {
   confidentialityReceipt: boolean
-  archiveItemCategoriesAttributes?: {
-    categoryId: number
-  }[]
 }
 
 export const archiveItemsApi = {

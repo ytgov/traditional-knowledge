@@ -3,7 +3,6 @@ import { isEmpty, isNil } from "lodash"
 
 import db, {
   ArchiveItem,
-  ArchiveItemCategory,
   ExternalOrganization,
   InformationSharingAgreement,
   InformationSharingAgreementArchiveItem,
@@ -18,17 +17,12 @@ const ACCESS_LEVEL_TO_SECURITY_LEVEL: Record<string, number> = {
   [InformationSharingAgreement.AccessLevels.CONFIDENTIAL_AND_RESTRICTED]: ArchiveItem.Levels.HIGH,
 }
 
-export type ArchiveItemCategoriesAttributes = {
-  categoryId: number
-}
-
 export type ArchiveItemFilesAttributes = {
   name: string
   path: string
 }
 
 export type ArchiveItemCreationAttributes = Partial<CreationAttributes<ArchiveItem>> & {
-  archiveItemCategoriesAttributes?: ArchiveItemCategoriesAttributes[]
   archiveItemFilesAttributes?: ArchiveItemFilesAttributes[]
 }
 
@@ -42,12 +36,8 @@ export class CreateService extends BaseService {
   }
 
   async perform(): Promise<ArchiveItem> {
-    const {
-      confidentialityReceipt,
-      archiveItemCategoriesAttributes,
-      archiveItemFilesAttributes,
-      ...optionalAttributes
-    } = this.attributes
+    const { confidentialityReceipt, archiveItemFilesAttributes, ...optionalAttributes } =
+      this.attributes
 
     if (isNil(confidentialityReceipt) || confidentialityReceipt !== true) {
       throw new Error("Confidentiality receipt is required, and must be true")
@@ -73,9 +63,9 @@ export class CreateService extends BaseService {
         isDecision: false,
         status: ArchiveItem.Statuses.ACCEPTED,
         securityLevel,
-        sharingPurpose: authorizedApplication ?? undefined,
-        description: purpose ?? undefined,
-        yukonFirstNations: yukonFirstNations ?? undefined,
+        sharingPurpose: authorizedApplication,
+        description: purpose,
+        yukonFirstNations,
         userId: this.currentUser.id,
       })
 
@@ -84,8 +74,6 @@ export class CreateService extends BaseService {
       if (!isNil(archiveItemFilesAttributes)) {
         await this.uploadFilesForArchiveItem(archiveItem.id, archiveItemFilesAttributes)
       }
-
-      await this.assignCategoriesToArchiveItem(archiveItem.id, archiveItemCategoriesAttributes)
 
       return archiveItem.reload({
         include: ["categories", "accessGrants", "user"],
@@ -116,7 +104,15 @@ export class CreateService extends BaseService {
     if (isNil(externalGroupContactId)) return null
 
     const organization = await ExternalOrganization.findOne({
-      include: [{ association: "users", attributes: [], where: { id: externalGroupContactId } }],
+      include: [
+        {
+          association: "users",
+          attributes: [],
+          where: {
+            id: externalGroupContactId,
+          },
+        },
+      ],
     })
 
     if (isNil(organization)) {
@@ -125,23 +121,6 @@ export class CreateService extends BaseService {
 
     const { name } = organization
     return [name]
-  }
-
-  private async assignCategoriesToArchiveItem(
-    archiveItemId: number,
-    archiveItemCategoriesAttributes: { categoryId: number }[] | undefined
-  ): Promise<void> {
-    if (isNil(archiveItemCategoriesAttributes) || isEmpty(archiveItemCategoriesAttributes)) {
-      return
-    }
-
-    const archiveItemCategoriesAttributesWithArchiveItemId = archiveItemCategoriesAttributes.map(
-      ({ categoryId }) => ({
-        archiveItemId,
-        categoryId,
-      })
-    )
-    await ArchiveItemCategory.bulkCreate(archiveItemCategoriesAttributesWithArchiveItemId)
   }
 }
 
