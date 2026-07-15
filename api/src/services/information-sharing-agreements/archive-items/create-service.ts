@@ -119,9 +119,12 @@ export class CreateService extends BaseService {
       include: [{ association: "users", attributes: [], where: { id: externalGroupContactId } }],
     })
 
-    if (isNil(organization)) return null
+    if (isNil(organization)) {
+      throw new Error("External group contact is missing its associated external organization")
+    }
 
-    return [organization.name]
+    const { name } = organization
+    return [name]
   }
 
   private async assignCategoriesToArchiveItem(
