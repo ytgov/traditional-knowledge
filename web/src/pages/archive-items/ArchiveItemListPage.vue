@@ -77,7 +77,7 @@
       <v-row class="mb-3">
         <v-col
           cols="12"
-          md="4"
+          md="8"
         >
           <v-text-field
             v-model="search"
@@ -85,21 +85,16 @@
             density="compact"
           />
         </v-col>
-        <v-col class="d-flex">
+        <v-col
+          cols="12"
+          md="4"
+          class="d-flex"
+        >
           <StatusSelect
             v-model="status"
             label="Status"
             density="compact"
-          />
-
-          <v-btn
-            class="ml-6"
-            color="primary"
-            text="New Knowledge Item"
-            style="height: 40px"
-            :to="{
-              name: 'archive-items/ArchiveItemNewPage',
-            }"
+            clearable
           />
         </v-col>
       </v-row>
