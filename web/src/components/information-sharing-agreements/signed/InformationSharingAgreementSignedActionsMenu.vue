@@ -8,7 +8,7 @@
       #dialogs
     >
       <InformationSharingAgreementArchiveItemCreateDialog
-        ref="createArchiveItemDialog"
+        ref="informationSharingAgreementArchiveItemCreateDialogRef"
         :information-sharing-agreement="informationSharingAgreement"
         @created="goToInformationSharingAgreementsPage"
       />
@@ -123,10 +123,12 @@ const { informationSharingAgreementArchiveItems } = useInformationSharingAgreeme
 const archiveItemId = computed(
   () => informationSharingAgreementArchiveItems.value?.at(0)?.archiveItemId
 )
-const createArchiveItemDialog = useTemplateRef("createArchiveItemDialog")
+const informationSharingAgreementArchiveItemCreateDialogRef = useTemplateRef(
+  "informationSharingAgreementArchiveItemCreateDialogRef"
+)
 
 function openCreateArchiveItemDialog() {
-  createArchiveItemDialog.value?.open()
+  informationSharingAgreementArchiveItemCreateDialogRef.value?.open()
 }
 
 const primaryButtonAttributes = computed(() => {
