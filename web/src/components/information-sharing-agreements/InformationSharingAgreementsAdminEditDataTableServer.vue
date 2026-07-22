@@ -33,44 +33,6 @@
     <template #item.creatorId="{ item }">
       <UserChip :user-id="item.creatorId" />
     </template>
-    <template #item.actions="{ item }">
-      <div class="d-flex justify-end align-center">
-        <v-btn
-          v-if="item.policy.update"
-          :to="{
-            name: 'administration/information-sharing-agreements/InformationSharingAgreementEditPage',
-            params: {
-              informationSharingAgreementId: item.id,
-            },
-          }"
-          :loading="isDeleting"
-          title="Edit"
-          icon="mdi-pencil"
-          size="x-small"
-          color="primary"
-          variant="outlined"
-          @click.stop
-        />
-        <v-btn
-          v-if="item.policy.destroy"
-          class="ml-2"
-          :loading="isDeleting"
-          title="Delete"
-          icon="mdi-delete"
-          size="x-small"
-          color="error"
-          variant="outlined"
-          @click.stop="confirmThenDelete(item)"
-        />
-
-        <div
-          v-if="!item.policy.update && !item.policy.destroy"
-          class="mx-auto text-caption text-medium-emphasis"
-        >
-          &mdash;
-        </div>
-      </div>
-    </template>
   </v-data-table-server>
 </template>
 
@@ -82,10 +44,8 @@ import { isNil } from "lodash"
 
 import { formatDate } from "@/utils/formatters"
 
-import informationSharingAgreementsApi from "@/api/information-sharing-agreements-api"
 import useVuetifySortByToSafeRouteQuery from "@/use/utils/use-vuetify-sort-by-to-safe-route-query"
 import useVuetifySortByToSequelizeSafeOrder from "@/use/utils/use-vuetify-sort-by-to-sequelize-safe-order"
-import useSnack from "@/use/use-snack"
 import useInformationSharingAgreements, {
   type InformationSharingAgreementAsIndex,
   type InformationSharingAgreementWhereOptions,
@@ -146,11 +106,6 @@ const headers = ref([
     title: "Creator",
     key: "creatorId",
   },
-  {
-    title: "Actions",
-    key: "actions",
-    sortable: false,
-  },
 ])
 
 const page = useRouteQuery(`page${props.routeQuerySuffix}`, "1", { transform: Number })
@@ -183,27 +138,6 @@ function goToInformationSharingAgreementPage(informationSharingAgreementId: numb
       informationSharingAgreementId,
     },
   })
-}
-
-const snack = useSnack()
-const isDeleting = ref(false)
-
-async function confirmThenDelete(informationSharingAgreement: InformationSharingAgreementAsIndex) {
-  const { title } = informationSharingAgreement
-
-  const result = confirm(`Are you sure you want to delete ${title}.`)
-  if (result === false) return
-
-  isDeleting.value = true
-  try {
-    await informationSharingAgreementsApi.delete(informationSharingAgreement.id)
-    await refresh()
-  } catch (error) {
-    console.error(error)
-    snack.error(`Failed to delete information sharing agreement: ${error}`)
-  } finally {
-    isDeleting.value = false
-  }
 }
 
 defineExpose({

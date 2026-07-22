@@ -109,13 +109,6 @@ const routes: RouteRecordRaw[] = [
         ],
       },
       {
-        path: "information-sharing-agreements/:informationSharingAgreementId/archive-items/new",
-        name: "information-sharing-agreements/archive-items/InformationSharingAgreementArchiveItemNewPage",
-        component: () =>
-          import("@/pages/information-sharing-agreements/archive-items/InformationSharingAgreementArchiveItemNewPage.vue"),
-        props: true,
-      },
-      {
         path: "administration",
         children: [
           {
@@ -207,12 +200,6 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@/pages/administration/InformationSharingAgreementsPage.vue"),
           },
           {
-            path: "information-sharing-agreements/new",
-            name: "administration/information-sharing-agreements/InformationSharingAgreementNewPage",
-            component: () =>
-              import("@/pages/administration/information-sharing-agreements/InformationSharingAgreementNewPage.vue"),
-          },
-          {
             path: "information-sharing-agreements/:informationSharingAgreementId",
             component: () =>
               import("@/pages/administration/information-sharing-agreements/InformationSharingAgreementPage.vue"),
@@ -240,13 +227,6 @@ const routes: RouteRecordRaw[] = [
                 props: true,
               },
             ],
-          },
-          {
-            path: "information-sharing-agreements/:informationSharingAgreementId/edit",
-            name: "administration/information-sharing-agreements/InformationSharingAgreementEditPage",
-            component: () =>
-              import("@/pages/administration/information-sharing-agreements/InformationSharingAgreementEditPage.vue"),
-            props: true,
           },
           {
             path: "users",
@@ -283,9 +263,15 @@ const routes: RouteRecordRaw[] = [
             props: true,
           },
           {
-            path: "users/:userId/edit",
-            name: "users/UserEditPage",
-            component: () => import("@/pages/users/UserEditPage.vue"),
+            path: "internal-users/:userId/edit",
+            name: "users/UserInternalEditPage",
+            component: () => import("@/pages/users/UserInternalEditPage.vue"),
+            props: true,
+          },
+          {
+            path: "external-users/:userId/edit",
+            name: "users/UserExternalEditPage",
+            component: () => import("@/pages/users/UserExternalEditPage.vue"),
             props: true,
           },
         ],

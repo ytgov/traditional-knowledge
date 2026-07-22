@@ -129,7 +129,7 @@ const router = useRouter()
 function goToUserPage(userId: number) {
   // TODO: standardize this route to redirect to user read page
   return router.push({
-    name: "users/UserEditPage",
+    name: "users/UserInternalEditPage",
     params: {
       userId,
     },
