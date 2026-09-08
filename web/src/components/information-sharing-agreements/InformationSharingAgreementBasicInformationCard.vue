@@ -9,7 +9,7 @@
     <v-divider />
     <v-card-text class="pa-6 pa-md-8">
       <div class="mb-6">
-        <div class="text-overline text-grey-darken-1 mb-2">Agreement Title</div>
+        <div class="text-overline text-grey-darken-1 mb-2">ISA Title</div>
         <div class="text-h5 font-weight-bold">{{ title }}</div>
       </div>
 
@@ -37,7 +37,7 @@
               mdi-account-group
             </v-icon>
             <span class="font-weight-bold text-primary">
-              Yukon First Nation or Transboundary Contact
+              Yukon First Nation or Indigenous Government Contact
             </span>
           </div>
           <div class="mb-3">
@@ -58,7 +58,9 @@
           </div>
           <div class="mb-3">
             <div class="text-body-2 text-grey-darken-1 mb-1">Email</div>
-            <div class="font-weight-medium">{{ externalGroupContact?.email || "Not specified" }}</div>
+            <div class="font-weight-medium">
+              {{ externalGroupContact?.email || "Not specified" }}
+            </div>
           </div>
           <div>
             <div class="text-body-2 text-grey-darken-1 mb-1">

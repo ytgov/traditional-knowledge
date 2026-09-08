@@ -10,10 +10,20 @@
         >
           <v-text-field
             :model-value="title"
-            label="Title *"
+            label="ISA Title *"
+            hint="Format: FNG-YG Department Acronym-Project/Purpose-YYYY-YYYY (e.g. KDFN-HPW-Whitehorse Generating Station-2026-2029)"
+            persistent-hint
             :rules="[required]"
             required
             @update:model-value="emit('update:title', $event)"
+          />
+          <v-alert
+            v-if="!isNil(titleFormatWarning)"
+            type="warning"
+            variant="tonal"
+            density="compact"
+            class="mt-1"
+            :text="titleFormatWarning"
           />
         </v-col>
         <v-col cols="12">
@@ -36,7 +46,7 @@
         >
           <UserSearchableAutocomplete
             :model-value="externalGroupContactId"
-            label="Yukon First Nation or Transboundary Contact Name *"
+            label="Yukon First Nation or Indigenous Government Contact Name *"
             :where="externalGroupContactWhere"
             :rules="[required]"
             required
@@ -65,7 +75,7 @@
         >
           <v-text-field
             :model-value="externalGroupContactTitle"
-            label="Yukon First Nation or Transboundary Contact Title *"
+            label="Yukon First Nation or Indigenous Government Contact Title *"
             :rules="[required]"
             required
             @update:model-value="emit('update:externalGroupContactTitle', $event)"
@@ -105,14 +115,13 @@
           cols="12"
           md="6"
         >
-          <UserSearchableAutocomplete
-            :model-value="internalGroupSecondaryContactId"
+          <YukonGovernmentEmployeeSearchableAutocomplete
+            :model-value="internalGroupSecondaryContactEmail"
             label="Yukon Government (YG) Manager Contact Name *"
-            :where="internalGroupSecondaryContactWhere"
-            hint="Typically the manager of the primary YG contact, but can be any appropriate internal contact."
+            hint="Typically the manager of the primary YG contact, but can be any appropriate internal contact. Search the Active Directory."
             :rules="[required]"
             required
-            @update:model-value="emit('update:internalGroupSecondaryContactId', $event)"
+            @update:model-value="emit('update:internalGroupSecondaryContactEmail', $event)"
           />
         </v-col>
       </v-row>
@@ -121,7 +130,7 @@
 </template>
 
 <script setup lang="ts">
-import { isNil } from "lodash"
+import { isEmpty, isNil } from "lodash"
 import { computed, toRefs } from "vue"
 
 import { required } from "@/utils/validators"
@@ -130,6 +139,7 @@ import useUser from "@/use/use-user"
 import UserSearchableAutocomplete, {
   type UserAsIndex,
 } from "@/components/users/UserSearchableAutocomplete.vue"
+import YukonGovernmentEmployeeSearchableAutocomplete from "@/components/yukon-government-directory/YukonGovernmentEmployeeSearchableAutocomplete.vue"
 
 const props = defineProps<{
   title: string | null | undefined
@@ -138,7 +148,7 @@ const props = defineProps<{
   externalGroupContactTitle: string | null | undefined
   internalGroupContactId: number | null | undefined
   internalGroupContactTitle: string | null | undefined
-  internalGroupSecondaryContactId: number | null | undefined
+  internalGroupSecondaryContactEmail: string | null | undefined
 }>()
 
 const emit = defineEmits<{
@@ -148,19 +158,29 @@ const emit = defineEmits<{
   "update:externalGroupContactTitle": [value: string | null | undefined]
   "update:internalGroupContactId": [value: number | null | undefined]
   "update:internalGroupContactTitle": [value: string | null | undefined]
-  "update:internalGroupSecondaryContactId": [value: number | null | undefined]
+  "update:internalGroupSecondaryContactEmail": [value: string | null | undefined]
 }>()
 
 const { externalGroupContactId } = toRefs(props)
 const { user: externalGroupContact } = useUser(externalGroupContactId)
 
+// Non-blocking guidance only. See TK-65: the exact format is still being
+// confirmed, so we warn rather than reject. Project/Purpose is free text and
+// may contain dashes, so this pattern only checks the overall shape:
+// FNG-Department-Purpose-YYYY-YYYY.
+const TITLE_FORMAT_PATTERN = /^.+-.+-.+-\d{4}-\d{4}$/
+const titleFormatWarning = computed(() => {
+  const { title } = props
+  if (isNil(title) || isEmpty(title)) return null
+  if (TITLE_FORMAT_PATTERN.test(title)) return null
+
+  return "Title does not match the recommended format: FNG-YG Department Acronym-Project/Purpose-YYYY-YYYY (e.g. KDFN-HPW-Whitehorse Generating Station-2026-2029)."
+})
+
 const externalGroupContactWhere = computed(() => ({
   isExternal: true,
 }))
 const internalGroupContactWhere = computed(() => ({
-  isExternal: false,
-}))
-const internalGroupSecondaryContactWhere = computed(() => ({
   isExternal: false,
 }))
 
