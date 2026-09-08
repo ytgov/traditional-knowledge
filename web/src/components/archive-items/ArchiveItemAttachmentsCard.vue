@@ -55,6 +55,7 @@ import { ref, toRefs } from "vue"
 
 import archiveItemsApi from "@/api/archive-items-api"
 import useArchiveItem from "@/use/use-archive-item"
+import useSnack from "@/use/use-snack"
 
 import ArchiveItemFileCard from "@/components/archive-item-files/ArchiveItemFileCard.vue"
 
@@ -68,6 +69,7 @@ const emit = defineEmits<{
 
 const { archiveItemId } = toRefs(props)
 const { archiveItem, policy, refresh } = useArchiveItem(archiveItemId)
+const snack = useSnack()
 
 const filesToUpload = ref<File[]>([])
 const isUploading = ref(false)
@@ -81,6 +83,9 @@ async function uploadFiles(files: File | File[]) {
     await archiveItemsApi.createFiles(archiveItemId.value, filesAsArray)
     await refresh()
     filesToUpload.value = []
+  } catch (error) {
+    console.error("Failed to upload attachment:", error)
+    snack.error("Failed to upload attachment")
   } finally {
     isUploading.value = false
   }
