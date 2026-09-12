@@ -16,6 +16,7 @@ export type InformationSharingAgreementAsShow = Pick<
   | "internalGroupContactId"
   | "internalGroupSecondaryContactId"
   | "status"
+  | "auditEnabled"
   | "identifier"
   | "externalGroupInfo"
   | "internalGroupInfo"
@@ -82,6 +83,7 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "internalGroupContactId",
         "internalGroupSecondaryContactId",
         "status",
+        "auditEnabled",
         "identifier",
         "externalGroupInfo",
         "internalGroupInfo",
