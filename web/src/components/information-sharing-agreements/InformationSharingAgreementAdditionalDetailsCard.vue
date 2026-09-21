@@ -6,7 +6,7 @@
     </v-card-title>
     <v-divider />
     <v-card-text class="pa-6 pa-md-8">
-      <div class="text-overline text-grey-darken-1 mb-2">5. Compelled disclosure</div>
+      <div class="text-overline text-grey-darken-1 mb-2">Compelled disclosure</div>
       <div
         v-if="!isEmpty(disclosureNotes)"
         class="text-grey-darken-3 whitespace-pre-wrap"
