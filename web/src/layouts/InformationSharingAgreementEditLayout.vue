@@ -206,20 +206,25 @@ const confidentialitySubtitle = computed(() => {
 })
 
 // Breadcrumbs
-const pageTitle = computed(() => {
-  if (isNil(informationSharingAgreement.value)) return "loading..."
-
-  const { id, title } = informationSharingAgreement.value
-  return `${formatInformationSharingAgreementNumber(id)} - ${title}`
-})
-
-useBreadcrumbs(pageTitle, [
-  BASE_CRUMB,
-  {
-    title: "Information Sharing Agreements",
-    to: {
-      name: "InformationSharingAgreementsPage",
+useBreadcrumbs(
+  "Edit",
+  computed(() => [
+    BASE_CRUMB,
+    {
+      title: "Information Sharing Agreements",
+      to: {
+        name: "InformationSharingAgreementsPage",
+      },
     },
-  },
-])
+    {
+      title: formatInformationSharingAgreementNumber(informationSharingAgreementIdAsNumber.value),
+      to: {
+        name: "information-sharing-agreements/InformationSharingAgreementPage",
+        params: {
+          informationSharingAgreementId: props.informationSharingAgreementId,
+        },
+      },
+    },
+  ])
+)
 </script>
