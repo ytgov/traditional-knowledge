@@ -27,9 +27,6 @@ export type InformationSharingAgreementAsShow = Pick<
   | "title"
   | "description"
   | "purpose"
-  | "detailLevel"
-  | "detailNotes"
-  | "formats"
   | "accessLevel"
   | "accessLevelDepartmentRestriction"
   | "accessLevelBranchRestriction"
@@ -39,12 +36,6 @@ export type InformationSharingAgreementAsShow = Pick<
   | "expirationCondition"
   | "confidentialityType"
   | "authorizedApplication"
-  | "creditLines"
-  | "creditNotes"
-  | "expirationActions"
-  | "expirationNotes"
-  | "breachActions"
-  | "breachNotes"
   | "disclosureNotes"
   | "createdAt"
   | "updatedAt"
@@ -102,9 +93,6 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "title",
         "description",
         "purpose",
-        "detailLevel",
-        "detailNotes",
-        "formats",
         "accessLevel",
         "accessLevelDepartmentRestriction",
         "accessLevelBranchRestriction",
@@ -114,12 +102,6 @@ export class ShowSerializer extends BaseSerializer<InformationSharingAgreement> 
         "expirationCondition",
         "confidentialityType",
         "authorizedApplication",
-        "creditLines",
-        "creditNotes",
-        "expirationActions",
-        "expirationNotes",
-        "breachActions",
-        "breachNotes",
         "disclosureNotes",
         "createdAt",
         "updatedAt",

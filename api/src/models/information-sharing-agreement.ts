@@ -129,15 +129,6 @@ export class InformationSharingAgreement extends BaseModel<
   @Attribute(DataTypes.TEXT)
   declare purpose: string | null
 
-  @Attribute(DataTypes.STRING(250))
-  declare detailLevel: string | null
-
-  @Attribute(DataTypes.TEXT)
-  declare detailNotes: string | null
-
-  @Attribute(DataTypes.STRING(500))
-  declare formats: string | null
-
   @Attribute(DataTypes.STRING(500))
   @ValidateAttribute({
     isIn: {
@@ -167,24 +158,6 @@ export class InformationSharingAgreement extends BaseModel<
 
   @Attribute(DataTypes.TEXT)
   declare authorizedApplication: string | null
-
-  @Attribute(DataTypes.STRING(500))
-  declare creditLines: string | null
-
-  @Attribute(DataTypes.TEXT)
-  declare creditNotes: string | null
-
-  @Attribute(DataTypes.STRING(500))
-  declare expirationActions: string | null
-
-  @Attribute(DataTypes.TEXT)
-  declare expirationNotes: string | null
-
-  @Attribute(DataTypes.STRING(500))
-  declare breachActions: string | null
-
-  @Attribute(DataTypes.TEXT)
-  declare breachNotes: string | null
 
   @Attribute(DataTypes.TEXT)
   declare disclosureNotes: string | null

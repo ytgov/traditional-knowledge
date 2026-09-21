@@ -56,9 +56,6 @@ export type InformationSharingAgreement = {
   title: string
   description: string | null
   purpose: string | null
-  detailLevel: string | null
-  detailNotes: string | null
-  formats: string | null
   accessLevel: InformationSharingAgreementAccessLevels | null
   accessLevelDepartmentRestriction: string | null
   accessLevelBranchRestriction: string | null
@@ -68,12 +65,6 @@ export type InformationSharingAgreement = {
   expirationCondition: InformationSharingAgreementExpirationConditions | null
   confidentialityType: InformationSharingAgreementConfidentialityType | null
   authorizedApplication: string | null
-  creditLines: string | null
-  creditNotes: string | null
-  expirationActions: string | null
-  expirationNotes: string | null
-  breachActions: string | null
-  breachNotes: string | null
   disclosureNotes: string | null
   startDate: string | null
   endDate: string | null
@@ -123,9 +114,6 @@ export type InformationSharingAgreementAsShow = Pick<
   | "title"
   | "description"
   | "purpose"
-  | "detailLevel"
-  | "detailNotes"
-  | "formats"
   | "accessLevel"
   | "accessLevelDepartmentRestriction"
   | "accessLevelBranchRestriction"
@@ -135,12 +123,6 @@ export type InformationSharingAgreementAsShow = Pick<
   | "expirationCondition"
   | "confidentialityType"
   | "authorizedApplication"
-  | "creditLines"
-  | "creditNotes"
-  | "expirationActions"
-  | "expirationNotes"
-  | "breachActions"
-  | "breachNotes"
   | "disclosureNotes"
   | "createdAt"
   | "updatedAt"
@@ -176,9 +158,6 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "title"
   | "description"
   | "purpose"
-  | "detailLevel"
-  | "detailNotes"
-  | "formats"
   | "accessLevel"
   | "accessLevelDepartmentRestriction"
   | "accessLevelBranchRestriction"
@@ -188,12 +167,6 @@ export type InformationSharingAgreementWhereOptions = WhereOptions<
   | "expirationCondition"
   | "confidentialityType"
   | "authorizedApplication"
-  | "creditLines"
-  | "creditNotes"
-  | "expirationActions"
-  | "expirationNotes"
-  | "breachActions"
-  | "breachNotes"
   | "disclosureNotes"
   | "startDate"
   | "endDate"

@@ -52,15 +52,6 @@
 
         <InformationSharingAgreementAdditionalDetailsCard
           class="mt-6 rounded-lg"
-          :detail-level="informationSharingAgreement.detailLevel"
-          :detail-notes="informationSharingAgreement.detailNotes"
-          :formats="informationSharingAgreement.formats"
-          :credit-lines="informationSharingAgreement.creditLines"
-          :credit-notes="informationSharingAgreement.creditNotes"
-          :expiration-actions="informationSharingAgreement.expirationActions"
-          :expiration-notes="informationSharingAgreement.expirationNotes"
-          :breach-actions="informationSharingAgreement.breachActions"
-          :breach-notes="informationSharingAgreement.breachNotes"
           :disclosure-notes="informationSharingAgreement.disclosureNotes"
         />
 
