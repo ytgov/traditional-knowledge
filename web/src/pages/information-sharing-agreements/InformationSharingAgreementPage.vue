@@ -50,6 +50,11 @@
           :authorized-application="informationSharingAgreement.authorizedApplication"
         />
 
+        <InformationSharingAgreementAdditionalDetailsCard
+          class="mt-6 rounded-lg"
+          :disclosure-notes="informationSharingAgreement.disclosureNotes"
+        />
+
         <div class="mt-4 d-flex flex-column flex-md-row justify-space-between ga-3 px-6 py-4">
           <InformationSharingAgreementActionsMenu
             :information-sharing-agreement-id="informationSharingAgreementIdAsNumber"
@@ -83,6 +88,7 @@ import useInformationSharingAgreement from "@/use/use-information-sharing-agreem
 
 import InformationSharingAgreementAccessCard from "@/components/information-sharing-agreements/InformationSharingAgreementAccessCard.vue"
 import InformationSharingAgreementActionsMenu from "@/components/information-sharing-agreements/InformationSharingAgreementActionsMenu.vue"
+import InformationSharingAgreementAdditionalDetailsCard from "@/components/information-sharing-agreements/InformationSharingAgreementAdditionalDetailsCard.vue"
 import InformationSharingAgreementBasicInformationCard from "@/components/information-sharing-agreements/InformationSharingAgreementBasicInformationCard.vue"
 import InformationSharingAgreementConfidentialityCard from "@/components/information-sharing-agreements/InformationSharingAgreementConfidentialityCard.vue"
 import InformationSharingAgreementDurationCard from "@/components/information-sharing-agreements/InformationSharingAgreementDurationCard.vue"
