@@ -22,6 +22,7 @@ export class CreateService extends BaseService {
 
   async perform(): Promise<User> {
     this.assertRolesAreGrantable()
+    await this.assertEmailIsAvailable()
 
     const { isExternal } = this.attributes
 
@@ -42,6 +43,29 @@ export class CreateService extends BaseService {
     if (!isNil(ungrantableRole)) {
       throw new Error(`You are not authorized to grant the ${ungrantableRole} role`)
     }
+  }
+
+  /**
+   * The email and auth0_subject unique indexes exclude soft-deleted rows but not
+   * deactivated ones, so re-adding an existing person otherwise surfaces as a raw
+   * database constraint error. Fail early with copy an admin can act on, and point
+   * them at reactivation when the person is only deactivated. See TK-102.
+   */
+  private async assertEmailIsAvailable(): Promise<void> {
+    const { email } = this.attributes
+    if (isNil(email)) return
+
+    const existingUser = await User.findOne({ where: { email } })
+    if (isNil(existingUser)) return
+
+    if (isNil(existingUser.deactivatedAt)) {
+      throw new Error(`A user with the email ${email} already exists.`)
+    }
+
+    throw new Error(
+      `A user with the email ${email} already exists but is deactivated. ` +
+        `Reactivate that user instead of creating a new one.`
+    )
   }
 
   /**
