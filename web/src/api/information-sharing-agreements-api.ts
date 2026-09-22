@@ -68,6 +68,7 @@ export type InformationSharingAgreement = {
   disclosureNotes: string | null
   startDate: string | null
   endDate: string | null
+  auditEnabled: boolean
   createdAt: string
   updatedAt: string
 }
@@ -124,6 +125,7 @@ export type InformationSharingAgreementAsShow = Pick<
   | "confidentialityType"
   | "authorizedApplication"
   | "disclosureNotes"
+  | "auditEnabled"
   | "createdAt"
   | "updatedAt"
 > & {
