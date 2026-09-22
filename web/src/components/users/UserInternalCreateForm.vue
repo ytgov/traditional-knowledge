@@ -202,7 +202,7 @@ async function saveWrapper() {
       name: "users/UsersPage",
     })
   } catch (error) {
-    snack.error("Failed to create internal user!")
+    snack.error(error instanceof Error ? error.message : "Failed to create internal user!")
     throw error
   } finally {
     isLoading.value = false
