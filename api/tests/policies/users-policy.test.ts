@@ -28,56 +28,71 @@ describe("api/src/policies/users-policy.ts", () => {
       { role: User.Roles.USER, canManageInternal: false, canManageExternal: false },
     ]
 
-    describe.each(MATRIX)("when actor has the $role role", ({ role, canManageInternal, canManageExternal }) => {
-      test(`#create returns ${canManageInternal} for an internal target`, async () => {
-        // Arrange
-        const actor = await buildInternalUser([role])
-        const target = User.build({ isExternal: false })
+    describe.each(MATRIX)(
+      "when actor has the $role role",
+      ({ role, canManageInternal, canManageExternal }) => {
+        test(`#create returns ${canManageInternal} for an internal target`, async () => {
+          // Arrange
+          const actor = await buildInternalUser([role])
+          const target = User.build({ isExternal: false })
 
-        // Act, Assert
-        expect(new UsersPolicy(actor, target).create()).toBe(canManageInternal)
-      })
+          // Act, Assert
+          expect(new UsersPolicy(actor, target).create()).toBe(canManageInternal)
+        })
 
-      test(`#create returns ${canManageExternal} for an external target`, async () => {
-        // Arrange
-        const actor = await buildInternalUser([role])
-        const target = User.build({ isExternal: true })
+        test(`#create returns ${canManageExternal} for an external target`, async () => {
+          // Arrange
+          const actor = await buildInternalUser([role])
+          const target = User.build({ isExternal: true })
 
-        // Act, Assert
-        expect(new UsersPolicy(actor, target).create()).toBe(canManageExternal)
-      })
+          // Act, Assert
+          expect(new UsersPolicy(actor, target).create()).toBe(canManageExternal)
+        })
 
-      test(`#destroy returns ${canManageInternal} for an internal target`, async () => {
-        // Arrange
-        const actor = await buildInternalUser([role])
-        const target = await buildInternalUser([User.Roles.USER])
+        test(`#destroy returns ${canManageInternal} for an internal target`, async () => {
+          // Arrange
+          const actor = await buildInternalUser([role])
+          const target = await buildInternalUser([User.Roles.USER])
 
-        // Act, Assert
-        expect(new UsersPolicy(actor, target).destroy()).toBe(canManageInternal)
-      })
+          // Act, Assert
+          expect(new UsersPolicy(actor, target).destroy()).toBe(canManageInternal)
+        })
 
-      test(`#destroy returns ${canManageExternal} for an external target`, async () => {
-        // Arrange
-        const actor = await buildInternalUser([role])
-        const target = await buildExternalTarget()
+        test(`#destroy returns ${canManageExternal} for an external target`, async () => {
+          // Arrange
+          const actor = await buildInternalUser([role])
+          const target = await buildExternalTarget()
 
-        // Act, Assert
-        expect(new UsersPolicy(actor, target).destroy()).toBe(canManageExternal)
-      })
+          // Act, Assert
+          expect(new UsersPolicy(actor, target).destroy()).toBe(canManageExternal)
+        })
 
-      test(`#permittedAttributes ${canManageInternal ? "includes" : "excludes"} roles for an internal target`, async () => {
-        // Arrange
-        const actor = await buildInternalUser([role])
-        const target = await buildInternalUser([User.Roles.USER])
+        test(`#permittedAttributes ${canManageInternal ? "includes" : "excludes"} roles for an internal target`, async () => {
+          // Arrange
+          const actor = await buildInternalUser([role])
+          const target = await buildInternalUser([User.Roles.USER])
 
-        // Act
-        const attributes = new UsersPolicy(actor, target).permittedAttributes()
+          // Act
+          const attributes = new UsersPolicy(actor, target).permittedAttributes()
 
-        // Assert
-        expect(attributes.includes("roles")).toBe(canManageInternal)
-        expect(attributes.includes("email")).toBe(canManageInternal)
-      })
-    })
+          // Assert
+          expect(attributes.includes("roles")).toBe(canManageInternal)
+          expect(attributes.includes("email")).toBe(canManageInternal)
+        })
+
+        test(`#permittedAttributes ${canManageExternal ? "includes" : "excludes"} externalOrganizationId for an external target`, async () => {
+          // Arrange
+          const actor = await buildInternalUser([role])
+          const target = await buildExternalTarget()
+
+          // Act
+          const attributes = new UsersPolicy(actor, target).permittedAttributes()
+
+          // Assert
+          expect(attributes.includes("externalOrganizationId")).toBe(canManageExternal)
+        })
+      }
+    )
 
     describe("#update", () => {
       test("when actor is the target, returns true even without an admin role", async () => {

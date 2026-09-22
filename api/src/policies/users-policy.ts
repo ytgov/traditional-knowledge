@@ -38,14 +38,14 @@ export class UsersPolicy extends PolicyFactory(User) {
     ]
 
     if (this.user.canManageUser(this.record)) {
-      attributes.push("email", "roles")
+      attributes.push("email", "roles", "externalOrganizationId")
     }
 
     return attributes
   }
 
   permittedAttributesForCreate(): Path[] {
-    return ["isExternal", "externalOrganizationId", ...this.permittedAttributes()]
+    return ["isExternal", ...this.permittedAttributes()]
   }
 
   /**
