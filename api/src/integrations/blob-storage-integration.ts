@@ -3,6 +3,7 @@ import { v4 as uuidV4 } from "uuid"
 import { isNil } from "lodash"
 
 import { BLOB_CONNECTION_STRING, BLOB_CONTAINER } from "@/config"
+import withNetworkRetry from "@/utils/with-network-retry"
 
 export class BlobStorageIntegration {
   private static _instance: BlobStorageIntegration
@@ -55,7 +56,7 @@ export class BlobStorageIntegration {
 
   async downloadFile(remoteFileIdentifier: string): Promise<Buffer> {
     const client = this.getBlockBlobClient(remoteFileIdentifier)
-    return client.downloadToBuffer()
+    return withNetworkRetry(() => client.downloadToBuffer())
   }
 
   async deleteFile(remoteFileIdentifier: string): Promise<void> {

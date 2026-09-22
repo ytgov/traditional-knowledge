@@ -2,8 +2,9 @@ import { isEmpty, isNil } from "lodash"
 
 import logger from "@/utils/logger"
 import { ArchiveItem, ArchiveItemAudit, ArchiveItemFile } from "@/models"
+import { BlobStorageIntegration } from "@/integrations"
 import { ArchiveItemsPolicy } from "@/policies"
-import { ArchiveItemFiles, FileStorageService } from "@/services"
+import { ArchiveItemFiles } from "@/services"
 import BaseController from "@/controllers/base-controller"
 
 export class ArchiveItemFilesController extends BaseController<ArchiveItem> {
@@ -82,7 +83,6 @@ export class ArchiveItemFilesController extends BaseController<ArchiveItem> {
       const selectedFile = archiveItem.files?.find((f) => f.id == parseInt(fileId))
 
       if (selectedFile) {
-        const fileService = new FileStorageService()
         const { format } = this.request.query
 
         await ArchiveItemAudit.create({
@@ -93,7 +93,7 @@ export class ArchiveItemFilesController extends BaseController<ArchiveItem> {
         })
 
         if (format === "protected" && !isNil(selectedFile.pdfKey)) {
-          const fileResponse = await fileService.downloadFile(selectedFile.pdfKey)
+          const fileResponse = await BlobStorageIntegration.downloadFile(selectedFile.pdfKey)
           this.response.setHeader(
             "Content-Disposition",
             `attachment;filename="${selectedFile.pdfFileName}"`
@@ -101,7 +101,7 @@ export class ArchiveItemFilesController extends BaseController<ArchiveItem> {
           this.response.setHeader("Content-Type", selectedFile.pdfMimeType ?? "application/pdf")
           return this.response.send(fileResponse)
         } else {
-          const fileResponse = await fileService.downloadFile(selectedFile.originalKey)
+          const fileResponse = await BlobStorageIntegration.downloadFile(selectedFile.originalKey)
           this.response.setHeader(
             "Content-Disposition",
             `attachment;filename="${selectedFile.originalFileName}"`

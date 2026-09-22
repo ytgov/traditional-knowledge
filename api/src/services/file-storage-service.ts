@@ -21,10 +21,4 @@ export class FileStorageService {
     const uploadBlobResponse = await blockBlobClient.uploadFile(localFilePath)
     return uploadBlobResponse
   }
-
-  async downloadFile(key: string) {
-    const blockBlobClient = this.containerClient.getBlockBlobClient(key)
-
-    return await blockBlobClient.downloadToBuffer()
-  }
 }
