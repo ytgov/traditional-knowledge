@@ -9,7 +9,7 @@
     @submit.prevent="saveAndGoToNextPage"
   >
     <p>
-      Authorised access to this Traditional Knowledge (TK) is limited. Any Yukon Government (YG)
+      Authorised access to this Traditional Knowledge (TK) is limited. Any Government of Yukon (YG)
       employees who are authorised to consider this TK must have a work need that complies with the
       criteria of this agreement, adhere to the terms and conditions, and uphold the equivalent
       protection standards YG would normally apply to information provided by another government

@@ -90,7 +90,7 @@
         >
           <UserSearchableAutocomplete
             :model-value="internalGroupContactId"
-            label="Yukon Government (YG) Contact Name *"
+            label="Government of Yukon (YG) Contact Name *"
             :where="internalGroupContactWhere"
             :rules="[required]"
             required
@@ -105,7 +105,7 @@
         >
           <v-text-field
             :model-value="internalGroupContactTitle"
-            label="Yukon Government (YG) Contact Title *"
+            label="Government of Yukon (YG) Contact Title *"
             :rules="[required]"
             required
             @update:model-value="emit('update:internalGroupContactTitle', $event)"
@@ -117,7 +117,7 @@
         >
           <YukonGovernmentEmployeeSearchableAutocomplete
             :model-value="internalGroupSecondaryContactEmail"
-            label="Yukon Government (YG) Manager Contact Name *"
+            label="Government of Yukon (YG) Manager Contact Name *"
             hint="Typically the manager of the primary YG contact, but can be any appropriate internal contact. Search the Active Directory."
             :rules="[required]"
             required

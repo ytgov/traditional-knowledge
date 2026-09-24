@@ -9,7 +9,7 @@
         <v-card-text>
           <p class="text-subtitle-1 mb-4">
             The Vault provides layers of secure storage for Yukon First Nations and Indigenous
-            Governments to share their Traditional Knowledge with the Yukon Government. An
+            Governments to share their Traditional Knowledge with the Government of Yukon. An
             Information Sharing Agreement sets the terms of the sharing, and Traditional Knowledge
             is then added under that agreement.
           </p>
@@ -19,7 +19,7 @@
               <DashboardStepCard
                 :step="1"
                 title="Create an Information Sharing Agreement"
-                description="Set out the terms under which Traditional Knowledge will be shared with the Yukon Government."
+                description="Set out the terms under which Traditional Knowledge will be shared with the Government of Yukon."
                 icon="mdi-file-document-edit"
                 :to="{
                   name: 'information-sharing-agreements/InformationSharingAgreementNewPage',

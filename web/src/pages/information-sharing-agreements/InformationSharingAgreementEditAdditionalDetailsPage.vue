@@ -12,7 +12,7 @@
       <v-col cols="12">
         <h3 class="text-subtitle-1 font-weight-bold">Compelled disclosure</h3>
         <p class="text-body-2 text-medium-emphasis mb-2">
-          This section is optional. Under Yukon legislation, Yukon Government could be compelled to
+          This section is optional. Under Yukon legislation, the Government of Yukon could be compelled to
           disclose information in its custody. Indicate if additional protocols are required, for
           example if there is a request to notify additional contacts.
         </p>

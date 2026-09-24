@@ -4,7 +4,7 @@
     <v-divider />
     <v-card-text>
       <p class="mb-2">
-        Yukon Government (YG) acknowledges the confidentiality and access identified above and will
+        Government of Yukon (YG) acknowledges the confidentiality and access identified above and will
         receive Traditional Knowledge (TK) as/in:
       </p>
 
@@ -37,7 +37,7 @@
           <v-textarea
             :model-value="authorizedApplication"
             label="Authorised application of Traditional Knowledge (TK) *"
-            hint="Describe how Traditional Knowledge (TK) may be reflected in or considered for the described purpose. Include if Yukon Government (YG) intends to share any materials pertaining to the outcome of this agreement."
+            hint="Describe how Traditional Knowledge (TK) may be reflected in or considered for the described purpose. Include if Government of Yukon (YG) intends to share any materials pertaining to the outcome of this agreement."
             persistent-hint
             rows="8"
             auto-grow

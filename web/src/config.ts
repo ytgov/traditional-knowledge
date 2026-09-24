@@ -73,3 +73,5 @@ export const AUTH0_CLIENT_ID = config.clientId
 
 export const MATOMO_TRACKER_HOST = stripTrailingSlash(config.matomoHost)
 export const MATOMO_TRACKER_SITE_ID = config.matomoSiteId
+
+export const MAXIMUM_UPLOAD_FILE_SIZE_LABEL = "50 MB"
