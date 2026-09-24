@@ -73,3 +73,9 @@ export const AUTH0_CLIENT_ID = config.clientId
 
 export const MATOMO_TRACKER_HOST = stripTrailingSlash(config.matomoHost)
 export const MATOMO_TRACKER_SITE_ID = config.matomoSiteId
+
+/**
+ * Human-readable maximum upload size shown in file upload guidance.
+ * Mirrors the API request body limit configured in api/src/app.ts (express.json/urlencoded "50mb").
+ */
+export const MAXIMUM_UPLOAD_FILE_SIZE_LABEL = "50 MB"

@@ -147,7 +147,8 @@
         <v-card-title>Attachments</v-card-title>
 
         <v-card-text>
-          <p class="mb-4">Drag and drop files or click the box belox</p>
+          <FileUploadGuidance />
+          <p class="mb-4">Drag and drop files or click the box below to select them.</p>
           <v-file-input
             v-model="createItem.files"
             multiple
@@ -181,6 +182,7 @@ import { SecurityLevel } from "@/api/archive-items-api"
 
 import CategorySelect from "@/components/categories/CategorySelect.vue"
 import FileDrop from "@/components/common/FileDrop.vue"
+import FileUploadGuidance from "@/components/common/FileUploadGuidance.vue"
 import RetentionSelect from "@/components/retentions/RetentionSelect.vue"
 import SecurityLevelSelect from "@/components/archive-items/SecurityLevelSelect.vue"
 import YukonFirstNationsComboBox from "@/components/archive-items/YukonFirstNationsComboBox.vue"

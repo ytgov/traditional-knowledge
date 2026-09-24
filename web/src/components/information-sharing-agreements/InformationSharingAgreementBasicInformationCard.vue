@@ -83,7 +83,7 @@
             >
               mdi-bank
             </v-icon>
-            <span class="font-weight-bold text-primary">Yukon Government (YG) Contact</span>
+            <span class="font-weight-bold text-primary">Government of Yukon (YG) Contact</span>
           </div>
           <div class="mb-3">
             <div class="text-body-2 text-grey-darken-1 mb-1">Contact Name</div>
