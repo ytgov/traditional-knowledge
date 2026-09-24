@@ -64,7 +64,6 @@
           Sorry, no preview available, use download button to download the file.
         </div>
       </v-card-text>
-      <div class="d-none">PREVIEW_URL: {{ previewUrl }}</div>
     </v-card>
   </v-dialog>
 </template>
@@ -92,13 +91,10 @@ watch(
   ([blob, show]) => {
     if (blob && show) {
       previewUrl.value = URL.createObjectURL(blob as Blob)
-
-      console.log("BLOB", (blob as Blob).type)
     } else if (!show) {
       if (previewUrl.value) URL.revokeObjectURL(previewUrl.value)
       previewUrl.value = null
     }
-    console.log("PREVIEW_URL", show, previewUrl.value)
   }
 )
 
