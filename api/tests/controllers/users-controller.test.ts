@@ -145,6 +145,46 @@ describe("api/src/controllers/users-controller.ts", () => {
         expect(response.status).toBe(201)
         expect(response.body.user.roles).toContain(User.Roles.SYSTEM_ADMIN)
       })
+
+      test("when a user with the email already exists, responds 422 with an actionable message", async () => {
+        // Arrange
+        await buildInternalActor([User.Roles.SYSTEM_ADMIN])
+        const payload = buildInternalUserPayload()
+        await userFactory.create({ email: payload.email, isExternal: false })
+
+        // Act
+        const response = await request().post("/api/users").send(payload)
+
+        // Assert
+        expect(response.status).toBe(422)
+        expect(response.body.message).toContain("already exists")
+        expect(response.body.message).not.toContain("deactivated")
+
+        const matching = await User.findAll({ where: { email: payload.email } })
+        expect(matching).toHaveLength(1)
+      })
+
+      test("when the email belongs to a deactivated user, responds 422 pointing at reactivation", async () => {
+        // Arrange
+        await buildInternalActor([User.Roles.SYSTEM_ADMIN])
+        const payload = buildInternalUserPayload()
+        await userFactory.create({
+          email: payload.email,
+          isExternal: false,
+          deactivatedAt: new Date(),
+          deactivationReason: "Left the department",
+        })
+
+        // Act
+        const response = await request().post("/api/users").send(payload)
+
+        // Assert
+        expect(response.status).toBe(422)
+        expect(response.body.message).toContain("deactivated")
+
+        const matching = await User.findAll({ where: { email: payload.email } })
+        expect(matching).toHaveLength(1)
+      })
     })
   })
 })

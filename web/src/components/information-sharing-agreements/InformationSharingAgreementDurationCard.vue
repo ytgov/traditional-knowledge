@@ -72,7 +72,7 @@
         <div>
           The options above do not prevent the possibility to amend, extend or terminate this agreement
           earlier due to mutually agreed upon conditions or other occurrences. These options ensure that
-          by default, Traditional Knowledge (TK) is not retained indefinitely by Yukon Government (YG).
+          by default, Traditional Knowledge (TK) is not retained indefinitely by Government of Yukon (YG).
         </div>
       </v-alert>
     </v-card-text>

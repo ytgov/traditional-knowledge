@@ -29,8 +29,6 @@ export function usePdfPreview() {
 
     if (mimeType.includes("pdf")) return true
     if (mimeType.includes("image")) return true
-
-    console.log("checking canPreview", mimeType)
     return false
   }
 

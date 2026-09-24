@@ -129,17 +129,6 @@
             </v-btn>
             <v-spacer />
             <v-btn
-              v-if="policy?.update"
-              class="ml-3"
-              :loading="isLoading"
-              color="primary"
-              variant="outlined"
-              @click="sync"
-            >
-              <v-icon class="mr-2">mdi-sync</v-icon>
-              Sync
-            </v-btn>
-            <v-btn
               class="ml-3"
               :loading="isLoading"
               type="submit"
@@ -161,7 +150,6 @@ import { ref, toRefs } from "vue"
 import { type VBtn, type VForm } from "vuetify/components"
 
 import { required } from "@/utils/validators"
-import usersApi from "@/api/users-api"
 
 import useCurrentUser from "@/use/use-current-user"
 import useSnack from "@/use/use-snack"
@@ -192,7 +180,7 @@ const emit = defineEmits<{
 }>()
 
 const { userId } = toRefs(props)
-const { user, policy, isLoading, save, refresh: refreshUser } = useUser(userId)
+const { user, isLoading, save, refresh: refreshUser } = useUser(userId)
 
 const form = ref<InstanceType<typeof VForm> | null>(null)
 const snack = useSnack()
@@ -227,30 +215,6 @@ async function refresh() {
 
   if (user.value?.id === currentUser.value.id) {
     await refreshCurrentUser()
-  }
-}
-
-async function sync() {
-  if (isNil(user.value)) return
-
-  isLoading.value = true
-  try {
-    await usersApi.directorySync(user.value.id)
-
-    if (user.value.id === currentUser.value.id) {
-      await refreshCurrentUser()
-      snack.info("Synced and reloaded current user!")
-    } else {
-      await refreshUser()
-      snack.success("User synced!")
-    }
-
-    emit("saved", user.value.id)
-  } catch (error) {
-    console.error(`Failed to sync user: ${error}`, { error })
-    snack.error(`Failed to sync user: ${error}`)
-  } finally {
-    isLoading.value = false
   }
 }
 </script>

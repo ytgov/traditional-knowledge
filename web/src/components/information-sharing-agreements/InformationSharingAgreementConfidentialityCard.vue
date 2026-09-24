@@ -41,7 +41,7 @@
           Authorised application of Traditional Knowledge (TK)
         </div>
         <div class="mb-4">
-          Yukon Government (YG) acknowledges the confidentiality and access identified above and
+          Government of Yukon (YG) acknowledges the confidentiality and access identified above and
           will receive Traditional Knowledge (TK) as/in:
         </div>
         <div class="text-grey-darken-3 whitespace-pre-wrap">
@@ -49,7 +49,7 @@
         </div>
         <p class="text-body-2 font-italic text-grey-darken-1 mt-6">
           Describes how Traditional Knowledge (TK) may be reflected in or considered for the
-          described purpose. Includes if Yukon Government (YG) intends to share any materials
+          described purpose. Includes if Government of Yukon (YG) intends to share any materials
           pertaining to the outcome of this agreement.
         </p>
       </div>

@@ -32,19 +32,22 @@
       v-if="policy?.update"
       #actions
     >
-      <v-file-input
-        v-model="filesToUpload"
-        class="mx-2 mb-2"
-        density="compact"
-        multiple
-        chips
-        clearable
-        hide-details
-        label="Attach files"
-        :loading="isUploading"
-        :disabled="isUploading"
-        @update:model-value="uploadFiles"
-      />
+      <div class="w-100">
+        <FileUploadGuidance class="mx-2" />
+        <v-file-input
+          v-model="filesToUpload"
+          class="mx-2 mb-2"
+          density="compact"
+          multiple
+          chips
+          clearable
+          hide-details
+          label="Attach files"
+          :loading="isUploading"
+          :disabled="isUploading"
+          @update:model-value="uploadFiles"
+        />
+      </div>
     </template>
   </v-card>
 </template>
@@ -55,8 +58,10 @@ import { ref, toRefs } from "vue"
 
 import archiveItemsApi from "@/api/archive-items-api"
 import useArchiveItem from "@/use/use-archive-item"
+import useSnack from "@/use/use-snack"
 
 import ArchiveItemFileCard from "@/components/archive-item-files/ArchiveItemFileCard.vue"
+import FileUploadGuidance from "@/components/common/FileUploadGuidance.vue"
 
 const props = defineProps<{
   archiveItemId: number
@@ -68,6 +73,7 @@ const emit = defineEmits<{
 
 const { archiveItemId } = toRefs(props)
 const { archiveItem, policy, refresh } = useArchiveItem(archiveItemId)
+const snack = useSnack()
 
 const filesToUpload = ref<File[]>([])
 const isUploading = ref(false)
@@ -81,6 +87,9 @@ async function uploadFiles(files: File | File[]) {
     await archiveItemsApi.createFiles(archiveItemId.value, filesAsArray)
     await refresh()
     filesToUpload.value = []
+  } catch (error) {
+    console.error("Failed to upload attachment:", error)
+    snack.error("Failed to upload attachment")
   } finally {
     isUploading.value = false
   }

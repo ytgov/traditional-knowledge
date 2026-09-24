@@ -4,7 +4,7 @@ export const ENVIRONMENT = import.meta.env.MODE
 const DEVELOPMENT_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"
 
 /** Matomo tracking is disabled unless the host is configured for the environment. */
-const MATOMO_HOST = import.meta.env.VITE_MATOMO_HOST || ""
+const MATOMO_HOST = import.meta.env.VITE_MATOMO_HOST || "https://analytics.gov.yk.ca"
 const MATOMO_SITE_ID = 115
 
 const prodConfig = {
@@ -73,3 +73,5 @@ export const AUTH0_CLIENT_ID = config.clientId
 
 export const MATOMO_TRACKER_HOST = stripTrailingSlash(config.matomoHost)
 export const MATOMO_TRACKER_SITE_ID = config.matomoSiteId
+
+export const MAXIMUM_UPLOAD_FILE_SIZE_LABEL = "50 MB"

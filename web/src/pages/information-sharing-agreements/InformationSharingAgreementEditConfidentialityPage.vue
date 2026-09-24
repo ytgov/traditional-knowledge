@@ -11,7 +11,7 @@
     <v-row>
       <v-col cols="12">
         <p>
-          Yukon Government (YG) acknowledges the confidentiality and access identified above and
+          Government of Yukon (YG) acknowledges the confidentiality and access identified above and
           will receive Traditional Knowledge (TK) as / in:
         </p>
       </v-col>
@@ -54,7 +54,7 @@
         <v-textarea
           v-model="informationSharingAgreement.authorizedApplication"
           label="Authorised application of Traditional Knowledge (TK) *"
-          hint="Describe how Traditional Knowledge (TK) may be reflected in or considered for the described purpose. Include if Yukon Government (YG) intends to share any materials pertaining to the outcome of this agreement."
+          hint="Describe how Traditional Knowledge (TK) may be reflected in or considered for the described purpose. Include if Government of Yukon (YG) intends to share any materials pertaining to the outcome of this agreement."
           persistent-hint
           rows="8"
           auto-grow
