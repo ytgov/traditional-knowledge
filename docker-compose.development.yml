@@ -143,7 +143,7 @@ services:
       - ./.prettierrc.yaml:/usr/src/.prettierrc.yaml
 
   cache:
-    image: bitnamilegacy/redis:8.0.2
+    image: soldevelo/redis:8.0.3
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
 

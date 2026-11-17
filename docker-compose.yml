@@ -53,7 +53,7 @@ services:
       - "1025:1025" # SMTP
 
   cache:
-    image: bitnami/redis:8.0.2
+    image: soldevelo/redis:8.0.3
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
